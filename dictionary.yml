@@ -1,4 +1,4 @@
-# dictionary.yaml - Emulation plan YAML dictionary.
+# dictionary.yml - Emulation plan YAML dictionary.
 
 # All possible fields for a single TTP.
 # Any amount of TTPs may be included in this format within a single emulation plan.
