@@ -3,13 +3,13 @@
 # All possible fields for a single TTP.
 # Any amount of TTPs may be included in this format within a single emulation plan.
 
-- id: GUID for the Procedure
+- id: Pseudorandom 32 digit hexadecimal GUID for the Procedure
   name: Enumerate AD person objects
   description: Description of the Procedure
   tactic: ATT&CK Tactic name
   technique: (Empty)
-    attack_id: ATT&CK (Sub-)Technique ID 
-    name: Account Discovery:\ Domain Account
+    attack_id: ATT&CK (Sub-)Technique ID
+    name: ATT&CK (Sub-)Technique Name
   cti-source: Reference (link, description, etc.) to a specific CTI source such as a threat report or file.
   procedure_group: (Optional) A unique name for a Procedure Group procedure_discovery
   procedure_step: (Optional) 
