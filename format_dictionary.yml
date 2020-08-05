@@ -5,6 +5,8 @@
 attack_version: 7.2
 format_version: 1.0
 
+# (Variable): Means that the name of the field is variable
+
 - id: GUID for the Procedure
   name: Unique name of the TTP
   description: Description of the Procedure
