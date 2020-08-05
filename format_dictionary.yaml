@@ -7,7 +7,7 @@ format_version: 1.0
 
 # (Variable): Means that the name of the field is variable
 
-- id: GUID for the Procedure
+- id: GUID for the Procedure (e.g. e44a39ce-0651-3ddd-df05-f83aa2ffd657)
   name: Unique name of the TTP
   description: Description of the Procedure
   tactic: ATT&CK Tactic name
