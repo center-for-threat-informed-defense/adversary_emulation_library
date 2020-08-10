@@ -1,10 +1,9 @@
 # format_dictionary.yaml - Emulation plan YAML dictionary.
-
-# All possible fields for a single TTP.
-# Any amount of TTPs may be included in this format within a single emulation plan.
 attack_version: 7.2
 format_version: 1.0
 
+# All possible fields for a single TTP.
+# Any amount of TTPs may be included in this format within a single emulation plan.
 # (Variable): Means that the name of the field is variable
 
 - id: GUID for the Procedure (e.g. e44a39ce-0651-3ddd-df05-f83aa2ffd657)
