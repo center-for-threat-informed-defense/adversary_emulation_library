@@ -1,6 +1,6 @@
 # CTID Adversary Emulation Library
 
-
+[TODO: Add a link to the announcement blog post]
 
 ## Philosophy 
 
