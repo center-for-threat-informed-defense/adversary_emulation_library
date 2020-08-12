@@ -1,11 +1,11 @@
 # FIN6 Operations Flow
 
-Please see the formal [FIN6 Intelligence Summary](/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
+Please see the formal [FIN6 Intelligence Summary](/fin6/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
 
-This FIN6 emulation is split into two distinct phases, [Phase 1](/emulation_plan/Phase1.md) and [Phase 2](/emulation_plan/Phase2.md).
+This FIN6 emulation is split into two distinct phases, [Phase 1](/fin6/Emulation_Plan/Phase1.md) and [Phase 2](/fin6/Emulation_Plan/Phase2.md).
 
 
-![/Emulation_Plan/OpFlow_Diagram.png](/Emulation_Plan/OpFlow_Diagram.png)
+![/Emulation_Plan/OpFlow_Diagram.png](/fin6/Emulation_Plan/OpFlow_Diagram.png)
 
 # Phase 1
 ## Initial Access
