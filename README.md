@@ -4,7 +4,7 @@ In collaboration with Center Participants, the MITRE Engenuity [Center for Threa
 
 ## Philosophy 
 
-These adversary emulation plans to document and distribute red team resources that are based on known-adversary behaviors. This approach empowers defenders to operationalize cyber threat intelligence to better understand and combat real-world adversaries. Rather than focusing on static signatures, these intelligence-driven emulation plans provide a repeatable means to test and tune defensive capabilities and products against the evolving TTPs of threat actors and malware.
+These adversary emulation plans are based on known-adversary behaviors and designed to empower red teams to manually emulate a specific threat actor in order to test and evaluate defensive capabilities from a threat-informed perspective. This approach empowers defenders to operationalize cyber threat intelligence to better understand and combat real-world adversaries. Rather than focusing on static signatures, these intelligence-driven emulation plans provide a repeatable means to test and tune defensive capabilities and products against the evolving TTPs of threat actors and malware.
 
 ## Adversary Emulation Background
 
