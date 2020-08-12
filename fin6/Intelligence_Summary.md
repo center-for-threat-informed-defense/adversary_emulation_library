@@ -43,43 +43,43 @@ MAZE | | Ransomware | MaaS | The group is thought to have deployed MAZE ransomwa
 
 #### The following behaviors are in scope for an emulation of actions attributed to FIN6 in the [referenced reporting](#references).
 
-![/Attack_Layers/FIN6_G0037.png](/Attack_Layers/FIN6_G0037.png)
+![/Attack_Layers/FIN6_G0037.png](/fin6/Attack_Layers/FIN6_G0037.png)
 
 ## [Cobalt Strike (S0154)](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0154%2FS0154-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN6 using Cobalt Strike, exclusively based on current intelligence within ATT&CK.
 
-![/Attack_Layers/Cobalt_Strike_S0154.png](/Attack_Layers/Cobalt_Strike_S0154.png)
+![/Attack_Layers/Cobalt_Strike_S0154.png](/fin6/Attack_Layers/Cobalt_Strike_S0154.png)
 
 ## [LockerGoga (S0372)](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0372%2FS0372-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN6 using LockerGoga, exclusively based on current intelligence within ATT&CK.
 
-![/Attack_Layers/LockerGoga_S0372.png](/Attack_Layers/LockerGoga_S0372.png)
+![/Attack_Layers/LockerGoga_S0372.png](/fin6/Attack_Layers/LockerGoga_S0372.png)
 
 ## [Mimikatz (S0002)](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0002%2FS0002-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN6 using Mimikatz, exclusively based on current intelligence within ATT&CK.
 
-![/Attack_Layers/Mimikatz_S0002.png](/Attack_Layers/Mimikatz_S0002.png)
+![/Attack_Layers/Mimikatz_S0002.png](/fin6/Attack_Layers/Mimikatz_S0002.png)
 
 ## [More_eggs (S0284)](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0284%2FS0284-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN6 using More_eggs, exclusively based on current intelligence within ATT&CK.
 
-![/Attack_Layers/More_eggs_S0284.png](/Attack_Layers/More_eggs_S0284.png)
+![/Attack_Layers/More_eggs_S0284.png](/fin6/Attack_Layers/More_eggs_S0284.png)
 
 ## [PsExec (S0029)](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0029%2FS0029-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN6 using PsExec, exclusively based on current intelligence within ATT&CK.
 
-![/Attack_Layers/PsExec_S0029.png](/Attack_Layers/PsExec_S0029.png)
+![/Attack_Layers/PsExec_S0029.png](/fin6/Attack_Layers/PsExec_S0029.png)
 
 ## [Windows Credential Editor (S0005)](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0005%2FS0005-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN6 using Windows Credential Editor, exclusively based on current intelligence within ATT&CK.
 
-![/Attack_Layers/Windows_Credential_Editor_S0005.png](/Attack_Layers/Windows_Credential_Editor_S0005.png)
+![/Attack_Layers/Windows_Credential_Editor_S0005.png](/fin6/Attack_Layers/Windows_Credential_Editor_S0005.png)
 
 ## References
 
