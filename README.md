@@ -24,6 +24,8 @@ The content to execute the scenario(s) is broken down into step-by-step procedur
 
 Please submit issues for any technical questions/concerns, or contact ctid@mitre-engenuity.org directly for more general inquiries.
 
+Also see the guidance for contributors if are interested in [contributing](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/CONTRIBUTING.md)
+
 
 ## Liability / Responsible Usage
 
