@@ -2,12 +2,11 @@
 
 FIN6 operations can be interpreted as having two phases.  Each phase has several objectives.  The objectives are presented linearly as each objective enables subsequent objectives and phases.  That said, each organization can tailor this emulation to their individual use case, priorities, and available resources.  The assessing team can begin at any phase or objective but should do so understanding that each objective enables the succeeding objectives.  
 
-Phase 2, the operational effects phase of the emulation plan, is left to the discretion of the organization.  Three use cases are presented along with information relevant to emulation.  This emulation plan recommends procedures using the tools reported to have been used by FIN6.  "Alternative Procedures" are presented to address intelligence gaps and suggest procedures that are intended to be operationally representative.
+Phase 1 is the pursuit of enabling objectives.  Phase 2, the operational effects phase of the emulation plan, is left to the discretion of the organization.  Three use cases are presented along with information relevant to emulation.  This emulation plan recommends procedures using the tools reported to have been used by FIN6.  "Alternative Procedures" are presented to address intelligence gaps and suggest procedures that are intended to be operationally representative.
 
 # Phase 1 Overview
 
 * Emulating FIN6 using tools such as Metasploit, Mimikatz, and PsExec.
-* The emulation will be executed in two phases.  Phase 1 is the pursuit of enabling objectives.  Phase 2 is the pursuit of operational objectives that are contingent upon the completion of Phase 1.
 * Phase 1 begins after a host is compromised, a payload is executed, and command and control is established.
 * "Seek-and-deploy" style operation; the objective of Phase 1 is to compromise, discover, and escalate, in order to deploy an operational capability during Phase 2.
 
