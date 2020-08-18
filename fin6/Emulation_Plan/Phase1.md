@@ -67,7 +67,7 @@ The following represents a bare minimum but should be operationally representati
 
 * ### Phase 2 - POS Exfiltration
 
-  * DNS - FIN6 is reported to have exfiltrated POS data from compromised systems using DNS tunneling.  In order to emulate this use-case (Phase2 Scenario 1), you will need to set up an exfiltration server that is capable of receiving DNS requests and issuing DNS responses.  We further describe how to emulate this activity using dnscat2 in Phase 2.    
+  * DNS - FIN6 is reported to have exfiltrated POS data from compromised systems using DNS tunneling.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>  In order to emulate this use-case (Phase2 Scenario 1), you will need to set up an exfiltration server that is capable of receiving DNS requests and issuing DNS responses.  We further describe how to emulate this activity using dnscat2 in Phase 2.    
 
 * ### Phase 2 - E-Commerce Exfiltration
 
