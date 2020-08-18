@@ -63,15 +63,15 @@ The following represents a bare minimum but should be operationally representati
 
 * ### Phase 1 - Exfiltration
 
-  * SSH
+  * SSH - After conducting internal discovery, FIN6 has been reported to stage the resulting files, compress those files, and typically exfiltrate using SSH. <sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>.  In order to emulate this use-case, you will need to set up an exfiltration server that is capable of receiving SSH connections.   
 
 * ### Phase 2 - POS Exfiltration
 
-  * DNS
+  * DNS - FIN6 is reported to have exfiltrated POS data from compromised systems using DNS tunneling.  In order to emulate this use-case (Phase2 Scenario 1), you will need to set up an exfiltration server that is capable of receiving DNS requests and issuing DNS responses.  We further describe how to emulate this activity using dnscat2 in Phase 2.    
 
 * ### Phase 2 - E-Commerce Exfiltration
 
-  * HTTP
+  * HTTP - FIN6 is reported to have exfiltrated payment data resulting from it's Magecart Group 6 activity via HTTP POST.  In order to emulate this use-case (Phase 2 Scenario 2), you will need to set up an exfiltration server capable of receiving HTTP POST requests.  Depending on how you intend to evaluate this scenario, a lightweight solution like Python's http.server may be appropriate.  This activity is further described in Phase 2.    
 
 ---
 
