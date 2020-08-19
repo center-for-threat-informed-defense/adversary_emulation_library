@@ -1,6 +1,6 @@
 # CTID Adversary Emulation Library
 
-In collaboration with Center Participants, the MITRE Engenuity [Center for Threat-Informed Defense (CTID)](https://mitre-engenuity.org/center-for-threat-informed-defense/) has developed this library of adversary emulation plans to allow organizations to evaluate their defensive capabilities against real-world threats they face. These plans are an essential component in testing current defenses for organizations that are looking to prioritize their defenses around actual adversary behavior. Focusing our energies on developing a set of common plans that are available to all means that organizations can use their limited time and resources to focus on understanding how their defenses actually fare against real-world threats.
+In collaboration with Center Participants, the MITRE Engenuity [Center for Threat-Informed Defense (CTID)](https://mitre-engenuity.org/center-for-threat-informed-defense/) will continue to populate this library of adversary emulation plans to allow organizations to evaluate their defensive capabilities against the real-world threats they face. Emulation plans are an essential component in testing current defenses for organizations that are looking to prioritize their defenses around actual adversary behavior. Focusing our energies on developing a set of common emulation plans that are available to all means that organizations can use their limited time and resources to focus on understanding how their defenses actually fare against real-world threats.
 
 ## Philosophy 
 
@@ -20,11 +20,15 @@ Within each emulation plan, the operational flow provides a high-level summary o
 
 The content to execute the scenario(s) is broken down into step-by-step procedures provided in both human and machine-readable formats. Scenarios can be executed end-to-end or as individual tests. The human-readable formats provide additional relevant background where possible as well as any setup prerequisites, while the machine-readable format is designed to be parsed by an automated agent (ex: [CALDERA](https://github.com/mitre/caldera), though both forms of content can similarly be parsed and run by other C2 and/or breach simulation frameworks). Please see the emulation plan data dictionary for a more detailed breakdown of the fields of the machine-readable format.
 
+## Future Work
+
+The threat landscape changes every day, as new groups/malware emerge and known adversaries adapt and evolve. The CTID will continue to populate and maintain this library to match this growth curve through dedicated research efforts that aim to either create or update plans based on a specific adversary.
+
 ## Questions and Feedback
 
 Please submit issues for any technical questions/concerns, or contact ctid@mitre-engenuity.org directly for more general inquiries.
 
-Also see the guidance for contributors if are interested in [contributing](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/CONTRIBUTING.md)
+Also see the guidance for contributors if are interested in [contributing.](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/CONTRIBUTING.md)
 
 
 ## Liability / Responsible Usage
