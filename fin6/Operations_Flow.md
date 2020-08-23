@@ -4,10 +4,10 @@ Please see the formal [FIN6 Intelligence Summary](/fin6/Intelligence_Summary.md)
 
 This FIN6 emulation is split into two distinct phases, [Phase 1](/fin6/Emulation_Plan/Phase1.md) and [Phase 2](/fin6/Emulation_Plan/Phase2.md).
 
-
 ![/Emulation_Plan/OpFlow_Diagram.png](/fin6/Emulation_Plan/OpFlow_Diagram.png)
 
 # Phase 1
+
 ## Initial Access
 
 Phase 1 is the pursuit of enabling objectives, the first of which is initial access to the target network.  FIN6 appears to take a pragmatic approach toward delivery, varying techniques according to what is most likely to be successful.  It is therefore, recommended for the purpose of threat emulation, that assessors approach delivery in the same manner.  
