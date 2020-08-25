@@ -13,7 +13,7 @@ format_version: 1.0
   technique: (Empty)
     attack_id: ATT&CK (Sub-)Technique ID 
     name: ATT&CK Technique name
-  cti-source: Reference (link, description, etc.) to a specific CTI data source such as a threat report or file
+  cti_source: Reference (link, description, etc.) to a specific CTI data source such as a threat report or file
   procedure_group: (Optional) A unique name for a group of Procedures
   procedure_step: (Optional) A unique step ID for this TTP. Can be used to create sequences of TTPs.
   platforms: (Empty) 

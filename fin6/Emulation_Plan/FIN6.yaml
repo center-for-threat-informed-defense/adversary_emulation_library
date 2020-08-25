@@ -11,7 +11,7 @@ format_version: 1.0
   technique: 
     attack_id: T1087.002
     name: Account Discovery:\ Domain Account
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_discovery
   procedure_step: 2.1
   platforms:
@@ -59,7 +59,7 @@ format_version: 1.0
   technique:
     attack_id: T1018
     name: Remote System Discovery
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_discovery
   procedure_step: 2.2
   platforms:
@@ -107,7 +107,7 @@ format_version: 1.0
   technique:
     attack_id: T1482
     name: Domain Trust Discovery
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_discovery
   procedure_step: 2.3
   platforms:
@@ -156,7 +156,7 @@ format_version: 1.0
   technique:
     attack_id: T1482
     name: Domain Trust Discovery
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_discovery
   procedure_step: 2.4
   platforms:
@@ -205,7 +205,7 @@ format_version: 1.0
   technique:
     attack_id: T1016
     name: System Network Configuration Discovery
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_discovery
   procedure_step: 2.5
   platforms:
@@ -254,7 +254,7 @@ format_version: 1.0
   technique:
     attack_id: T1069.002
     name: Permission Groups Discovery:\ Domain Groups
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_discovery
   procedure_step: 2.6
   platforms:
@@ -305,7 +305,7 @@ format_version: 1.0
   technique:
     attack_id: T1134
     name: Access Token Manipulation
-  cti-source: 
+  cti_source: 
   procedure_group: procedure_privesc
   procedure_step: 3.1
   platforms:
@@ -323,7 +323,7 @@ format_version: 1.0
   technique:
     attack_id: T1003.001
     name: OS Credential Dumping: LSASS Memory - Invoke-Mimikatz
-  cti-source: https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/
+  cti_source: https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/
   procedure_group: procedure_privesc
   procedure_step: 3.2
   platforms:
@@ -339,7 +339,7 @@ format_version: 1.0
   technique:
     attack_id: T1003.001
     name: OS Credential Dumping: LSASS Memory - Windows Credential Editor (WCE)
-  cti-source: https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf
+  cti_source: https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf
   procedure_group: procedure_cred_access
   procedure_step: 3.4
   platforms:
@@ -397,7 +397,7 @@ format_version: 1.0
   technique:
     attack_id: T1560.001
     name: Archive Collected Data:\ Archive via Utility
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_collection
   procedure_step: 4.1
   platforms:
@@ -448,7 +448,7 @@ format_version: 1.0
   technique:
     attack_id: T1567.002
     name: Exfiltration Over Web Service:\ Exfiltration to Cloud Storage
-  cti-source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_exfiltration
   procedure_step: 4.2
   platforms:
@@ -512,7 +512,7 @@ format_version: 1.0
   technique:
     attack_id: T1569.002
     name: System Services:\ Service Execution
-  cti-source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
   procedure_group: procedure_pos_execution
   procedure_step: 5.1
   platforms:
@@ -560,7 +560,7 @@ format_version: 1.0
   technique:
     attack_id: 1047
     name: Windows Management Instrumentation
-  cti-source: https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24
+  cti_source: https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24
   procedure_group: procedure_pos_execution
   procedure_step: 5.3
   platforms:
@@ -594,7 +594,7 @@ format_version: 1.0
   technique: 
     attack_id: T1547.001
     name: Boot or Logon Autostart Execution:\ Registry Run Keys / Startup Folder
-  cti-source: https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems
+  cti_source: https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems
   procedure_group: procedure_pos_persistence
   procedure_step: 5.4.1
   platforms:
@@ -628,7 +628,7 @@ format_version: 1.0
   technique:
     attack_id: T1053.005
     name: Scheduled Task/Job:\ Scheduled Task
-  cti-source: https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems
+  cti_source: https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems
   procedure_group: procedure_pos_persistence
   procedure_step: 5.4.2
   platforms:
@@ -664,7 +664,7 @@ format_version: 1.0
   technique: 
     attack_id: T1048.003
     name: Exfiltration Over Alternative Protocol:\ Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol
-  cti-source: https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24
+  cti_source: https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24
   procedure_group: procedure_pos_exfiltration
   procedure_step: 5.5
   platforms:
@@ -817,7 +817,7 @@ format_version: 1.0
   technique:
     attack_id: T1021.002
     name: Remote Services:\ SMB/Windows Admin Shares
-  cti-source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  cti_source: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
   procedure_group: procedure_ransomware_copy
   procedure_step: 7.1.4
   platforms:
