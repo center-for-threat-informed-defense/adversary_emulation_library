@@ -28,7 +28,8 @@ format_version: 1.0
     argument_name: (Empty, Variable) 
       description: Description of the argument
         type: (Path | String | URL)
-        default: (Optional) Default value of the argument
+        defaults: (Optional) Default values of the argument.
+          - List of possible values derived from CTI.
 
   dependency_executor_name: (Optional) Name of the executor used to execute the prerequisite command
   dependencies:
