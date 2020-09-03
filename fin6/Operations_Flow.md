@@ -4,7 +4,11 @@ Please see the formal [FIN6 Intelligence Summary](/fin6/Intelligence_Summary.md)
 
 This FIN6 emulation is split into two distinct phases, [Phase 1](/fin6/Emulation_Plan/Phase1.md) and [Phase 2](/fin6/Emulation_Plan/Phase2.md).
 
+---
+
 ![/Emulation_Plan/OpFlow_Diagram.png](/fin6/Emulation_Plan/OpFlow_Diagram.png)
+
+---
 
 # Phase 1
 
@@ -26,6 +30,8 @@ The third objective of Phase 1 is to escalate privileges.  Reporting suggests th
 
 The terminating event for Phase 1 is exfiltration of Phase 1 data.  FIN6 has exfiltrated the text files resultant from Discovery and the NTDS.dit file harvested during Privilege Escalation by way of SSH and FTP.  These files are reported to have been pushed to FIN6 controlled infrastructure for processing and analysis.  The information ascertained enables the group to pursue their Phase 2 objectives.  
 
+---
+
 # Phase 2
 
 ## Lateral Movement
@@ -35,3 +41,11 @@ Escalating privileges during Phase 1 may require lateral movement.  The lateral 
 ## Exfiltration
 
 The terminus of this phase and likewise, this emulation plan is the exfiltration of Phase 2 data.  FIN6 has used DNS tunneling to exfiltrate PoS data.  When targeting e-commerce sites, the group’s card skimming scripts exfiltrate payment data by using an HTTP POST to send the data to FIN6 controlled infrastructure.  
+
+---
+
+## Next Steps
+
+- [FIN6 Intelligence Summary](/fin6/Intelligence_Summary.md)
+- [FIN6 Phase 1](/fin6/Emulation_Plan/Phase1.md)
+- [FIN6 Phase 2](/fin6/Emulation_Plan/Phase2.md)
