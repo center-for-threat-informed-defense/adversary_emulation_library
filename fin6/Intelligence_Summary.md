@@ -23,6 +23,8 @@ Depending on the target, FIN6 may identify Point of Sale (POS) systems and use t
 
 In more recent campaigns, FIN6 has used its access to deploy ransomware throughout a victim’s environment. FIN6 may stage ransomware and automated deployment scripts [(T1072)](https://attack.mitre.org/techniques/T1072/) on victim servers [(T1080)](https://attack.mitre.org/techniques/T1080/); these scripts may call utilities like PsExec [(S0029)](https://attack.mitre.org/software/S0029/) to deploy ransomware such as LockerGoga [(S0372)](https://attack.mitre.org/software/S0372) to as many machines as possible at the same time. FIN6 may try to acquire Domain Administrator credentials to achieve maximum success with PsExec [(S0029)](https://attack.mitre.org/software/S0029/) deployment or so they can use Group Policy Modification [(T1484)](https://attack.mitre.org/techniques/T1484/) to distribute the ransomware via AD group policies.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup>
 
+--- 
+
 ## FIN6 Software
 
 Name | Associated Names | Software Type | Availability | Emulation Notes
@@ -38,6 +40,8 @@ FrameworkPOS | TRINITY | Point of Sale (POS) Malware | | POS malware commonly us
 TerraLoader | SpiceyOmlette | Loader | MaaS | FIN6 uses TerraLoader to download and execute more_eggs and Metasploit stages.
 PowerTrick | | Backdoor | MaaS | FIN6 is believed to have used PowerTrick to download TerraLoader, which subequently installs more_eggs or Metasploit.
 MAZE | | Ransomware | MaaS | The group is thought to have deployed MAZE ransomware in compromised environments.
+
+---
 
 ## FIN6 ATT&CK Navigator
 
@@ -81,6 +85,8 @@ MAZE | | Ransomware | MaaS | The group is thought to have deployed MAZE ransomwa
 
 ![/Attack_Layers/Windows_Credential_Editor_S0005.png](/fin6/Attack_Layers/Windows_Credential_Editor_S0005.png)
 
+---
+
 ## References
 
 ID | Source | Publisher | Date |
@@ -100,3 +106,10 @@ ID | Source | Publisher | Date |
 13 | [FIN6 Cybercrime Group Expands Threat to eCommerce Merchants](https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf)|[VISA](https://usa.visa.com)| February 2019
 14 | [Inside the Magecart Breach of British Airways: How 22 Lines of Code Claimed 380,000 Victims](https://riskiq.com/blog/labs/magecart-british-airways-breach/)| [RiskIQ](https://riskiq.com)| September 2018
 15 | [Another Victim of the Magecart Assault Emerges: Newegg](https://riskiq.com/blog/labs/magecart-newegg/)| [RiskIQ](https://riskiq.com)| September 2018
+
+---
+
+## Next Steps
+
+- [FIN6 Operations Flow](/fin6/Operations_Flow.md)
+- [FIN6 Phase 1](/fin6/Emulation_Plan/Phase1.md)
