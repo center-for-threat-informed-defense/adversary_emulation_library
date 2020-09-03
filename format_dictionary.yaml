@@ -1,6 +1,7 @@
 # format_dictionary.yaml - Emulation plan YAML dictionary.
-attack_version: 7.2
-format_version: 1.0
+-version:
+  attack_version: 7.2
+  format_version: 1.0
 
 # All possible fields for a single TTP.
 # Any amount of TTPs may be included in this format within a single emulation plan.
@@ -44,4 +45,3 @@ format_version: 1.0
     elevation_required: (true | false)
     command: The command to execute the Procedure using this executor
     cleanup_command: (Optional) Command to run using this executor after the Procedure to cleanup
-        
