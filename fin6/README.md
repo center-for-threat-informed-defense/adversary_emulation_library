@@ -18,10 +18,9 @@ The FIN6 emulation plan is a human-readable, step-by-step / command-by-command i
 * [Intelligence Summary](/fin6/Intelligence_Summary.md)
 * [Operations Flow](/fin6/Operations_Flow.md)
 * [Emulation Plan](/fin6/Emulation_Plan/README.md)
-  - [YAML](/fin6/Emulation_Plan/FIN6.yaml)
-  - [OpFlow Diagram](/fin6/Emulation_Plan/OpFlow_Diagram.png)
   - [Phase 1](/fin6/Emulation_Plan/Phase1.md)
   - [Phase 2](/fin6/Emulation_Plan/Phase2.md)
+  - [YAML](/fin6/Emulation_Plan/FIN6.yaml)
 * [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
 
 ## Liability / Responsible Usage
