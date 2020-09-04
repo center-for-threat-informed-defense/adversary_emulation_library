@@ -4,7 +4,7 @@ This repository contains an adversary emulation plan for [FIN6](https://attack.m
 
 FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015. FIN6 has targeted e-commerce sites and multinational organizations. Most of the group’s targets have been located in the United States and Europe, but include companies in Australia, Canada, Spain, India, Kazakhstan, Serbia, and China.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
-The Intelligence Summary summarizes outlines 15 publicly available sources to describe FIN6, their motivations, objectives, and observed target industries. It further describes the typical FIN6 Operational Flow along with their publicly attributed Tactics, Techniques, and Procedures (TTPs) mapped to ATT&CK.
+The Intelligence Summary summarizes 15 publicly available sources to describe FIN6, their motivations, objectives, and observed target industries. It further describes the typical FIN6 Operational Flow along with their publicly attributed Tactics, Techniques, and Procedures (TTPs) mapped to ATT&CK.
 
 The Operations Flow chains techniques together into a logical order of the major steps that commonly occur across FIN6 operations. In the case of FIN6, we describe their operations in two major phases:
 
