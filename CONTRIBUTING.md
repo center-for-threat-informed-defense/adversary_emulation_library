@@ -6,7 +6,7 @@ Thanks for contributing to the FIN6 Adversary Emulation Plan!
 
 You are welcome to comment on issues, open new issues, and open pull requests.
 
-Pull requests should target the **develop** branch of the repository.
+Pull requests should target the **[develop](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/develop)** branch of the repository.
 
 Also, if you contribute any source code, we need you to agree to the following Developer's Certificate of Origin below.
 
