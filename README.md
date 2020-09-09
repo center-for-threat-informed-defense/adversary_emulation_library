@@ -1,6 +1,6 @@
 # Adversary Emulation Library
 
-In collaboration with Center Participants, the MITRE Engenuity [Center for Threat-Informed Defense (CTID)](https://mitre-engenuity.org/center-for-threat-informed-defense/) is building a library of adversary emulation plans to allow organizations to evaluate their defensive capabilities against the real-world threats they face. Emulation plans are an essential component in testing current defenses for organizations that are looking to prioritize their defenses around actual adversary behavior. Focusing our energies on developing a set of common emulation plans that are available to all means that organizations can use their limited time and resources to focus on understanding how their defenses actually fare against real-world threats.
+In collaboration with Center Participants, the MITRE Engenuity [Center for Threat-Informed Defense (Center)](https://mitre-engenuity.org/center-for-threat-informed-defense/) is building a library of adversary emulation plans to allow organizations to evaluate their defensive capabilities against the real-world threats they face. Emulation plans are an essential component in testing current defenses for organizations that are looking to prioritize their defenses around actual adversary behavior. Focusing our energies on developing a set of common emulation plans that are available to all means that organizations can use their limited time and resources to focus on understanding how their defenses actually fare against real-world threats.
 
 ## Philosophy 
 
@@ -30,7 +30,7 @@ The content to execute the scenario(s) is broken down into step-by-step procedur
 
 ## Future Work
 
-The threat landscape changes every day, as new groups/malware emerge and known adversaries adapt and evolve. The CTID will continue to populate and maintain this library to match this growth curve through dedicated research efforts that aim to either create or update plans based on a specific adversary.
+The threat landscape changes every day, as new groups/malware emerge and known adversaries adapt and evolve. The Center will continue to populate and maintain this library to match this growth curve through dedicated research efforts that aim to either create or update plans based on a specific adversary.
 
 ## Questions and Feedback
 
