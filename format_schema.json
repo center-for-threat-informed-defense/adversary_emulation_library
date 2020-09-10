@@ -3,6 +3,7 @@
   "$id": "http://raw.githubusercontent.com/center-for-threat-informed-defense/adversary_emulation_library/master/format_schema.json",
   "title": "Emulation Plan Format Schema",
   "type": "array",
+  "$comment": "All possible fields for a single TTP. Any amount of TTPs may be included in this format within a single emulation plan. (Variable): Means that the name of the field is variable",
   "minItems": 1,
   "additionalItems": false,
   "items": {
@@ -124,7 +125,7 @@
           },
           "input_arguments": {
             "type": "object",
-            "$comment": "patternProperties refers to argument_name as a dynamic key (Variable)",
+            "$comment": "patternProperties refers to argument_name as a dynamic key (Variable). Multiple input arguments may be specified and referenced elsewhere using the format #{argument_name}",
             "patternProperties": {
               ".+" : {
                 "type": "object",
@@ -183,6 +184,7 @@
             "type": "array",
             "title": "Execution Methods",
             "description": "Execution methods defined for the Procedure.",
+            "$comment": "Additional execution methods for the Procedure may be provided through executors. Multiple executors may be specified.",
             "minItems": 1,
             "items": {
               "type": "object",
