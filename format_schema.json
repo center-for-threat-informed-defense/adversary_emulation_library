@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://raw.githubusercontent.com/center-for-threat-informed-defense/adversary_emulation_library/master/format_schema.json",
+  "title": "Emulation Plan Format Schema",
+  "type": "array",
+  "$comment": "All possible fields for a single TTP. Any amount of TTPs may be included in this format within a single emulation plan. (Variable): Means that the name of the field is variable",
+  "minItems": 1,
+  "additionalItems": false,
+  "items": {
+    "anyOf": [
+      {
+        "type": "object",
+        "title": "Version Metadata",
+        "description": "Captures Metadata about the ATT&CK Version and Format Schema (this document).",
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "attack_version",
+              "format_version"
+            ],
+            "properties": {
+              "attack_version": {
+                "type": "number"
+              },
+              "format_version": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "object",
+        "title": "Procedure Details",
+        "description": "Captures individual procedures that define the Emulation Plan.",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "description",
+          "tactic",
+          "technique",
+          "procedure_group",
+          "procedure_step",
+          "platforms"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "GUID for the Procedure. (RFC 4122)",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+            "examples": [
+              "e44a39ce-0651-4ddd-8f05-f83aa2ffd657"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Unique name of the TTP."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the Procedure."
+          },
+          "tactic": {
+            "type": "string",
+            "description": "ATT&CK Tactic name."
+          },
+          "technique": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "attack_id",
+              "name"
+            ],
+            "properties": {
+              "attack_id": {
+                "type": "string",
+                "description": "ATT&CK (Sub-)Technique ID.",
+                "pattern": "^T\\d{4}(\\.\\d{3})?$"
+              },
+              "name": {
+                "type": "string",
+                "description": "ATT&CK Technique name"
+              }
+            }
+          },
+          "cti_source": {
+            "type": "string",
+            "description": "Reference link (link, description, etc.) to a specific CTI data source such as a threat report or file."
+          },
+          "procedure_group": {
+            "type": "string",
+            "description": "A unique name for a group of Procedures."
+          },
+          "procedure_step": {
+            "type": "string",
+            "description": "A unique step ID for this TTP. Can be used to create sequences of TTPs."
+          },
+          "platforms": {
+            "type": "object",
+            "description": "Defines the platforms related to this procedure.",
+            "$comment": "patternProperties refers to platform_name as a dynamic key (Variable)",
+            "patternProperties": {
+              ".+": {
+                "type": "object",
+                "$comment": "patternProperties refers to executor_name as a dynamic key (Variable)",
+                "patternProperties": {
+                  ".+": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "command"
+                    ],
+                    "properties": {
+                      "command": {
+                        "type": "string"
+                      },
+                      "payload": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "input_arguments": {
+            "type": "object",
+            "$comment": "patternProperties refers to argument_name as a dynamic key (Variable). Multiple input arguments may be specified and referenced elsewhere using the format #{argument_name}",
+            "patternProperties": {
+              ".+" : {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "description",
+                  "type"
+                ],
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the argument."
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "default": {
+                    "type": "string",
+                    "description": "Default value of the argument. Possible value derived from CTI."
+                  }
+                }
+              }
+            }
+          },
+          "dependency_executor_name": {
+            "type": "string",
+            "description": "Name of the executor used to execute the prerequisite command"
+          },
+          "dependencies": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "description",
+                "prereq_command"
+              ],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "A description of the dependency command."
+                },
+                "prereq_command": {
+                  "type": "string",
+                  "description": "A validation command to execute as a prerequisite to this Procedure that checks that all dependencies are met."
+                },
+                "get_prereq_command": {
+                  "type": "string",
+                  "description": "A command that ensures all payloads and arguments are avaialable before executing the validation command."
+                }
+              }
+            }
+          },
+          "executors": {
+            "type": "array",
+            "title": "Execution Methods",
+            "description": "Execution methods defined for the Procedure.",
+            "$comment": "Additional execution methods for the Procedure may be provided through executors. Multiple executors may be specified.",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "command"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the executor"
+                },
+                "elevation_required": {
+                  "type": "boolean",
+                  "description": "If elevation required to run command."
+                },
+                "command": {
+                  "type": "string",
+                  "description": "The command to execute the Procedure using this executor."
+                },
+                "cleanup_command": {
+                  "type": "string",
+                  "description": "Command to run using this executor after the Procedure to cleanup."
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
