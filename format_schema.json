@@ -41,6 +41,10 @@
           "id",
           "name",
           "description",
+          "tactic",
+          "technique",
+          "procedure_group",
+          "procedure_step",
           "platforms"
         ],
         "properties": {

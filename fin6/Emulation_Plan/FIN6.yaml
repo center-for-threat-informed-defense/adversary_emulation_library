@@ -249,7 +249,7 @@
   description: List groups and output the results to a text file.
   tactic: discovery
   technique:
-    attack_id: T1069.003
+    attack_id: T1069.002
     name: "Permission Groups Discovery: Domain Groups"
   cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_discovery
