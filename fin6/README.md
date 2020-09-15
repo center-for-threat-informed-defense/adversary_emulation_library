@@ -1,6 +1,6 @@
 # FIN6 Adversary Emulation
 
-Version:1
+Version: 1.0
 
 This repository contains an adversary emulation plan for [FIN6](https://attack.mitre.org/groups/G0037/). This is the first emulation plan in a [library](https://github.com/center-for-threat-informed-defense/adversary_emulation_library) published by MITRE Engenuity's [Center for Threat Informed Defense](https://mitre-engenuity.org/center-for-threat-informed-defense/) in cooperation with our participants. See our recent [blog](https://medium.com/mitre-engenuity/center-releases-fin6-adversary-emulation-plan-775d8c5ebe9b) announcing the release of this emulation plan. 
 
