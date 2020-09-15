@@ -1,6 +1,6 @@
 # Phase 2 Overview
 
-During Discovery, FIN6 identifies systems of interest.  Depending on your organization’s use case, this could be a Point of Sale (POS) system, an E-commerce site, or hosts on which to emulate a ransomware event.  FIN6 has deployed PoS malware via popular penetration testing frameworks and executed these tools with the Windows Management Instrumentation (WMI) Command-Line Utility.  FIN6 is reported to have compromised E-commerce environments by both injecting Magecart scripts into third-party JavaScript libraries and by directly attacking web servers.  To deploy ransomware, the group copies its tools to an internal server, uses bat files for deployment, and WMI or PsExec for execution.
+During Discovery, FIN6 identifies systems of interest.  Depending on your organization’s use case, this could be a Point of Sale (POS) system, an E-commerce site, or hosts on which to emulate a ransomware event.  FIN6 has deployed POS malware via popular penetration testing frameworks and executed these tools with the Windows Management Instrumentation (WMI) Command-Line Utility.  FIN6 is reported to have compromised E-commerce environments by both injecting Magecart scripts into third-party JavaScript libraries and by directly attacking web servers.  To deploy ransomware, the group copies its tools to an internal server, uses bat files for deployment, and WMI or PsExec for execution.
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ Additional file names ([T1036.005](https://attack.mitre.org/techniques/T1036/005
 logmesvc.exe, ttfmgr.exe, powershell.exe, dspsvc.exe, logmeinlauncher.exe, and POSreport.exe, PnPXAssoc.exe
 ```
 
-Additional service names ([T1036.004](https://attack.mitre.org/techniques/T1036/004/)) used by FIN6 in persisting PoS malware:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
+Additional service names ([T1036.004](https://attack.mitre.org/techniques/T1036/004/)) used by FIN6 in persisting POS malware:<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
 ```sh
 #{AV} Management Instrumentation, BFHlpr / Base Filtering Helper, hdmsv c/ Windows Hardware Management Driver, TrueType Fonts Management Service, and LogMeInServer
