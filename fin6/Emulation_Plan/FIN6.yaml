@@ -40,7 +40,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -87,7 +87,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -134,7 +134,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -182,7 +182,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -230,7 +230,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -278,7 +278,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{adfind_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -366,7 +366,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: Windows Credential Editor must exist on disk at specified location (#{wce_exe})
-      prereq_command: if (Test-Path #{wce_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{wce_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -418,7 +418,7 @@
   dependency_executor_name: powershell
   dependencies:
     - description: 7.exe must exist on disk at specified location (#{7_exe})
-      prereq_command: if (Test-Path \#{7_exe}) {exit 0} else {else 1}
+      prereq_command: if (Test-Path \#{7_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{7_exe}"; $zippath = "$parentpath\7.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -479,7 +479,7 @@
     - description: |
         putty.exe must exist on disk at specified location (#{putty_exe})
       prereq_command: |
-        if (Test-Path \#{putty_exe}) {exit 0} else {else 1}
+        if (Test-Path \#{putty_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{putty_exe}"; $zippath = "$parentpath\putty.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -683,7 +683,7 @@
     - description: |
         dnscat2.ps1 must exist on disk at specified location (#{dnscat_ps1})
       prereq_command: |
-        if (Test-Path \#{dnscat_ps1}) {exit 0} else {else 1}
+        if (Test-Path \#{dnscat_ps1}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{dnscat_ps1}"; $zippath = "$parentpath\dnscat2.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
