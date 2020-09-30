@@ -118,7 +118,7 @@
                       "command": {
                         "type": "string"
                       },
-                      "payload": {
+                      "payloads": {
                         "type": "string"
                       }
                     }
