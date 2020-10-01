@@ -1,6 +1,6 @@
 # FIN6 Emulation Plan
 
-This folder contains the core components of the FIN6 emulation plan. Each component is summarized below, and explained in detail in the announcement blog post: [TODO: Link to blog post]
+This folder contains the core components of the FIN6 emulation plan. Each component is summarized below, explained in detail in the recent [blog](https://medium.com/mitre-engenuity/center-releases-fin6-adversary-emulation-plan-775d8c5ebe9b) announcing this emulation plan's release, and the [video walkthrough](https://www.youtube.com/watch?v=n5jeGSOyJzY&feature=youtu.be).
 
 The Operations Flow chains techniques together into a logical flow of the major Steps that commonly occur across FIN6 operations. In the case of FIN6, we describe their Operations in two major Phases:
 
