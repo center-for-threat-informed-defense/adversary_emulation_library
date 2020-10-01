@@ -133,10 +133,20 @@
                     ],
                     "properties": {
                       "command": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The command to be executed for this step."
                       },
                       "payloads": {
-                        "type": "string"
+                        "type": "array",
+                        "description": "All payloads used for this step.",
+                        "minItems": 1,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "cleanup": {
+                        "type": "string",
+                        "description": "A cleanup command that runs after the command in this step."
                       }
                     }
                   }
