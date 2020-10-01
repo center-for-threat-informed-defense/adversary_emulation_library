@@ -1,6 +1,9 @@
 # FIN6.yaml - CALDERA and Atomic style TTPs
 
-- version:
+- emulation_plan_details:
+    id: 123700e5-44c8-4894-a409-6484992c8846
+    adversary_name: FIN6 Adversary Emulation Plan
+    adversary_description: FIN6 is a financially motivated cyber crime group known for stealing credit card data and performing ransomware attacks.
     attack_version: 7.2
     format_version: 1.0
 
@@ -350,6 +353,8 @@
           wce.exe -w -o wce_creds.txt
         payloads: 
         - wce.exe
+        cleanup: |
+          del "#{output_file}" >nul 2>&1
 
   input_arguments:
     output_file:
@@ -568,6 +573,8 @@
       cmd:
         command: |
           wmic /node:"#{node}" process call create #{process_to_execute}
+        cleanup: |
+          wmic /node "#{node}" process where name="#{process_to_execute}" del >nul 2>&1
 
   input_arguments:
     node:
