@@ -10,18 +10,35 @@
     "anyOf": [
       {
         "type": "object",
-        "title": "Version Metadata",
-        "description": "Captures Metadata about the ATT&CK Version and Format Schema (this document).",
+        "title": "Emulation Plan Details",
+        "description": "Captures Metadata about this Plan, ATT&CK Version and Format Schema (this document).",
         "additionalProperties": false,
         "properties": {
-          "version": {
+          "emulation_plan_details": {
             "type": "object",
             "additionalProperties": false,
             "required": [
+              "id",
+              "adversary_name",
+              "adversary_description",
               "attack_version",
               "format_version"
             ],
             "properties": {
+              "id": {
+                "type": "string",
+                "description": "GUID for the Emulation Plan. (RFC 4122)",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+                "examples": [
+                  "e44a39ce-0651-4ddd-8f05-f83aa2ffd657"
+                ]
+              },
+              "adversary_name": {
+                "type": "string"
+              },
+              "adversary_description": {
+                "type": "string"
+              },
               "attack_version": {
                 "type": "number"
               },
