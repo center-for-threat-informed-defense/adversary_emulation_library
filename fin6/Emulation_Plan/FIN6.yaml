@@ -35,7 +35,7 @@
     adfind_url:
       description: Path to download ADFind zip file
       type: URL
-      default: https://joeware.net/freetools/tools/adfind/index.htm
+      default: http://www.joeware.net/downloads/files/AdFind.zip
 
     adfind_zip_hash:
       description: File hash of the ADFind zip file
@@ -83,7 +83,7 @@
     adfind_url:
       description: Path to download ADFind zip file
       type: URL
-      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+      default: http://www.joeware.net/downloads/files/AdFind.zip
 
     adfind_zip_hash:
       description: File hash of the ADFind zip file
@@ -131,7 +131,7 @@
     adfind_url:
       description: Path to download ADFind zip file
       type: URL
-      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+      default: http://www.joeware.net/downloads/files/AdFind.zip
 
     adfind_zip_hash:
       description: File hash of the ADFind zip file
@@ -180,7 +180,7 @@
     adfind_url:
       description: Path to download ADFind zip file
       type: URL
-      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+      default: http://www.joeware.net/downloads/files/AdFind.zip
 
     adfind_zip_hash:
       description: File hash of the ADFind zip file
@@ -229,7 +229,7 @@
     adfind_url:
       description: Path to download ADFind zip file
       type: URL
-      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+      default: http://www.joeware.net/downloads/files/AdFind.zip
 
     adfind_zip_hash:
       description: File hash of the ADFind zip file
@@ -278,7 +278,7 @@
     adfind_url:
       description: Path to download ADFind zip file
       type: URL
-      default: https://joeware.net/downloads/dl.php?download=AdFind.zip
+      default: http://www.joeware.net/downloads/files/AdFind.zip
 
     adfind_zip_hash:
       description: File hash of the ADFind zip file
