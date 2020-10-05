@@ -811,7 +811,7 @@
 - id: 6ffca252-9eb0-4ac0-93dd-35c9e7c6fae0
   name: Copy Kill Scripts
   description: FIN6 utilizes cmd to copy kill scripts to an internal distribution server
-  tactic: lateral_movement
+  tactic: lateral-movement
   technique:
     attack_id: T1021.002
     name: "Remote Services: SMB/Windows Admin Shares"
@@ -946,7 +946,7 @@
 
 - id: c29e9cc7-b34f-46c2-bdbe-a41f757eae24
   name: Execute Ransomware via WMIC
-  description: FIN6 has utilized WMI to execute the ransomeware on intended targets
+  description: FIN6 has utilized WMI to execute the ransomware on intended targets
   tactic: execution
   technique:
     attack_id: T1047
@@ -1015,7 +1015,7 @@
 
 - id: d77838f6-d562-3480-ad29-2cbeee8b7b45
   name: Execute Ransomware via PsExec
-  description: FIN6 has utilized PsExec to execute ransomeware on intended targets
+  description: FIN6 has utilized PsExec to execute ransomware on intended targets
   tactic: execution
   technique:
     attack_id: T1569.002
