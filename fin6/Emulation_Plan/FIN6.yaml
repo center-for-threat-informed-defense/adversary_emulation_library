@@ -2,7 +2,7 @@
 
 - emulation_plan_details:
     id: 123700e5-44c8-4894-a409-6484992c8846
-    adversary_name: FIN6 Adversary Emulation Plan
+    adversary_name: FIN6
     adversary_description: FIN6 is a financially motivated cyber crime group known for stealing credit card data and performing ransomware attacks.
     attack_version: 7.2
     format_version: 1.0
