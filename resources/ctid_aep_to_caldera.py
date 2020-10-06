@@ -47,8 +47,8 @@ __copyright__ = "FUJITSU SYSTEM INTEGRATION LABORATORIES LTD."
 __author__ = "Kazuhisa SHIRAKAMI"
 __author_email__ = "k.shirakami@fujitsu.com"
 __status__ = "prototype"
-__version__ = "1.0.0"
-__date__ = "02 September 2020"
+__version__ = "1.0.1"
+__date__ = "06 September 2020"
 
 
 class AdversaryEmulationPlan:
@@ -104,13 +104,13 @@ async def enable(services):
         path = self.adversary_path(adversary)
         path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
         with open(path, 'w', encoding='utf-8') as f:
-            yaml.dump(profile, stream=f)
+            yaml.dump(profile, stream=f, sort_keys=False)
 
     def save_ability(self, ability):
         path = self.ability_path(ability)
         path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
         with open(path, 'w', encoding='utf-8') as f:
-            yaml.dump([ability], stream=f)
+            yaml.dump([ability], stream=f, sort_keys=False)
 
     def save_script(self, adversary):
         path = self.script_path
