@@ -1,4 +1,5 @@
 import sys
+import re
 import yaml
 from pathlib import Path
 
@@ -47,8 +48,10 @@ __copyright__ = "FUJITSU SYSTEM INTEGRATION LABORATORIES LTD."
 __author__ = "Kazuhisa SHIRAKAMI"
 __author_email__ = "k.shirakami@fujitsu.com"
 __status__ = "prototype"
-__version__ = "1.0.1"
-__date__ = "06 September 2020"
+__version__ = "1.0.2"
+__date__ = "07 September 2020"
+
+
 
 
 class AdversaryEmulationPlan:
@@ -61,6 +64,19 @@ class AdversaryEmulationPlan:
         self.name = emulation_plan_details['adversary_name']
         self.description = emulation_plan_details['adversary_description']
         self.abilities = abilities
+        self.ability_ids = [ability['id'] for ability in abilities]
+        self._adjust_multiline_commands()
+
+    def _adjust_multiline_commands(self):
+        for ability in self.abilities:
+            platforms = ability.get('platforms', {})
+            for platform, executors in platforms.items():
+                for executor, properties in executors.items():
+                    if 'command' not in properties:
+                        continue
+                    joiner = ' && ' if executor == 'cmd' else '; '
+                    command = properties['command'].strip().split('\n')
+                    properties['command'] = joiner.join(command)
 
 
 class CalderaPlugin:
@@ -99,7 +115,7 @@ async def enable(services):
             'id': adversary.id,
             'name': adversary.name,
             'description': adversary.description,
-            'atomic_ordering': [ability['id'] for ability in adversary.abilities]
+            'atomic_ordering': adversary.ability_ids,
         }
         path = self.adversary_path(adversary)
         path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
