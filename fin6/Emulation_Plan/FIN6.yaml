@@ -621,7 +621,7 @@
       command: |
         wmic /node: #{node} process call create #{process_to_execute}
       cleanup_command: |
-        wmic /node: #{node} process where name=#{process_to_execute} del >nul 2>&1
+        wmic /node: #{node} process where name="#{process_to_execute}" delete >nul 2>&1
 
 # Phase 2: Persistence - Point of Sale (POS)
 
