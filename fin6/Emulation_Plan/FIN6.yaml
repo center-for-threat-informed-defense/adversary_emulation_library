@@ -796,7 +796,7 @@
     windows:
       cmd:
         command: |
-          start copy xaa.bat \\#{internal_IP}\c$\windows\temp\
+          start copy sss.exe \\#{internal_IP}\c$\windows\temp\
 
   input_arguments:
     internal_IP:
