@@ -730,20 +730,14 @@
       type: string
       default: 127.0.0.1
 
-  dependency_executor_name: dnscat2.ps1
+  dependency_executor_name: powershell
   dependencies:
     - description: |
         dnscat2.ps1 must exist on disk at specified location (#{dnscat_ps1})
       prereq_command: |
         if (Test-Path "#{dnscat_ps1}") {exit 0} else {exit 1}
       get_prereq_command: |
-        $parentpath = Split-Path "#{dnscat_ps1}"; $zippath = "$parentpath\dnscat2.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{dnscat2_url}" $zippath "#{dnscat2_hash}") {
-        Expand-Archive $zippath $parentpath\dnscat2 -Force
-        Move-Item $parentpath\dnscat2\dnscat2.exe "#{dnscat_ps1}"
-        Remove-Item $zippath, $parentpath\dnscat2 -Recurse
-        }
+        Invoke-WebRequest "#{dnscat2_url}" -OutFile "#{dnscat_ps1}"
 
   executors:
     - name: powershell
