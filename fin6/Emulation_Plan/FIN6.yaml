@@ -435,42 +435,44 @@
     windows:
       cmd:
         command: |
-          7.exe a -mx3 ad.7z ad_*
+          7za.exe a -mx3 ad.7z ad_*
         payloads: 
-        - 7.exe
+        - 7za.exe
 
   input_arguments:
-    7_exe:
-      description: Path of 7.exe
+    7zip_exe:
+      description: Path of 7za.exe
       type: Path
+      default:
+        C:\Windows\Temp
 
-    7_url:
-      description: Path to download 7zip file
+    7zip_url:
+      description: Path to download 7za zip file
       type: URL
-      default: https://7-zip.org/a/7z1900-x64.exe
+      default: https://www.7-zip.org/a/7za920.zip
 
-    7_hash:
-      description: File hash of the 7zip file
+    7zip_hash:
+      description: File hash of the 7za zip file
       type: String
 
   dependency_executor_name: powershell
   dependencies:
-    - description: 7.exe must exist on disk at specified location (#{7_exe})
+    - description: 7zip.exe must exist on disk at specified location ("#{7zip_exe}")
       prereq_command: |
-        if (Test-Path "#{7_exe}") {exit 0} else {exit 1}
+        if (Test-Path "#{7zip_exe}") {exit 0} else {exit 1}
       get_prereq_command: |
-        $parentpath = Split-Path "#{7_exe}"; $zippath = "$parentpath\7.zip"
+        $parentpath = Split-Path "#{7zip_exe}"; $zippath = "$parentpath\7za920.zip"
         IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{7_url}" $zippath "#{7_hash}") {
+        if(Invoke-WebRequestVerifyHash "#{7zip_url}" $zippath "#{7zip_hash}") {
         Expand-Archive $zippath $parentpath\7 -Force
-        Move-Item $parentpath\7\7.exe "#{7_exe}"
-        Remove-Item $zippath, $parentpath\7 -Recurse
+        Move-Item $parentpath\7za920\7za.exe "#{7zip_exe}"
+        Remove-Item $zippath, $parentpath\7za920 -Recurse
         }
 
   executors:
     - name: command_prompt
       command: |
-        "#{7_exe}" a -mx3 ad.7z ad_*"
+        "#{7zip_exe}" a -mx3 ad.7z ad_*"
 
 # Phase 1/2: Exfiltration
 
