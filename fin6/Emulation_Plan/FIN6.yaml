@@ -721,10 +721,6 @@
       type: URL
       default: https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1
 
-    dnscat2_hash:
-      description: File hash of the dnscat2 .ps1 file
-      type: String
-
     dnscat2_server:
       description: IP address
       type: string
