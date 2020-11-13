@@ -78,6 +78,17 @@ def test_command_builder(yaml_path):
 
     bad_entries = {}
 
+    def flag_bad_entries(step, section, cmd, input_args, entry_map):
+        """Replaces #{variable} with value.
+        Checks for any undefined variables."""
+        for argument_name, argument_value in input_args.items():
+            cmd = cmd.replace("#{%s}" % argument_name, argument_value)
+
+        if re.findall(r"#{.*?}", cmd):
+            if section not in entry_map:
+                entry_map[section] = []
+            entry_map[section].append((step["id"], cmd))
+
     for item in yaml_object:
         input_arguments = {}
 
@@ -86,47 +97,28 @@ def test_command_builder(yaml_path):
 
         for executor in item.get("executors", []):
             executor_cmd = executor["command"]
-            for arg, val in input_arguments.items():
-                executor_cmd = executor_cmd.replace("#{%s}" % arg, val)
-            if re.findall(r"#{.*?}", executor_cmd):
-                if "executors" not in bad_entries:
-                    bad_entries["executors"] = []
-                bad_entries["executors"].append((item["id"], executor_cmd))
+            cleanup_cmd = executor.get("cleanup_command", "")
+
+            flag_bad_entries(item, "executors", executor_cmd, input_arguments, bad_entries)
+            flag_bad_entries(item, "executors", cleanup_cmd, input_arguments, bad_entries)
 
         for dependency in item.get("dependencies", []):
             prereq_cmd = dependency["prereq_command"]
-            get_prereq_cmd = dependency.get("get_prereq_command", "")
+            get_prereq_cmd = dependency.get("get_prereq_cmd", "")
 
-            for arg, val in input_arguments.items():
-                prereq_cmd = prereq_cmd.replace("#{%s}" % arg, val)
-
-            for arg, val in input_arguments.items():
-                get_prereq_cmd = get_prereq_cmd.replace("#{%s}" % arg, val)
-
-            if re.findall(r"#{.*?}", prereq_cmd):
-                if "dependencies" not in bad_entries:
-                    bad_entries["dependencies"] = []
-                bad_entries["dependencies"].append((item["id"], prereq_cmd))
-
-            if re.findall(r"#{.*?}", get_prereq_cmd):
-                if "dependencies" not in bad_entries:
-                    bad_entries["dependencies"] = []
-                bad_entries["dependencies"].append((item["id"], get_prereq_cmd))
+            flag_bad_entries(item, "dependencies", prereq_cmd, input_arguments, bad_entries)
+            flag_bad_entries(item, "dependencies", get_prereq_cmd, input_arguments, bad_entries)
 
         for platform, platform_value in item.get("platforms", {}).items():
             for os_name, os_value in platform_value.items():
                 cmd_value = os_value["command"]
+                cleanup_value = os_value.get("cleanup", "")
 
-                for arg, val in input_arguments.items():
-                    cmd_value = cmd_value.replace("#{%s}" % arg, val)
-
-                if re.findall(r"#{.*?}", cmd_value):
-                    if "platforms" not in bad_entries:
-                        bad_entries["platforms"] = []
-                    bad_entries["platforms"].append((item["id"], cmd_value))
+                flag_bad_entries(item, "platforms", cmd_value, input_arguments, bad_entries)
+                flag_bad_entries(item, "platforms", cleanup_value, input_arguments, bad_entries)
 
     if bad_entries:
-        pprint.pprint(bad_entries, indent=4)
+        pprint.pprint(bad_entries)
 
     assert not bad_entries
 
