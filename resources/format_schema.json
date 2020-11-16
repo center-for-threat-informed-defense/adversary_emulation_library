@@ -62,7 +62,8 @@
           "technique",
           "procedure_group",
           "procedure_step",
-          "platforms"
+          "platforms",
+          "executors"
         ],
         "properties": {
           "id": {
