@@ -470,7 +470,7 @@
       $parentpath = Split-Path "#{7zip_exe}"; $zippath = "$parentpath\7za920.zip"
       IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
       if(Invoke-WebRequestVerifyHash "#{7zip_url}" $zippath "#{7zip_hash}") {
-      Expand-Archive $zippath $parentpath\7 -Force
+      Expand-Archive $zippath $parentpath\7za920 -Force
       Move-Item $parentpath\7za920\7za.exe "#{7zip_exe}"
       Remove-Item $zippath, $parentpath\7za920 -Recurse
       }
