@@ -502,7 +502,7 @@
     pscp_port:
       description: Connection port for use with pscp
       type: String
-      default: 22
+      default: "22"
 
     pscp_exfil_files:
       description: Files to be exfiltrated
