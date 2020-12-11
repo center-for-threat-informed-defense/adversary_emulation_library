@@ -30,7 +30,7 @@ Within each emulation plan, the operational flow provides a high-level summary o
 
 The content to execute the scenario(s) is broken down into step-by-step procedures provided in both human and machine-readable formats. Scenarios can be executed end-to-end or as individual tests. The human-readable formats provide additional relevant background where possible as well as any setup prerequisites, while the machine-readable format is designed to be programmatically parsed (ex: read, reformatted, and ingested into an automated agent, such as [CALDERA](https://github.com/mitre/caldera) and/or breach simulation frameworks).
 
-Detailed documenation on our emulation plan structure can be found [here.](/emulation_plan_structure.md). 
+Detailed documenation for our emulation plan structure can be found [here.](/emulation_plan_structure.md) 
 
 ## Future Work
 
