@@ -30,6 +30,8 @@ Within each emulation plan, the operational flow provides a high-level summary o
 
 The content to execute the scenario(s) is broken down into step-by-step procedures provided in both human and machine-readable formats. Scenarios can be executed end-to-end or as individual tests. The human-readable formats provide additional relevant background where possible as well as any setup prerequisites, while the machine-readable format is designed to be programmatically parsed (ex: read, reformatted, and ingested into an automated agent, such as [CALDERA](https://github.com/mitre/caldera) and/or breach simulation frameworks).
 
+Detailed documenation on our emulation plan structure can be found [here.](/emulation_plan_structure.md). 
+
 ## Future Work
 
 The threat landscape changes every day, as new groups/malware emerge and known adversaries adapt and evolve. The Center will continue to populate and maintain this library to match this growth curve through dedicated research efforts that aim to either create or update plans based on a specific adversary.
@@ -38,7 +40,7 @@ The threat landscape changes every day, as new groups/malware emerge and known a
 
 Please submit issues for any technical questions/concerns or contact ctid@mitre-engenuity.org directly for more general inquiries.
 
-Also see the guidance for contributors if are interested in [contributing.](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/CONTRIBUTING.md)
+Also see the guidance for contributors if are interested in [contributing.](/CONTRIBUTING.md)
 
 
 ## Liability / Responsible Usage
