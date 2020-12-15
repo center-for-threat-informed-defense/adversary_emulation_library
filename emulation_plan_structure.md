@@ -22,4 +22,4 @@ We have also defined an additional, optional component of a **Phase** to capture
 
 ![](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/structural-documentation/notional_diagram_phases.PNG)
 
-In this case, the second Phase has two alternative Step options (Steal or Destroy Data).
+In this case, the second Phase has two alternative Step options (*Steal Data* or *Destroy Data*).
