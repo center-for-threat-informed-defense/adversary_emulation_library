@@ -3,8 +3,8 @@
 Each emulation plan is built based on the same structural components:
 
 - **Scenario:** An end-to-end, emulated campaign typically spanning (pre-)compromise behaviors through the adversary achieving their operational objective(s)
-- **Step:** A grouping of behaviors related to a specific adversary goal during a scenario, typically align at the same level of abstraction as [ATT&CK Tactics](https://attack.mitre.org/tactics/)
-- **Sub-Step / Procedure:** Each specific behavior to be executed during the emulation, typically align at the same level of abstraction as [ATT&CK Techniques](https://attack.mitre.org/techniques/)
+- **Step:** A grouping of behaviors related to a specific adversary goal within a scenario, typically aligns at the same level of abstraction as [ATT&CK Tactics](https://attack.mitre.org/tactics/)
+- **Sub-Step / Procedure:** Each specific behavior to be executed during the emulation, typically aligns at the same level of abstraction as [ATT&CK Techniques](https://attack.mitre.org/techniques/)
 
 The following notional operations flow diagram outlines this structure:
 
