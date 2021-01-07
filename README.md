@@ -4,6 +4,8 @@ In collaboration with Center Participants, the [Center for Threat-Informed Defen
 
 Also see our recent blog on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b).
 
+< TODO - INSERT TABLE listing emulation plans here >
+
 ## Philosophy 
 
 These adversary emulation plans are based on known-adversary behaviors and designed to empower red teams to manually emulate a specific threat actor in order to test and evaluate defensive capabilities from a threat-informed perspective. This approach empowers defenders to operationalize cyber threat intelligence to better understand and combat real-world adversaries. Rather than focusing on static signatures, these intelligence-driven emulation plans provide a repeatable means to test and tune defensive capabilities and products against the evolving Tactics, Techniques, and Procedures (TTPs) of threat actors and malware.
