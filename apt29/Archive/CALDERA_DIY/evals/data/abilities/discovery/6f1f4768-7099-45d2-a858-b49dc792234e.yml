@@ -1,0 +1,24 @@
+---
+
+- id: 6f1f4768-7099-45d2-a858-b49dc792234e
+  name: 4.C - Loading Stage-2 & Performing Discovery 
+  description: Load Stage-2 from Modified Sysinternals Toolset
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysInternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          if (!(test-path ".\readme.ps1")) {
+            Move-Item .\readme.txt readme.ps1 -Force;
+          }
+          . .\readme.ps1;
+          Invoke-Discovery;

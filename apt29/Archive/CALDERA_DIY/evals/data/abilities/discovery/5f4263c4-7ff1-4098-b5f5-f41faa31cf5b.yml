@@ -1,0 +1,14 @@
+---
+
+- id: 5f4263c4-7ff1-4098-b5f5-f41faa31cf5b
+  name: 4.B.1 - System Network Configuration Discovery (T1016)
+  description: The netsh utility is executed via cmd to enumerate local firewall configuration information.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: System Network Configuration Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          netsh advfirewall show allprofiles

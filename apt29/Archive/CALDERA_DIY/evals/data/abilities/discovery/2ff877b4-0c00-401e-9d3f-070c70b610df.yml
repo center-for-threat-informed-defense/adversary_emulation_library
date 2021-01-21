@@ -1,0 +1,14 @@
+---
+
+- id: 2ff877b4-0c00-401e-9d3f-070c70b610df
+  name: 2.D.1 - System Service Discovery (T1007)
+  description: The sc utility is executed via cmd to enumerate local active services.
+  tactic: discovery
+  technique:
+    attack_id: T1007
+    name: System Service Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          sc query

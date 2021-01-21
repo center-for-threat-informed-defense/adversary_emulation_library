@@ -1,0 +1,37 @@
+---
+- id: 4bedbd9b-a570-4f9f-b78a-2f7f99ad5e92
+  name: 10.A.3 - Artifact Cleanup
+  description: Delete file artifacts left from the operation.
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1107
+    name: File Deletion
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+            Remove-Item -Path "$env:USERPROFILE\Downloads\*.pfx" -Force;
+            Remove-Item -Path "$env:USERPROFILE\Downloads\*.bmp" -Force;
+            Remove-Item -Path "$env:USERPROFILE\Downloads\*.png" -Force;
+            if (test-path -path "$env:APPDATA\OfficeSupplies.7z") { 
+                Remove-Item -Path "$env:APPDATA\OfficeSupplies.7z" -Force; write-host "[+] Successfully removed OfficeSupplies.7z";
+            } else { 
+                write-host "[!] File did not exist to be removed!";
+            }
+
+            if (get-job -name "Keystrokes" -ErrorAction SilentlyContinue) { 
+                Remove-Job -Name "Keystrokes"; 
+                if ($?) { 
+                    write-host "[+] Job \"Keystrokes\" was remove.";
+                } 
+            } else { 
+                write-host "[!] Job \"Keystrokes\" did not exist.";
+            }
+
+            if (get-job -Name "Screenshot" -ErrorAction SilentlyContinue) { 
+                Remove-Job -Name "Screenshot" -Force;
+                write-host "[+] Job \"screenshot\" was removed.";
+            } else { 
+                write-host "[*] Job \"screenshot\" does not exist, thus was not removed."; 
+            }
+            remove-item upload.ps1 -Force;

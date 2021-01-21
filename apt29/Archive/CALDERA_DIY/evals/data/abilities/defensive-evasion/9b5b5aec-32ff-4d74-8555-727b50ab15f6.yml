@@ -1,0 +1,22 @@
+---
+
+- id: 9b5b5aec-32ff-4d74-8555-727b50ab15f6
+  name: 4.B.2 - Artifact Cleanup - Delete Files
+  description: Cleanup files related to Operation
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1107
+    name: File Deletion
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysInternalsSuite";)) {
+            write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          gci $env:userprofile\Desktop;
+          .\sdelete64.exe /accepteula "$env:USERPROFILE\Desktop\‮cod.3aka3.scr";
+          .\sdelete64.exe /accepteula "$env:APPDATA\Draft.Zip";
+          .\sdelete64.exe /accepteula "$env:USERPROFILE\Downloads\SysInternalsSuite.zip";

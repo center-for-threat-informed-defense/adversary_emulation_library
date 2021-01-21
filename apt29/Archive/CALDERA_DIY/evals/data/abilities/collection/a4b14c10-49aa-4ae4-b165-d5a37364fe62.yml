@@ -1,0 +1,23 @@
+---
+- id: a4b14c10-49aa-4ae4-b165-d5a37364fe62
+  name: 7.A.0 - Staging files for PowerShell module imports
+  description: Renaming psversion.txt to psversion.txt to be imported
+  tactic: collection
+  technique:
+    attack_id: T1036
+    name: Masquerading
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+
+          if (! $(test-path -path "C:\Program Files\SysInternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          if (test-path -path ".\psversion.txt" ) {
+            move-item .\psversion.txt psversion.ps1 -Force;
+          }
+            write-host "[+] File psversion.ps1 staged to be imported."

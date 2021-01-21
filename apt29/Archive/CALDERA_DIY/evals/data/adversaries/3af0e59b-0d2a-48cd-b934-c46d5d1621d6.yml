@@ -1,0 +1,9 @@
+---
+
+id: 3af0e59b-0d2a-48cd-b934-c46d5d1621d6
+name: ATT&CK Eval APT3 - 5.B-8.A
+description: Access Token Manipulation, Discovery for Lateral Movement, Persistence, and Discovery for Collection
+visible: 1
+phases:
+  1:
+    - 03afada1-1714-408f-bde5-f528b91dc89d

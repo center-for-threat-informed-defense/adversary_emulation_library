@@ -1,0 +1,16 @@
+---
+
+- id: 1c8552c7-f7ed-4523-b640-72d65af5f855
+  name: 16.A - Enumerate Domain Controller
+  description: Get domain controller and current user SID for the domain
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: Remote System Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\powerview.ps1;
+          get-netdomaincontroller;
+        payload: powerview.ps1

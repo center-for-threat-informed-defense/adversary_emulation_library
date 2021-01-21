@@ -1,0 +1,13 @@
+description: MITRE Evals APT-29 kill chain execution for day 1.B - lateral movement
+id: 7916aaa3-f05d-453a-b632-f0f73b0865ce
+name: ATT&CK Eval APT29 - Day 1.B - Lateral Movement
+visible: 1
+phases:
+   1:
+    - 08e57385-dbce-4850-8bb7-589ef79465ab # PowerShell collection
+
+   2:
+    - 2d18c8ec-4593-49dc-9bf4-11d0673d6ae6 # File upload
+
+   3:
+    - 208b021b-c79a-4176-8ad1-3af99ed50c6f # Artifact cleanup, break out username into fact after testing

@@ -1,0 +1,18 @@
+---
+- id: a42be479-fc26-4d7c-9e63-7a9b74e4c8d2
+  name: 16.B - Enumerate Domain SID (T1033)
+  description: Get domain user SID 
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: System Owner/User Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepSixteen_SID.ps1;
+          siduser;
+        payload: stepSixteen_SID.ps1
+        parsers:
+          plugins.evals.app.parsers.sid:
+            - source: target.sid

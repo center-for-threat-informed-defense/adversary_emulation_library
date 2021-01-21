@@ -1,0 +1,50 @@
+description: MITRE Evals APT-29 kill chain execution day 2.A
+id: 6dc5b558-c7bd-4835-860b-50e003399f8d
+name: ATT&CK Eval APT29 - Day 2
+visible: 1
+phases:
+  1: #Setup
+    - 865b6ad9-ba59-435a-bd8f-641052fc077a
+
+  2: # day 2 - 11
+    - e506f811-884d-4992-aacb-514b33a0324f # .lnk payload
+
+  3: # day 2 - 12
+    - 4a2ad84e-a93a-4b2e-b1f0-c354d6a41278 # Timestomp 
+    - f9c0b150-822f-497b-ad6d-187f24561e9a # DetectAV
+    - 2b5a72b1-01e4-48ae-98b0-2570a7894371 # Detect Software
+
+  4: # day 2 - 13
+    - 0cfadbcb-ec21-44ae-adb7-9a23176dd620 # comp 
+    - 96140694-6d13-40b6-9553-0e63533469f3 # domain
+    - f320eebd-e75b-4194-b529-79e64ad0b9ee # user triage
+    - a34ab8f2-a106-41fb-af0b-cf5382bd18ae # pslist
+
+  5: # day 2 - 14
+    - 5226e5dc-fc28-43b7-a679-0db49d520402 # stdctl UAC bypass
+    - 1dba454c-0e4f-4fe0-8bc9-b17e8c5c9a24 # Staging m.exe
+    - 4ef6009d-2d62-4bb4-8de9-0458df2e9567 # Dumping credentials via wmidump (Mimikatz)
+
+  6: # day 2 - 15
+    - 43aad2d6-d16a-4adb-aa2b-9510a3be4c52 # WMI persistence technique
+
+  7: # day 2 - 16
+    - 1c8552c7-f7ed-4523-b640-72d65af5f855 # Enumerate Domain Controller 
+    - a42be479-fc26-4d7c-9e63-7a9b74e4c8d2 # Enumerate Domain SID
+    - acecc8f7-18c2-41fd-87bc-39ffd644e4e9 # Copy winrm to remote host
+
+  8: # day 2 - 17
+    - b1dcc53a-c86c-46ba-8a3d-e1da74a8db3c # Email collection
+    - fc231955-774f-442c-ac0e-e74dfda50c5c # Document collection
+
+  9: # day 2 - 18
+    - 4840d6dd-da13-401a-be46-05db56f4e1e0 # Mount netshare for exfil
+
+  10: # day 2 - 19
+    - f820b93d-6176-4a72-a138-a70b0b549c49 # Data Wiping
+
+  11: # day 2 - 20A
+    - 267bad86-3f06-49f1-9a3e-6522f2a61e7a # Cred/Ticket Collection
+
+  12: # day 2 - 20B
+    - afb8d8f7-d059-4825-95ae-c5727e2db320 # Restart to trigger persistance

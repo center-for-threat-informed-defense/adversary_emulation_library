@@ -1,0 +1,17 @@
+---
+
+- id: 5ff80022-8d85-410b-b868-6c7565b267e5
+  name: 3.B - Registry Cleanup for UAC Bypass Technique
+  description: Delete registry entries post-UAC bypass.
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1112
+    name: Modify Registry
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Remove-Item -Path HKCU:\Software\Classes\Folder* -Recurse -Force;
+          if (!(test-path -path HKCU:\Software\Classes\Folder)) {
+            write-host "[+] Reg keys removed!";
+           }

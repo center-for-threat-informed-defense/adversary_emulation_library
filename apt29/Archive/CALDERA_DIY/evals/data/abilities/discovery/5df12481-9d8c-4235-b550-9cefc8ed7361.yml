@@ -1,0 +1,16 @@
+---
+
+- id: 5df12481-9d8c-4235-b550-9cefc8ed7361
+  name: 2.C.1 - Process Discovery (T1057)
+  description: API call(s) are executed to enumerate local running processes.
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\ps.ps1 -Verbose -Force;
+          ProcessList
+        payload: ps.ps1

@@ -1,0 +1,16 @@
+---
+
+- id: 0b1841bd-ef8b-475c-bce7-8fcb2860984a
+  name: 8.D.1 - Screen Capture (T1113)
+  description: Native API call(s) were used to collect a screenshot.
+  tactic: collection
+  technique:
+    attack_id: T1113
+    name: Screen Capture
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\Get-Screenshot.ps1 -Verbose -Force;
+          Get-Screenshot;
+        payload: Get-Screenshot.ps1

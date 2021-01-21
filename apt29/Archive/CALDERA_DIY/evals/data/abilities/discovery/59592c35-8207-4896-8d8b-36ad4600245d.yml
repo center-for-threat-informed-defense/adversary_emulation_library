@@ -1,0 +1,14 @@
+---
+
+- id: 59592c35-8207-4896-8d8b-36ad4600245d
+  name: 4.A.1 - Remote System Discovery (T1018)
+  description: The net utility is executed via cmd to enumerate DCs within the domain
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: Remote System Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c net group "Domain Controllers" /domain

@@ -1,0 +1,14 @@
+---
+
+- id: 35d95b64-c1f8-4ac7-a2f2-8959218239cd
+  name: 2.B.1 - System Owner / User Discovery (T1033)
+  description: The native echo command is executed via cmd to enumerate local environment variables associated with current user and domain.
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: System Owner/User Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          echo %USERDOMAIN%\%USERNAME%

@@ -1,0 +1,14 @@
+---
+
+- id: d5170a60-3bdc-44e0-9870-a38db5c0cf81
+  name: 9.A.1 - File and Directory Discovery (T1083)
+  description: PowerShell's Get-ChildItem alias 'ls' is used to enumerate files in a remote file share.
+  tactic: discovery
+  technique:
+    attack_id: T1083
+    name: File and Directory Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          ls #{remote.file.share}

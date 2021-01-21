@@ -1,0 +1,16 @@
+---
+- id: c4a59e39-53b0-4ace-9528-8ff052752ece
+  name: 8.A.2 - Identifying current user on other machines
+  description: Custom PowerShell script to perform AD triage for domain bound computers. 
+  tactic: execution
+  technique:
+    attack_id: T1086
+    name: PowerShell
+  platforms:
+    windows:
+      psh:
+        command: |
+            Invoke-Command -ComputerName "$(hostname)" -ScriptBlock { Get-Process -IncludeUserName | Select-Object UserName,SessionId | Where-Object { $_.UserName -like "*\$env:USERNAME" } | Sort-Object SessionId -Unique } | Select-Object UserName,SessionId -Last 1;
+        parsers:
+          plugins.evals.app.parsers.sessionid:
+            - source: user.session.id

@@ -1,0 +1,14 @@
+---
+
+- id: ee08a427-1e1d-4d8a-aeb1-978a7fcf9087
+  name: 2.A.1 - System Network Configuration Discovery (T1016)
+  description: The ipconfig utility is executed via cmd to enumerate local TCP/IP network configuration information.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: System Network Configuration Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          ipconfig /all
