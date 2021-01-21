@@ -2,7 +2,7 @@
 
 ## How to contribute
 
-Thanks for contributing to the FIN6 Adversary Emulation Plan!
+Thanks for contributing to the Adversary Emulation Library!
 
 You are welcome to comment on issues, open new issues, and open pull requests.
 
