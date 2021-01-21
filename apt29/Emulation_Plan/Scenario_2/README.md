@@ -28,7 +28,7 @@ APT29 operations have been separated into two scenarios, with steps and granular
 
 ## Pre-requisites
 
-Prior to beginning the following emulation Scenario, ensure you have the proper infrastructure requirements and configuration in place as stated in the [Scenario 2 Infrastruction](/Emulation_Plan/Scenario_2/Infrastructure.md) documentation.
+Prior to beginning the following emulation Scenario, ensure you have the proper infrastructure requirements and configuration in place as stated in the [Scenario 2 Infrastructure](/apt29/Emulation_Plan/Scenario_2/Infrastructure.md) documentation.
 
 ---
 

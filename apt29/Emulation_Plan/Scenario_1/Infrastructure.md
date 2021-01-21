@@ -41,9 +41,9 @@ This methodology assumes the following static IP address configurations:
 
 - The payloads are customized variants of reverse shells from Pupy RAT and Metasploit.
 
-- Pre-compiled payloads are available in the [resources](/Resources) directory; however, they are configured to connect back to static IP addresses 192.168.0.5 and 192.168.0.4.
+- Pre-compiled payloads are available in the [resources](/apt29/Resources) directory; however, they are configured to connect back to static IP addresses 192.168.0.5 and 192.168.0.4.
 
-- If you would like to build the payloads yourself, please see [payload_configs.md](/Resources/Scenario_1/payload_configs.md) for further instructions.
+- If you would like to build the payloads yourself, please see [payload_configs.md](/apt29/Resources/Scenario_1/payload_configs.md) for further instructions.
 
 ### Setup Redirector: 192.168.0.5 (or the value used for the Redirector IP)
 
@@ -90,13 +90,13 @@ sudo socat TCP-LISTEN:443,fork TCP:192.168.0.4:443 & sudo socat TCP-LISTEN:1234,
 3. Set UAC to never notify (<https://articulate.com/support/article/how-to-turn-user-account-control-on-or-off-in-windows-10>)
 4. Verify user has read/write/execute permissions in the C:\Windows\Temp directory
 5. Install Google Chrome (https://www.google.com/chrome/); cache credentials in Chrome password manager
-6. Import-PFX certificate found in [shockwave.local.pfx](/Resources/Scenario_1/shockwave.local.pfx). Instructions below:
+6. Import-PFX certificate found in [shockwave.local.pfx](/apt29/Resources/Scenario_1/shockwave.local.pfx). Instructions below:
 
 #### Import PFX Certificate
 
 Step 6.B of this emulation models [theft of Private Keys](https://attack.mitre.org/techniques/T1552/004/).
 
-1. Copy the PFX certificate located in the [shockwave.local.pfx](/Resources/Scenario_1/shockwave.local.pfx) file to the Windows victims.
+1. Copy the PFX certificate located in the [shockwave.local.pfx](/apt29/Resources/Scenario_1/shockwave.local.pfx) file to the Windows victims.
 
 2. Import the certificate using PowerShell:
 
@@ -106,7 +106,7 @@ Import-PfxCertificate -Exportable -FilePath "shockwave.local.pfx" -CertStoreLoca
 
 #### Add RTLO character and place rcs.3aka3.doc on Windows Victim-1
 
-* See [payload_configs.md](/Resources/Scenario_1/payload_configs.md) for instructions on how to update [cod.3aka3.scr](/Resources/Scenario_1/cod.3aka3.scr)
+* See [payload_configs.md](/apt29/Resources/Scenario_1/payload_configs.md) for instructions on how to update [cod.3aka3.scr](/apt29/Resources/Scenario_1/cod.3aka3.scr)
 
 ---
 

@@ -21,68 +21,68 @@ In their smaller more targeted campaigns, APT29 has utilized a different toolset
 
 #### The following behaviors are in scope for an emulation of actions attributed to APT29 as referenced by [MITRE ATT&CK](https://attack.mitre.org/groups/G0016/).
 
-![/Attack_Layers/APT29_Scenario1.png](/Attack_Layers/APT29_G0016.png)
+![/Attack_Layers/APT29_Scenario1.png](/apt29/Attack_Layers/APT29_G0016.png)
 
 
 ## [Scenario 1](/Emulation_Plan/Scenario_1/README.md)
 
 #### The following behaviors are in scope for an emulation of actions attributed to APT29, as implemented in Scenario 1, in the [referenced reporting](#references).
 
-![/Attack_Layers/APT29_Scenario1.png](/Attack_Layers/APT29_Scenario1.png)
+![/Attack_Layers/APT29_Scenario1.png](/apt29/Attack_Layers/APT29_Scenario1.png)
 
 ## [Scenario 2](/Emulation_Plan/Scenario_2/README.md)
 
 #### The following behaviors are in scope for an emulation of actions attributed to APT29, as implemented in Scenario 2, in the [referenced reporting](#references).
 
-![/Attack_Layers/APT29_Scenario2.png](/Attack_Layers/APT29_Scenario2.png)
+![/Attack_Layers/APT29_Scenario2.png](/apt29/Attack_Layers/APT29_Scenario2.png)
 
 ## [CosmicDuke](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0050%2FS0050-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using CosmicDuke, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/CosmicDuke_S0050.png](/Attack_Layers/CosmicDuke_S0050.png)
+![/Attack_Layers/CosmicDuke_S0050.png](/apt29/Attack_Layers/CosmicDuke_S0050.png)
 
 ## [MiniDuke](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0051%2FS0051-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using MiniDuke, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/MiniDuke_S0051.png](/Attack_Layers/MiniDuke_S0051.png)
+![/Attack_Layers/MiniDuke_S0051.png](/apt29/Attack_Layers/MiniDuke_S0051.png)
 
 ## [SeaDuke](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0053%2FS0053-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using SeaDuke, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/SeaDuke_S0053.png](/Attack_Layers/SeaDuke_S0053.png)
+![/Attack_Layers/SeaDuke_S0053.png](/apt29/Attack_Layers/SeaDuke_S0053.png)
 
 ## [CozyCar](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0046%2FS0046-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using CozyCar, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/CozyCar_S0046.png](/Attack_Layers/CozyCar_S0046.png)
+![/Attack_Layers/CozyCar_S0046.png](/apt29/Attack_Layers/CozyCar_S0046.png)
 
 ## [HammerToss](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0037%2FS0037-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using HammerToss, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/HAMMERTOSS_S0037.png](/Attack_Layers/HAMMERTOSS_S0037.png)
+![/Attack_Layers/HAMMERTOSS_S0037.png](/apt29/Attack_Layers/HAMMERTOSS_S0037.png)
 
 ## [PowerDuke](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0139%2FS0139-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using PowerDuke, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/HAMMERTOSS_S0037.png](/Attack_Layers/PowerDuke_S0139.png)
+![/Attack_Layers/HAMMERTOSS_S0037.png](/apt29/Attack_Layers/PowerDuke_S0139.png)
 
 ## [POSHSPY](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0150%2FS0150-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using POSHSPY, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/HAMMERTOSS_S0037.png](/Attack_Layers/POSHSPY_S0150.png)
+![/Attack_Layers/HAMMERTOSS_S0037.png](/apt29/Attack_Layers/POSHSPY_S0150.png)
 
 ## [CloudDuke]()
 
 #### The following behaviors are in scope for an emulation of actions performed by APT29 using CloudDuke, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/HAMMERTOSS_S0037.png](/Attack_Layers/CloudDuke_S0054.png)
+![/Attack_Layers/HAMMERTOSS_S0037.png](/apt29/Attack_Layers/CloudDuke_S0054.png)
 
 ---
 ## Software

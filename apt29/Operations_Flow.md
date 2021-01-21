@@ -1,10 +1,10 @@
 # APT29 Operations Flow
 
-Please see the formal [APT29 Intelligence Summary](/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
+Please see the formal [APT29 Intelligence Summary](/apt29/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
 
 ---
 
-![/Emulation_Plan/OpFlow_Diagram.png](/Emulation_Plan/OpFlow_Diagram.png)
+![/Emulation_Plan/OpFlow_Diagram.png](/apt29/Emulation_Plan/OpFlow_Diagram.png)
 
 ---
 

