@@ -1,0 +1,14 @@
+---
+
+- id: 144b1384-5060-494f-80eb-91772695cdf3
+  name: 2.D.2 - System Service Discovery (T1007)
+  description: The net utility is executed via cmd to enumerate local active services.
+  tactic: discovery
+  technique:
+    attack_id: T1007
+    name: System Service Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net start

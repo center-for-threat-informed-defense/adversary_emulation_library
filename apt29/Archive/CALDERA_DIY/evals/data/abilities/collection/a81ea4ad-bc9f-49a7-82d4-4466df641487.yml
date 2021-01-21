@@ -1,0 +1,21 @@
+---
+
+- id: a81ea4ad-bc9f-49a7-82d4-4466df641487
+  name: 7.A.1 - Screen Capturing
+  description: Load custom PowerShell module and take screenshots.
+  tactic: collection
+  technique:
+    attack_id: T1113
+    name: Screen Capture
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite\psversion.ps1";)) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite\psversion.ps1 does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          . .\psversion.ps1;
+          Invoke-ScreenCapture; Start-Sleep -Seconds 3; View-Job -JobName "Screenshot";

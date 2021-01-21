@@ -1,0 +1,19 @@
+---
+- id: ee4c2eab-be57-434c-a32c-14b77360301a
+  name: 7.A.2 - Automated Collection (T1119) - Clipboard (T1115)
+  description: Get contents of clipboard
+  tactic: collection
+  technique:
+    attack_id: T1115
+    name: Clipboard Data
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          $clip_data=get-clipboard;
+          if ($clip_data.Length -gt 0) {
+            write-host "[+] Clipboard data obtained!\n";
+            write-host $clip_data;
+          } else {
+            write-host "[!] No clipboard data available!\n";
+          }

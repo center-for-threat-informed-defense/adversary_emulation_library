@@ -1,0 +1,17 @@
+---
+- id: 00446217-53ca-4749-bacd-f41fe189d36e
+  name: 10.B - Startup Folder Persistence Execution 
+  description: Sets credentials for a headless RDP session to spawn triggering startup folder persistence.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1060, T1106, T1134
+    name: Remote Desktop Protocol
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+            cmdkey /add:127.0.0.2 /user:#{profile_user} /pass:#{profile_user_password};
+            mstsc /v:127.0.0.2;
+            sleep 10; 
+            Get-Process -name mstsc; 
+            if ($?) { taskkill.exe /F /IM mstsc.exe; exit 0; } else {exit 1;}

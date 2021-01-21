@@ -1,0 +1,21 @@
+---
+- id: 95564347-e77a-4a89-b08f-dcafa5468f2c
+  name: 8.A.1 - Remote System Discovery (T1018)
+  description: Custom PowerShell script to perform AD triage for domain bound computers. 
+  tactic: execution
+  technique:
+    attack_id: T1086
+    name: PowerShell
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          . .\psversion.ps1;
+          Ad-Search Computer Name *;

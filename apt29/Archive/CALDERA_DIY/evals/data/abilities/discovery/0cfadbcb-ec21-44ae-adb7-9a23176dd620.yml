@@ -1,0 +1,16 @@
+---
+
+- id: 0cfadbcb-ec21-44ae-adb7-9a23176dd620
+  name: 13.A - Enumerate Computer Name
+  description: Triage host for ComputerNameNetBIOS,ComputerNameDnsHostname,ComputerNameDnsDomain,ComputerNameDnsFullyQualified,ComputerNamePhysicalNetBIOS,ComputerNamePhysicalDnsHostname,ComputerNamePhysicalDnsDomain,ComputerNamePhysical,DnsFullyQualifie
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          comp;
+        payload: stepThirteen.ps1

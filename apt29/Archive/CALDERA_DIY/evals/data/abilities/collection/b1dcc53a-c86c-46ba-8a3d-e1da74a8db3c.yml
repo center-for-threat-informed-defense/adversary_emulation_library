@@ -1,0 +1,16 @@
+---
+
+- id: b1dcc53a-c86c-46ba-8a3d-e1da74a8db3c
+  name: 17.A - Collect E-mails
+  description: Perform e-mail collection from custom PowerShell module.
+  tactic: collection
+  technique:
+    attack_id: T1114
+    name: Email Collection
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepSeventeen_email.ps1;
+          Write-Host "Emails Collected";
+        payload: stepSeventeen_email.ps1

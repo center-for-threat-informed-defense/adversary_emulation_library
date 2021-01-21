@@ -1,0 +1,32 @@
+---
+
+id: 80e9c544-c5ea-423d-b4f3-c0de3c2947ba
+name: ATT&CK Eval APT3 - 2-3.A
+description: Initial Discovery and Privilege Escalation
+visible: 1
+phases:
+  1:
+    - ee08a427-1e1d-4d8a-aeb1-978a7fcf9087
+    - 64f1fcb4-399d-4f3b-9a6b-13ec00e1c2ce
+  2:
+    - 35d95b64-c1f8-4ac7-a2f2-8959218239cd
+  3:
+    - 5df12481-9d8c-4235-b550-9cefc8ed7361
+    - 41610306-087c-4c34-874b-37b8ed633a36
+  4:
+    - 2ff877b4-0c00-401e-9d3f-070c70b610df
+    - 144b1384-5060-494f-80eb-91772695cdf3
+  5:
+    - d2ea2676-7f85-4228-b980-ab3c0e1adc03
+    - 7c2a6e5b-1adb-464f-a581-4677391f8dd6
+  6:
+    - faa96e7f-081a-40b7-a743-a6a7f2627ea3
+    - 26181249-be75-41ed-9fe7-5c30ea8c2d4d
+    - 84377d7a-0363-44fd-a082-44657ca1858f
+  7:
+    - 61221fb9-cb32-46d5-98fd-90567a621526
+    - 9ce5bf9f-44ec-44c4-bbe0-6d68a83e1b76
+  8:
+    - 5c23f638-9cfc-4fc4-9cab-4af628fef70a
+  9:
+    - 1345bff7-6f26-43b2-a92a-9aabccdb3db0

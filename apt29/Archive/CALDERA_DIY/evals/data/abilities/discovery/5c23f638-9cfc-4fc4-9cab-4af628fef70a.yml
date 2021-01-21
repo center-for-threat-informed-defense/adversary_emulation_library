@@ -1,0 +1,14 @@
+---
+
+- id: 5c23f638-9cfc-4fc4-9cab-4af628fef70a
+  name: 2.H.1 - Query Registry (T1012)
+  description: The reg utility is executed via cmd to enumerate a specific Registry key associated with local system policies to ensure that the user will not be prompted for credentials when elevating permissions.
+  tactic: discovery
+  technique:
+    attack_id: T1012
+    name: Query Registry
+  platforms:
+    windows:
+      cmd:
+        command: |
+          reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System

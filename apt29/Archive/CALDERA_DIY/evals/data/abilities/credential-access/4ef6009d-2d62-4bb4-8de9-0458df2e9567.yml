@@ -1,0 +1,15 @@
+---
+
+- id: 4ef6009d-2d62-4bb4-8de9-0458df2e9567
+  name: 14.B - Credential Dumping (T1003)
+  description: Dumping credentials via wmidump (Mimikatz)
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: Credential Dumping
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepFourteen_credDump.ps1;
+        payload: stepFourteen_credDump.ps1

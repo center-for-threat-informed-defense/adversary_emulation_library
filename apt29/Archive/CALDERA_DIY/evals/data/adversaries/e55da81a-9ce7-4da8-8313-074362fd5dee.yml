@@ -1,0 +1,9 @@
+---
+
+id: e55da81a-9ce7-4da8-8313-074362fd5dee
+name: ATT&CK Eval APT3 - 10
+description: Execution of Persistence
+visible: 1
+phases:
+  1:
+    - 4b2e9574-b1a7-4b38-95b2-6054ded9c4fe

@@ -1,0 +1,13 @@
+---
+  - id: afb8d8f7-d059-4825-95ae-c5727e2db320
+    name: 20.B - Triggering Persistent
+    description: Trigger RegKey persistence by rebooting the machine
+    tactic: persistence
+    technique:
+      attack_id: T1085
+      name: Rundll32
+    platforms:
+      windows:
+        psh, pshw:
+          command: |
+            Restart-Computer -Force;

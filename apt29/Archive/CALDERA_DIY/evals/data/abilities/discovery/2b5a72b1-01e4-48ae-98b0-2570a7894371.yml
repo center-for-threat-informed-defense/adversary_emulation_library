@@ -1,0 +1,16 @@
+---
+
+- id: 2b5a72b1-01e4-48ae-98b0-2570a7894371
+  name: 12.C - Detect Software
+  description: Detect software on host
+  tactic: discovery
+  technique:
+    attack_id: T1518
+    name:   Software Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepTwelve.ps1;
+          software;
+        payload: stepTwelve.ps1

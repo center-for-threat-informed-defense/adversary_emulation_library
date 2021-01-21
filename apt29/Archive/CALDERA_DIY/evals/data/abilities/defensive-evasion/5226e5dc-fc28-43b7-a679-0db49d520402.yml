@@ -1,0 +1,16 @@
+---
+
+- id: 5226e5dc-fc28-43b7-a679-0db49d520402
+  name: 14.A - UAC Bypass via sdctl
+  description: Invoke UAC bypass sdctl
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1088
+    name: Access Token Manipulation (T1134)
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepFourteen_bypassUAC.ps1;
+          bypass;
+        payload: stepFourteen_bypassUAC.ps1

