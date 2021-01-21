@@ -1,0 +1,14 @@
+---
+
+- id: 61221fb9-cb32-46d5-98fd-90567a621526
+  name: 2.G.1 - Account Discovery (T1087)
+  description: The net utility is executed via cmd to enumerate domain user accounts.
+  tactic: discovery
+  technique:
+    attack_id: T1087
+    name: Account Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net user /domain

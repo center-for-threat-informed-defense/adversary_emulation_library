@@ -1,0 +1,14 @@
+---
+- id: 1dba454c-0e4f-4fe0-8bc9-b17e8c5c9a24
+  name: 14.C - Stage Mimikatz Binary
+  description: Staging Mimikatz Binary for later execution
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: Credential Dumping
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+            write-host "[+] Successfully downloaded m.exe";
+        payload: m.exe

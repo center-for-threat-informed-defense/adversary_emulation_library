@@ -1,0 +1,14 @@
+---
+
+- id: 7c2a6e5b-1adb-464f-a581-4677391f8dd6
+  name: 2.E.2 - System Information Discovery (T1082)
+  description: The net utility is executed via cmd to enumerate local operating system configuration.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net config workstation

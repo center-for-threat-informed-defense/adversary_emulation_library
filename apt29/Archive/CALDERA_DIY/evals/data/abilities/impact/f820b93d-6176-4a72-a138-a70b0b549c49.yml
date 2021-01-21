@@ -1,0 +1,18 @@
+---
+
+- id: f820b93d-6176-4a72-a138-a70b0b549c49
+  name: 19.A - Data Wiping of staged files
+  description: Securely delete previously staged files.
+  tactic: impact
+  technique:
+    attack_id: T1488
+    name: Disk Content Wipe
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\wipe.ps1;
+          wipe "m.exe";
+          wipe "C:\Windows\Temp\WindowsParentalControlMigration.tmp";
+          wipe "C:\Windows\Temp\WindowsParentalControlMigration\MITRE-ATTACK-EVALS.HTML";
+        payload: wipe.ps1

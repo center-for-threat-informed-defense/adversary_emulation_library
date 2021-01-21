@@ -1,0 +1,14 @@
+---
+
+- id: 64f1fcb4-399d-4f3b-9a6b-13ec00e1c2ce
+  name: 2.A.2 - System Network Configuration Discovery (T1016)
+  description: The arp utility is executed via cmd to enumerate local ARP configuration information.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: System Network Configuration Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          arp -a

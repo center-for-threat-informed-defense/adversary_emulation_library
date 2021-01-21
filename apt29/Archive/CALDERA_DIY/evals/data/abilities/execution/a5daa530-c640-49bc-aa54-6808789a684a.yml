@@ -1,0 +1,17 @@
+---
+- id: a5daa530-c640-49bc-aa54-6808789a684a
+  name: 1.B - PowerShell (1086)
+  description: Spawn powershell.exe from cmd.exe
+  tactic: execution
+  technique:
+    attack_id: T1086
+    name: PowerShell
+  platforms:
+    windows:
+      cmd:
+        command: |
+            powershell.exe;
+            if ($?) {
+                write-host "[*] PowerShell successfully spawned";
+                exit 0;
+            }

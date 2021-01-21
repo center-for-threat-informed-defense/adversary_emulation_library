@@ -1,0 +1,14 @@
+---
+
+- id: faa96e7f-081a-40b7-a743-a6a7f2627ea3
+  name: 2.F.1 - Permissions Groups Discovery (T1069)
+  description: The net utility is executed via cmd to enumerate members of the local system's administrators group.
+  tactic: discovery
+  technique:
+    attack_id: T1069
+    name: Permission Groups Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net localgroup administrators

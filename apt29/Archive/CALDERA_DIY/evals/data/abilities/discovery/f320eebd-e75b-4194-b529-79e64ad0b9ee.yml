@@ -1,0 +1,16 @@
+---
+
+- id: f320eebd-e75b-4194-b529-79e64ad0b9ee
+  name: 13.C - Enumerate Username
+  description: user triage
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: System Owner/User Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          user;
+        payload: stepThirteen.ps1

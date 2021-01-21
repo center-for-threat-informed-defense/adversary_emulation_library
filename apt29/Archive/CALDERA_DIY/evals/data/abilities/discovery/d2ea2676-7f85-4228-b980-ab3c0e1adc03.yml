@@ -1,0 +1,14 @@
+---
+
+- id: d2ea2676-7f85-4228-b980-ab3c0e1adc03
+  name: 2.E.1 - System Information Discovery (T1082)
+  description: The systeminfo utility is executed via cmd to enumerate local operating system configuration.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          systeminfo

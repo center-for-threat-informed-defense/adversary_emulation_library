@@ -1,0 +1,21 @@
+---
+
+- id: 4a2ad84e-a93a-4b2e-b1f0-c354d6a41278
+  name: 12.A  Timestomp kxwn.lock 
+  description: Timestomp kxwn.lock
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1099
+    name: Timestomp
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (!(test-path -path "$env:appdata\Microsoft\kxwn.lock")) {
+            write-host "[!] kxwn.lock was not found on this host.";
+            exit 1;
+          } else {
+            . .\timestomp.ps1;
+            timestomp -dest "$env:appdata\Microsoft\kxwn.lock";
+          }
+        payload: timestomp.ps1

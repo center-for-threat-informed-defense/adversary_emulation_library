@@ -1,0 +1,1 @@
+powershell.exe -c "Start-Process C:\Windows\System32\hostui.exe -verb runas"

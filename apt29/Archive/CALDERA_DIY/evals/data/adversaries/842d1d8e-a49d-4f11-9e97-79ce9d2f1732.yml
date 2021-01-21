@@ -1,0 +1,9 @@
+---
+
+id: 842d1d8e-a49d-4f11-9e97-79ce9d2f1732
+name: ATT&CK Eval APT3 - 3.B-3.C
+description: Privilege Escalation
+visible: 1
+phases:
+  1:
+    - 088b8639-3f37-42cc-9dc8-01aabb645461

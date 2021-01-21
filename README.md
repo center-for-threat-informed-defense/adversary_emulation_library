@@ -4,6 +4,14 @@ In collaboration with Center Participants, the [Center for Threat-Informed Defen
 
 Also see our recent blog on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b).
 
+Available adversary emulation plans are listed below:
+
+| Emulation Plan | Intelligence Summary |
+|------|------|
+| [FIN6](/fin6/) | [FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015...](/fin6/Intelligence_Summary.md) |
+| [APT29](/apt29/) | [APT29 is thought to be an organized and well-resourced cyber threat actor whose collection objectives appear to align with the interests of the Russian Federation...](/apt29/Intelligence_Summary.md) |
+
+
 ## Philosophy 
 
 These adversary emulation plans are based on known-adversary behaviors and designed to empower red teams to manually emulate a specific threat actor in order to test and evaluate defensive capabilities from a threat-informed perspective. This approach empowers defenders to operationalize cyber threat intelligence to better understand and combat real-world adversaries. Rather than focusing on static signatures, these intelligence-driven emulation plans provide a repeatable means to test and tune defensive capabilities and products against the evolving Tactics, Techniques, and Procedures (TTPs) of threat actors and malware.
@@ -30,6 +38,8 @@ Within each emulation plan, the operational flow provides a high-level summary o
 
 The content to execute the scenario(s) is broken down into step-by-step procedures provided in both human and machine-readable formats. Scenarios can be executed end-to-end or as individual tests. The human-readable formats provide additional relevant background where possible as well as any setup prerequisites, while the machine-readable format is designed to be programmatically parsed (ex: read, reformatted, and ingested into an automated agent, such as [CALDERA](https://github.com/mitre/caldera) and/or breach simulation frameworks).
 
+Detailed documenation for our emulation plan structure can be found [here.](/emulation_plan_structure.md) 
+
 ## Future Work
 
 The threat landscape changes every day, as new groups/malware emerge and known adversaries adapt and evolve. The Center will continue to populate and maintain this library to match this growth curve through dedicated research efforts that aim to either create or update plans based on a specific adversary.
@@ -38,7 +48,7 @@ The threat landscape changes every day, as new groups/malware emerge and known a
 
 Please submit issues for any technical questions/concerns or contact ctid@mitre-engenuity.org directly for more general inquiries.
 
-Also see the guidance for contributors if are interested in [contributing.](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/CONTRIBUTING.md)
+Also see the guidance for contributors if are interested in [contributing.](/CONTRIBUTING.md)
 
 
 ## Liability / Responsible Usage

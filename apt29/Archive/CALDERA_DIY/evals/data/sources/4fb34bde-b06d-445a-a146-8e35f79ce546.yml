@@ -1,0 +1,31 @@
+facts:
+- trait: target.domain.name
+  value: TGTDOMAIN.lan
+- trait: target.winrm.username
+  value: WINRM_USR
+- trait: target.winrm.password
+  value: WINRM_PASS
+- trait: target.winrm.remote_host
+  value: WINRM_REMOTE_HOST
+- trait: pivot_machine_hostname
+  value: PIVOT_HOST_NAME
+- trait: 7zip_password
+  value: abc123
+- trait: profile_user
+  value: PROFILE_USER
+- trait: profile_user_password
+  value: PROFILE_USER_PASSWORD
+- trait: profile_user_day2
+  value: PROFILE_USER_DAY_2
+- trait: profile_user_password_day2
+  value: PROFILE_USER_DAY_2_PASSWORD
+- trait: onedrive.username
+  value: ONEDRIVE_USERNAME@outlook.com
+- trait: onedrive.url
+  value: ONEDRIVE_URL
+- trait: onedrive.password
+  value: ONEDRIVE_PASSWORD
+
+id: 4fb34bde-b06d-445a-a146-8e35f79ce546
+name: evals-round-2
+rules: []

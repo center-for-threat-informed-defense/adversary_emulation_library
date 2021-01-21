@@ -1,0 +1,16 @@
+---
+
+- id: a34ab8f2-a106-41fb-af0b-cf5382bd18ae
+  name: 13.D - Enumerate Processes
+  description: Process triage
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          pslist;
+        payload: stepThirteen.ps1

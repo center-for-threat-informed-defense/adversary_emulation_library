@@ -1,0 +1,29 @@
+---
+
+- id: 68b588bc-002a-42dc-bac7-9189f944065b
+  name: 3.A - Staging monkey PNG
+  description: Staging PNG for Lateral Movement
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1036
+    name: masquerading
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+            $username="#{profile_user}";
+            if ( $(test-path -path "C:\Users\$username\Downloads\monkey.png") -eq $false ) {
+              copy-item monkey.png -Destination "C:\Users\$username\Downloads\\" -Force;
+              if ($? -eq $True) {
+                write-host "[+] Successfully copied monkey.png!";
+                get-childitem -path "C:\Users\$username\Downloads\\";
+                exit 0;
+              } else {
+                write-host "[+] Failed to copy monkey.png.";
+                exit 1;
+              }
+
+            } else {
+              write-host "[*] monkey.png already exists within C:\users\$username\Downloads..."
+            }
+        payload: monkey.png

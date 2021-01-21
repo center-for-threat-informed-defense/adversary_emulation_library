@@ -1,0 +1,15 @@
+---
+
+- id: 646be6c9-f27a-4f5f-be5d-b8a0317e215f
+  name: 4.B.1 - Process Discovery
+  description: List running process on the machine via PowerShell.
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+            $ps = get-process;
+            write-output $ps;

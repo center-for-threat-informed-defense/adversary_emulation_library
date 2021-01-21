@@ -1,0 +1,14 @@
+---
+
+- id: 41610306-087c-4c34-874b-37b8ed633a36
+  name: 2.C.2 - Process Discovery (T1057)
+  description: The tasklist utility is executed via cmd to enumerate local running processes.
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  platforms:
+    windows:
+      cmd:
+        command: |
+          tasklist /v

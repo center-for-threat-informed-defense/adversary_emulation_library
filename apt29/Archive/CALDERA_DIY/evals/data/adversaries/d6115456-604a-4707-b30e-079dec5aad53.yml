@@ -1,0 +1,69 @@
+description: MITRE Evals APT-29 kill chain execution day 1.A
+id: d6115456-604a-4707-b30e-079dec5aad53
+name: ATT&CK Eval APT29 - Day 1.A
+visible: 1
+phases:
+  1:
+    - 571845f6-b75c-4b9d-a666-a78f7827261f # RTLO execution
+  2:
+    - a5daa530-c640-49bc-aa54-6808789a684a # Powershell Spawning
+    - 5692da31-3586-4e4f-8f07-5750070c730b # PowerShell Collection
+  3:
+    - 68e209dd-f354-4adc-8bc6-e85a3e55a7f4 # Exfiltration
+
+  4:
+    - 68b588bc-002a-42dc-bac7-9189f944065b # Download monkey.png
+
+  5:
+    - 89e9dffa-8836-4672-8cf3-bebd006d2a2b # Setup UAC Bypass to execute Monkey.png
+  6:
+    - 5ff80022-8d85-410b-b868-6c7565b267e5 # Cleanup registry keys
+
+  7:
+    - 4f7d21c9-ea31-4943-ad8a-efbbeeccdd7d # Download modified Sysinternals
+
+  8:
+    - 646be6c9-f27a-4f5f-be5d-b8a0317e215f # Clean up process
+    - 9b5b5aec-32ff-4d74-8555-727b50ab15f6 # Delete on disk files
+
+  9:
+    - 6f1f4768-7099-45d2-a858-b49dc792234e # Load Stage 2 and perform discovery
+
+  10:
+    - 9c75155e-21ab-4471-af16-45f3795a313c # Run persistence step one
+
+  11:
+    - 45f18b58-c14f-4b61-a3da-41b67af21429 # Run persistence step two
+
+  12:
+    - e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d # Dump chrome creds w/ accesschk
+
+  13:
+    - c4f4b13c-87b6-498c-b814-93570173068c # Search for Private Keys
+
+  14:
+    - a4b14c10-49aa-4ae4-b165-d5a37364fe62 # Rename psversion.txt to psversion.ps1
+
+  15:
+    - a81ea4ad-bc9f-49a7-82d4-4466df641487 # Grab screenshot
+    - ee4c2eab-be57-434c-a32c-14b77360301a # Grab clipboard
+    - db28f68d-e8b8-46e6-b680-642570d4b257 # Grab keystrokes
+
+  16:
+    - a612311d-a802-48da-bb7f-88a4b9dd7a24 # Exfiltrate data
+
+  17:
+    - 95564347-e77a-4a89-b08f-dcafa5468f2c # Remote System Discovery
+    - c4a59e39-53b0-4ace-9528-8ff052752ece # PowerShell system discovery of users on other machines
+
+  18:
+    - bddc0abc-07a0-41b7-813f-e0c64d9226b3 # PsExec and execute Sandcat
+
+  19:
+    - 00446217-53ca-4749-bacd-f41fe189d36e # RDP to trigger startup folder persistence
+
+  20:
+    - 4bedbd9b-a570-4f9f-b78a-2f7f99ad5e92 # Clean up artifacts
+
+  21:
+    - 4b2e9574-b1a7-4b38-95b2-6054ded9c4fe # Restart computer to trigger persistence mechanisms
