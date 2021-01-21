@@ -4,10 +4,12 @@ In collaboration with Center Participants, the [Center for Threat-Informed Defen
 
 Also see our recent blog on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b).
 
+Available adversary emulation plans are listed below:
+
 | Emulation Plan | Intelligence Summary |
 |------|------|
-| [FIN6](/fin6/) | [FIN6 Summary](/fin6/Intelligence_Summary.md) |
-| [APT29](/apt29/) | [APT29 Summary](/apt29/Intelligence_Summary.md) |
+| [FIN6](/fin6/) | [FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015...](/fin6/Intelligence_Summary.md) |
+| [APT29](/apt29/) | [APT29 is thought to be an organized and well-resourced cyber threat actor whose collection objectives appear to align with the interests of the Russian Federation...](/apt29/Intelligence_Summary.md) |
 
 
 ## Philosophy 
