@@ -4,7 +4,11 @@ In collaboration with Center Participants, the [Center for Threat-Informed Defen
 
 Also see our recent blog on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b).
 
-< TODO - INSERT TABLE listing emulation plans here >
+| Emulation Plan | Intelligence Summary |
+|------|------|
+| [FIN6](/fin6/) | [FIN6 Summary](/fin6/Intelligence_Summary.md) |
+| [APT29](/apt29/) | [APT29 Summary](/apt29/Intelligence_Summary.md) |
+
 
 ## Philosophy 
 
