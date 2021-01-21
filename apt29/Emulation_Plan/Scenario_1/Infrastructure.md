@@ -120,6 +120,6 @@ Import-PfxCertificate -Exportable -FilePath "shockwave.local.pfx" -CertStoreLoca
   - [Scenario 2 - Infrastructure](/apt29/Emulation_Plan/Scenario_2/Infrastructure.md)
   - [Scenario 2](/apt29/Emulation_Plan/Scenario_2/README.md)
   - [YAML](/apt29/Emulation_Plan/APT29.yaml)
-- [Archive](/apt29/Archive/README.md)
+- [Archive](/apt29/Archive)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
 - [Change Log](/apt29/CHANGE_LOG.md)
