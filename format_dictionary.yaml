@@ -21,12 +21,12 @@
   cti_source: Reference (link, description, etc.) to a specific CTI data source such as a threat report or file
   procedure_group: A unique name for a group of Procedures
   procedure_step: A unique step ID for this TTP. Can be used to create sequences of TTPs.
-  platforms: #(Empty) 
+  platforms: #(Empty)
     platform_name: #(Empty/Variable e.g. windows, linux, darwin)
       executor_name: #(Empty/Variable e.g. cmd, psh, pwsh, sh)
         command: |
           The command or data to provide to that executor
-        payloads: 
+        payloads:
         - The name of a file to use as a payload for the executor
 
   # Multiple input arguments may be specified and referenced elsewhere using the format #{argument_name}
@@ -42,7 +42,7 @@
   - description: Description of the dependency command
     prereq_command: A validation command to execute as a prerequisite to this Procedure that checks that all dependencies are met
     get_prereq_command: A command that ensures all payloads and arguments are available before executing the validation command
-  
+
   # Additional execution methods for the Procedure may be provided through executors
   # Multiple executors may be specified
   executors:
