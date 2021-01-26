@@ -11,9 +11,9 @@ Pull requests should target the **[develop](https://github.com/center-for-threat
 Also, if you contribute any source code, we need you to agree to the following Developer's Certificate of Origin below.
 
 ## Reporting issues with emulation procedures
-  
+
 * Describe (in detail) what should have happened. Include any supporting information that may be helpful in resolving the issue.
-  
+
 * Be sure to include any steps to replicate the issue.
 
 ## Developer's Certificate of Origin v1.1
