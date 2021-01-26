@@ -2,9 +2,11 @@
 
 FIN6 infrastructure is likely comprised of distributed command and control (C2) servers and exfiltration servers.  FIN6 is reported to have conducted C2 over HTTPS.  As such, it would be wise to purchase, associate, and categorize a domain for each redirector.  [Let's Encrypt](https://letsencrypt.org) is a resource for free SSL/TLS certificates.
 
-FIN6 uses separate servers for exfiltration.  They appear to purchase domain names that are similar/relevent to their target organization in order to blend in.  The group may very well use one server to exfiltrate Discovery data during Phase 1, and separate servers to exfiltrate PoS or payment data during Phase 2.  Specific server configuration very much depends on the C2 framework.  
+FIN6 uses separate servers for exfiltration.  They appear to purchase domain names that are similar/relevent to their target organization in order to blend in.  The group may very well use one server to exfiltrate Discovery data during Phase 1, and separate servers to exfiltrate PoS or payment data during Phase 2.  Specific server configuration very much depends on the C2 framework.
 
 Detailing specific infrastructure configuration is beyond the scope of this plan.  Please consult the following resources:
+
+---
 
 ## Infrastructure Configuration
 
@@ -13,6 +15,8 @@ Detailing specific infrastructure configuration is beyond the scope of this plan
 * [HTTPS Payload and C2 Redirectors](https://bluescreenofjeff.com/2018-04-12-https-payload-and-c2-redirectors/)
 * [Red Team Infrastructure Wiki](https://github.com/bluscreenofjeff/Red-Team-Infrastructure-Wiki)
 * [A Deep Dive into Cobalt Strike Malleable C2](https://posts.specterops.io/a-deep-dive-into-cobalt-strike-malleable-c2-6660e33b0e0b)
+
+---
 
 ## Emulation Team Systems and Tools
 
@@ -58,3 +62,17 @@ The following represents a bare minimum but should be operationally representati
 * ### Phase 2 - E-Commerce Exfiltration
 
   * HTTP - FIN6 is reported to have exfiltrated payment data resulting from it's Magecart Group 6 activity via HTTP POST.<sup>[10](https://blog.trendmicro.com/trendlabs-security-intelligence/fin6-compromised-e-commerce-platform-via-magecart-to-inject-credit-card-skimmers-into-thousands-of-online-shops/)</sup> In order to emulate this use case (Phase 2 Scenario 2), you will need to set up an exfiltration server capable of receiving HTTP POST requests.  Depending on how you intend to evaluate this scenario, a lightweight solution like Python's http.server may be appropriate.  This activity is further described in Phase 2.
+
+---
+
+## Additional Plan Resources
+
+* [Intelligence Summary](/fin6/Intelligence_Summary.md)
+* [Operations Flow](/fin6/Operations_Flow.md)
+* [Emulation Plan](/fin6/Emulation_Plan/README.md)
+  - [Infrastructure](/fin6/Emulation_Plan/Infrastructure.md)
+  - [Phase 1](/fin6/Emulation_Plan/Phase1.md)
+  - [Phase 2](/fin6/Emulation_Plan/Phase2.md)
+  - [YAML](/fin6/Emulation_Plan/yaml/FIN6.yaml)
+* [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
+* [Change Log](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/fin6/CHANGE_LOG.md)
