@@ -2,8 +2,8 @@
 
 - emulation_plan_details:
     id: UUID for the Procedure (e.g. b5192070-dff1-4134-bf66-c6b87c7498af)
-    adversary_name: menuPass
-    adversary_description: menuPass is thought to be a Chinese cyber espionage group associated with activity directed by elements of the PRC MSS.
+    adversary_name: Adversary
+    adversary_description: Adversary Description
     attack_version: Version of ATT&CK in which the plan was developed
     format_version: YAML format version
 
