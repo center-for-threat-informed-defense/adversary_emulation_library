@@ -21,7 +21,7 @@ The FIN6 emulation plan is a human-readable, step-by-step / command-by-command i
   - [Infrastructure](/fin6/Emulation_Plan/Infrastructure.md)
   - [Phase 1](/fin6/Emulation_Plan/Phase1.md)
   - [Phase 2](/fin6/Emulation_Plan/Phase2.md)
-  - [YAML](/fin6/Emulation_Plan/yaml/FIN6.yaml)
+  - [YAML](/fin6/Emulation_Plan/yaml)
 * [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
 * [Change Log](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/fin6/CHANGE_LOG.md)
 
