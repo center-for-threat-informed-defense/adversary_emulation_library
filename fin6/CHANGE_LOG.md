@@ -2,6 +2,6 @@
 
 ## FIN6 Emulation Plan
 
-Version | Date | Change Details |
---- | --- | --- |
-1.0 | 15 September 2020 | Initial Release
+|Version | Date | Change Details |
+|:---|:---|:---|
+| 1.0 | 15 September 2020 | Adversary Emulation Library Release |
