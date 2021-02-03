@@ -61,7 +61,7 @@ esentutl ([S0404](https://attack.mitre.org/software/S0404/))| |Used to copy and 
 Impacket ([S0357](https://attack.mitre.org/software/S0357/))| |Atexec, psexec, and secretsdump are compiled using PyInstaller and employed during enabling objectives<sup>[7](https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf)</sup>
 Koadic ([S0250](https://attack.mitre.org/software/S0250/))| |Delivered via spearphishing, has been used to download and execute ANEL<sup>[16](https://www.trendmicro.com/en_us/research/18/c/chessmaster-adds-updated-tools-to-its-arsenal.html)</sup>|
 Mimikatz ([S0002](https://attack.mitre.org/software/S0002/))| Pd.exe, MSVCR100.dll|Repacked and/or compiled to DLL version executed via load order hijacking or sideloading<sup>[10](https://recordedfuture.com/apt10-cyberespionage-campaign/)</sup>
-Nbtscan | Nbt.exe | |Used to enumerate NetBIOS sessions<sup>[7](https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf)</sup>|
+Nbtscan | Nbt.exe |Used to enumerate NetBIOS sessions<sup>[7](https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf)</sup>|
 NetSess | |Observed enumerating NetBIOS sessions during reconnaissance<sup>[7](https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf)</sup>|
 PowerSploit ([S0194](https://attack.mitre.org/software/S0194/))| |Discovery, lateral movement, and injected ChChes into PowerShell process<sup>[29](https://blogs.jpcert.or.jp/en/2017/03/malware-leveraging-powersploit.html)</sup>
 PsExec ([S0029](https://attack.mitre.org/software/S0029/))| Psexe.exe |Used to execute tools on a remote host<sup>[7](https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf)</sup>|
