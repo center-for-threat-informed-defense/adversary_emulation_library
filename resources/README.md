@@ -2,7 +2,7 @@
 
 This folder contains additional resources that may be utilized in conjunction with emulation plans in the [Adversary Emulation Library](/README.md). Each component is summarized below.
 
-### JSON Schema 
+### JSON Schema
 
 Schema used to validate Adversary Emulation Plan YAML files (e.g. [fin6.yaml](/fin6/Emulation_Plan/FIN6.yaml ))
 

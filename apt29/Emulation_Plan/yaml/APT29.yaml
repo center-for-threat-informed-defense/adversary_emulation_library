@@ -2,7 +2,7 @@
 
 - emulation_plan_details:
     id: 4975696e-1d41-11eb-adc1-0242ac120002
-    adversary_name: APT29 Adversary Emulation Plan
+    adversary_name: APT29
     adversary_description: APT29 is a threat group that has been attributed to the Russian government who have been in operation since at least 2008. This group reportedly compromised the Democratic National Committee starting in the summer of 2015.
     attack_version: 8.1
     format_version: 1.0

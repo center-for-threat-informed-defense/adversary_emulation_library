@@ -7,12 +7,12 @@ Also see our recent blog on the [Adversary Emulation Library](https://medium.com
 Available adversary emulation plans are listed below:
 
 | Emulation Plan | Intelligence Summary |
-|------|------|
+|:-----:|------|
 | [FIN6](/fin6/) | [FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015...](/fin6/Intelligence_Summary.md) |
 | [APT29](/apt29/) | [APT29 is thought to be an organized and well-resourced cyber threat actor whose collection objectives appear to align with the interests of the Russian Federation...](/apt29/Intelligence_Summary.md) |
+| [menuPass](/menuPass/) | [menuPass is thought to be threat group motivated by collection objectives, with targeting that is consistent with Chinese strategic objectives...](/menuPass/Intelligence_Summary.md) |
 
-
-## Philosophy 
+## Philosophy
 
 These adversary emulation plans are based on known-adversary behaviors and designed to empower red teams to manually emulate a specific threat actor in order to test and evaluate defensive capabilities from a threat-informed perspective. This approach empowers defenders to operationalize cyber threat intelligence to better understand and combat real-world adversaries. Rather than focusing on static signatures, these intelligence-driven emulation plans provide a repeatable means to test and tune defensive capabilities and products against the evolving Tactics, Techniques, and Procedures (TTPs) of threat actors and malware.
 
@@ -34,11 +34,11 @@ In summary, each emulation plan should be perceived as input to an offensive ass
 
 Each emulation plan focuses on a specific named threat actor. The README of each individual plan provides a curated summary of available cyber threat intelligence, composed of an intelligence overview of the actor (describing who they target, how, and why where possible) as well as the scope of their activity (i.e. breadth of techniques and malware used). All presented information is cited back to relevant publicly available cyber threat intelligence and communicated and annotated via [ATT&CK](https://attack.mitre.org/).
 
-Within each emulation plan, the operational flow provides a high-level summary of the captured scenario(s). These scenarios will vary based on the adversary and available intelligence, but typically follow a sequential progression of how the actor breaches then works towards achieving their operational objectives within a victim environment (espionage, data/system destruction, etc.). 
+Within each emulation plan, the operational flow provides a high-level summary of the captured scenario(s). These scenarios will vary based on the adversary and available intelligence, but typically follow a sequential progression of how the actor breaches then works towards achieving their operational objectives within a victim environment (espionage, data/system destruction, etc.).
 
 The content to execute the scenario(s) is broken down into step-by-step procedures provided in both human and machine-readable formats. Scenarios can be executed end-to-end or as individual tests. The human-readable formats provide additional relevant background where possible as well as any setup prerequisites, while the machine-readable format is designed to be programmatically parsed (ex: read, reformatted, and ingested into an automated agent, such as [CALDERA](https://github.com/mitre/caldera) and/or breach simulation frameworks).
 
-Detailed documenation for our emulation plan structure can be found [here.](/emulation_plan_structure.md) 
+Detailed documenation for our emulation plan structure can be found [here.](/structure/emulation_plan_structure.md)
 
 ## Future Work
 
@@ -50,14 +50,13 @@ Please submit issues for any technical questions/concerns or contact ctid@mitre-
 
 Also see the guidance for contributors if are interested in [contributing.](/CONTRIBUTING.md)
 
-
 ## Liability / Responsible Usage
 
 This content is only to be used with appropriate prior, explicit authorization for the purposes of assessing security posture and/or research.
 
 ## Notice
 
-Copyright 2020 MITRE Engenuity. Approved for public release. Document number CT0005
+Copyright 2020-2021 MITRE Engenuity. Approved for public release. Document number CT0005
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 

