@@ -7,9 +7,10 @@ Also see our recent blog on the [Adversary Emulation Library](https://medium.com
 Available adversary emulation plans are listed below:
 
 | Emulation Plan | Intelligence Summary |
-|------|------|
+|:-----:|------|
 | [FIN6](/fin6/) | [FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015...](/fin6/Intelligence_Summary.md) |
 | [APT29](/apt29/) | [APT29 is thought to be an organized and well-resourced cyber threat actor whose collection objectives appear to align with the interests of the Russian Federation...](/apt29/Intelligence_Summary.md) |
+| [menuPass](/menuPass/) | [menuPass is thought to be threat group motivated by collection objectives, with targeting that is consistent with Chinese strategic objectives...](/menuPass/Intelligence_Summary.md) |
 
 ## Philosophy
 
@@ -48,7 +49,6 @@ The threat landscape changes every day, as new groups/malware emerge and known a
 Please submit issues for any technical questions/concerns or contact ctid@mitre-engenuity.org directly for more general inquiries.
 
 Also see the guidance for contributors if are interested in [contributing.](/CONTRIBUTING.md)
-
 
 ## Liability / Responsible Usage
 
