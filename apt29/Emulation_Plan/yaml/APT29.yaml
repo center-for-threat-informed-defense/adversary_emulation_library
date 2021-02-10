@@ -1049,7 +1049,7 @@
   procedure_step: "5.A.2"
   platforms:
     windows:
-      psh, pshw:
+      psh,pwsh:
         command: |
           Set-Location -path "C:\Program Files\SysinternalsSuite";
           if (get-service -name "javamtsup" -ErrorAction SilentlyContinue) {
@@ -1100,7 +1100,7 @@
   procedure_step: "5.B.1"
   platforms:
     windows:
-      psh, pshw:
+      psh,pwsh:
         command: |
           Set-Location -path "C:\Program Files\SysinternalsSuite";
           if (Test-Path -path "readme.ps1") {
@@ -2799,7 +2799,7 @@
   procedure_step: "20.B"
   platforms:
     windows:
-      psh,pshw:
+      psh,pwsh:
         command: |
           Restart-Computer -Force;
 
