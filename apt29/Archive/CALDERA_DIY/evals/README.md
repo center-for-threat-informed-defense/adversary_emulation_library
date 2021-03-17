@@ -11,7 +11,7 @@ For more information, please see the [evaulations website](https://attackevals.m
 ## Initial CALDERA Installation
 1. Clone CALDERA 2.6.6
 ```
-git clone https://github.com/mitre/caldera.git --recursive --branch 2.6.6 && sudo ./install.sh
+git clone https://github.com/mitre/caldera.git --recursive --branch 2.6.6 && cd caldera && sudo ./install.sh
 ```
 
 2. Clone the Eval plugin into the caldera/plugins directory
