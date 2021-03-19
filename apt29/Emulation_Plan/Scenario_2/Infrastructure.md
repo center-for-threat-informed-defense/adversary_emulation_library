@@ -2,6 +2,8 @@
 
 We hope to capture the general structure of what is reported to have been seen being used by APT29.  The infrastructure listed below is specific to Scenario 2.  The requirements described herein should be considered a bare minimum to execute the scenario.  If you have the time and resources to remain true-to-form, you may elect to stand up multiple of each of these servers, non-contiguous IP space, etc.  If you are not concerned with emulating APT29 to this degree, this level of effort is not necessary.  You could for instance, phish, serve payload, and exfil from/to the same server.
 
+Please note that binaries/files containing binaries hosted in [resources](/apt29/Resources) have been added to password protected zip files.  The password for these files is "malware."
+
 ---
 
 ## Emulation Team Infrastructure
