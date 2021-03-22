@@ -14,6 +14,9 @@ The Operations Flow chains techniques together into a logical order that commonl
 
 The APT29 emulation plan is a human-readable, step-by-step / command-by-command implementation of APT29 TTPs. Structurally, the plan is organized into an infrastructure section, and two scenarios, as defined in the Operations Flow. The infrastructure section explains how to prepare the environment to execute both scenarios.  The human-readable plan is accompanied by a machine-readable plan implemented in YAML. The YAML includes all steps, commands, and syntax for both Scenario 1 and Scenario 2. The YAML template was nuanced to ensure that each step within the YAML is directly coupled with its equivalent in the human-readable version.
 
+## Resources
+Please note that binary files hosted in [Scenario_1](/apt29/Resources/Scenario_1) and [Scenario_2](/apt29/Resources/Scenario_2) have been added to password protected zip files.  The password for these files is "malware."
+
 ## Acknowledgements
 
 We would like to formally thank the people that contributed to the content, review, and format of this document. This includes the MITRE ATT&CK and MITRE ATT&CK Evaluations teams, the organizations and people that provided public intelligence and resources, as well as the following organizations that participated in the community cyber threat intelligence contribution process:
