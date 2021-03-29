@@ -11,7 +11,7 @@ For more information, please see the [evaulations website](https://attackevals.m
 ## Initial CALDERA Installation
 1. Clone CALDERA 2.6.6
 ```
-git clone https://github.com/mitre/caldera.git --recursive --branch 2.6.6 && sudo ./install.sh
+git clone https://github.com/mitre/caldera.git --recursive --branch 2.6.6 && cd caldera && sudo ./install.sh
 ```
 
 2. Clone the Eval plugin into the caldera/plugins directory
@@ -51,7 +51,7 @@ Requirements for the round 2 adversary are the following:
 **It is recommended that you first execute the evals plugin in an isolated-test environment to fully understand the TTPs performed on hosts, as well as the artifacts left behind.**
 
 #### Setting Up CALDERA Facts
-Next, update the [CALDERA facts](https://caldera.readthedocs.io/en/latest/Learning-the-terminology.html#what-is-a-fact) located here ```./data/sources/4fb34bde-b06d-445a-a146-8e35f79ce546.yml```
+Next, update the [CALDERA facts](https://caldera.readthedocs.io/en/latest/Learning-the-terminology.html#what-is-a-fact) now located in ```/caldera/plugins/evals/data/sources/4fb34bde-b06d-445a-a146-8e35f79ce546.yml```
 with the appropriate values for your environment. Keys to update include:
 
 * Update ```target.domain.name``` to your environment's domain name.
