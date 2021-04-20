@@ -162,5 +162,5 @@ This methodology assumes the following static IP address configurations:
   - [Scenario 1 - Detections](/fin7/Emulation_Plan/Scenario_1)
   - [Scenario 2 - Infrastructure](/fin7/Emulation_Plan/Scenario_2/Infrastructure.md)
   - [Scenario 2 - Protections](/fin7/Emulation_Plan/Scenario_2)
-- [Issues](/issues)
+- [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
 - [Change Log](/fin7/CHANGE_LOG.md)

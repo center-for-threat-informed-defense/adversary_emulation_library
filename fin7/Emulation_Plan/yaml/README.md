@@ -73,5 +73,5 @@ The procedures in the YAML are mapped directly to the steps in Scenario 1. The t
   - [YAML](/fin7/Emulation_Plan/yaml)
 - [File Hashes](/fin7/hashes)
 - [YARA Rules](/fin7/yara-rules)
-- [Issues](/issues)
+- [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
 - [Change Log](/fin7/CHANGE_LOG.md)
