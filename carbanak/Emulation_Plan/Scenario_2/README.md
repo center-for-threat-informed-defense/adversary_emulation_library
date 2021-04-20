@@ -4,7 +4,7 @@ For the purpose of this emulation plan, Carbanak operations have been separated 
 
 While in Scenario 1 each objective enables subsequent objectives, Scenario 2 is designed such that each objective is run independently of any other. Specifically, this scenario is intended to be used in an environment that has protective/preventative defense measures enabled. That said, each organization can tailor this emulation to their individual use case, priorities, and available resources.
 
-This emulation plan contains several placeholder values that are meant to be replaced with values specific to the target environment against which this plan is to be run. For ease of use, a script has been included to automatically make these substitutions, found [here](/Resources/placeholder_substitution).
+This emulation plan contains several placeholder values that are meant to be replaced with values specific to the target environment against which this plan is to be run. For ease of use, a script has been included to automatically make these substitutions, found [here](/carbanak/Resources/placeholder_substitution).
 
 ---
 
@@ -28,7 +28,7 @@ This emulation plan contains several placeholder values that are meant to be rep
 
 ### Pre-requisites
 
-Prior to beginning the following emulation Scenario, ensure you have the proper infrastructure requirements and configuration in place as stated in the [Scenario 2 Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md) documentation.
+Prior to beginning the following emulation Scenario, ensure you have the proper infrastructure requirements and configuration in place as stated in the [Scenario 2 Infrastructure](/carbanak/Emulation_Plan/Scenario_2/Infrastructure.md) documentation.
 
 ---
 
@@ -657,15 +657,15 @@ On the `cfo` workstation:
 
 ## Additional Plan Resources
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
+- [Intelligence Summary](/carbanak/Intelligence_Summary.md)
+- [Operations Flow](/carbanak/Operations_Flow.md)
+- [Emulation Plan](/carbanak/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/carbanak/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/carbanak/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/carbanak/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/carbanak/Emulation_Plan/Scenario_2)
+  - [YAML](/carbanak/Emulation_Plan/yaml)
+- [File Hashes](/carbanak/hashes)
+- [YARA Rules](/carbanak/yara-rules)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/carbanak/CHANGE_LOG.md)

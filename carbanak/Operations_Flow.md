@@ -1,6 +1,6 @@
 # Carbanak Operations Flow
 
-Please see the formal [Carbanak Intelligence Summary](/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
+Please see the formal [Carbanak Intelligence Summary](/carbanak/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
 
 ---
 
@@ -30,15 +30,15 @@ This scenario emulates the same Carbanak TTP's as scenario 1; however, changes w
 
 ## Additional Plan Resources
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
+- [Intelligence Summary](/carbanak/Intelligence_Summary.md)
+- [Operations Flow](/carbanak/Operations_Flow.md)
+- [Emulation Plan](/carbanak/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/carbanak/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/carbanak/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/carbanak/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/carbanak/Emulation_Plan/Scenario_2)
+  - [YAML](/carbanak/Emulation_Plan/yaml)
+- [File Hashes](/carbanak/hashes)
+- [YARA Rules](/carbanak/yara-rules)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/carbanak/CHANGE_LOG.md)

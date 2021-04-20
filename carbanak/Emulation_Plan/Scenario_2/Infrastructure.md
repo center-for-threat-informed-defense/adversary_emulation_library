@@ -4,9 +4,9 @@ The infrastructure listed below is specific to Scenario 2, which assumes that pr
  
 The requirements described herein should be considered a bare minimum to execute the scenario.  If you have the time and resources to remain true-to-form, you may elect to stand up multiple of each of these servers, non-contiguous IP space, etc.  If you are not concerned with emulating Carbanak to this degree, this level of effort is not necessary.  You could for instance, phish, serve payload, and exfil from/to the same server.
 
-Please note that binary executable files hosted in [Resources](/Resources/) have been added to password protected zip files.  The password for these files is "malware."
+Please note that binary executable files hosted in [Resources](/carbanak/Resources/) have been added to password protected zip files.  The password for these files is "malware."
 
-We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](/carbanak/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 $ cd carbanak
@@ -24,7 +24,7 @@ $ python3 Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
         
 2. **Attack Platform**: tested and executed on Kali Linux 2019.1
     - C2 Frameworks
-        - [ATT&CK Evals Carbanak C2 Server](/Resources/utilities/carbanak_c2server/c2server/c2server.elf)
+        - [ATT&CK Evals Carbanak C2 Server](/carbanak/Resources/utilities/carbanak_c2server/c2server/c2server.elf)
         - [Metasploit Framework](https://github.com/rapid7/metasploit-framework)
     - [tmux](https://github.com/tmux/tmux/wiki)
   
@@ -42,7 +42,7 @@ This methodology assumes the following static IP address configuration:
 
 - This evaluation utilizes payloads that model Carbanak malware.
 
-- Some pre-compiled payloads are available in the [resources](/Resources) directory; however, they are configured to connect back to static IP address 192.168.0.4.
+- Some pre-compiled payloads are available in the [resources](/carbanak/Resources) directory; however, they are configured to connect back to static IP address 192.168.0.4.
 
 - If you would like to build the payloads yourself, please make the necessary adjustments to the payload source to match your environment.
 
@@ -111,13 +111,13 @@ This methodology assumes the following hostname configurations:
 
 1. If only testing detection capabilities, disable Windows Defender
 
-    The `set-defender.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-defender.ps1` PowerShell script in the [setup](/carbanak/Resources/setup) folder can be used to perform this.
 
 ### HR Manager Workstation Setup
 
 1. If only testing detection capabilities, disable Windows Defender
 
-    The `set-defender.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-defender.ps1` PowerShell script in the [setup](/carbanak/Resources/setup) folder can be used to perform this.
 
 2. Copy newly generated SSH keypair from attacker platform to the following directory:
     ```
@@ -126,13 +126,13 @@ This methodology assumes the following hostname configurations:
    
 3. Disable OLE Security to enable execution of initial access payload
     
-    The `set-OLEsecurity.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-OLEsecurity.ps1` PowerShell script in the [setup](/carbanak/Resources/setup) folder can be used to perform this.
    
 ### CFO Workstation Setup
 
 1. If only testing detection capabilities, disable Windows Defender
 
-    The `set-defender.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-defender.ps1` PowerShell script in the [setup](/carbanak/Resources/setup) folder can be used to perform this.
 
 2. Give the CFO user RDP privileges on only this machine by adding them to the following local groups:
     ```
@@ -182,7 +182,7 @@ This methodology assumes the following hostname configurations:
 
 ### Setup Automation
 
-The `setup-teamsherver.sh` and `setup-winhosts.ps1` scripts in the [setup](/Resources/setup) folder can be used to automate this process.
+The `setup-teamsherver.sh` and `setup-winhosts.ps1` scripts in the [setup](/carbanak/Resources/setup) folder can be used to automate this process.
 These scripts use the default hostnames, but require usernames and host IP addresses to be substituted in place of placeholder values.
 
 1. Run `setup-teamserver.sh` on the Attack Platform.
@@ -193,12 +193,12 @@ These scripts use the default hostnames, but require usernames and host IP addre
 
 ## Additional Plan Resources
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
+- [Intelligence Summary](/carbanak/Intelligence_Summary.md)
+- [Operations Flow](/carbanak/Operations_Flow.md)
+- [Emulation Plan](/carbanak/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/carbanak/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/carbanak/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/carbanak/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/carbanak/Emulation_Plan/Scenario_2)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/carbanak/CHANGE_LOG.md)
