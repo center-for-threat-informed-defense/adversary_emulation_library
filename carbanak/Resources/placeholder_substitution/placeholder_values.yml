@@ -1,0 +1,60 @@
+- name: <domain>
+  description: The name of the target institution's domain.
+  default: financial
+  value: ""
+- name: <domain_full>
+  description: The full name of the target institution's domain.
+  default: financial.local
+  value: ""
+- name: <domain_admin>
+  description: Domain administrator that executes the initial payload.
+  default: kmitnick
+  value: ""
+- name: <domain_admin_password>
+  description: Password for the domain admin account.
+  default: "79a&LbjM@MlW8XZa"
+  value: ""
+- name: <domain_admin_password_ntlm_hash>
+  description: NTLM hash of the domain admin account's password.
+  default: "aad3b435b51404eeaad3b435b51404ee:c3aa78cd0827b8e8603ac1c8996e6556"
+  value: ""
+- name: <cfo_user>
+  description: The CFO user's username.
+  default: jsmith
+  value: ""
+- name: <cfo_user_password>
+  description: The CFO user's username.
+  default: "Passw0rd!"
+  value: ""
+- name: <attack_platform>
+  description: The name of the attack platform.
+  default: attack
+  value: ""
+- name: <attacker>
+  description: The username of the attacker user on the attack platform.
+  default: gfawkes
+  value: ""
+- name: <attacker_ssh_user>
+  description: The username of the SSH user on the attack platform.
+  default: alfred
+  value: ""
+- name: <attacker_ssh_user_password>
+  description: The password for Attacker SSH user account.
+  default: azsxdcAZSXDC123
+  value: ""
+- name: <bankdc_ip>
+  description: IP address of the bankdc.
+  default: 10.0.0.4
+  value: ""
+- name: <cfo_ip>
+  description: IP address of the CFO workstation.
+  default: 10.0.0.5
+  value: ""
+- name: <hrmanager_ip>
+  description: IP address of the HRManager workstation.
+  default: 10.0.0.6
+  value: ""
+- name: <bankfileserver_ip>
+  description: IP address of the BankFileServer machine.
+  default: 10.0.0.7
+  value: ""

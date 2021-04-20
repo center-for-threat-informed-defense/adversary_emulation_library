@@ -1,0 +1,40 @@
+rule dumpwebcreds
+
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings associated with dumpWebCreds.exe"
+	
+    strings:
+        $string1 = "<GetCreds>g__GetVaultElementValue|0_0"
+        $string3 = "VAULT_SCHEMA_ELEMENT_ID"
+        $string4 = "VAULT_ELEMENT_TYPE"
+        $string5 = "VAULT_ITEM"
+        $string6 = "VAULT_ITEM_ELEMENT"
+        $string7 = "vaultGuid"
+        $string8 = "vaultHandle"
+        $string9 = "get_Value"
+        $string10 = "GetValue"
+        $string11 = "webCreds.exe"
+        $string12 = "VaultCli"
+        $string13 = "vaultcli.dll"
+        $string14 = "get_Item"
+        $string15 = "VaultGetItem"
+        $string16 = "vaultItem"
+        $string17 = "System"
+        $string18 = "Enum"
+        $string19 = "TimeStamp"
+        $string20 = "webCreds"
+        $string21 = "GetCreds"
+        $string22 = "VaultEnumerateItems"
+        $string23 = "VaultEnumerateVaults"
+        $string24 = "VaultCloseVault"
+        $string25 = "VaultOpenVault"
+        $string26 = "vaultItemCount"
+        $string27 = "vaultCount"
+        $string28 = "webCreds.pdb"
+
+    condition:
+        all of them
+}

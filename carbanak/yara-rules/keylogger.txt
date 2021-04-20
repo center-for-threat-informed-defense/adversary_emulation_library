@@ -1,0 +1,164 @@
+rule output
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect output associated with keylogger.exe"
+	
+    strings:
+        $output1 = "Error, too many arguments."
+		$output2 = "Starting KeyCapture to file"
+		$output3 = "Failed to get handle from SetWindowsHookEx()"
+		$output4 = "KeyCapture handle ready"
+
+    condition:
+        all of them
+}
+
+rule file_names
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect file names associated with keylogger.exe"
+	
+    strings:
+        $path1 = "test.log"
+		$path2 = "SetWindowsHookEx-Keylogger.pdb"
+
+    condition:
+        all of them
+}
+
+rule AV
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect AV strings associated with keylogger.exe"
+	
+    strings:
+		$AV1 = ".?AVlogic_error@std@@"
+		$AV2 = ".?AVlength_error@std@@"
+		$AV3 = ".?AVout_of_range@std@@"
+		$AV4 = ".?AV_Locimp@locale@std@@"
+		$AV5 = ".?AVtype_info@@"
+		$AV6 = ".?AVbad_exception@std@@"
+		$AV7 = ".?AV?$basic_stringstream@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@"
+		$AV8 = ".?AVfailure@ios_base@std@@"
+		$AV9 = ".?AV?$basic_filebuf@DU?$char_traits@D@std@@@std@@"
+		$AV10 = ".?AVruntime_error@std@@"
+		$AV11 = ".?AV?$codecvt@DDU_Mbstatet@@@std@@"
+		$AV12 = ".?AVbad_alloc@std@@"
+		$AV13 = ".?AV?$basic_stringbuf@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@"
+		$AV14 = ".?AVios_base@std@@"
+		$AV15 = ".?AVerror_category@std@@"
+		$AV16 = ".?AV?$ctype@D@std@@"
+		$AV17 = ".?AVsystem_error@std@@"
+		$AV18 = ".?AV?$basic_iostream@DU?$char_traits@D@std@@@std@@"
+		$AV19 = ".?AVcodecvt_base@std@@"
+		$AV20 = ".?AV_Facet_base@std@@"
+		$AV21 = ".?AV_Generic_error_category@std@@"
+		$AV22 = ".?AU_Crt_new_delete@std@@"
+		$AV23 = ".?AV?$_Iosb@H@std@@"
+		$AV24 = ".?AV?$basic_ofstream@DU?$char_traits@D@std@@@std@@"
+		$AV25 = ".?AV?$numpunct@D@std@@"
+		$AV26 = ".?AV?$basic_streambuf@DU?$char_traits@D@std@@@std@@"
+		$AV27 = ".?AV_Iostream_error_category@std@@"
+		$AV28 = ".?AVbad_cast@std@@"
+		$AV29 = ".?AUctype_base@std@@"
+		$AV30 = ".?AV?$basic_istream@DU?$char_traits@D@std@@@std@@"
+		$AV31 = ".?AV?$basic_ios@DU?$char_traits@D@std@@@std@@"
+		$AV32 = ".?AVfacet@locale@std@@"
+		$AV33 = ".?AV?$basic_ostream@DU?$char_traits@D@std@@@std@@"
+		$AV34 = ".?AV_System_error@std@@"
+		$AV35 = ".?AVexception@std@@"
+		$AV36 = ".?AV?$num_put@DV?$ostreambuf_iterator@DU?$char_traits@D@std@@@std@@@std@@"
+		$AV37 = ".?AVbad_array_new_length@std@@"
+
+    condition:
+        all of them
+}
+
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect functions associated with keylogger.exe"
+	
+    strings:
+		$function1 = "FlsAlloc"
+		$function2 = "InitializeCriticalSectionEx"
+		$function3 = "InitOnceExecuteOnce"
+		$function4 = "CreateEventExW"
+		$function5 = "CreateSemaphoreW"
+		$function6 = "SetThreadpoolTimer"
+		$function7 = "FlushProcessWriteBuffers"
+		$function8 = "GetCurrentProcessorNumber"
+		$function9 = "CreateSymbolicLinkW"
+		$function10 = "GetTickCount64"
+		$function11 = "SetFileInformationByHandle"
+		$function12 = "GetSystemTimePreciseAsFileTime"
+		$function13 = "InitializeConditionVariable"
+		$function14 = "WakeConditionVariable"
+		$function15 = "WakeAllConditionVariable"
+		$function16 = "SleepConditionVariableCS"
+		$function17 = "CompareStringEx"
+		$function18 = "GetLocaleInfoEx"
+		$function19 = "EnumSystemLocalesEx"
+		$function20 = "AppPolicyGetProcessTerminationMethod"
+		$function21 = "SetWindowsHookExW"
+		$function22 = "GetWindowTextA"
+		$function23 = "DispatchMessageW"
+		$function24 = "CallNextHookEx"
+		$function25 = "GetKeyState"
+		$function26 = "GetMessageW"
+		$function27 = "WideCharToMultiByte"
+		$function28 = "EnterCriticalSection"
+		$function29 = "InitializeCriticalSectionAndSpinCount"
+		$function30 = "SwitchToThread"
+		$function31 = "TlsAlloc"
+		$function32 = "GetProcAddress"
+		$function33 = "EncodePointer"
+		$function34 = "CompareStringW"
+		$function35 = "LCMapStringW"
+		$function36 = "GetLocaleInfoW"
+		$function37 = "GetStringTypeW"
+		$function38 = "GetCPInfo"
+		$function39 = "RtlCaptureContext"
+		$function40 = "UnhandledExceptionFilter"
+		$function41 = "SetUnhandledExceptionFilter"
+		$function42 = "GetCurrentProcess"
+		$function43 = "TerminateProcess"
+		$function44 = "IsProcessorFeaturePresent"
+		$function45 = "IsDebuggerPresent"
+		$function46 = "GetStartupInfoW"
+		$function47 = "QueryPerformanceCounter"
+		$function48 = "GetCurrentProcessId"
+		$function49 = "RtlPcToFileHeader"
+		$function50 = "RaiseException"
+		$function51 = "GetModuleFileNameW"
+		$function52 = "GetStdHandle"
+		$function53 = "WriteFile"
+		$function54 = "GetCommandLineA"
+		$function55 = "GetFileSizeEx"
+		$function56 = "HeapAlloc"
+		$function57 = "FlushFileBuffers"
+		$function58 = "IsValidLocale"
+		$function59 = "EnumSystemLocalesW"
+		$function60 = "GetFileAttributesExW"
+		$function61 = "ReadConsoleW"
+		$function62 = "HeapReAlloc"
+		$function63 = "FindClose"
+		$function64 = "IsValidCodePage"
+		$function65 = "GetEnvironmentStringsW"
+		$function66 = "SetStdHandle"
+		$function67 = "CreateFileW"
+		$function68 = "HeapSize"
+		$function69 = "WriteConsoleW"
+		$function70 = "SetEndOfFile"
+
+    condition:
+        all of them
+}
