@@ -1,0 +1,194 @@
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect functions associated with sql-rat.js"
+	
+    strings:
+		$function1 = "sleep"
+        $function2 = "listRunningProcesses"
+		$function3 = "netShareDiscovery"
+		$function4 = "isVm"
+		$function5 = "getADInformation"
+		$function6 = "getEnvVar"
+		$function7 = "getSysInfo"
+		$function8 = "getSysInfoDiscovery"
+		$function9 = "getMacSerial"
+		$function10 = "getRandomFile"
+		$function11 = "getCommandOutput"
+		$function13 = "sendTaskOutput"
+		$function14 = "downloadFile"
+		$function15 = "uploadFile"
+		$function16 = "execShellCommand"
+		$function17 = "deleteCmd"
+		$function18 = "getTasking"
+		
+    condition:
+        all of them
+}
+
+rule sleep
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the sleep function"
+	
+    strings:
+        $sleep1 = "jitter = Math.round(Math.random()*(max-min)+min)"
+		$sleep2 = "sleepInterval = 500*3*jitter"
+
+    condition:
+        all of them
+}
+
+rule isVm
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the isVm function"
+	
+    strings:
+        $isVm1 = "Select * From Win32_BIOS"
+		$isVm2 = "bios_version.indexOf('vmware')"
+		$isVm3 = "bios_version.indexOf('virtualbox')"
+		$isVm4 = "serial_number.indexOf('parallels')"
+		$isVm5 = "serial_number.indexOf('vmware')"
+        $isVm6 = "is_vm: "
+
+    condition:
+        all of them
+}
+
+rule getSysInfo
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the getSysInfo function"
+	
+    strings:
+        $getSysInfo1 = "('username***' + getEnvVar('%USERNAME%'))"
+		$getSysInfo2 = "('hostname***' + getEnvVar('%COMPUTERNAME%'))"
+		$getSysInfo3 = "('adinformation***' + ad)"
+		$getSysInfo4 = "('adinformation***no_ad')"
+		$getSysInfo5 = "Select * From Win32_ComputerSystem"
+		$getSysInfo6 = "('pc_domain***' + csItems.item().Domain)"
+		$getSysInfo7 = "('pc_dns_host_name***' + csItems.item().DNSHostName)"
+		$getSysInfo8 = "('pc_model***' + csItems.item().Model)"
+		$getSysInfo9 = "Select * From Win32_OperatingSystem"
+		$getSysInfo10 = "('os_architecture***' + osItems.item().OSArchitecture)"
+		$getSysInfo11 = "('os_version***' + osItems.item().Version)"
+
+    condition:
+        all of them
+}
+
+rule getMacSerial
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the getMacSerial function"
+	
+    strings:
+        $getMacSerial1 = "Select * From Win32_NetworkAdapterConfiguration Where IPEnabled = True"
+		$getMacSerial2 = "Select * from Win32_LogicalDisk"
+		$getMacSerial3 = "mac_address + serial"
+
+    condition:
+        all of them
+}
+
+rule sendTaskOutput
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the sendTaskOutput function"
+	
+    strings:
+        $sendTaskOutput1 = "ActiveXObject"
+		$sendTaskOutput2 = "ADODB.Command"
+		$sendTaskOutput3 = "INSERT INTO Responses "
+
+    condition:
+        all of them
+}
+
+rule downloadfile
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the downloadFile function"
+	
+    strings:
+        $downloadfile1 = "WScript.CreateObject('ADODB.Stream')"
+		$downloadfile2 = "WScript.CreateObject('Scripting.FileSystemObject')"
+		
+    condition:
+        all of them
+}
+
+rule uploadFile
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the uploadFile function"
+	
+    strings:
+        $uploadFile1 = "ADODB.Stream"
+		$uploadFile2 = "Scripting.FileSystemObject"
+		$uploadFile3 = "ActiveXObject"
+    condition:
+        all of them
+}
+
+rule execShellCommand
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the execShellCommand function"
+	
+    strings:
+        $execShellCommand1 = "echo '[+] Upload Complete' >"
+		$execShellCommand2 = "2>&1"
+		$execShellCommand3 = "enum-system"
+		$execShellCommand4 = "get-mac-serial"
+
+    condition:
+        all of them
+}
+
+rule deleteCmd
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the deleteCmd function"
+	
+    strings:
+        $deleteCmd1 = "DELETE FROM Requests WHERE ID = "
+
+    condition:
+        $deleteCmd1
+}
+
+rule getTasking
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the getTasking function"
+	
+    strings:
+        $getTasking1 = "SELECT ID, cmd, filecontent FROM Requests;"
+
+    condition:
+        $getTasking1
+}

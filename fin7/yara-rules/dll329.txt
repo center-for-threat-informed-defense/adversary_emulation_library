@@ -1,0 +1,47 @@
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings associated with dll329.dll"
+	
+    strings:
+
+		$strings1 = "InitializeCriticalSection"
+		$strings3 = "ZwMapViewOfSection"
+		$strings4 = "RtlCreateUserThread"
+		$strings5 = "WriteProcessMemory"
+		$strings6 = "GetCurrentProcess"
+		$strings7 = "UnmapViewOfFile"
+		$strings8 = "GetModuleHandleA"
+		$strings9 = "CloseHandle"
+		$strings10 = "GetProcAddress"
+		$strings11 = "VirtualAllocEx"
+		$strings12 = "CreateFileMappingA"
+		$strings13 = "CreateRemoteThread"
+		$strings14 = "MapViewOfFile"
+		$strings15 = "RtlUnwind"
+		$strings16 = "UnhandledExceptionFilter"
+		$strings17 = "SetUnhandledExceptionFilter"
+		$strings18 = "TerminateProcess"
+		$strings19 = "GetCurrentProcessId"
+		$strings20 = "GetCurrentThreadId"
+		$strings21 = "IsDebuggerPresent"
+		$strings22 = "GetModuleHandleW"
+		$strings23 = "InterlockedFlushSList"
+		$strings24 = "DeleteCriticalSection"
+		$strings25 = "ExitProcess"
+		$strings26 = "GetModuleHandleExW"
+		$strings27 = "GetModuleFileNameW"
+		$strings28 = "GetCommandLine"
+		$strings29 = "EnvironmentStringsW"
+		$strings30 = "WriteFile"
+		$strings31 = "GetConsole"
+		$strings32 = "SetFilePointerEx"
+		$strings33 = "CreateFileW"
+		$strings34 = "WriteConsoleW"
+		$strings35 = "DecodePointer"
+		
+    condition:
+        all of them
+}

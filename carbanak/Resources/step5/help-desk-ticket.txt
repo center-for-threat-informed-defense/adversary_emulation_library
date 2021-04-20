@@ -1,0 +1,9 @@
+Help Desk Ticket
+ID: 1234
+Summary: User financial.local\jsmith requires access to the Payment Transfer System.
+System: cfo.financial.local (10.0.0.5)
+Assignee: financial.local\kmitick
+Creator: Mitch Grimes
+Organization: financial.local
+Priority: High
+Due: 01/19/2020

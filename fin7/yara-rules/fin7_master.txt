@@ -1,0 +1,297 @@
+rule samcat
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/15/2021"
+		description = "Used to detect strings associated with samcat.exe"
+	
+    strings:
+        $katz1 = "NTPASSWORDHISTORY"
+		$katz2 = "LMPASSWORDHISTORY"
+		$katz3 = "NTPASSWORD"
+		$katz4 = "LMPASSWORD"
+		$katz5 = "mimikatz" nocase
+		$katz6 = "AcquireCredentialsHandleW"
+		$katz7 = "CreateProcess"
+		$katz8 = "CreateRemoteThread"
+		$katz9 = "CredentialKeys"
+		$katz10 = "CredEnumerateW"
+		$katz11 = "CredFree"
+		$katz12 = "CredIsMarshaledCredentialW"
+		$katz13 = "CredUnmarshalCredentialW"
+		$katz14 = "CryptAcquireCertificatePrivateKey"
+		$katz15 = "DeleteSecurityContext"
+		$katz16 = "DuplicateTokenEx"
+		$katz17 = "FreeCredentialsHandle"
+		$katz18 = "GetSystem"
+		$katz19 = "IsDebuggerPresent"
+		$katz20 = "LsaCallAuthenticationPackage"
+		$katz21 = "LsaClose"
+		$katz22 = "LsaEnumerateTrustedDomainsEx"
+		$katz23 = "LsaFreeMemory"
+		$katz24 = "LsaFreeReturnBuffer"
+		$katz25 = "LsaOpen"
+		$katz26 = "LsaQuery"
+		$katz27 = "OpenThreadToken"
+		$katz28 = "SamConnect"
+		$katz29 = "SamEnumerate"
+		$katz30 = "SamGetMembers"
+		$katz31 = "SamiChangePasswordUser"
+		$katz32 = "SamLookup"
+		$katz33 = "SamOpen"
+		$katz34 = "VirtualAlloc"
+		$katz35 = "SamCloseHandle"
+		
+    condition:
+        all of them
+}
+
+rule pillowmint
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/15/2021"
+		description = "Used to detect strings associated with pillowMint.exe"
+	
+    strings:
+        $pillowmint1 = "[i] searching for 'AccountingIQ.exe'"
+		$pillowmint2 = "[!] unable to find process with name AccountingIQ.exe"
+		$pillowmint3 = "[i] getting handle to AccountingIQ.exe via OpenProcess()"
+		$pillowmint4 = "[-] unable to get handle to AccountingIQ.exe"
+		$pillowmint5 = "[i] searching address"
+		$pillowmint6 = "for credit card records via ReadProcessMemory()"
+		$pillowmint7 = "[-] call to ReadProcessMemory failed with error code:"
+		$pillowmint8 = "[+] Found credit card record:"
+		$pillowmint9 = "[i] XOR Encrypting credit card data"
+		$pillowmint10 = "[+] Writing credit card record to file:"
+		$pillowmint11 = "[i] closing handle to AccountingIQ.exe"
+		$pillowmint12 = "[-] call to CloseHandle failed"
+		$pillowmint13 = "[i] finished"
+		$pillowmint14 = "[-] fatal error in call to Process32FirstW"
+		$pillowmint15 = "[+] Found process with name 'AccountingIQ.exe' (pid:"
+		$pillowmint16 = "CreateToolhelp32Snapshot"
+
+    condition:
+        all of them
+}
+
+rule hollow
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/15/2021"
+		description = "Used to detect strings associated with hollow.exe"
+	
+    strings:		
+		$hollow1 = "[---> Process Hollow  <---]"
+		$hollow2 = "[*] Running the target executable (%s)"
+		$hollow3 = "-k netsrv"
+		$hollow4 = "Error: Unable to run the target executable. CreateProcess failed with error %d"
+		$hollow5 = "Process created in suspended state (%s PID: %d)"
+		$hollow6 = "Memory unmapped from child process!"
+		$hollow7 = "Error: Invalid executable format."
+		$hollow8 = "Allocating RWX memory in child process."
+		$hollow9 = "Error: Unable to allocate memory in child process. VirtualAllocEx failed with error %d"
+		$hollow10 = "Memory allocated. Address: %#zx"
+		$hollow11 = "Writing executable image into child process."
+		$hollow12 = "New entry point: %#zx"
+		$hollow13 = "Setting the context of the child process's primary thread."
+		$hollow14 = "Resuming child process's primary thread."
+		$hollow15 = "Thread resumed."
+		$hollow16 = "ReadProcessMemory"
+		$hollow17 = "NtGetContextThread"
+		$hollow18 = "NtQueryInformationProcess"
+		$hollow19 = "NtReadVirtualMemory"
+		$hollow20 = "NtSetContextThread"
+		$hollow21 = "NtWriteVirtualMemory"
+		$hollow22 = "NtUnmapViewOfSection"
+		$hollow23 = "IsDebuggerPresent"
+		$hollow24 = "VirtualAlloc"
+        $hollow25 = "PAYLOAD:"
+		$hollow26 = "ntdll.dll"
+		$hollow27 = "wininet"
+		$hollow30 = "ProcessHollowing32-64-master"
+		$hollow31 = "ProcessHollowing.pdb"
+
+    condition:
+        all of them
+}
+
+rule sql_rat
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/15/2021"
+		description = "Used to detect strings associated with sql-rat.js"
+	
+    strings:
+        $sqlrat1 = "jitter = Math.round(Math.random()*(max-min)+min)"
+        $sqlrat2 = "Select * From Win32_BIOS"
+		$sqlrat3 = "bios_version.indexOf('vmware')"
+		$sqlrat4 = "bios_version.indexOf('virtualbox')"
+		$sqlrat5 = "serial_number.indexOf('parallels')"
+		$sqlrat6 = "serial_number.indexOf('vmware')"
+        $sqlrat7 = "('username***' + getEnvVar('%USERNAME%'))"
+		$sqlrat8 = "('hostname***' + getEnvVar('%COMPUTERNAME%'))"
+		$sqlrat9 = "('adinformation***' + ad)"
+		$sqlrat10 = "('adinformation***no_ad')"
+		$sqlrat11 = "Select * From Win32_ComputerSystem"
+		$sqlrat12 = "('pc_domain***' + csItems.item().Domain)"
+		$sqlrat13 = "('pc_dns_host_name***' + csItems.item().DNSHostName)"
+		$sqlrat14 = "('pc_model***' + csItems.item().Model)"
+		$sqlrat15 = "Select * From Win32_OperatingSystem"
+		$sqlrat16 = "('os_architecture***' + osItems.item().OSArchitecture)"
+		$sqlrat17 = "('os_version***' + osItems.item().Version)"
+        $sqlrat18 = "Select * From Win32_NetworkAdapterConfiguration Where IPEnabled = True"
+		$sqlrat19 = "Select * from Win32_LogicalDisk"
+		$sqlrat20 = "mac_address + serial"
+        $sqlrat21 = "echo '[+] Upload Complete' >"
+		$sqlrat22 = "enum-system"
+		$sqlrat23 = "get-mac-serial"
+        $sqlrat24 = "DELETE FROM Requests WHERE ID = "
+        $sqlrat25 = "SELECT ID, cmd, filecontent FROM Requests;"
+
+    condition:
+        all of them
+}
+
+rule boostwrite
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/15/2021"
+		description = "Used to detect strings in BOOSTWRITE.exe"
+
+    strings:
+        $boostwrite1 = "BOOSTWRITE" nocase
+		$boostwrite2 = "CryptStringToBinaryA"
+		$boostwrite3 = "GetCurrentProcess"
+		$boostwrite4 = "VirtualAllocEx"
+		$boostwrite5 = "WriteProcessMemory"
+		$boostwrite6 = "WriteFile"
+		$boostwrite7 = "GetTempPathW"
+		$boostwrite8 = "GetTempFileNameW"
+		$boostwrite9 = "CreateFileW"
+		$boostwrite10 = "GetModuleHandleW"
+		$boostwrite11 = "ReadProcessMemory"
+		$boostwrite12 = "CloseHandle"
+		$boostwrite13 = "QueryPerformanceCounter"
+		$boostwrite14 = "GetTickCount"
+		$boostwrite15 = "EnterCriticalSection"
+        $boostwrite16 = "LeaveCriticalSection"
+		$boostwrite17 = "InitializeCriticalSectionEx"
+		$boostwrite18 = "DeleteCriticalSection"
+		$boostwrite19 = "Sleep"
+		$boostwrite20 = "GetCurrentThreadId"
+		$boostwrite21 = "GetSystemTimeAsFileTime"
+		$boostwrite22 = "IsDebuggerPresent"
+		$boostwrite23 = "GetCurrentProcessId"
+		$boostwrite24 = "IsProcessorFeaturePresent"
+		$boostwrite25 = "TerminateProcess"
+		$boostwrite26 = "UnhandledExceptionFilter"
+		$boostwrite27 = "GetFileSizeEx"
+		$boostwrite28 = "SetLastError"
+		$boostwrite29 = "ReadFile"
+		$boostwrite30 = "GetLastError"
+		$boostwrite31 = "LoadLibraryA"
+		$boostwrite32 = "GetProcAddress"
+		$boostwrite33 = "GetModuleHandleA"
+        $boostwrite34 = "AVtype_info@@"
+		$boostwrite35 = "AVexception@std@@"
+		$boostwrite36 = "AVbad_"
+
+    condition:
+        all of them
+}
+
+rule babymetal
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/15/2021"
+		description = "Used to strings associated with babymetal.exe"
+	
+    strings:
+        $babymetal1 = "DeleteCriticalSection"
+		$babymetal2 = "EnterCriticalSection"
+		$babymetal3 = "GetCurrentProcess"
+		$babymetal4 = "GetCurrentThreadId"
+		$babymetal5 = "GetLastError"
+		$babymetal6 = "GetSystemTimeAsFileTime"
+		$babymetal7 = "GetTickCount"
+		$babymetal8 = "InitializeCriticalSection"
+		$babymetal9 = "LeaveCriticalSection"
+		$babymetal10 = "QueryPerformanceCounter"
+		$babymetal11 = "RtlAddFunctionTable"
+		$babymetal12 = "RtlCaptureContext"
+		$babymetal13 = "RtlLookupFunctionEntry"
+		$babymetal14 = "RtlVirtualUnwind"
+		$babymetal15 = "SetUnhandledExceptionFilter"
+		$babymetal16 = "Sleep"
+		$babymetal17 = "TerminateProcess"
+		$babymetal18 = "TlsGetValue"
+		$babymetal19 = "UnhandledExceptionFilter"
+		$babymetal20 = "VirtualAlloc"
+		$babymetal21 = "VirtualProtect"
+		$babymetal22 = "VirtualQuery"
+		$babymetal24 = "abort"
+		$babymetal25 = "calloc"
+		$babymetal26 = "DllEntryPoint"
+		$babymetal27 = "DllMainCRTStartup"
+		$babymetal28 = "fwrite"
+		$babymetal29 = "malloc.h"
+		$babymetal30 = "realloc"
+		$babymetal31 = "threadID"
+		$babymetal32 = "tzname"
+
+    condition:
+        all of them
+}
+
+rule dll329
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/15/2021"
+		description = "Used to detect strings associated with dll329.dll"
+	
+    strings:
+
+		$dll1 = "InitializeCriticalSection"
+		$dll3 = "ZwMapViewOfSection"
+		$dll4 = "RtlCreateUserThread"
+		$dll5 = "WriteProcessMemory"
+		$dll6 = "GetCurrentProcess"
+		$dll7 = "UnmapViewOfFile"
+		$dll8 = "GetModuleHandleA"
+		$dll9 = "CloseHandle"
+		$dll10 = "GetProcAddress"
+		$dll11 = "VirtualAllocEx"
+		$dll12 = "CreateFileMappingA"
+		$dll13 = "CreateRemoteThread"
+		$dll14 = "MapViewOfFile"
+		$dll15 = "RtlUnwind"
+		$dll16 = "UnhandledExceptionFilter"
+		$dll17 = "SetUnhandledExceptionFilter"
+		$dll18 = "TerminateProcess"
+		$dll19 = "GetCurrentProcessId"
+		$dll20 = "GetCurrentThreadId"
+		$dll21 = "IsDebuggerPresent"
+		$dll22 = "GetModuleHandleW"
+		$dll23 = "InterlockedFlushSList"
+		$dll24 = "DeleteCriticalSection"
+		$dll25 = "ExitProcess"
+		$dll26 = "GetModuleHandleExW"
+		$dll27 = "GetModuleFileNameW"
+		$dll28 = "GetCommandLine"
+		$dll29 = "EnvironmentStringsW"
+		$dll30 = "WriteFile"
+		$dll31 = "GetConsole"
+		$dll32 = "SetFilePointerEx"
+		$dll33 = "CreateFileW"
+		$dll34 = "WriteConsoleW"
+		$dll35 = "DecodePointer"
+		
+    condition:
+        all of them
+}

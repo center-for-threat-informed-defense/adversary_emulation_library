@@ -1,0 +1,108 @@
+rule usage
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect terms from usage section of tiny.exe"
+	
+    strings:
+        $usage1 = "tiny.exe" nocase
+		$usage2 = "lhost" nocase
+		$usage3 = "lport" nocase
+
+    condition:
+        all of them
+}
+
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect functions associated with tiny.exe"
+	
+    strings:
+        $function1 = "DeleteCriticalSection"
+		$function2 = "EnterCriticalSection"
+		$function3 = "GetCurrentProcess"
+		$function4 = "GetCurrentProcessId"
+		$function5 = "GetCurrentThreadId"
+		$function6 = "GetLastError"
+		$function7 = "GetStartupInfoA"
+		$function8 = "GetSystemTimeAsFileTime"
+		$function9 = "GetTickCount"
+		$function10 = "InitializeCriticalSection"
+		$function11 = "IsDBCSLeadByteEx"
+		$function12 = "LeaveCriticalSection"
+		$function13 = "MultiByteToWideChar"
+		$function14 = "QueryPerformanceCounter"
+		$function15 = "RtlAddFunctionTable"
+		$function16 = "RtlCaptureContext"
+		$function17 = "RtlLookupFunctionEntry"
+		$function18 = "RtlVirtualUnwind"
+		$function19 = "SetUnhandledExceptionFilter"
+		$function20 = "Sleep"
+		$function21 = "TerminateProcess"
+		$function22 = "TlsGetValue"
+		$function23 = "UnhandledExceptionFilter"
+		$function24 = "VirtualAlloc"
+		$function25 = "VirtualProtect"
+		$function26 = "VirtualQuery"
+		$function27 = "WideCharToMultiByte"
+
+    condition:
+        all of them
+}
+
+rule tiny_strings
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings associated with tiny.exe"
+	
+    strings:
+        $string1 = "WVSH"
+		$string2 = "UATWVSH"
+		$string3 = "UAUATWVSH"
+		$string4 = "UAWAVAUATWVSH"
+		$string5 = "AUATUWVSH"
+		$string6 = "ATUWVSH"
+		$string7 = "AVAUATUWVSH"
+		$string8 = "gY0uKgg0=L"
+		$string9 = "10.10.10.10 443"
+
+    condition:
+        all of them
+}
+
+rule errors
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect error outputs associated with tiny.exe"
+	
+    strings:
+		$error1 = "Unable to initialize winsock"
+		$error2 = "Unable to get hostname"
+		$error3 = "Unable to create socket"
+		$error4 = "Unable to connect to remote server"
+		$error5 = "Connecting to control server: %s:%s"
+		$error6 = "Argument domain error (DOMAIN)"
+		$error7 = "Argument singularity (SIGN)"
+		$error8 = "Overflow range error (OVERFLOW)"
+		$error9 = "Partial loss of significance (PLOSS)"
+		$error10 = "Total loss of significance (TLOSS)"
+		$error11 = "The result is too small to be represented (UNDERFLOW)"
+		$error12 = "_matherr(): %s in %s(%g, %g)  (retval=%g)"
+		$error13 = "Mingw-w64 runtime failure:"
+		$error14 = "Address %p has no image-section"
+		$error15 = "VirtualQuery failed for %d bytes at address %p"
+		$error16 = "VirtualProtect failed with code 0x%x"
+		$error17 = "Unknown pseudo relocation protocol version %d."
+		$error18 = "Unknown pseudo relocation bit size %d."
+
+    condition:
+        all of them
+}

