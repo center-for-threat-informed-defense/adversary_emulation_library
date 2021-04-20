@@ -1,0 +1,147 @@
+rule boostwrite
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect BOOSTWRITE file name"
+	
+    strings:
+        $boostwrite1 = "BOOSTWRITE" nocase
+
+    condition:
+        all of them
+}
+
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect functions associated with BOOSTWRITE.dll"
+	
+    strings:
+        $functions1 = "WinBioGetEnrolledFactors"
+		$functions2 = "WSAIoctl"
+		$functions3 = "getaddrinfo"
+		$functions4 = "freeaddrinfo"
+		$functions5 = "CertOpenStore"
+		$functions6 = "CertCloseStore"
+		$functions7 = "CertEnumCertificatesInStore"
+		$functions8 = "CertFindCertificateInStore"
+		$functions9 = "CertFreeCertificateContext"
+		$functions10 = "CryptStringToBinaryA"
+		$functions11 = "CertAddCertificateContextToStore"
+		$functions12 = "CertGetNameStringA"
+		$functions13 = "CryptQueryObject"
+		$functions14 = "CertCreateCertificateChainEngine"
+		$functions15 = "CertFreeCertificateChainEngine"
+		$functions16 = "CertGetCertificateChain"
+		$functions17 = "CertFreeCertificateChain"
+		$functions18 = "CryptAcquireContextA"
+        $functions19 = "CryptReleaseContext"
+		$functions20 = "CryptGetHashParam"
+		$functions21 = "CryptGenRandom"
+		$functions22 = "CryptCreateHash"
+		$functions23 = "CryptHashData"
+		$functions24 = "CryptDestroyHash"
+		$functions25 = "GetCurrentProcess"
+		$functions26 = "VirtualAllocEx"
+		$functions27 = "WriteProcessMemory"
+		$functions28 = "WriteFile"
+		$functions29 = "GetTempPathW"
+		$functions30 = "GetTempFileNameW"
+		$functions31 = "CreateFileW"
+		$functions32 = "GetModuleHandleW"
+		$functions33 = "K32GetProcessMemoryInfo"
+		$functions34 = "ReadProcessMemory"
+		$functions35 = "CloseHandle"
+		$functions36 = "QueryPerformanceCounter"
+		$functions37 = "GetTickCount"
+		$functions38 = "EnterCriticalSection"
+        $functions39 = "LeaveCriticalSection"
+		$functions40 = "InitializeCriticalSectionEx"
+		$functions41 = "DeleteCriticalSection"
+		$functions42 = "Sleep"
+		$functions43 = "SleepEx"
+		$functions44 = "GetCurrentThreadId"
+		$functions45 = "GetSystemTimeAsFileTime"
+		$functions46 = "InitializeSListHead"
+		$functions47 = "IsDebuggerPresent"
+		$functions48 = "GetCurrentProcessId"
+		$functions49 = "IsProcessorFeaturePresent"
+		$functions50 = "TerminateProcess"
+		$functions51 = "SetUnhandledExceptionFilter"
+		$functions52 = "UnhandledExceptionFilter"
+		$functions53 = "GetFileSizeEx"
+		$functions54 = "CreateFileA"
+		$functions55 = "FormatMessageA"
+		$functions56 = "SetLastError"
+		$functions57 = "WaitForMultipleObjects"
+		$functions58 = "PeekNamedPipe"
+		$functions59 = "ReadFile"
+		$functions60 = "GetFileType"
+		$functions61 = "GetStdHandle"
+		$functions62 = "ExpandEnvironmentStringsA"
+		$functions63 = "GetLastError"
+		$functions64 = "WaitForSingleObjectEx"
+		$functions65 = "VerifyVersionInfoA"
+		$functions66 = "LoadLibraryA"
+		$functions67 = "GetProcAddress"
+		$functions68 = "GetModuleHandleA"
+		$functions69 = "FreeLibrary"
+		$functions70 = "GetSystemDirectoryA"
+		$functions71 = "QueryPerformanceFrequency"
+		$functions72 = "VerSetConditionMask"
+
+    condition:
+        all of them
+}
+
+rule av
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings associated with AV"
+	
+    strings:
+        $av1 = "AVtype_info@@"
+		$av2 = "AVexception@std@@"
+		$av3 = "AVbad_alloc@std@@"
+		$av4 = "AVbad_array_new_length@std@@"
+
+    condition:
+        all of them
+}
+
+rule dll
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect DLLs associated with BOOSTWRITE.dll"
+	
+    strings:
+        $dll1 = "iphlpapi.dll"
+		$dll2 = "WS2_32.DLL"
+		$dll3 = "security.dll"
+		$dll4 = "secur32.dll"
+		$dll5 = "WLDAP32.dll"
+		$dll6 = "CRYPT32.dll"
+		$dll7 = "ADVAPI32.dll"
+		$dll8 = "KERNEL32.dll"
+		$dll9 = "MSVCP140.dll"
+		$dll10 = "VCRUNTIME140.dll"
+		$dll11 = "api-ms-win-crt-heap-l1-1-0.dll"
+		$dll12 = "api-ms-win-crt-runtime-l1-1-0.dll"
+		$dll13 = "api-ms-win-crt-utility-l1-1-0.dll"
+		$dll14 = "api-ms-win-crt-stdio-l1-1-0.dll"
+		$dll15 = "api-ms-win-crt-time-l1-1-0.dll"
+		$dll16 = "api-ms-win-crt-string-l1-1-0.dll"
+		$dll17 = "api-ms-win-crt-filesystem-l1-1-0.dll"
+		$dll18 = "api-ms-win-crt-convert-l1-1-0.dll"
+		$dll19 = "api-ms-win-crt-environment-l1-1-0.dll"		
+
+    condition:
+        all of them
+}

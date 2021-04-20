@@ -1,0 +1,44 @@
+- name: <domain>
+  description: The name of the target institution's domain.
+  default: hospitality
+  value: ""
+- name: <domain_full>
+  description: The full name of the target institution's domain.
+  default: hospitality.local
+  value: ""
+- name: <domain_admin>
+  description: Domain administrator that executes the initial payload.
+  default: kmitnick
+  value: ""
+- name: <domain_admin_password>
+  description: Password for the domain admin account.
+  default: 79a&LbjM@MlW8XZa
+  value: ""
+- name: <domain_admin_password_hash>
+  description: Hash of the domain admin account's password.
+  default: c3aa78cd0827b8e8603ac1c8996e6556
+  value: ""
+- name: <attacker>
+  description: The username of the attacker user on the attack platform.
+  default: gfawkes
+  value: ""
+- name: <ubuntu_fin7_dir_abs_path>
+  description: The absolute path to the FIN7 directory on your Ubuntu machine.
+  default: /home/attack/fin7
+  value: ""
+- name: <hoteldc_ip>
+  description: IP address of the hospitality domain's DC.
+  default: 10.0.1.4
+  value: ""
+- name: <hotelmanager_ip>
+  description: IP address of the Hotel Manager workstation.
+  default: 10.0.1.5
+  value: ""
+- name: <itadmin_ip>
+  description: IP address of the IT Admin workstation.
+  default: 10.0.1.6
+  value: ""
+- name: <accounting_ip>
+  description: IP address of the Accounting workstation.
+  default: 10.0.1.7
+  value: ""

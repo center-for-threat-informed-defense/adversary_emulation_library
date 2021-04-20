@@ -1,0 +1,162 @@
+rule output
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect output associated with pillowMint.exe"
+	
+    strings:
+        $output1 = "[i] searching for 'AccountingIQ.exe'"
+		$output2 = "[!] unable to find process with name AccountingIQ.exe"
+		$output3 = "[i] getting handle to AccountingIQ.exe via OpenProcess()"
+		$output4 = "[-] unable to get handle to AccountingIQ.exe"
+		$output5 = "[i] searching address"
+		$output6 = "for credit card records via ReadProcessMemory()"
+		$output7 = "[-] call to ReadProcessMemory failed with error code:"
+		$output8 = "[+] Found credit card record:"
+		$output9 = "[i] XOR Encrypting credit card data"
+		$output10 = "[+] Writing credit card record to file:"
+		$output11 = "[i] closing handle to AccountingIQ.exe"
+		$output12 = "[-] call to CloseHandle failed"
+		$output13 = "[i] finished"
+		$output14 = "[-] fatal error in call to Process32FirstW"
+		$output15 = "[+] Found process with name 'AccountingIQ.exe' (pid:"
+
+    condition:
+        all of them
+}
+
+rule shim
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings associated with shimming"
+	
+    strings:
+        $shim1 = "cannot create shim for unknown locale::facet"
+		$shim2 = "*NSt13__facet_shims12_GLOBAL__N_112collate_shimIcEE"
+		$shim3 = "*NSt13__facet_shims12_GLOBAL__N_112collate_shimIwEE"
+		$shim4 = "*NSt13__facet_shims12_GLOBAL__N_113messages_shimIcEE"
+		$shim5 = "*NSt13__facet_shims12_GLOBAL__N_113messages_shimIwEE"
+		$shim6 = "*NSt13__facet_shims12_GLOBAL__N_113numpunct_shimIcEE"
+		$shim7 = "*NSt13__facet_shims12_GLOBAL__N_113numpunct_shimIwEE"
+		$shim8 = "*NSt13__facet_shims12_GLOBAL__N_113time_get_shimIcEE"
+		$shim9 = "*NSt13__facet_shims12_GLOBAL__N_113time_get_shimIwEE"
+		$shim10 = "*NSt13__facet_shims12_GLOBAL__N_114money_get_shimIwEE"
+		$shim11 = "*NSt13__facet_shims12_GLOBAL__N_114money_put_shimIcEE"
+		$shim12 = "*NSt13__facet_shims12_GLOBAL__N_114money_put_shimIwEE"
+		$shim13 = "*NSt13__facet_shims12_GLOBAL__N_115moneypunct_shimIcLb0EEE"
+		$shim14 = "*NSt13__facet_shims12_GLOBAL__N_115moneypunct_shimIcLb1EEE"
+		$shim15 = "*NSt13__facet_shims12_GLOBAL__N_115moneypunct_shimIwLb0EEE"
+		$shim16 = "*NSt13__facet_shims12_GLOBAL__N_115moneypunct_shimIwLb1EEE"
+		
+    condition:
+        all of them
+}
+
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect functions associated with pillowMint.exe"
+	
+    strings:
+	    $function1 = "AddVectoredExceptionHandler"
+		$function2 = "CloseHandle"
+		$function3 = "CreateEventA"
+		$function4 = "CreateSemaphoreA"
+		$function5 = "CreateToolhelp32Snapshot"
+		$function6 = "DeleteCriticalSection"
+		$function7 = "DuplicateHandle"
+		$function8 = "EnterCriticalSection"
+		$function9 = "GetCurrentProcess"
+		$function10 = "GetCurrentProcessId"
+        $function11 = "GetCurrentThread"
+		$function12 = "GetCurrentThreadId"
+		$function13 = "GetHandleInformation"
+		$function14 = "GetLastError"
+		$function15 = "GetProcessAffinityMask"
+		$function16 = "GetStartupInfoA"
+		$function17 = "GetSystemTimeAsFileTime"
+		$function18 = "GetThreadContext"
+		$function19 = "GetThreadPriority"
+		$function20 = "GetTickCount"
+        $function21 = "InitializeCriticalSection"
+		$function22 = "IsDBCSLeadByteEx"
+		$function23 = "IsDebuggerPresent"
+		$function24 = "LeaveCriticalSection"
+		$function25 = "MultiByteToWideChar"
+		$function26 = "OpenProcess"
+		$function27 = "OutputDebugStringA"
+		$function28 = "Process32FirstW"
+		$function29 = "Process32NextW"
+		$function30 = "QueryPerformanceCounter"
+        $function31 = "RaiseException"
+		$function32 = "ReadProcessMemory"
+		$function33 = "ReleaseSemaphore"
+		$function34 = "RemoveVectoredExceptionHandler"
+		$function35 = "ResetEvent"
+		$function36 = "ResumeThread"
+		$function37 = "RtlAddFunctionTable"
+		$function38 = "RtlCaptureContext"
+		$function39 = "RtlLookupFunctionEntry"
+		$function40 = "RtlUnwindEx"
+        $function41 = "RtlVirtualUnwind"
+		$function42 = "SetEvent"
+		$function43 = "SetLastError"
+		$function44 = "SetProcessAffinityMask"
+		$function45 = "SetThreadContext"
+		$function46 = "SetThreadPriority"
+		$function47 = "SetUnhandledExceptionFilter"
+		$function48 = "Sleep"
+		$function49 = "SuspendThread"
+		$function50 = "TerminateProcess"
+        $function51 = "TlsAlloc"
+		$function52 = "TlsGetValue"
+		$function53 = "TlsSetValue"
+		$function54 = "TryEnterCriticalSection"
+		$function55 = "UnhandledExceptionFilter"
+		$function56 = "VirtualProtect"
+		$function57 = "VirtualQuery"
+		$function58 = "WaitForMultipleObjects"
+		$function59 = "WaitForSingleObject"
+		$function60 = "WideCharToMultiByte"
+		
+    condition:
+        all of them
+}
+
+rule money
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings associated with financial features"
+	
+    strings:
+        $money1 = "%s: __pos (which is %zu) > this->size() (which is %zu)"
+		$money2 = "NSt7__cxx119money_getIcSt19istreambuf_iteratorIcSt11char_traitsIcEEEE"
+		$money3 = "NSt7__cxx119money_getIwSt19istreambuf_iteratorIwSt11char_traitsIwEEEE"
+		$money4 = "NSt7__cxx119money_putIcSt19ostreambuf_iteratorIcSt11char_traitsIcEEEE"
+		$money5 = "NSt7__cxx119money_putIwSt19ostreambuf_iteratorIwSt11char_traitsIwEEEE"
+		$money6 = "NSt7__cxx1110moneypunctIcLb1EEE"
+		$money7 = "NSt7__cxx1110moneypunctIwLb0EEE"
+		$money8 = "St10money_base"
+		$money9 = "St10moneypunctIcLb0EE"
+		$money10 = "St10moneypunctIcLb1EE"
+		$money11 = "St10moneypunctIwLb0EE"
+		$money12 = "St10moneypunctIwLb1EE"
+		$money13 = "St17moneypunct_bynameIcLb0EE"
+		$money14 = "St17moneypunct_bynameIcLb1EE"
+		$money15 = "St17moneypunct_bynameIwLb0EE"
+		$money16 = "St17moneypunct_bynameIwLb1EE"
+		$money17 = "St18__moneypunct_cacheIcLb0EE"
+		$money18 = "St18__moneypunct_cacheIcLb1EE"
+		$money19 = "St18__moneypunct_cacheIwLb0EE"
+		$money20 = "St18__moneypunct_cacheIwLb1EE"
+
+    condition:
+        all of them
+}

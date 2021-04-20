@@ -1,0 +1,142 @@
+The md5 hash and strings found in infosMin48.exe found below:
+
+root@kali:~/Desktop# md5sum infosMin48.exe 
+a1da94d9ccce68afb28ab1cb120ff16e  infosMin48.exe
+root@kali:~/Desktop# strip -s infosMin48.exe 
+root@kali:~/Desktop# md5sum infosMin48.exe 
+7b3cab8ff334689883f0f8e7bfdebf7c  infosMin48.exe
+
+root@kali:~/Desktop# strings infosMin48.exe 
+!This program cannot be run in DOS mode.
+.text
+0`.rsrc
+.reloc
+BSJB
+v4.0.30319
+#Strings
+#GUID
+#Blob
+<GetCreds>g__GetVaultElementValue|0_0
+ReadInt32
+Dictionary`2
+UInt64
+ToInt64
+ReadInt16
+arg6
+infosMin48
+<Module>
+VAULT_SCHEMA_ELEMENT_ID
+VAULT_ELEMENT_TYPE
+VAULT_ITEM
+VAULT_ITEM_ELEMENT
+value__
+mscorlib
+System.Collections.Generic
+FromFileTimeUtc
+SchemaId
+schemaId
+SchemaElementId
+LastModified
+Undefined
+pPackageSid
+vaultGuid
+GetField
+AppEnd
+IdentityReference
+Resource
+VaultFree
+Double
+RuntimeTypeHandle
+GetTypeFromHandle
+vaultHandle
+Console
+pszCredentialFriendlyName
+DateTime
+WriteLine
+ValueType
+GetType
+PtrToStructure
+CompilerGeneratedAttribute
+DebuggableAttribute
+CompilationRelaxationsAttribute
+RuntimeCompatibilityAttribute
+ReadByte
+get_Value
+GetValue
+infosMin48_tmp.exe
+chunkSize
+SizeOf
+ToString
+VaultCli
+PtrToStringUni
+Illegal
+Marshal
+System.Security.Principal
+vaultcli.dll
+get_Item
+VaultGetItem
+vaultItem
+System
+Enum
+Boolean
+Main
+System.Reflection
+Exception
+FieldInfo
+Zero
+zero
+TimeStamp
+infosMin48_tmp
+SecurityIdentifier
+Authenticator
+.ctor
+passwordVaultPtr
+ReadIntPtr
+vaultElementPtr
+System.Diagnostics
+GetCreds
+System.Runtime.InteropServices
+System.Runtime.CompilerServices
+DebuggingModes
+dwFlags
+args
+VaultEnumerateItems
+Infos
+VaultEnumerateVaults
+pPropertyElements
+Concat
+Object
+offset
+op_Explicit
+VaultCloseVault
+VaultOpenVault
+UnsignedInt
+pResourceElement
+pAuthenticatorElement
+pIdentityElement
+vaultItemCount
+dwPropertiesCount
+vaultCount
+AppStart
+UnsignedShort
+Last
+ProtectedArray
+ByteArray
+ContainsKey
+op_Inequality
+Identity
+WrapNonExceptionThrows
+_CorExeMain
+mscoree.dll
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+    <security>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+</assembly>
+

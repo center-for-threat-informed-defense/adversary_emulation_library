@@ -1,0 +1,145 @@
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect functions associated with http-rat.js"
+	
+    strings:
+		$function1 = "GetComputerInform"
+        $function2 = "GetCompProcess"
+		$function3 = "createGUID"
+		$function4 = "getTasking"
+		$function5 = "sendTaskOutput"
+		$function6 = "downloadFile"
+		$function7 = "uploadFile"
+		$function8 = "getRandomFile"
+		$function9 = "execShellCommand"
+		$function10 = "getCommandOutput"
+		$function11 = "getProxy"
+		$function12 = "sleep"
+		
+    condition:
+        all of them
+}
+
+rule output
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect command-line output of http-rat.js"
+	
+    strings:
+        $output1 = "Computer name:"
+		$output2 = "Domain:"
+		$output3 = "Username:"
+		$output4 = "OS-bit:"
+		$output5 = "OS Name: "
+		$output6 = "Version: "
+		$output7 = "Service Pack: "
+		$output8 = "OS Manufacturer: "
+		$output9 = "Windows Directory: "
+		$output10 = "Locale: "
+		$output11 = "Available Physical Memory: "
+		$output12 = "Total Virtual Memory: "
+		$output13 = "Available Virtual Memory: "
+    condition:
+        all of them
+}
+
+rule UserAgent
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect user agent associated with http-rat.js"
+	
+    strings:
+        $UserAgent1 = "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC Pyramind Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
+
+    condition:
+        $UserAgent1
+}
+
+rule lhost
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "7/14/2020"
+		description = "Used to detect use of lhost variable"
+	
+    strings:
+        $lhost1 = "LHOST ="
+		$lhost2 = "url = LHOST + url"
+
+    condition:
+        all of them
+}
+
+rule downloadfile
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the downloadFile function"
+	
+    strings:
+        $ADODBstream = "WScript.CreateObject('ADODB.Stream')"
+		$FileSystemObject = "WScript.CreateObject('Scripting.FileSystemObject')"
+		
+    condition:
+        all of them
+}
+
+rule execShellCommand
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the execShellCommand function"
+	
+    strings:
+        $execShellCommand1 = "echo '[+] Upload Complete' >"
+		$execShellCommand2 = "2>&1"
+		$execShellCommand3 = "enum-system"
+
+    condition:
+        all of them
+}
+
+rule getProxy
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the getProxy function"
+	
+    strings:
+        $getProxy1 = "HKEY_CURRENT_USER" 
+		$getProxy2 = "Software"
+		$getProxy3 = "Microsoft"
+		$getProxy4 = "Windows"
+		$getProxy5 = "CurrentVersion"
+		$getProxy6 = "Internet Settings"
+		$getProxy7 = "ProxyEnable"
+		$getProxy8 = "ProxyServer"
+
+    condition:
+        7 of them
+}
+
+rule sleep
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings from the sleep function"
+	
+    strings:
+        $sleep1 = "jitter = Math.round(Math.random()*(max-min)+min)"
+		$sleep2 = "sleepInterval = 500*3*jitter"
+
+    condition:
+        all of them
+}
