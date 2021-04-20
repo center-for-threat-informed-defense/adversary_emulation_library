@@ -36,55 +36,55 @@ SQLRat ([S0390](https://attack.mitre.org/software/S0390/)) | | Remote Access Too
 
 #### The following behaviors are in scope for an emulation of actions attributed to FIN7 as referenced by [MITRE ATT&CK](https://attack.mitre.org/groups/G0046/).
 
-![/Attack_Layers/FIN7_G0046.png](/Attack_Layers/FIN7_G0046.png)
+![/Attack_Layers/FIN7_G0046.png](/fin7/Attack_Layers/FIN7_G0046.png)
 
-## [Scenario 1](/Emulation_Plan/Scenario_1/README.md)
+## [Scenario 1](/fin7/Emulation_Plan/Scenario_1/README.md)
 
 #### The following behaviors are in scope for an emulation of actions attributed to FIN7, as implemented in Scenario 1, in the [referenced reporting](#references).
 
-![/Attack_Layers/FIN7_Scenario1.png](/Attack_Layers/FIN7_Scenario1.png)
+![/Attack_Layers/FIN7_Scenario1.png](/fin7/Attack_Layers/FIN7_Scenario1.png)
 
-## [Scenario 2](/Emulation_Plan/Scenario_2/README.md)
+## [Scenario 2](/fin7/Emulation_Plan/Scenario_2/README.md)
 
 #### The following behaviors are in scope for an emulation of actions attributed to FIN7, as implemented in Scenario 2, in the [referenced reporting](#references).
 
-![/Attack_Layers/FIN7_Scenario2.png](/Attack_Layers/FIN7_Scenario2.png)
+![/Attack_Layers/FIN7_Scenario2.png](/fin7/Attack_Layers/FIN7_Scenario2.png)
 
 ## [BOOSTWRITE](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0415%2FS0415-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN7 using BOOSTWRITE, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/BOOSTWRITE_S0415.png](/Attack_Layers/BOOSTWRITE_S0415.png)
+![/Attack_Layers/BOOSTWRITE_S0415.png](/fin7/Attack_Layers/BOOSTWRITE_S0415.png)
 
 ## [Carbanak](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0030%2FS0030-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN7 using Carbanak, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/Carbanak_S0030.png](/Attack_Layers/Carbanak_S0030.png)
+![/Attack_Layers/Carbanak_S0030.png](/fin7/Attack_Layers/Carbanak_S0030.png)
 
 ## [GRIFFON](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0417%2FS0417-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN7 using GRIFFON, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/GRIFFON_S0417.png](/Attack_Layers/GRIFFON_S0417.png)
+![/Attack_Layers/GRIFFON_S0417.png](/fin7/Attack_Layers/GRIFFON_S0417.png)
 
 ## [HALFBAKED](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0151%2FS0151-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN7 using HALFBAKED, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/HALFBAKED_S0151.png](/Attack_Layers/HALFBAKED_S0151.png)
+![/Attack_Layers/HALFBAKED_S0151.png](/fin7/Attack_Layers/HALFBAKED_S0151.png)
 
 ## [Pillowmint](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0517%2FS0517-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN7 using Pillowmint, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/Pillowmint_S0517.png](/Attack_Layers/Pillowmint_S0517.png)
+![/Attack_Layers/Pillowmint_S0517.png](/fin7/Attack_Layers/Pillowmint_S0517.png)
 
 ## [SQLRat](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0390%2FS0390-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by FIN7 using SQLRat, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/SQLRat_S0390.png](/Attack_Layers/SQLRat_S0390.png)
+![/Attack_Layers/SQLRat_S0390.png](/fin7/Attack_Layers/SQLRat_S0390.png)
 
 ---
 
@@ -128,15 +128,15 @@ ID | Source | Publisher | Date |
 
 ## Additional Plan Resources
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
-- [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Intelligence Summary](/fin7/Intelligence_Summary.md)
+- [Operations Flow](/fin7/Operations_Flow.md)
+- [Emulation Plan](/fin7/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/fin7/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/fin7/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/fin7/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/fin7/Emulation_Plan/Scenario_2)
+  - [YAML](/fin7/Emulation_Plan/yaml)
+- [File Hashes](/fin7/hashes)
+- [YARA Rules](/fin7/yara-rules)
+- [Issues](/issues)
+- [Change Log](/fin7/CHANGE_LOG.md)
