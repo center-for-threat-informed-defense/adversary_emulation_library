@@ -4,7 +4,7 @@ For the purpose of this emulation plan, FIN7 operations have been separated into
 
 While in Scenario 1 each objective enables subsequent objectives, Scenario 2 is designed such that each objective is run independently of any other. Specifically, this scenario is intended to be used in an environment that does **not** have protective/preventative defense measures enabled, so as to assess detection capabilities. That said, each organization can tailor this emulation to their individual use case, priorities, and available resources. The assessing team can begin at any scenario or objective but should do so understanding that each objective enables succeeding objectives.
 
-This emulation plan contains several placeholder values that are meant to be replaced with values specific to the target environment against which this plan is to be run. For ease of use, a script has been included to automatically make these substitutions, found [here](/Resources/placeholder_substitution). 
+This emulation plan contains several placeholder values that are meant to be replaced with values specific to the target environment against which this plan is to be run. For ease of use, a script has been included to automatically make these substitutions, found [here](/fin7/Resources/placeholder_substitution). 
 
 ---
 
@@ -31,7 +31,7 @@ This emulation plan contains several placeholder values that are meant to be rep
 
 
 ## Pre-requisites
-Prior to beginning the following emulation Scenario, ensure you have the proper infrastructure requirements and configuration in place as stated in the [Scenario 1 Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md) documentation.
+Prior to beginning the following emulation Scenario, ensure you have the proper infrastructure requirements and configuration in place as stated in the [Scenario 1 Infrastructure](/fin7/Emulation_Plan/Scenario_1/Infrastructure.md) documentation.
 
 ## Step 0 - Start C2 Server
 
@@ -135,7 +135,7 @@ On `hotelmanager`:
 ## Step 2 - Delayed Malware Execution (Evaluations Step 12)
 
 The previously created scheduled task spawns `Adb156.exe` via `svchost` ([T1053.005](https://attack.mitre.org/techniques/T1053/005/)). 
-`Adb156.exe` then loads `scrobj.dll` and executes [`sql-rat.js`](/Resources/Step1/sql-rat.js) via jscript ([T1059.7](https://attack.mitre.org/techniques/T1059/007/)).
+`Adb156.exe` then loads `scrobj.dll` and executes [`sql-rat.js`](/fin7/Resources/Step1/sql-rat.js) via jscript ([T1059.7](https://attack.mitre.org/techniques/T1059/007/)).
 Next, Adb156.exe then connects to 192.168.0.6 via MSSQL transactions ([T1071](https://attack.mitre.org/techniques/T1071)) (TCP port 1433).
 Finally, FIN7 performs WMI queries to obtain network configuration information ([T1016](https://attack.mitre.org/techniques/T1016/)) and system information ([T1082](https://attack.mitre.org/techniques/T1082/)).
 
@@ -152,7 +152,7 @@ On the `Windows Attack Platform`:
 
 #### 2.B - Upload Powershell Stager
  
-1. Upload the [PowerShell stager](/Resources/Step2/stager.ps1) via SQLRat.
+1. Upload the [PowerShell stager](/fin7/Resources/Step2/stager.ps1) via SQLRat.
     ```
     [ATT&CK RAT]> upload-file C:\\stager.ps1 C:\\Users\\<domain_admin>.<domain>\\AppData\\Local\\stager.ps1
     ```
@@ -708,15 +708,15 @@ On the `Linux Attack Platform`:
 
 ---
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
+- [Intelligence Summary](/fin7/Intelligence_Summary.md)
+- [Operations Flow](/fin7/Operations_Flow.md)
+- [Emulation Plan](/fin7/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/fin7/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/fin7/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/fin7/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/fin7/Emulation_Plan/Scenario_2)
+  - [YAML](/fin7/Emulation_Plan/yaml)
+- [File Hashes](/fin7/hashes)
+- [YARA Rules](/fin7/yara-rules)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/fin7/CHANGE_LOG.md)

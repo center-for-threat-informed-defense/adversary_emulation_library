@@ -23,9 +23,9 @@ The FIN7 emulation plan is a human-readable, step-by-step / command-by-command i
 
 ## Resources
 
-Please note that binary executable files hosted in [Resources](/Resources/) have been added to password protected zip files.  The password for these files is "malware."
+Please note that binary executable files hosted in [Resources](/fin7/Resources/) have been added to password protected zip files.  The password for these files is "malware."
 
-We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](/fin7/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 $ cd carbanak
@@ -34,7 +34,7 @@ $ python3 Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
 ```
 ## YARA Rules
 
-[YARA rules](/yara-rules) are provided to assist the community in researching, preventing, and detecting malware specimens used in this emulation plan.
+[YARA rules](/fin7/yara-rules) are provided to assist the community in researching, preventing, and detecting malware specimens used in this emulation plan.
 
 ## Acknowledgements
 
@@ -52,18 +52,18 @@ Special thanks to the following projects for providing tools and source code tha
 
 ## Table of Contents
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
+- [Intelligence Summary](/fin7/Intelligence_Summary.md)
+- [Operations Flow](/fin7/Operations_Flow.md)
+- [Emulation Plan](/fin7/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/fin7/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/fin7/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/fin7/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/fin7/Emulation_Plan/Scenario_2)
+  - [YAML](/fin7/Emulation_Plan/yaml)
+- [File Hashes](/fin7/hashes)
+- [YARA Rules](/fin7/yara-rules)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/fin7/CHANGE_LOG.md)
 
 ## Liability / Responsible Usage
 

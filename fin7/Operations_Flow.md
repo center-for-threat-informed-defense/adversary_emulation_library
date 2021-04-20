@@ -1,6 +1,6 @@
 # FIN7 Operations Flow
 
-Please see the formal [FIN7 Intelligence Summary](/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
+Please see the formal [FIN7 Intelligence Summary](/fin7/Intelligence_Summary.md) which includes a break-down of the cited intelligence used for each step of this emulation.
 
 ---
 
@@ -27,15 +27,15 @@ This scenario emulates the same FIN7 TTP's as scenario 1; however, changes were 
 
 ## Additional Plan Resources
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
+- [Intelligence Summary](/fin7/Intelligence_Summary.md)
+- [Operations Flow](/fin7/Operations_Flow.md)
+- [Emulation Plan](/fin7/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/fin7/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/fin7/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/fin7/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/fin7/Emulation_Plan/Scenario_2)
+  - [YAML](/fin7/Emulation_Plan/yaml)
+- [File Hashes](/fin7/hashes)
+- [YARA Rules](/fin7/yara-rules)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/fin7/CHANGE_LOG.md)

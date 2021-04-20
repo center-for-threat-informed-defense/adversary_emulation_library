@@ -6,9 +6,9 @@ The requirements described herein should be considered a bare minimum to execute
 
 ## Resources
 
-Please note that binary executable files hosted in [Resources](/Resources/) have been added to password protected zip files.  The password for these files is "malware."
+Please note that binary executable files hosted in [Resources](/fin7/Resources/) have been added to password protected zip files.  The password for these files is "malware."
 
-We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](/fin7/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 $ cd fin7
@@ -32,7 +32,7 @@ $ python3 Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
     - [tmux](https://github.com/tmux/tmux/wiki)
 
 3. **Windows Attack Platform**: Windows 10 SQL Server 2019 Build 17763
-    - [ATT&CK RAT](/Resources/Scenario_1/Step11/FIN7_SQLRat_C2_Server)
+    - [ATT&CK RAT](/fin7/Resources/Scenario_1/Step11/FIN7_SQLRat_C2_Server)
 
 4. **Optional - Windows 10**: Windows 10 Client build 18363
 	* Note, this Windows 10 machine was used ONLY in the event debugging needed to occur during an evaluation.
@@ -54,9 +54,9 @@ This methodology assumes the following static IP address configurations:
 
 - These utilities include credential dumpers, and variants of process injection techniques.
 
-- Some pre-compiled payloads are available in the [resources](/Resources) directory; however, they are configured to connect back to static IP address 192.168.0.4.
+- Some pre-compiled payloads are available in the [resources](/fin7/Resources) directory; however, they are configured to connect back to static IP address 192.168.0.4.
 
-- Binaries that are not pre-compiled have compilation instructions included, e.g. for [`AccountingIQ.exe`](/Resources/Step10/README.md) 
+- Binaries that are not pre-compiled have compilation instructions included, e.g. for [`AccountingIQ.exe`](/fin7/Resources/Step10/README.md) 
 
 - If you would like to build the payloads yourself, please make the necessary adjustments to the payload source to match your environment.
 
@@ -71,7 +71,7 @@ This methodology assumes the following static IP address configurations:
     netsh advfirewall set allprofiles state off
     ```
 
-2. Setup the MSSQL Database using [`dbsetup.bat`](/Resources/setup/dbsetup.bat)
+2. Setup the MSSQL Database using [`dbsetup.bat`](/fin7/Resources/setup/dbsetup.bat)
 
 ---
 
@@ -102,17 +102,17 @@ This methodology assumes the following static IP address configurations:
 
 1. If only testing detection capabilities, disable Windows Defender
 
-    The `set-defender.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-defender.ps1` PowerShell script in the [setup](/fin7/Resources/setup) folder can be used to perform this.
 
 ### Hotel Manager Workstation Setup
 
 1. If only testing detection capabilities, disable Windows Defender
 
-    The `set-defender.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-defender.ps1` PowerShell script in the [setup](/fin7/Resources/setup) folder can be used to perform this.
    
 2. Disable OLE Security to enable execution of initial access payload
     
-    The `set-OLEsecurity.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-OLEsecurity.ps1` PowerShell script in the [setup](/fin7/Resources/setup) folder can be used to perform this.
    
 3. Add a static ARP entry for `itadmin`:
     
@@ -130,19 +130,19 @@ This methodology assumes the following static IP address configurations:
 
 1. If only testing detection capabilities, disable Windows Defender
 
-    The `set-defender.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-defender.ps1` PowerShell script in the [setup](/fin7/Resources/setup) folder can be used to perform this.
 
 2. Set ACLs to allow full control for everyone on the `C:\Windows\SysWOW64` directory
     
-    The `set-acl-syswow64.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-acl-syswow64.ps1` PowerShell script in the [setup](/fin7/Resources/setup) folder can be used to perform this.
 
 ### Accounting Workstation Setup
 
 1. If only testing detection capabilities, disable Windows Defender
 
-    The `set-defender.ps1` PowerShell script in the [setup](/Resources/setup) folder can be used to perform this.
+    The `set-defender.ps1` PowerShell script in the [setup](/fin7/Resources/setup) folder can be used to perform this.
 
-2. Compile `AccountingIQ.exe` using the instructions found [here](/Resources/Step10/README.md)
+2. Compile `AccountingIQ.exe` using the instructions found [here](/fin7/Resources/Step10/README.md)
 
 3. Place `AccountingIQ.exe` in `C:\Users\Public`
 
@@ -155,12 +155,12 @@ This methodology assumes the following static IP address configurations:
 
 ## Additional Plan Resources
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
+- [Intelligence Summary](/fin7/Intelligence_Summary.md)
+- [Operations Flow](/fin7/Operations_Flow.md)
+- [Emulation Plan](/fin7/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/fin7/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/fin7/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/fin7/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/fin7/Emulation_Plan/Scenario_2)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/fin7/CHANGE_LOG.md)

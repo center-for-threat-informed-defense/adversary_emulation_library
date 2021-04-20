@@ -32,37 +32,37 @@ PsExec ([S0029](https://attack.mitre.org/software/S0029/)) | | Remote Execution 
 
 #### The following behaviors are in scope for an emulation of actions attributed to Carbanak as referenced by [MITRE ATT&CK](https://attack.mitre.org/groups/G0008/) and in the [referenced reporting](#references).
 
-![/Attack_Layers/Carbanak_G0008.png](/Attack_Layers/Carbanak_G0008.png)
+![/Attack_Layers/Carbanak_G0008.png](/carbanak/Attack_Layers/Carbanak_G0008.png)
 
-## [Scenario 1](/Emulation_Plan/Scenario_1/README.md)
+## [Scenario 1](/carbanak/Emulation_Plan/Scenario_1/README.md)
 
 #### The following behaviors are in scope for an emulation of actions attributed to Carbanak, as implemented in Scenario 1, in the [referenced reporting](#references).
 
-![/Attack_Layers/Carbanak_Scenario1.png](/Attack_Layers/Carbanak_Scenario1.png)
+![/Attack_Layers/Carbanak_Scenario1.png](/carbanak/Attack_Layers/Carbanak_Scenario1.png)
 
 ## [Carbanak](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0030%2FS0030-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by the Carbanak group using Carbanak malware, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/Carbanak_S0030.png](/Attack_Layers/Carbanak_S0030.png)
+![/Attack_Layers/Carbanak_S0030.png](/carbanak/Attack_Layers/Carbanak_S0030.png)
 
 ## [Mimikatz](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0002%2FS0002-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by Carbanak using Mimikatz, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/Mimikatz_S0002.png](/Attack_Layers/Mimikatz_S0002.png)
+![/Attack_Layers/Mimikatz_S0002.png](/carbanak/Attack_Layers/Mimikatz_S0002.png)
 
 ## [netsh](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0108%2FS0108-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by Carbanak using netsh, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/netsh_S0108.png](/Attack_Layers/netsh_S0108.png)
+![/Attack_Layers/netsh_S0108.png](/carbanak/Attack_Layers/netsh_S0108.png)
 
 ## [PsExec](https://mitre-attack.github.io/attack-navigator//#layerURL=https%3A%2F%2Fattack.mitre.org%2Fsoftware%2FS0002%2FS0002-enterprise-layer.json)
 
 #### The following behaviors are in scope for an emulation of actions performed by Carbanak using Mimikatz, exclusively based on current intelligence within ATT&CK for the given software.
 
-![/Attack_Layers/PsExec_S0029.png](/Attack_Layers/PsExec_S0029.png)
+![/Attack_Layers/PsExec_S0029.png](/carbanak/Attack_Layers/PsExec_S0029.png)
 ---
 
 ## References
@@ -97,15 +97,15 @@ ID | Source | Publisher | Date |
 
 ## Additional Plan Resources
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
+- [Intelligence Summary](/carbanak/Intelligence_Summary.md)
+- [Operations Flow](/carbanak/Operations_Flow.md)
+- [Emulation Plan](/carbanak/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/carbanak/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/carbanak/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/carbanak/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/carbanak/Emulation_Plan/Scenario_2)
+  - [YAML](/carbanak/Emulation_Plan/yaml)
+- [File Hashes](/carbanak/hashes)
+- [YARA Rules](/carbanak/yara-rules)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/carbanak/CHANGE_LOG.md)

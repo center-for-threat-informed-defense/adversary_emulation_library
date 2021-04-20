@@ -18,9 +18,9 @@ The Carbanak emulation plan is a human-readable, step-by-step / command-by-comma
 
 ## Resources
 
-Please note that binary executable files hosted in [Resources](/Resources/) have been added to password protected zip files.  The password for these files is "malware."
+Please note that binary executable files hosted in [Resources](/carbanak/Resources/) have been added to password protected zip files.  The password for these files is "malware."
 
-We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](/carbanak/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 $ cd carbanak
@@ -48,18 +48,18 @@ Special thanks to the following projects for providing tools and source code tha
 
 ## Table of Contents
 
-- [Intelligence Summary](/Intelligence_Summary.md)
-- [Operations Flow](/Operations_Flow.md)
-- [Emulation Plan](/Emulation_Plan)
-  - [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
-  - [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
-  - [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
-  - [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
-  - [YAML](/Emulation_Plan/yaml)
-- [File Hashes](/hashes)
-- [YARA Rules](/yara-rules)
+- [Intelligence Summary](/carbanak/Intelligence_Summary.md)
+- [Operations Flow](/carbanak/Operations_Flow.md)
+- [Emulation Plan](/carbanak/Emulation_Plan)
+  - [Scenario 1 - Infrastructure](/carbanak/Emulation_Plan/Scenario_1/Infrastructure.md)
+  - [Scenario 1 - Detections](/carbanak/Emulation_Plan/Scenario_1)
+  - [Scenario 2 - Infrastructure](/carbanak/Emulation_Plan/Scenario_2/Infrastructure.md)
+  - [Scenario 2 - Protections](/carbanak/Emulation_Plan/Scenario_2)
+  - [YAML](/carbanak/Emulation_Plan/yaml)
+- [File Hashes](/carbanak/hashes)
+- [YARA Rules](/carbanak/yara-rules)
 - [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
-- [Change Log](/CHANGE_LOG.md)
+- [Change Log](/carbanak/CHANGE_LOG.md)
 
 ## Liability / Responsible Usage
 This content is only to be used with appropriate prior, explicit authorization for the purposes of assessing security posture and/or research.
