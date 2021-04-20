@@ -11,6 +11,8 @@ Available adversary emulation plans are listed below:
 | [FIN6](/fin6/) | [FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015...](/fin6/Intelligence_Summary.md) |
 | [APT29](/apt29/) | [APT29 is thought to be an organized and well-resourced cyber threat actor whose collection objectives appear to align with the interests of the Russian Federation...](/apt29/Intelligence_Summary.md) |
 | [menuPass](/menuPass/) | [menuPass is thought to be threat group motivated by collection objectives, with targeting that is consistent with Chinese strategic objectives...](/menuPass/Intelligence_Summary.md) |
+| [Carbanak Group](/carbanak/) | [Carbanak is a threat group who has been found to manipulate financial assets, such as by transferring funds from bank accounts or by taking over ATM infrastructures...](/carbanak/Intelligence_Summary.md) |
+| [FIN7](/fin7/) | [FIN7 is a financially-motivated threat group that has been associated with malicious operations dating back to late 2015. The group is characterized by their persistent targeting and large-scale theft of payment card data from victim systems...](/fin7/Intelligence_Summary.md) |
 
 ## Philosophy
 
