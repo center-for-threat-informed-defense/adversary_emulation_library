@@ -1,0 +1,77 @@
+rule babymetal_strings
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect strings found in babymetal.dll"
+	
+    strings:
+        $babymetal_strings1 = "babymetal" nocase
+		$babymetal_strings2 = "abort"
+		$babymetal_strings3 = "calloc"
+		$babymetal_strings4 = "DllEntryPoint"
+		$babymetal_strings5 = "DllMainCRTStartup"
+		$babymetal_strings6 = "emu_pdata"
+		$babymetal_strings7 = "emu_xdata"
+		$babymetal_strings8 = "free"
+		$babymetal_strings9 = "fwrite"
+		$babymetal_strings10 = "malloc.h"
+		$babymetal_strings11 = "pseudo-reloc-list.c"
+		$babymetal_strings12 = "realloc"
+		$babymetal_strings13 = "scatter_per_elt"
+		$babymetal_strings14 = "scatter_static"
+		$babymetal_strings15 = "shift_const"
+		$babymetal_strings16 = "shift_var"
+		$babymetal_strings17 = "short int"
+		$babymetal_strings18 = "short unsigned int"
+		$babymetal_strings19 = "signal"
+		$babymetal_strings20 = "signed char"
+		$babymetal_strings21 = "simultaneous_prefetches"
+		$babymetal_strings22 = "threadID"
+		$babymetal_strings23 = "tzname"
+		$babymetal_strings24 = "uintptr_t"
+		$babymetal_strings25 = "unknown_size"
+		$babymetal_strings26 = "unrolled_loop"
+		$babymetal_strings27 = "unsigned char"
+		$babymetal_strings28 = "UQItype"
+		$babymetal_strings29 = "vector_loop"
+		$babymetal_strings30 = "vfprintf"
+
+    condition:
+        all of them
+}
+
+rule functions
+{
+	meta:
+		author = "MITRE Engenuity"
+		date = "2/16/2021"
+		description = "Used to detect functions associated with babymetal.dll"
+	
+    strings:
+        $functions1 = "DeleteCriticalSection"
+		$functions2 = "EnterCriticalSection"
+		$functions3 = "GetCurrentProcess"
+		$functions4 = "GetCurrentThreadId"
+		$functions5 = "GetLastError"
+		$functions6 = "GetSystemTimeAsFileTime"
+		$functions7 = "GetTickCount"
+		$functions8 = "InitializeCriticalSection"
+		$functions9 = "LeaveCriticalSection"
+		$functions10 = "QueryPerformanceCounter"
+		$functions11 = "RtlAddFunctionTable"
+		$functions12 = "RtlCaptureContext"
+		$functions13 = "RtlLookupFunctionEntry"
+		$functions14 = "RtlVirtualUnwind"
+		$functions15 = "SetUnhandledExceptionFilter"
+		$functions16 = "Sleep"
+		$functions17 = "TerminateProcess"
+		$functions18 = "TlsGetValue"
+		$functions19 = "UnhandledExceptionFilter"
+		$functions20 = "VirtualAlloc"
+		$functions21 = "VirtualProtect"
+		$functions22 = "VirtualQuery"
+
+    condition:
+        all of them
+}
