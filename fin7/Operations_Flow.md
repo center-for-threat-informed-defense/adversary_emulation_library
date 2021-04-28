@@ -5,7 +5,7 @@ Please see the formal [FIN7 Intelligence Summary](/fin7/Intelligence_Summary.md)
 ---
 
 <p align="center">
-  <img src="/Emulation_Plan/OpFlow_Diagram.png" />
+  <img src="/fin7/Emulation_Plan/OpFlow_Diagram.png" />
 </p>
 
 ---

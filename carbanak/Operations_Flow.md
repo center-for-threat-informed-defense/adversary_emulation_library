@@ -5,7 +5,7 @@ Please see the formal [Carbanak Intelligence Summary](/carbanak/Intelligence_Sum
 ---
 
 <p align="center">
-  <img src="/Emulation_Plan/CARBANAKopflow.png" />
+  <img src="/carbanak/Emulation_Plan/CARBANAKopflow.png" />
 </p>
 
 ---
