@@ -1,0 +1,2203 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Conari</name>
+    </assembly>
+    <members>
+        <member name="T:net.r_eg.Conari.Accessors.WinAPI.Kernel32">
+            <summary>
+            kernel32 via Conari engine [DLR version]: 
+            https://github.com/3F/Conari
+            https://docs.microsoft.com/en-us/windows/win32/api/
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Accessors.WinAPI.Kernel32.#ctor(net.r_eg.Conari.Core.IConfig)">
+            <summary>
+            Initialize kernel32 via Conari engine.
+            </summary>
+            <param name="cfg">Custom configuration. Module cannot be overridden.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Accessors.WinAPI.Kernel32.#ctor">
+            <summary>
+            Initialize kernel32 via Conari engine.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.Accessors.WinAPI.User32">
+            <summary>
+            user32 via Conari engine [DLR version]: 
+            https://github.com/3F/Conari
+            https://docs.microsoft.com/en-us/windows/win32/api/winuser/
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Accessors.WinAPI.User32.#ctor(net.r_eg.Conari.Core.IConfig)">
+            <summary>
+            Initialize user32 via Conari engine.
+            </summary>
+            <param name="cfg">Custom configuration. Module cannot be overridden.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Accessors.WinAPI.User32.#ctor">
+            <summary>
+            Initialize user32 via Conari engine.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Aliases.AliasCfg.NoPrefixR">
+            <summary>
+            Avoids prefix for right operand if it's defined.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Aliases.AliasDict.Aliases">
+            <summary>
+            The aliases for exported-functions and variables.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Aliases.AliasDict.use(net.r_eg.Conari.Core.LpProcName)">
+            <summary>
+            Try to use alias.
+            </summary>
+            <param name="lpProcName"></param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.Conari.Aliases.IAlias.Name">
+            <summary>
+            The final name.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Aliases.IAlias.Cfg">
+            <summary>
+            Configuration of alias.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Aliases.IAliasCfg.NoPrefixR">
+            <summary>
+            Avoids prefix for right operand if it's defined.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Aliases.ProcAlias.Name">
+            <summary>
+            The final name.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Aliases.ProcAlias.Cfg">
+            <summary>
+            Configuration of alias.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.ConariL">
+            <summary>
+            Conari for work with unmanaged memory, pe-modules, and raw binary data: 
+            https://github.com/3F/Conari
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.ConariL.ConfigDLR">
+            <summary>
+            Access to available configuration data of dynamic DLR.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.ConariL.DLR">
+            <summary>
+            Provides dynamic features like adding 
+            and invoking of new exported-functions at runtime.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.ConariL.Log">
+            <summary>
+            Access to logger and its events.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.ConariL.__cdecl">
+            <summary>
+            DLR Features with `__cdecl` calling convention.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.ConariL.__stdcall">
+            <summary>
+            DLR Features with `__stdcall` calling convention.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.ConariL.__fastcall">
+            <summary>
+            DLR Features with `__fastcall` calling convention.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.ConariL.__vectorcall">
+            <summary>
+            DLR Features with `__vectorcall` calling convention.
+            https://msdn.microsoft.com/en-us/library/dn375768.aspx
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariL.#ctor(net.r_eg.Conari.Core.IConfig,System.Runtime.InteropServices.CallingConvention,System.String)">
+            <summary>
+            Initialize Conari with specific calling convention.
+            </summary>
+            <param name="cfg">The Conari configuration.</param>
+            <param name="conv">How should call methods.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariL.#ctor(net.r_eg.Conari.Core.IConfig,System.String)">
+            <summary>
+            Initialize Conari with Cdecl - When the stack is cleaned up by the caller, it can do vararg functions.
+            </summary>
+            <param name="cfg">The Conari configuration.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariL.#ctor(System.String,System.Runtime.InteropServices.CallingConvention,System.String)">
+            <summary>
+            Initialize Conari with specific calling convention.
+            </summary>
+            <param name="lib">The library.</param>
+            <param name="conv">How should call methods.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariL.#ctor(System.String,System.String)">
+            <summary>
+            Initialize Conari with the calling convention by default.
+            </summary>
+            <param name="lib">The library.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariL.#ctor(System.String,System.Boolean,System.String)">
+            <summary>
+            Initialize Conari with the calling convention by default.
+            </summary>
+            <param name="lib">The library.</param>
+            <param name="isolate">To isolate module for a real new loading when true. Details in {IConfig.IsolateLoadingOfModule}.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="T:net.r_eg.Conari.ConariX">
+            <summary>
+            Conari [DLR version] for work with unmanaged memory, pe-modules, and raw binary data: 
+            https://github.com/3F/Conari
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariX.#ctor(net.r_eg.Conari.Core.IConfig,System.Runtime.InteropServices.CallingConvention,System.String)">
+            <summary>
+            Initialize Conari with specific calling convention.
+            </summary>
+            <param name="cfg">The Conari configuration.</param>
+            <param name="conv">How should call methods.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariX.#ctor(net.r_eg.Conari.Core.IConfig,System.String)">
+            <summary>
+            Initialize Conari with Cdecl - When the stack is cleaned up by the caller, it can do vararg functions.
+            </summary>
+            <param name="cfg">The Conari configuration.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariX.#ctor(System.String,System.Runtime.InteropServices.CallingConvention,System.String)">
+            <summary>
+            Initialize Conari with specific calling convention.
+            </summary>
+            <param name="lib">The library.</param>
+            <param name="conv">How should call methods.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariX.#ctor(System.String,System.String)">
+            <summary>
+            Initialize Conari with the calling convention by default.
+            </summary>
+            <param name="lib">The library.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="M:net.r_eg.Conari.ConariX.#ctor(System.String,System.Boolean,System.String)">
+            <summary>
+            Initialize Conari with the calling convention by default.
+            </summary>
+            <param name="lib">The library.</param>
+            <param name="isolate">To isolate module for a real new loading when true. Details in {IConfig.IsolateLoadingOfModule}.</param>
+            <param name="prefix">Optional prefix to use via `bind&lt;&gt;`</param>
+        </member>
+        <member name="T:net.r_eg.Conari.Core.CallingConventionConverter">
+            <summary>
+            For internal m_signature processing with unmanaged EmitCalli.
+            See Provider.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Config.Module">
+            <summary>
+            Module (.dll, .exe, or address).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Config.TransactionStrategy">
+            <summary>
+            To use `commit` methods for end calling.
+            TODO:
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Config.LazyLoading">
+            <summary>
+            To load library only when required.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Config.CacheDLR">
+            <summary>
+            To cache dynamic types.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Config.Mangling">
+            <summary>
+            Auto name-decoration to find entry points of exported proc.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Config.IsolateLoadingOfModule">
+            <summary>
+            https://github.com/3F/Conari/issues/15
+            Windows will prevent new loading and return the same handle as for the first loaded module due to used reference count for each trying to load the same module (dll or exe).
+            Actual new loading and its new handle is possible when reference count is less than 1.
+            
+            Through Conari this means each decrementing when disposing is processed on implemented such as ConariL object.
+            That is, each new instance will increase total reference count by +1 and each disposing will decrease it by -1.
+            But it can produce the problem not only in multithreading but even between third processes.
+            
+            This option will isolate module for a real new loading even if it was already loaded somewhere else.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Config.#ctor(System.String,System.Boolean)">
+            <param name="module">Module (.dll, .exe, or address).</param>
+            <param name="isolate">Initialize property {IsolateLoadingOfModule}.</param>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.DataArgs`1.Data">
+            <summary>
+            Provides a T value to use with events.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.Core.Dynamic.METHOD_NAME">
+            <summary>
+            Default name for new methods.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Dynamic.UseCache">
+            <summary>
+            To cache dynamic types by default with similar signatures:
+                `{return type} name( [{argument types}] )`
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.resetCache">
+            <summary>
+            To reset all cached types.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.cache(System.Reflection.MethodInfo)">
+            <summary>
+            To cache dynamic types via signature of method.
+            </summary>
+            <param name="mi">The instance of MethodInfo.</param>
+            <returns>false value if this signature is already exists or cannot be cached.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.getKeyTypes(System.Reflection.MethodInfo)">
+            <summary>
+            Extract all valuable types from MethodInfo.
+            </summary>
+            <param name="mi"></param>
+            <returns>The array of types that can be used for MICache containers etc.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.getMethodInfo(System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.getMethodInfo(System.Boolean,System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="cache">Try to find same types from cache. The name cannot be actual if true.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.getMethodInfo(System.String,System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="name">The name of method.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.getMethodInfo(System.String,System.Boolean,System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="name">The name of method.</param>
+            <param name="cache">Try to find same types from cache. The name cannot be actual if true.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.GetMethodInfo(System.Type,System.Type[])">
+            <summary>
+            Alias to `IDynamic.getMethodInfo(Type ret, params Type[] args)`
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.GetMethodInfo(System.Boolean,System.Type,System.Type[])">
+            <summary>
+            Alias to `IDynamic.getMethodInfo(bool cache, Type ret, params Type[] args)`
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="cache">Try to find same types from cache. The name cannot be actual if true.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.GetMethodInfo(System.String,System.Type,System.Type[])">
+            <summary>
+            Alias to `IDynamic.getMethodInfo(string name, Type ret, params Type[] args)`
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="name">The name of method.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.GetMethodInfo(System.String,System.Boolean,System.Type,System.Type[])">
+            <summary>
+            Alias to `IDynamic.getMethodInfo(string name, bool cache, Type ret, params Type[] args)`
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="name">The name of method.</param>
+            <param name="cache">Try to find same types from cache. The name cannot be actual if true.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.CreateEmptyType(System.Type,System.Type[])">
+            <summary>
+            Generates empty type with default name. 
+            </summary>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments if exists.</param>
+            <returns>The type that contains signature as `{ret} {METHOD_NAME}({args})`</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Dynamic.CreateEmptyType(System.String,System.Type,System.Type[])">
+            <summary>
+            Generates empty type.
+            </summary>
+            <param name="name">The name of type.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments if exists.</param>
+            <returns>The type that contains signature as `{ret} {name}({args})`</returns>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ExVar.DLR">
+            <summary>
+            Access to dynamic features like getting exported-variables at runtime.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.getVar``1(System.String)">
+            <summary>
+            Gets value from exported Variable. Full name is required.
+            </summary>
+            <typeparam name="T">The type of variable.</typeparam>
+            <param name="lpProcName">The full name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.getVar(System.String)">
+            <summary>
+            Alias to `getVar&lt;T&gt;(string lpProcName)`
+            Gets value from exported Variable. Full name is required.
+            </summary>
+            <param name="lpProcName">The full name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.get``1(System.String)">
+            <summary>
+            Gets value from exported Variable.
+            The main prefix will affects on this result.
+            </summary>
+            <typeparam name="T">The type of variable.</typeparam>
+            <param name="variable">The name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.get(System.String)">
+            <summary>
+            Alias to `get&lt;T&gt;(string variable)`
+            
+            Gets value from exported Variable.
+            The main prefix will affects on this result.
+            </summary>
+            <param name="variable">The name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.getField(System.Type,System.String)">
+            <summary>
+            Get field with native data from export table.
+            Uses type for information about data.
+            </summary>
+            <param name="type">To consider it as this type.</param>
+            <param name="name">The name of record.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.getField``1(System.String)">
+            <summary>
+            Alias to `getField(Type type, string name)`
+            
+            Get field with native data from export table.
+            Uses type for information about data.
+            </summary>
+            <typeparam name="T">To consider it as T type.</typeparam>
+            <param name="name">The name of record.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.getField(System.Int32,System.String)">
+            <summary>
+            Get field with native data from export table.
+            Uses size of unspecified unmanaged type in bytes. 
+            To calculate it from managed types, see: `NativeData.SizeOf`
+            </summary>
+            <param name="size">The size of raw-data in bytes.</param>
+            <param name="name">The name of record.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+            <summary>
+            Magic properties. Get.
+            </summary>
+            <param name="binder"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+            <summary>
+            Magic properties. Set.
+            </summary>
+            <param name="binder"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
+            <summary>
+            Magic methods. Invoking.
+            </summary>
+            <![CDATA[
+                `name<return_type>()`
+            ]]>
+            <param name="binder"></param>
+            <param name="args"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ExVar.GetDynamicMemberNames">
+            <summary>
+            List of magic properties.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bindFunc``1(System.String)">
+            <summary>
+            Binds the exported Function. Full name is required.
+            </summary>
+            <typeparam name="T">Type of delegate.</typeparam>
+            <param name="lpProcName">The full name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bindFunc(System.String)">
+            <summary>
+            Alias `bindFunc&lt;Action&gt;(string lpProcName)`
+            Binds the exported Function. Full name is required.
+            </summary>
+            <param name="lpProcName">The full name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bind``1(System.String)">
+            <summary>
+            Binds the exported Function.
+            The main prefix will affects on this result.
+            </summary>
+            <typeparam name="T">Type of delegate.</typeparam>
+            <param name="func">The name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bind(System.String)">
+            <summary>
+            Alias `bind&lt;Action&gt;(string func)`
+            Binds the exported Function.
+            The main prefix will affects on this result.
+            </summary>
+            <param name="func">The name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bind(System.Reflection.MethodInfo,System.String)">
+            <summary>
+            Binds the exported Function via MethodInfo and an specific name.
+            Note: 
+                It's recommended as a more efficient, 
+                because it allows caching of all MethodInfo for the same signatures but different function names.
+            
+                Use IProvider.procName() to same control of IProvider.Prefix if needed.
+            </summary>
+            <param name="mi">Prepared signature.</param>
+            <param name="name">Valid function name.</param>
+            <returns>Complete information to create delegates or to invoke methods.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bind(System.Reflection.MethodInfo,System.String,System.Runtime.InteropServices.CallingConvention)">
+            <summary>
+            Binds the exported Function via MethodInfo, an specific name and CallingConvention.
+            </summary>
+            <param name="mi">Prepared signature.</param>
+            <param name="name">Valid function name. Full name is required.</param>
+            <param name="conv">How it should be called. It overrides only for current method.</param>
+            <returns>Complete information to create delegates or to invoke methods.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bindFunc(System.String,System.Type,System.Type[])">
+            <summary>
+            Alias `bindFunc&lt;object&gt;(string lpProcName, Type ret, params Type[] args)`
+            Binds the exported function.
+            </summary>
+            <param name="lpProcName">The full name of exported function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bindFunc``1(System.String,System.Type,System.Type[])">
+            <summary>
+            Binds the exported function.
+            </summary>
+            <typeparam name="T">The return type for new Delegate should be as T type.</typeparam>
+            <param name="lpProcName">The full name of exported function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bind(System.String,System.Type,System.Type[])">
+            <summary>
+            Alias `bind&lt;object&gt;(string func, Type ret, params Type[] args)`
+            Binds the exported C API Function.
+            </summary>
+            <param name="func">The name of exported C API function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IBinder.bind``1(System.String,System.Type,System.Type[])">
+            <summary>
+            Binds the exported C API Function.
+            </summary>
+            <typeparam name="T">The return type for new Delegate should be as T type.</typeparam>
+            <param name="func">The name of exported C API function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IConfig.Module">
+            <summary>
+            Module (.dll, .exe, or address).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IConfig.TransactionStrategy">
+            <summary>
+            To use `commit` methods for end calling.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IConfig.LazyLoading">
+            <summary>
+            To load library only when required.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IConfig.CacheDLR">
+            <summary>
+            To cache dynamic types.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IConfig.Mangling">
+            <summary>
+            Auto name-decoration to find entry points of exported proc.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IConfig.IsolateLoadingOfModule">
+            <summary>
+            https://github.com/3F/Conari/issues/15
+            Windows will prevent new loading and return the same handle as for the first loaded module due to used reference count for each trying to load the same module (dll or exe).
+            Actual new loading and its new handle is possible when reference count is less than 1.
+            
+            Through Conari this means each decrementing when disposing is processed on implemented such as ConariL object.
+            That is, each new instance will increase total reference count by +1 and each disposing will decrease it by -1.
+            But it can produce the problem not only in multithreading but even between third processes.
+            
+            This option will isolate module for a real new loading even if it was already loaded somewhere else.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IDynamic.UseCache">
+            <summary>
+            To cache dynamic types by default with similar signatures:
+                `{return_type} name( [{argument_types}] )`
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IDynamic.resetCache">
+            <summary>
+            To reset all cached types.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IDynamic.cache(System.Reflection.MethodInfo)">
+            <summary>
+            To cache dynamic types via signature of method.
+            </summary>
+            <param name="mi">The instance of MethodInfo.</param>
+            <returns>false value if this signature is already exists or cannot be cached.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IDynamic.getKeyTypes(System.Reflection.MethodInfo)">
+            <summary>
+            Extract all valuable types from MethodInfo.
+            </summary>
+            <param name="mi"></param>
+            <returns>The array of types that can be used for MICache containers etc.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IDynamic.getMethodInfo(System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IDynamic.getMethodInfo(System.Boolean,System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="cache">Try to find same types from cache. The name cannot be actual if true.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IDynamic.getMethodInfo(System.String,System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="name">The name of method.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IDynamic.getMethodInfo(System.String,System.Boolean,System.Type,System.Type[])">
+            <summary>
+            Gets MethodInfo with empty method.
+            </summary>
+            <param name="name">The name of method.</param>
+            <param name="cache">Try to find same types from cache. The name cannot be actual if true.</param>
+            <param name="ret">The return type.</param>
+            <param name="args">Arguments of method if exists.</param>
+            <returns>Complete signature as method without body.</returns>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IExVar.DLR">
+            <summary>
+            Provides dynamic features like getting exported-variables at runtime.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IExVar.getVar``1(System.String)">
+            <summary>
+            Gets value from exported Variable. Full name is required.
+            </summary>
+            <typeparam name="T">The type of variable.</typeparam>
+            <param name="lpProcName">The full name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IExVar.getVar(System.String)">
+            <summary>
+            Alias to `getVar&lt;T&gt;(string lpProcName)`
+            Gets value from exported Variable. Full name is required.
+            </summary>
+            <param name="lpProcName">The full name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IExVar.get``1(System.String)">
+            <summary>
+            Gets value from exported Variable.
+            The main prefix will affects on this result.
+            </summary>
+            <typeparam name="T">The type of variable.</typeparam>
+            <param name="variable">The name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IExVar.get(System.String)">
+            <summary>
+            Alias to `get&lt;T&gt;(string variable)`
+            
+            Gets value from exported Variable.
+            The main prefix will affects on this result.
+            </summary>
+            <param name="variable">The name of exported variable.</param>
+            <returns>The value from exported variable.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IExVar.getField(System.Type,System.String)">
+            <summary>
+            Get field with native data from export table.
+            Uses type for information about data.
+            </summary>
+            <param name="type">To consider it as this type.</param>
+            <param name="name">The name of record.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IExVar.getField``1(System.String)">
+            <summary>
+            Alias to `getField(Type type, string name)`
+            
+            Get field with native data from export table.
+            Uses type for information about data.
+            </summary>
+            <typeparam name="T">To consider it as T type.</typeparam>
+            <param name="name">The name of record.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IExVar.getField(System.Int32,System.String)">
+            <summary>
+            Get field with native data from export table.
+            Uses size of unspecified unmanaged type in bytes. 
+            To calculate it from managed types, see: `NativeData.SizeOf`
+            </summary>
+            <param name="size">The size of raw-data in bytes.</param>
+            <param name="name">The name of record.</param>
+            <returns></returns>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.ILoader.BeforeUnload">
+            <summary>
+            Before unloading a library.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.ILoader.AfterUnload">
+            <summary>
+            When library has been unloaded.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.ILoader.AfterLoad">
+            <summary>
+            When library has been loaded.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ILoader.Library">
+            <summary>
+            Active library.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ILoader.PE">
+            <summary>
+            PE32/PE32+ features.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IMem.free(System.IntPtr)">
+            <summary>
+            To free memory from the heap allocated from the unmanaged memory.
+            </summary>
+            <param name="ptr">The address of the memory to be freed.</param>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.IProvider.PrefixChanged">
+            <summary>
+            When Prefix has been changed.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.IProvider.ConventionChanged">
+            <summary>
+            When Convention has been changed.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.IProvider.NewProcAddress">
+            <summary>
+            When handling new non-zero ProcAddress.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProvider.Cache">
+            <summary>
+            To cache delegates, generated methods, etc.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProvider.Prefix">
+            <summary>
+            Prefix for exported functions.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProvider.Convention">
+            <summary>
+            How should call methods implemented in unmanaged code.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProvider.Mangling">
+            <summary>
+            Auto name-decoration to find entry points of exported functions.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProvider.Aliases">
+            <summary>
+            The aliases for exported-functions and variables.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProvider.ExVar">
+            <summary>
+            Access to exported variables.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProvider.Svc">
+            <summary>
+            Additional services.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IProvider.procName(System.String)">
+            <summary>
+            Returns full lpProcName with main prefix etc.
+            </summary>
+            <param name="name">Exported function or variable name.</param>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProviderDLR.DynCfg">
+            <summary>
+            Access to used IDynamic object.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProviderDLR.Cache">
+            <summary>
+            To use cache for dynamic types etc.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProviderDLR.Convention">
+            <summary>
+            Current Convention for all dynamic methods.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProviderDLR.UseCallingContext">
+            <summary>
+            To use information about types from CallingContext if it's possible.
+            This should automatically:
+                * Detect all ByRef&amp; types.
+                * Bind all null-values for any reference-types that pushed with out/ref modifier.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.IProviderDLR.UseByRef">
+            <summary>
+            To use ByRef&amp; (reference-types) for all sent types.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IProviderSvc.getProcAddr(net.r_eg.Conari.Core.LpProcName)">
+            <summary>
+            Retrieves the address of an exported function or variable.
+            </summary>
+            <param name="lpProcName">The name of function or variable, or the function's ordinal value.</param>
+            <returns>The address if found.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IProviderSvc.native(net.r_eg.Conari.Core.LpProcName)">
+            <summary>
+            Prepare NativeData for active provider.
+            </summary>
+            <param name="lpProcName">The name of function or variable, or the function's ordinal value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IProviderSvc.procName(System.String,System.Boolean)">
+            <summary>
+            Extracts LpProcName.
+            </summary>
+            <param name="lpProcName">Original lpProcName.</param>
+            <param name="prefix">Uses prefix.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.IProviderSvc.tryAlias(System.String)">
+            <summary>
+            Try to get alias.
+            </summary>
+            <param name="name">Possible alias name.</param>
+            <returns></returns>
+        </member>
+        <member name="F:net.r_eg.Conari.Core.Link.module">
+            <summary>
+            Used module (.dll, .exe, or address)
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.Core.Link.isolated">
+            <summary>
+            Points to actual isolated module if true.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.Core.Link.handle">
+            <summary>
+            A handle of loaded module.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.Core.Link.resolved">
+            <summary>
+            An resolved file status of the used module.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.Loader.BeforeUnload">
+            <summary>
+            Before unloading a library.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.Loader.AfterUnload">
+            <summary>
+            When library has been unloaded.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.Loader.AfterLoad">
+            <summary>
+            When library has been loaded.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Loader.Library">
+            <summary>
+            Active library.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Loader.PE">
+            <summary>
+            PE32/PE32+ features.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Loader.load(System.String)">
+            <summary>
+            Loads library into the address space.
+            </summary>
+            <param name="lib">The name of the library.</param>
+            <returns></returns>
+        </member>
+        <member name="T:net.r_eg.Conari.Core.MdSigCallingConvention">
+            <summary>
+            For internal m_signature processing with unmanaged EmitCalli.
+            See Provider.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProcAddressArgs.PAddr">
+            <summary>
+            The address of the exported function or variable.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProcAddressArgs.Handle">
+            <summary>
+            A handle of used module.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProcAddressArgs.LPProcName">
+            <summary>
+            The function or variable name, or the function's ordinal value.
+            
+            If this parameter is an ordinal value, it must be in the low-order word;
+            the high-order word must be zero.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.Provider.PrefixChanged">
+            <summary>
+            When Prefix has been changed.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.Provider.ConventionChanged">
+            <summary>
+            When Convention has been changed.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Core.Provider.NewProcAddress">
+            <summary>
+            When handling new non-zero ProcAddress.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Provider.Cache">
+            <summary>
+            To cache delegates, generated methods, etc.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Provider.Prefix">
+            <summary>
+            Prefix for exported functions.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Provider.Convention">
+            <summary>
+            How should call methods implemented in unmanaged code.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Provider.Mangling">
+            <summary>
+            Auto name-decoration to find entry points of exported functions.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Provider.Aliases">
+            <summary>
+            The aliases for exported-functions and variables.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Provider.ExVar">
+            <summary>
+            Access to exported variables.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.Provider.Svc">
+            <summary>
+            Additional services.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bindFunc``1(System.String)">
+            <summary>
+            Binds the exported Function. Full name is required.
+            </summary>
+            <typeparam name="T">Type of delegate.</typeparam>
+            <param name="lpProcName">The full name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bindFunc(System.String)">
+            <summary>
+            Alias `bindFunc&lt;Action&gt;(string lpProcName)`
+            Binds the exported Function. Full name is required.
+            </summary>
+            <param name="lpProcName">The full name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bind``1(System.String)">
+            <summary>
+            Binds the exported Function.
+            The main prefix will affects on this result.
+            </summary>
+            <typeparam name="T">Type of delegate.</typeparam>
+            <param name="func">The name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bind(System.String)">
+            <summary>
+            Alias `bind&lt;Action&gt;(string func)`
+            Binds the exported Function.
+            The main prefix will affects on this result.
+            </summary>
+            <param name="func">The name of exported function.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bind(System.Reflection.MethodInfo,System.String)">
+            <summary>
+            Binds the exported Function via MethodInfo and an specific name.
+            </summary>
+            <param name="mi">Prepared signature.</param>
+            <param name="name">Valid function name.</param>
+            <returns>Complete information to create delegates or to invoke methods.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bind(System.Reflection.MethodInfo,System.String,System.Runtime.InteropServices.CallingConvention)">
+            <summary>
+            Binds the exported Function via MethodInfo, an specific name and CallingConvention.
+            </summary>
+            <param name="mi">Prepared signature.</param>
+            <param name="name">Valid function name. Full name is required.</param>
+            <param name="conv">How it should be called. It overrides only for current method.</param>
+            <returns>Complete information to create delegates or to invoke methods.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bindFunc(System.String,System.Type,System.Type[])">
+            <summary>
+            Alias `bindFunc&lt;object&gt;(string lpProcName, Type ret, params Type[] args)`
+            Binds the exported function.
+            </summary>
+            <param name="lpProcName">The full name of exported function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bindFunc``1(System.String,System.Type,System.Type[])">
+            <summary>
+            Binds the exported function.
+            </summary>
+            <typeparam name="T">The return type for new Delegate should be as T type.</typeparam>
+            <param name="lpProcName">The full name of exported function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bind(System.String,System.Type,System.Type[])">
+            <summary>
+            Alias `bind&lt;object&gt;(string func, Type ret, params Type[] args)`
+            Binds the exported C API Function.
+            </summary>
+            <param name="func">The name of exported C API function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bind``1(System.String,System.Type,System.Type[])">
+            <summary>
+            Binds the exported C API Function.
+            </summary>
+            <typeparam name="T">The return type for new Delegate should be as T type.</typeparam>
+            <param name="func">The name of exported C API function.</param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.procName(System.String)">
+            <summary>
+            Returns full lpProcName with main prefix etc.
+            </summary>
+            <param name="name">Exported function or variable name.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.free(System.IntPtr)">
+            <summary>
+            To free memory from the heap allocated from the unmanaged memory.
+            </summary>
+            <param name="ptr">The address of the memory to be freed.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.getProcAddress(net.r_eg.Conari.Core.LpProcName)">
+            <param name="lpProcName">The name of exported function.</param>
+            <returns>The address of the exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.bind``1(net.r_eg.Conari.Core.LpProcName,System.Type,System.Type[])">
+            <typeparam name="T">The return type for new Delegate should be as T type.</typeparam>
+            <param name="lpProcName"></param>
+            <param name="ret">The type of return value.</param>
+            <param name="args">The type of arguments.</param>
+            <returns>Delegate of exported function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.fixTypes(System.Type)">
+            <summary>
+            Fixes for specific types like a bool -> I1 etc.
+            https://github.com/3F/Conari/issues/6
+            </summary>
+            <param name="origin">Base type</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.Provider.convRetType(System.Type)">
+            <summary>
+            to support of implicit conversions
+            </summary>
+            <param name="origin">Base type</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProviderDLR.DynCfg">
+            <summary>
+            Access to used IDynamic object.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProviderDLR.Cache">
+            <summary>
+            To use cache for dynamic types etc.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProviderDLR.Convention">
+            <summary>
+            Current Convention for all dynamic methods.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProviderDLR.UseCallingContext">
+            <summary>
+            To use information about types from CallingContext if it's possible.
+            This should automatically:
+                * Detect all ByRef&amp; types.
+                * Bind all null-values for any reference-types that pushed with out/ref modifier.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Core.ProviderDLR.UseByRef">
+            <summary>
+            To use ByRef&amp; (reference-types) for all sent types.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Core.ProviderDLR.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
+            <summary>
+            Magic methods. Invoking.
+            </summary>
+            <![CDATA[
+                `[result =] name<return_type>([{argument_types}])`
+            ]]>
+            <param name="binder"></param>
+            <param name="args"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="F:net.r_eg.Conari.Core.TDyn.declaringType">
+            <summary>
+            NOTE: 
+            Do not use this type for `dynamic.CreateDelegate(...)` etc. if already used any caching of TDyn.
+            Use new type from MethodInfo instead, for example: `typeof(T).GetMethod("Invoke").DeclaringType`
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.IntPtrExtension.GetStringLength(System.IntPtr,System.UInt32)">
+            <summary>
+            Get length of null-based string.
+            </summary>
+            <param name="ptr">Pointer to unmanaged string.</param>
+            <param name="nulsize">Count of a zero '\0' after last character.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.IntPtrExtension.GetStringBytes(System.IntPtr,System.Int32)">
+            <summary>
+            Byte-sequence of unmanaged string.
+            </summary>
+            <param name="ptr">Pointer to unmanaged string.</param>
+            <param name="length">Length of string in bytes.</param>
+            <returns></returns>
+        </member>
+        <member name="T:net.r_eg.Conari.Extension.MemberBinderExtension">
+            <summary>
+            welcometothehell
+            TODO: FIXME
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.Invoke(System.Object,System.String,System.Object[])">
+            <summary>
+            Alias to `.Invoke(name, BindingFlags.Public | BindingFlags.Instance[, args])`
+            Invoke specific public method from unspecified object.
+            </summary>
+            <param name="obj">Unspecified object.</param>
+            <param name="name">The name of non-static public method from object.</param>
+            <param name="args">Optional arguments.</param>
+            <returns>The result from invoked method.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.Invoke(System.Object,System.String,System.Reflection.BindingFlags,System.Object[])">
+            <summary>
+            Invoke specific method from unspecified object.
+            </summary>
+            <param name="obj">Unspecified object.</param>
+            <param name="name">The name of method from object.</param>
+            <param name="flags">Control binding.</param>
+            <param name="args">Optional arguments.</param>
+            <returns>The result from invoked method.</returns>
+            <exception cref="T:System.EntryPointNotFoundException">When the selected method with specific arguments was not found.</exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.Reflection.TargetParameterCountException"></exception>
+            <exception cref="T:System.MethodAccessException"></exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.GetFieldValue(System.Object,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Get field value from unspecified object.
+            </summary>
+            <param name="obj">Unspecified object.</param>
+            <param name="name">The name of field from object.</param>
+            <param name="nonPublic">Is a non-public ?</param>
+            <param name="isStatic">Is a static ?</param>
+            <returns>The value from selected field.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.GetFieldValue(System.Object,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Get field value from unspecified object.
+            </summary>
+            <param name="obj">Unspecified object.</param>
+            <param name="name">The name of field from object.</param>
+            <param name="flags">Control binding.</param>
+            <returns>The value from selected field.</returns>
+            <exception cref="T:System.EntryPointNotFoundException">When the selected field was not found.</exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.FieldAccessException"></exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.GetPropertyValue(System.Object,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Get property value from unspecified object.
+            </summary>
+            <param name="obj">Unspecified object.</param>
+            <param name="name">The name of property from object.</param>
+            <param name="nonPublic">Is a non-public ?</param>
+            <param name="isStatic">Is a static ?</param>
+            <returns>The value from selected property.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.GetPropertyValue(System.Object,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Get property value from unspecified object.
+            </summary>
+            <param name="obj">Unspecified object.</param>
+            <param name="name">The name of property from object.</param>
+            <param name="flags">Control binding.</param>
+            <returns>The value from selected property.</returns>
+            <exception cref="T:System.EntryPointNotFoundException">When the selected property was not found.</exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.MethodAccessException"></exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.E``1(System.Object,System.Action)">
+            <summary>
+            Execute action separately from result.
+            </summary>
+            <typeparam name="T">The type of value that should be returned.</typeparam>
+            <param name="obj">Unspecified object.</param>
+            <param name="act">Any action that should be executed.</param>
+            <returns>Same value from selected object as T type.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Extension.ObjectExtension.E(System.Object,System.Action)">
+            <summary>
+            Execute action separately from result.
+            Alias to `E&lt;object&gt;()`
+            </summary>
+            <param name="obj">Unspecified object.</param>
+            <param name="act">Any action that should be executed.</param>
+            <returns>Same value from selected object.</returns>
+        </member>
+        <member name="P:net.r_eg.Conari.IConari.ConfigDLR">
+            <summary>
+            Access to available configuration data of dynamic DLR.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.IConari.DLR">
+            <summary>
+            Provides dynamic features like adding 
+            and invoking of new exported-functions at runtime.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.IConari.Log">
+            <summary>
+            Access to logger and its events.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.IConari.__cdecl">
+            <summary>
+            DLR Features with `__cdecl` calling convention.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.IConari.__stdcall">
+            <summary>
+            DLR Features with `__stdcall` calling convention.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.IConari.__fastcall">
+            <summary>
+            DLR Features with `__fastcall` calling convention.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.IConari.__vectorcall">
+            <summary>
+            DLR Features with `__vectorcall` calling convention.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Log.ISender.Received">
+            <summary>
+            When message has been received.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.ISender.send(System.Object,net.r_eg.Conari.Log.Message)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.ISender.send(System.Object,System.String)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.ISender.send(System.Object,System.String,net.r_eg.Conari.Log.Message.Level)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.ISender.send``1(net.r_eg.Conari.Log.Message)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.ISender.send``1(System.String)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.ISender.send``1(System.String,net.r_eg.Conari.Log.Message.Level)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="T:net.r_eg.Conari.Log.LSender">
+            <summary>
+            A simple retranslator.
+            Use the NLog etc.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Log.LSender.Received">
+            <summary>
+            When message has been received.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.Conari.Log.LSender.SReceived">
+            <summary>
+            Static alias to Received.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.Send(System.Object,net.r_eg.Conari.Log.Message)">
+            <summary>
+            Static alias to `send(object sender, Message msg)`
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.Send(System.Object,System.String)">
+            <summary>
+            Static alias to `send(object sender, string msg)`
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.Send(System.Object,System.String,net.r_eg.Conari.Log.Message.Level)">
+            <summary>
+            Static alias to `send(object sender, string msg, Message.Level type)`
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.Send``1(net.r_eg.Conari.Log.Message)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.Send``1(System.String)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.Send``1(System.String,net.r_eg.Conari.Log.Message.Level)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.send(System.Object,net.r_eg.Conari.Log.Message)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.send(System.Object,System.String)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.send(System.Object,System.String,net.r_eg.Conari.Log.Message.Level)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.send``1(net.r_eg.Conari.Log.Message)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.send``1(System.String)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.Conari.Log.LSender.send``1(System.String,net.r_eg.Conari.Log.Message.Level)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="P:net.r_eg.Conari.Log.LSender._">
+            <summary>
+            Thread-safe getting the instance of the Sender class
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.Mangling.C">
+            <summary>
+            The Mangling by C rules.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Mangling.C.Decorate(System.String,System.String[])">
+            <summary>
+            Decorate function name from existing exported list.
+            </summary>
+            <param name="function">Undecorated function name.</param>
+            <param name="names">The exported function names. Use PE handler.</param>
+            <returns>found decorated function or null.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Mangling.C.IsCdecl(System.String,System.String)">
+            <summary>
+            Underscore character (_) is prefixed to names, 
+            except when __cdecl functions that use C linkage are exported.
+            e.g: _get_Seven or get_Seven
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Mangling.C.IsStdCall(System.String,System.String)">
+            <summary>
+            Leading underscore (_) and a trailing at sign (@) followed by the number of bytes in the parameter list in decimal.
+            e.g: _get_SevenStdCall@0
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Mangling.C.IsFastCall(System.String,System.String)">
+            <summary>
+            Leading and trailing at signs (@) followed by a decimal number representing the number of bytes in the parameter list.
+            e.g.: @get_SevenFastCall@0
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Mangling.C.IsVectorCall(System.String,System.String)">
+            <summary>
+            Two trailing at signs (@@) followed by a decimal number of bytes in the parameter list.
+            e.g.: get_SevenVectorCall@@0
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BReader.GetValue(System.Type,System.Int32,System.Int32@,System.Byte[]@)">
+            <summary>
+            To get manually the value from byte-sequence.
+            </summary>
+            <param name="type">The type of result value.</param>
+            <param name="tsize">Actual size of value in byte-sequence.</param>
+            <param name="offset">Offset at left.</param>
+            <param name="data"></param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BReader.tryNext(System.Type,System.Int32,System.Object@)">
+            <summary>
+            Try to get the next value in byte-sequence.
+            </summary>
+            <param name="type">The type of value.</param>
+            <param name="tsize">Actual size of value.</param>
+            <param name="value">Output value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BReader.next(System.Type,System.Int32)">
+            <summary>
+            Gets next value in byte-sequence.
+            </summary>
+            <param name="type"></param>
+            <param name="tsize"></param>
+            <returns></returns>
+            <exception cref="T:System.IndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BReader.next``1(System.Int32)">
+            <summary>
+            Alias to `next(Type type, int tsize)`
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="tsize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BReader.next(System.Type)">
+            <summary>
+            Gets next value in byte-sequence with size of type by default.
+            </summary>
+            <param name="type">The type of value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BReader.next``1">
+            <summary>
+            Alias to `next(Type type)`
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BReader.reset(System.Int32)">
+            <summary>
+            To reset position.
+            </summary>
+            <param name="offset"></param>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.Core.BType.DLR">
+            <summary>
+            Access to dynamic features like getting of values at runtime from generated fields etc.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BType.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+            <summary>
+            Magic fields. Get.
+            </summary>
+            <param name="binder"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BType.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+            <summary>
+            Magic fields. Set.
+            </summary>
+            <param name="binder"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.BType.GetDynamicMemberNames">
+            <summary>
+            List of magic fields.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:net.r_eg.Conari.Native.Core.Field.tsize">
+            <summary>
+            Used size of type.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.Native.Core.Field.name">
+            <summary>
+            Field name.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.Native.Core.Field.value">
+            <summary>
+            The value of field.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.Native.Core.Field.user">
+            <summary>
+            User object for any purpose.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.Core.Field.IsValidForDLR">
+            <summary>
+            Checks the correct name for DLR features.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.Core.Field.toBytes">
+            <summary>
+            Get bytes from current field.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.Core.Raw.Values">
+            <summary>
+            Final byte-sequence from values (via pointer or local data).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.Core.Raw.Iter">
+            <summary>
+            Access to byte-sequence from values (via pointer or local data).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.Core.Raw.Type">
+            <summary>
+            Generates dynamic type for current data.
+            /+DLR
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.NativeData.Raw">
+            <summary>
+            Get raw-data of complex native structure.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.NativeData.Zero">
+            <summary>
+            To reset chain in zero.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Native.NativeData.AlignSizeByMax">
+            <summary>
+            Align by max size of existing types without changing of original types.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.SizeOf(System.Type[])">
+            <summary>
+            Gets size of selected types in bytes that are should be considered as unmanaged types.
+            </summary>
+            <param name="types"></param>
+            <returns>the size in bytes.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.SizeOf(System.Type)">
+            <summary>
+            Gets size of selected type in bytes that's should be considered as unmanaged type.
+            </summary>
+            <param name="type"></param>
+            <returns>the size in bytes.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.SizeOf``1">
+            <summary>
+            Alias to `int SizeOf(Type type)`
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.AlignSizeBy(System.Type,System.Int32)">
+            <summary>
+            Align size by specific type.
+            </summary>
+            <param name="type"></param>
+            <param name="count">the count of types that should be in chain.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData._(System.IntPtr)">
+            <summary>
+            Alias to get instance: `new NativeData(IntPtr)`
+            </summary>
+            <param name="ptr">pointer to data structure.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData._(System.Byte[])">
+            <summary>
+            Alias to get instance: `new NativeData(byte[])`
+            </summary>
+            <param name="bytes">local raw data.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.align``1(System.Int32,System.String[])">
+            <summary>
+            Align the chain by specific type at the right.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="count">the count of T that should be in chain.</param>
+            <param name="names">Optional assigned names.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.alignSizeBy(System.Int32)">
+            <summary>
+            Align by specific size without changing of original types.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.assign(System.Int32,System.String[])">
+            <summary>
+            To assign custom names.
+            </summary>
+            <param name="offset">Initial offset for present data with.</param>
+            <param name="names">The names, starting from offset.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.reset(System.UInt32)">
+            <summary>
+            To reset chain.
+            </summary>
+            <param name="pos">absolute position.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.h(System.String,System.String)">
+            <summary>
+            To add complex type from header file (.h)
+            </summary>
+            <param name="file">Full path to header file.</param>
+            <param name="typedef">The name of declared type that should be loaded.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.#ctor(System.IntPtr)">
+            <param name="ptr">pointer to data structure.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeData.#ctor(System.Byte[])">
+            <param name="bytes">local raw data.</param>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeExtension.Native(System.IntPtr)">
+            <summary>
+            To work with native data via pointer.
+            </summary>
+            <param name="ptr">pointer to data structure.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeExtension.Native(System.Byte[])">
+            <summary>
+            To work with native data via byte-array.
+            </summary>
+            <param name="bytes">local raw data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.Native.NativeExtension.NativeSize(System.Type)">
+            <summary>
+            Alias to `NativeData.SizeOf ...`
+            Gets size of selected type in bytes that's should be considered as unmanaged type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:net.r_eg.Conari.PE.Hole.ExportDirectory">
+            <summary>
+            PE32/PE32+ files. Works with records from ExportDirectory: 
+            WinNT IMAGE_OPTIONAL_HEADER - IMAGE_DATA_DIRECTORY[IMAGE_DIRECTORY_ENTRY_EXPORT]
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.IPE.Sections">
+            <summary>
+            Get available sections.
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms680341.aspx
+            /winnt.h
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.IPE.DExport">
+            <summary>
+            Get IMAGE_EXPORT_DIRECTORY record.
+            WinNT IMAGE_OPTIONAL_HEADER - IMAGE_DATA_DIRECTORY[IMAGE_DIRECTORY_ENTRY_EXPORT]
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.IPE.ExportedProcNames">
+            <summary>
+            Receives full names of all available exported functions or variables from ExportDirectory 
+            (WinNT OPTIONAL_HEADER).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.IPE.ExportedProcNamesArray">
+            <summary>
+            Full names of all available exported functions or variables from ExportDirectory 
+            (WinNT OPTIONAL_HEADER).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.IPE.FileName">
+            <summary>
+            Active pe-file.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.PEFile.Sections">
+            <summary>
+            Get available sections.
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms680341.aspx
+            /winnt.h
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.PEFile.DExport">
+            <summary>
+            Get IMAGE_EXPORT_DIRECTORY record.
+            WinNT IMAGE_OPTIONAL_HEADER - IMAGE_DATA_DIRECTORY[IMAGE_DIRECTORY_ENTRY_EXPORT]
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.PEFile.ExportedProcNames">
+            <summary>
+            Receives full names of all available exported functions or variables from ExportDirectory 
+            (WinNT OPTIONAL_HEADER).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.PEFile.ExportedProcNamesArray">
+            <summary>
+            Full names of all available exported functions or variables from ExportDirectory 
+            (WinNT OPTIONAL_HEADER).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.PE.PEFile.FileName">
+            <summary>
+            Active pe-file.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.PE.WinNT.IMAGE_EXPORT_DIRECTORY">
+            <summary>
+            Export Format
+            /winnt.h
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER">
+            <summary>
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms680341.aspx
+            /winnt.h
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.Name">
+            <summary>
+            An 8-byte, null-padded UTF-8 string. 
+            There is no terminating null character if the string is exactly eight characters long. 
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.Misc">
+            <summary>
+            union { DWORD PhysicalAddress; DWORD VirtualSize; }
+            
+            PhysicalAddress
+                The file address.
+                
+            VirtualSize
+                The total size of the section when loaded into memory, in bytes. 
+                If this value is greater than the SizeOfRawData member, the section is filled with zeroes. 
+                This field is valid only for executable images and should be set to 0 for object files.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.VirtualAddress">
+            <summary>
+            The address of the first byte of the section when loaded into memory, 
+            relative to the image base. For object files, this is the address of the first byte 
+            before relocation is applied.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.SizeOfRawData">
+            <summary>
+            The size of the initialized data on disk, in bytes. 
+            
+            This value must be a multiple of the FileAlignment member of the IMAGE_OPTIONAL_HEADER structure. 
+            If this value is less than the VirtualSize member, the remainder of the section is filled with zeroes. 
+            If the section contains only uninitialized data, the member is zero.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.PointerToRawData">
+            <summary>
+            A file pointer to the first page within the COFF file. 
+            
+            This value must be a multiple of the FileAlignment member of the IMAGE_OPTIONAL_HEADER structure. 
+            If a section contains only uninitialized data, set this member is zero.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.PointerToRelocations">
+            <summary>
+            A file pointer to the beginning of the relocation entries for the section. 
+            If there are no relocations, this value is zero.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.PointerToLinenumbers">
+            <summary>
+            A file pointer to the beginning of the line-number entries for the section.
+            If there are no COFF line numbers, this value is zero.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.NumberOfRelocations">
+            <summary>
+            The number of relocation entries for the section. 
+            This value is zero for executable images.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.NumberOfLinenumbers">
+            <summary>
+            The number of line-number entries for the section.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.PE.WinNT.IMAGE_SECTION_HEADER.Characteristics">
+            <summary>
+            The characteristics of the image.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.Types.BSTR">
+            <summary>
+            A BSTR (Basic string or binary string) is a string data type that is used by COM, Automation, and Interop functions.
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms221069(v=vs.85).aspx
+            
+            A BSTR is a composite data type that consists of a length prefix, a data string, and a terminator:
+            * Length prefix - A 4-byte integer that contains the number of bytes in the following data string. 
+                              It appears immediately before the first character of the data string. 
+            
+            * Data string   - A string of Unicode characters. May contain multiple embedded null characters.
+            * Terminator    - 2-null characters.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.BSTR.Raw">
+            <summary>
+            Raw byte-sequence
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.BSTR.free">
+            <summary>
+            Frees a BSTR using the COM SysFreeString function:
+            https://msdn.microsoft.com/en-us/Library/ms221481.aspx
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.CharPtr.Raw">
+            <summary>
+            Raw byte-sequence
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.IBoxed.Data">
+            <summary>
+            Access to internal data.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.int_t.op_Implicit(net.r_eg.Conari.Types.int_t)~System.Int32">
+            <exception cref="T:System.OverflowException">number is greater than Int32.MaxValue or less than Int32.MinValue</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.int_t.op_Implicit(net.r_eg.Conari.Types.int_t)~System.Int16">
+            <exception cref="T:System.OverflowException">number is greater than Int16.MaxValue or less than Int16.MinValue</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.int_t.op_Implicit(net.r_eg.Conari.Types.int_t)~System.SByte">
+            <exception cref="T:System.OverflowException">number is greater than SByte.MaxValue or less than SByte.MinValue</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.int_t.op_Explicit(net.r_eg.Conari.Types.int_t)~net.r_eg.Conari.Types.uint_t">
+            <exception cref="T:System.OverflowException">number is less than uint_t.MIN</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.int_t.#ctor(net.r_eg.Conari.Types.uint_t)">
+            <exception cref="T:System.OverflowException">number is greater than int_t.MAX</exception>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.INullType.Data">
+            <summary>
+            To get/set encapsulated data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.INullType.GenericType">
+            <summary>
+            To get base type.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.Types.Methods.Method`2">
+            <typeparam name="TRes">The type of return value.</typeparam>
+            <typeparam name="T">The type of arguments.</typeparam>
+            <param name="args">Argument list.</param>
+            <returns>Return value.</returns>
+        </member>
+        <member name="T:net.r_eg.Conari.Types.NullType`1">
+            <summary>
+            To store information about basic type for any null values.
+            </summary>
+            <typeparam name="T">Nullable type.</typeparam>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.NullType`1.Data">
+            <summary>
+            To get/set encapsulated data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.NullType`1.GenericType">
+            <summary>
+            To get base type.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.Types.uint_t">
+            <summary>
+            unsigned int 
+            /or/ 
+            unsigned __int64 (unsigned long long)
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.uint_t.op_Implicit(net.r_eg.Conari.Types.uint_t)~System.UInt32">
+            <exception cref="T:System.OverflowException">number is greater than Int32.MaxValue</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.uint_t.op_Implicit(net.r_eg.Conari.Types.uint_t)~System.UInt16">
+            <exception cref="T:System.OverflowException">number is greater than Int16.MaxValue</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.uint_t.op_Implicit(net.r_eg.Conari.Types.uint_t)~System.Byte">
+            <exception cref="T:System.OverflowException">number is greater than Byte.MaxValue</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.uint_t.op_Explicit(net.r_eg.Conari.Types.uint_t)~net.r_eg.Conari.Types.int_t">
+            <exception cref="T:System.OverflowException">number is greater than int_t.MAX</exception>
+        </member>
+        <member name="M:net.r_eg.Conari.Types.uint_t.#ctor(net.r_eg.Conari.Types.int_t)">
+            <exception cref="T:System.OverflowException">number is less than uint_t.MIN</exception>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.UnmanagedString.Pointer">
+            <summary>
+            Pointer to allocated string.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.UnmanagedString.Owner">
+            <summary>
+            Who is the owner for unmanaged string.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.UnmanagedString.Data">
+            <summary>
+            Access to managed or unmanaged string data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.UnmanagedStructure.Pointer">
+            <summary>
+            Pointer to unmanaged memory where will placed structure.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.UnmanagedStructure.Owner">
+            <summary>
+            Who is the owner for allocated structure.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.UnmanagedStructure.Managed">
+            <summary>
+            Managed structure.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.Conari.Types.WCharPtr.Raw">
+            <summary>
+            Raw byte-sequence
+            </summary>
+        </member>
+        <member name="T:net.r_eg.Conari.Types.WRef`1">
+            <summary>
+            Reference type wrapper for use inside value type data.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:net.r_eg.Conari.WinAPI.LoadLibraryFlags">
+            <summary>
+            Possible actions for loading the module with LoadLibraryEx function.
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
+            </summary>
+        </member>
+        <member name="F:net.r_eg.Conari.WinAPI.LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH">
+            <summary>
+            If this value is used and lpFileName specifies an absolute path, 
+            the system uses the alternate file search strategy discussed in the Remarks section to find 
+            associated executable modules that the specified module causes to be loaded. 
+            If this value is used and lpFileName specifies a relative path, the behavior is undefined.
+            
+            If this value is not used, or if lpFileName does not specify a path, 
+            the system uses the standard search strategy discussed in the Remarks section to find 
+            associated executable modules that the specified module causes to be loaded.
+            
+            This value cannot be combined with any LOAD_LIBRARY_SEARCH flag.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.Conari.WinAPI.NativeMethods.LoadLibrary(System.String)">
+            <summary>
+            Loads the specified module into the address space of the calling process.
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms684175.aspx
+            
+             The system maintains a per-process reference count on all loaded modules. 
+             * Calling LoadLibrary increments the reference count. 
+             * Calling the FreeLibrary (see below) or FreeLibraryAndExitThread function decrements the reference count. 
+             The system unloads a module when its reference count reaches zero or when the process terminates (regardless of the reference count).
+            </summary>
+            <param name="lpFileName">
+                The name of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).
+            </param>
+            <returns>A handle that can be used in GetProcAddress to get the address of a DLL function.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.WinAPI.NativeMethods.LoadLibraryEx(System.String,System.IntPtr,System.UInt32)">
+            <summary>
+            Loads the specified module into the address space of the calling process. The specified module may cause other modules to be loaded.
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms684179.aspx
+            
+            The behavior of this function is identical to the LoadLibrary function without flags.
+            </summary>
+            <param name="lpFileName">
+                A string that specifies the file name of the module to load. 
+                The module can be a library module (a .dll file) or an executable module (an .exe file).
+            </param>
+            <param name="hFile">This parameter is reserved for future use. It must be NULL.</param>
+            <param name="dwFlags">The action to be taken when loading the module. Use from LoadLibraryFlags.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.Conari.WinAPI.NativeMethods.GetProcAddress(System.IntPtr,System.String)">
+            <summary>
+            Retrieves the address of an exported function or variable from the specified dynamic-link library (DLL).
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms683212.aspx
+            </summary>
+            <param name="hModule">A handle to the DLL module that contains the function or variable.</param>
+            <param name="lpProcName">
+                The function or variable name, or the function's ordinal value. 
+                If this parameter is an ordinal value, it must be in the low-order word; 
+                the high-order word must be zero.
+            </param>
+            <returns>the address of the exported function or variable if true.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.WinAPI.NativeMethods.FreeLibrary(System.IntPtr)">
+            <summary>
+            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
+            When the reference count reaches zero, the module is unloaded from the address space of the calling process and the handle is no longer valid.
+            https://msdn.microsoft.com/en-us/library/windows/desktop/ms683152.aspx
+            </summary>
+            <param name="hModule">A handle to the loaded library module.</param>
+            <returns>If the function succeeds, the return value is nonzero.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.WinAPI.NativeMethods.GetModuleHandle(System.String)">
+            <summary>
+            Retrieves a module handle for the specified module. The module must have been loaded by the calling process.
+            https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlea
+            </summary>
+            <param name="lpModuleName">The name of the loaded module (either a .dll or .exe file). </param>
+            <returns>A handle to the specified module if success. Or NULL when fails. Use GetLastError.</returns>
+        </member>
+        <member name="M:net.r_eg.Conari.WinAPI.NativeMethods.GetModuleFileName(System.IntPtr,System.Text.StringBuilder,System.UInt32)">
+            <summary>
+            Retrieves the fully qualified path for the file that contains the specified module. 
+            The module must have been loaded by the current process.
+            https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
+            </summary>
+            <param name="hModule">
+            A handle to the loaded module whose path is being requested. 
+            If this parameter is NULL, GetModuleFileName retrieves the path of the executable file of the current process.
+            </param>
+            <param name="lpFilename">A pointer to a buffer that receives the fully qualified path of the module.</param>
+            <param name="nSize">The size of the lpFilename buffer.</param>
+            <returns>
+            If the function succeeds, the return value is the length of the string that is copied to the buffer, 
+            in characters, not including the terminating null character.
+            
+            If the buffer is too small to hold the module name, the string is truncated to nSize characters 
+            including the terminating null character, the function returns nSize, 
+            and the function sets the last error to ERROR_INSUFFICIENT_BUFFER.
+            
+            If the function fails, the return value is 0 (zero). Use GetLastError.
+            
+            Windows XP: If the buffer is too small to hold the module name, the function returns nSize. 
+                        The last error code remains ERROR_SUCCESS. Same for 0-buffer.
+            </returns>
+        </member>
+    </members>
+</doc>

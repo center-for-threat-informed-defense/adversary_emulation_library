@@ -1,0 +1,3791 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MvsSln</name>
+    </assembly>
+    <members>
+        <member name="F:net.r_eg.MvsSln.BuildType.Common">
+            <summary>
+            Common context - any type or type by default
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.Build">
+            <summary>
+            'build' action
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.Rebuild">
+            <summary>
+            'rebuild' action
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.Clean">
+            <summary>
+            'clean' action
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.BuildSelection">
+            <summary>
+            'build' action for selection
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.RebuildSelection">
+            <summary>
+            'rebuild' action for selection
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.CleanSelection">
+            <summary>
+            'clean' action for selection
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.BuildOnlyProject">
+            <summary>
+            'build' action for project
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.RebuildOnlyProject">
+            <summary>
+            'rebuild' action for project
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.CleanOnlyProject">
+            <summary>
+            'clean' action for project
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.BuildCtx">
+            <summary>
+            'build' action for project
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.RebuildCtx">
+            <summary>
+            'rebuild' action for project
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.BuildType.CleanCtx">
+            <summary>
+            'clean' action for project
+            </summary>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.ConfigItem">
+            <summary>
+            Basic item of configuration and platform.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigItem.Rule">
+            <summary>
+            The custom rule of the Configuration and Platform names.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigItem.SensitivityComparing">
+            <summary>
+            To use an `Sensitivity` logic when comparing {IConfPlatform}
+            together with `==` , `!=`.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigItem.ConfigurationByRuleICase">
+            <summary>
+            {ConfigurationByRule} with optional case insensitive logic.
+            Uses {SensitivityComparing} flag.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigItem.PlatformByRuleICase">
+            <summary>
+            {PlatformByRule} with optional case insensitive logic.
+            Uses {SensitivityComparing} flag.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ConfigItem.IsEqualByRule(System.String,System.String,System.Boolean)">
+            <summary>
+            Checking an config/platform by using {Rule} instance.
+            </summary>
+            <param name="config">Configuration name.</param>
+            <param name="platform">Platform name.</param>
+            <param name="icase">Case insensitive flag.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ConfigItem.Format(System.String,System.String)">
+            <summary>
+            Compatible format: 'configname'|'platformname'
+            http://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.interop.ivscfg.get_displayname.aspx
+            </summary>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.ConfigPrj">
+            <summary>
+            Project Configuration
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigPrj.PGuid">
+            <summary>
+            Project Guid.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigPrj.IncludeInBuild">
+            <summary>
+            Existence of `.Build.0` to activate project for build:
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.CI_Release|Any CPU.Build.0 = Release|Any CPU
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigPrj.IncludeInDeploy">
+            <summary>
+            Existence of `.Deploy.0` to activate project for deployment:
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.CI_Release|Any CPU.Deploy.0 = Release|Any CPU
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ConfigPrj.Sln">
+            <summary>
+            Link to solution configuration.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.ConfigSln">
+            <summary>
+            Solution Configuration
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.SLN_FOLDER">
+            <summary>
+            Solution Folder.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_CS">
+            <summary>
+            .csproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_DB">
+            <summary>
+            .dbproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_FS">
+            <summary>
+            .fsproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_VB">
+            <summary>
+            .vbproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_VC">
+            <summary>
+            .vcxproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_VJ">
+            <summary>
+            .vjsproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_WD">
+            <summary>
+            .wdproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_WEB">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_DEPLOY">
+            <summary>
+            .deployproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_SF">
+            <summary>
+            .sfproj
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_FS_SDK">
+            <summary>
+            .fsproj SDK based type.
+            https://github.com/dotnet/project-system/blob/master/docs/opening-with-new-project-system.md
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_VB_SDK">
+            <summary>
+            .vbproj SDK based type.
+            https://github.com/dotnet/project-system/blob/master/docs/opening-with-new-project-system.md
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_CS_SDK">
+            <summary>
+            .csproj SDK based type.
+            https://github.com/dotnet/project-system/blob/master/docs/opening-with-new-project-system.md
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.Guids.mvssln">
+            <summary>
+            Reserved domain for MvsSln purposes.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.Guids.ProjectTypeBy(System.String)">
+            <summary>
+            Evaluate project type via Guid.
+            </summary>
+            <param name="guid">Project type Guid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.Guids.GuidBy(net.r_eg.MvsSln.Core.ProjectType)">
+            <summary>
+            Evaluate Guid via ProjectType enum.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatform.Rule">
+            <summary>
+            The custom rule of the Configuration and Platform names.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatform.SensitivityComparing">
+            <summary>
+            To use an `Sensitivity` logic when comparing {IConfPlatform}
+            together with `==` , `!=`.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatform.ConfigurationByRuleICase">
+            <summary>
+            {ConfigurationByRule} with optional case insensitive logic.
+            Uses {SensitivityComparing} flag.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatform.PlatformByRuleICase">
+            <summary>
+            {PlatformByRule} with optional case insensitive logic.
+            Uses {SensitivityComparing} flag.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IConfPlatform.IsEqualByRule(System.String,System.String,System.Boolean)">
+            <summary>
+            Checking an config/platform by using {Rule} instance.
+            </summary>
+            <param name="config">Configuration name.</param>
+            <param name="platform">Platform name.</param>
+            <param name="icase">Case insensitive flag.</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatformPrj.PGuid">
+            <summary>
+            Project Guid.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatformPrj.IncludeInBuild">
+            <summary>
+            Existence of `.Build.0` to activate project for build:
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.CI_Release|Any CPU.Build.0 = Release|Any CPU
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatformPrj.IncludeInDeploy">
+            <summary>
+            Existence of `.Deploy.0` to activate project for deployment:
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.CI_Release|Any CPU.Deploy.0 = Release|Any CPU
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IConfPlatformPrj.Sln">
+            <summary>
+            Link to solution configuration.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IHandler.Id">
+            <summary>
+            Gets unique id of listener.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IRuleOfConfig.Platform(System.String)">
+            <summary>
+            Rules of platform names.
+            details: https://github.com/3F/vsSolutionBuildEvent/issues/14
+                   + MS Connect Issue #503935
+            </summary>
+            <param name="name">Platform name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IRuleOfConfig.Configuration(System.String)">
+            <summary>
+            Rules of configuration names.
+            </summary>
+            <param name="name">Configuration name.</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISection.Handler">
+            <summary>
+            Contains handler which is ready to process this section, or already processes.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISection.Line">
+            <summary>
+            Known line number to this section.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISection.Raw">
+            <summary>
+            Raw data from stream.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISection.Ignore">
+            <summary>
+            To ignore this from other sections.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISection.User">
+            <summary>
+            User's mixed object for anything.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISection.UpdateHandler(System.Object)">
+            <summary>
+            To update handler which is ready to process this section.
+            </summary>
+            <param name="handler">New handler.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISection.Clone">
+            <summary>
+            Clone data from this section into new ISection instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnContainer.SlnHandlers">
+            <summary>
+            Available solution handlers.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnContainer.RawXmlProjects">
+            <summary>
+            Dictionary of raw xml projects by Guid.
+            Will be used if projects cannot be accessed from filesystem.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnContainer.SetDefaultHandlers">
+            <summary>
+            To reset and register all default handlers.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnContainer.Parse(System.String,net.r_eg.MvsSln.SlnItems)">
+            <summary>
+            Parse of selected .sln file.
+            </summary>
+            <param name="sln">Solution file</param>
+            <param name="type">Allowed type of operations.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnContainer.Parse(System.IO.StreamReader,net.r_eg.MvsSln.SlnItems)">
+            <summary>
+            To parse data from used stream.
+            </summary>
+            <param name="reader"></param>
+            <param name="type">Allowed type of operations.</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnPDManager.FirstProject">
+            <summary>
+            Get first project from defined list.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnPDManager.LastProject">
+            <summary>
+            Get last project from defined list.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnPDManager.FirstBy(net.r_eg.MvsSln.BuildType)">
+            <summary>
+            Get first project in Project Build Order.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnPDManager.LastBy(net.r_eg.MvsSln.BuildType)">
+            <summary>
+            Get last project in Project Build Order.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnPDManager.GetProjectBy(System.String)">
+            <summary>
+            Get project by Guid string.
+            </summary>
+            <param name="guid">Identifier of project.</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnProjectDependencies.GuidList">
+            <summary>
+            List of project Guids.
+            In direct order of definitions with considering of ProjectDependencies.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnProjectDependencies.Projects">
+            <summary>
+            List of projects by Guid.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnProjectDependencies.Dependencies">
+            <summary>
+            Projects and their dependencies.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.SolutionDir">
+            <summary>
+            Full path to root solution directory.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.SolutionFile">
+            <summary>
+            Full path to an solution file.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.ResultType">
+            <summary>
+            Processed type for result.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.Header">
+            <summary>
+            Header information.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.SolutionConfigs">
+            <summary>
+            Solution configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.ProjectConfigs">
+            <summary>
+            Project configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.ProjectConfigurationPlatforms">
+            <summary>
+            Alias of the relation of solution configuration to project configurations.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.ProjectItems">
+            <summary>
+            All found projects in solution.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.ProjectItemsConfigs">
+            <summary>
+            Alias for ProjectItems and its configurations.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.SolutionFolders">
+            <summary>
+            List of solution folders.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.DefaultConfig">
+            <summary>
+            Default Configuration and Platform for current solution.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.Properties">
+            <summary>
+            All available global properties for solution.
+            Use optional {PropertyNames} to access to popular properties.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.ProjectDependencies">
+            <summary>
+            Solution Project Dependencies.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.ExtItems">
+            <summary>
+            Optional Key[-Value] records like `SolutionGuid` and so on
+            that can be presented inside an ExtensibilityGlobals section.
+            
+            ie. Flags/Key-only records are possible too (values will contain null).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.Env">
+            <summary>
+            Environment for current data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResult.Map">
+            <summary>
+            Contains map of all found (known/unknown) solution data.
+            This value is never null.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResultSvc.SolutionConfigList">
+            <summary>
+            Solution configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResultSvc.ProjectConfigList">
+            <summary>
+            Project configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResultSvc.ProjectItemList">
+            <summary>
+            All found projects in solution.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISlnResultSvc.SolutionFolderList">
+            <summary>
+            List of solution folders.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnResultSvc.SetProjectDependencies(net.r_eg.MvsSln.Core.ISlnPDManager)">
+            <summary>
+            Updates instance of the Solution Project Dependencies.
+            </summary>
+            <param name="dep"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISlnResultSvc.SetHeader(net.r_eg.MvsSln.Core.SlnHeader)">
+            <summary>
+            Updates header info.
+            </summary>
+            <param name="info"></param>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.IsolatedEnv">
+            <summary>
+            Isolated environment.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IsolatedEnv.#ctor(net.r_eg.MvsSln.Core.ISlnResult,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,net.r_eg.MvsSln.Core.RawText})">
+            <param name="data">Prepared data from solution parser.</param>
+            <param name="properties">Specified sln properties.</param>
+            <param name="raw">Optional dictionary of raw xml projects by Guid.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IsolatedEnv.#ctor(net.r_eg.MvsSln.Core.ISlnResult,System.Collections.Generic.IDictionary{System.String,net.r_eg.MvsSln.Core.RawText})">
+            <param name="data">Prepared data from solution parser.</param>
+            <param name="raw">Optional dictionary of raw xml projects by Guid.</param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISynchSubscribers`1.Count">
+            <summary>
+            Number of elements contained in the thread-safe collection.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ISynchSubscribers`1.SyncRoot">
+            <summary>
+            Gets the object used to synchronize access to the thread-safe collection.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISynchSubscribers`1.Register(`0)">
+            <summary>
+            Adds an listener to thread-safe collection.
+            </summary>
+            <param name="listener"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISynchSubscribers`1.Unregister(`0)">
+            <summary>
+            Removes specified listener from the collection.
+            </summary>
+            <param name="listener"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISynchSubscribers`1.Reset">
+            <summary>
+            Reset all collection.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISynchSubscribers`1.Contains(`0)">
+            <summary>
+            Determines whether the collection contains an listener.
+            </summary>
+            <param name="listener"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISynchSubscribers`1.Exists(System.Guid)">
+            <summary>
+            Checks existence of listener by Guid.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ISynchSubscribers`1.GetById(System.Guid)">
+            <summary>
+            Get listener by specific id.
+            </summary>
+            <param name="id"></param>
+            <returns>null if not found.</returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.Project">
+            <summary>
+            Access to project instance of Microsoft.Build.Evaluation.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.ProjectItem">
+            <summary>
+            ProjectItem and its configurations.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.Sln">
+            <summary>
+            Access to solution data if this was initialized with its context.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.PId">
+            <summary>
+            Provides unique identifier for project (not instance).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.ProjectGuid">
+            <summary>
+            The Guid of this project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.ProjectName">
+            <summary>
+            The ProjectName of this project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.ProjectPath">
+            <summary>
+            Gets the root directory for this project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.ProjectFullPath">
+            <summary>
+            Gets the full path to the project source file.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProject.GlobalProperties">
+            <summary>
+            Access to global properties of project.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.Save">
+            <summary>
+            Saves the project to the file system, if modified.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.Save(System.String,System.Text.Encoding)">
+            <summary>
+            Saves the project to the file system, if modified or if the path to the project
+            source code changes, using the given character encoding.
+            </summary>
+            <param name="path">Destination path of the the project source code.</param>
+            <param name="enc"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddImport(System.String,System.Boolean,System.String)">
+            <summary>
+            To add 'Import' element.
+            </summary>
+            <param name="target">Target project.</param>
+            <param name="checking">To check existence of target via 'Condition' attr.</param>
+            <param name="label">Optional 'Label' attr.</param>
+            <returns>true value if target has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddImport(System.String,System.String,System.String)">
+            <summary>
+            To add 'import' element.
+            </summary>
+            <param name="target">Target project.</param>
+            <param name="condition">Use 'Condition' attr. Can be null to avoid this attr.</param>
+            <param name="label">Optional 'Label' attr.</param>
+            <returns>true value if target has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddImport(net.r_eg.MvsSln.Projects.ImportElement)">
+            <summary>
+            To add 'import' element.
+            </summary>
+            <param name="element">Specified 'Import' element to add.</param>
+            <returns>true value if it has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddImport(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Projects.ImportElement},System.String,System.String)">
+            <summary>
+            To add 'import' elements inside ImportGroup.
+            Will stop the adding if some of this cannot be added.
+            </summary>
+            <param name="elements">List of specified 'Import' elements to add.</param>
+            <param name="condition">Optional 'Condition' attr for group.</param>
+            <param name="label">Optional 'Label' attr for group.</param>
+            <returns>true value only if all 'import' elements has been successfully added. False if one of this is failed.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveImport(System.String)">
+            <summary>
+            To remove the first found 'Import' element.
+            </summary>
+            <param name="project">Target project.</param>
+            <returns>true value if it has been found and removed.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveImport(net.r_eg.MvsSln.Projects.ImportElement,System.Boolean)">
+            <summary>
+            To remove 'Import' element.
+            </summary>
+            <param name="element">Specified 'Import' element to remove.</param>
+            <param name="holdEmptyGroup">Holds empty group if it was inside.</param>
+            <returns>true value if it has been removed.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetImport(System.String)">
+            <summary>
+            Retrieve the first found 'Import' element if it exists.
+            </summary>
+            <param name="project">Optional filter by the Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetImport(System.String,System.String,System.Boolean)">
+            <summary>
+            Retrieve the first found 'Import' element if it exists.
+            </summary>
+            <param name="project">Filter by the Project attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="label">Filter by the Label attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="eq">Equals() if true or EndsWith() function for comparing Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetImports(System.String)">
+            <summary>
+            Retrieve the all found 'Import' elements.
+            </summary>
+            <param name="project">Optional filter by the Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetImports(System.String,System.String,System.Boolean)">
+            <summary>
+            Retrieve the all found 'Import' elements.
+            </summary>
+            <param name="project">Filter by the Project attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="label">Filter by the Label attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="eq">Equals() if true or EndsWith() function for comparing Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetProperty(System.String,System.Boolean)">
+            <summary>
+            The property in this project that has the specified name.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="localScope">If true, will return default value for any special and imported properties type.</param>
+            <returns>null if no property of that name and scope exists.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.SetProperty(System.String,System.String)">
+            <summary>
+            Sets or adds a property with the given name and unevaluated value to the project.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="unevaluated">The new unevaluated value of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.SetProperty(System.String,System.String,System.String)">
+            <summary>
+            Sets or adds a property with the given name and unevaluated value to the project.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="unevaluated">The new unevaluated value of the property.</param>
+            <param name="condition">Use 'Condition' attr.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.SetProperties(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+            <summary>
+            Sets or adds properties inside group.
+            To remove group, just delete all properties inside.
+            </summary>
+            <param name="properties">List of properties name=unevaluatedValue.</param>
+            <param name="condition">Optional 'Condition' attr for group.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.SetProperties(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Projects.PropertyItem},System.String)">
+            <summary>
+            Sets or adds properties inside group.
+            To remove group, just delete all properties inside.
+            </summary>
+            <param name="properties">List of properties via PropertyItem.</param>
+            <param name="condition">Optional 'Condition' attr for group.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveProperty(System.String,System.Boolean)">
+            <summary>
+            Removes an property from the project.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="revalue">if true, will reevaluate data of project after removing.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveProperty(net.r_eg.MvsSln.Projects.PropertyItem,System.Boolean)">
+            <summary>
+            Removes an property from the project.
+            </summary>
+            <param name="property"></param>
+            <param name="revalue">if true, will reevaluate data of project after removing.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetProperties">
+            <summary>
+            All properties in this project.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.Reevaluate">
+            <summary>
+            Reevaluates data of project if necessary.
+            For example, if project contains 2 or more same properties by name:
+            * After RemoveProperty(...) the second property still will be unavailable for GetProperty(...) 
+             because its node does not contain this at all. Use this to update nodes.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetRelativePath(System.String)">
+            <summary>
+            Makes relative path from this project.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetFullPath(System.String)">
+            <summary>
+            Makes full path using path to this project as the base.
+            </summary>
+            <param name="relative">any path relative to the current project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddReference(System.String)">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="inc">Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddReference(System.Reflection.Assembly,System.Boolean,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="asm">Assembly for adding.</param>
+            <param name="local">Meta 'Private' - i.e. Copy Local.</param>
+            <param name="embed">Meta 'EmbedInteropTypes'.</param>
+            <param name="spec">Meta 'SpecificVersion'.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddReference(System.String,System.Boolean,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="fullpath">Full path to binary file.</param>
+            <param name="local">Meta 'Private' - i.e. Copy Local.</param>
+            <param name="embed">Meta 'EmbedInteropTypes'.</param>
+            <param name="spec">Meta 'SpecificVersion'.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddReference(System.String,System.String,System.Boolean,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="inc">Include attribute.</param>
+            <param name="path">Meta 'HintPath'.</param>
+            <param name="local">Meta 'Private' - i.e. Copy Local.</param>
+            <param name="embed">Meta 'EmbedInteropTypes'.</param>
+            <param name="spec">Meta 'SpecificVersion'.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddProjectReference(net.r_eg.MvsSln.Core.ProjectItem)">
+            <summary>
+            Adds 'ProjectReference' item.
+            </summary>
+            <param name="project">Information about project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddProjectReference(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Adds 'ProjectReference' item.
+            </summary>
+            <param name="path">Path to project file.</param>
+            <param name="guid">The Guid of project.</param>
+            <param name="name">The name of project.</param>
+            <param name="makeRelative">Make relative path.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddPackageReference(System.String,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Adds 'PackageReference' item.
+            </summary>
+            <param name="id">Package id: `MvsSln`; `Conari`; ...</param>
+            <param name="version">Package version: 2.5; 1.6.0-beta3; ...</param>
+            <param name="meta">Optional metadata, eg. ExcludeAssets="runtime" etc.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.AddItem(System.String,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Adds an item to the project.
+            </summary>
+            <param name="type">The item type.</param>
+            <param name="inc">The Include attribute of this item.</param>
+            <param name="meta">Optional metadata list.</param>
+            <returns>true if item has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetItems(System.String,System.String)">
+            <summary>
+            Retrieve all available items from projects.
+            </summary>
+            <param name="type">The item type or null value to get all.</param>
+            <param name="inc">The unevaluated value of the Include attribute or null value to get all.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetItem(System.String,System.String)">
+            <summary>
+            Retrieve first item by type.
+            </summary>
+            <param name="type">The item type.</param>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetReferences(System.String)">
+            <summary>
+            Get all available 'Reference' items.
+            </summary>
+            <param name="inc">The Include attribute to be found or null value to get all.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetProjectReferences(System.String)">
+            <summary>
+            Get all available 'ProjectReference' items.
+            </summary>
+            <param name="inc">The Include attribute to be found or null value to get all.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetFirstReference(System.String)">
+            <summary>
+            Get first available 'Reference' item.
+            </summary>
+            <param name="inc">The Include attribute to be found.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetFirstProjectReference(System.String)">
+            <summary>
+            Get first available 'ProjectReference' item.
+            </summary>
+            <param name="inc">The Include attribute to be found.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.GetFirstPackageReference(System.String)">
+            <summary>
+            Get first available 'PackageReference' item.
+            </summary>
+            <param name="id">Package id: `MvsSln`; `Conari`; ...</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveItem(System.String,System.String)">
+            <summary>
+            Remove first item from project by type.
+            </summary>
+            <param name="type">The item type.</param>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveItem(net.r_eg.MvsSln.Projects.Item)">
+            <summary>
+            Remove selected item from project.
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveReference(System.String)">
+            <summary>
+            Remove 'Reference' item from project.
+            </summary>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemoveProjectReference(System.String)">
+            <summary>
+            Remove 'ProjectReference' item from project.
+            </summary>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProject.RemovePackageReference(System.String)">
+            <summary>
+            Remove 'PackageReference' item from project.
+            </summary>
+            <param name="id">Package id: `MvsSln`; `Conari`; ...</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProjectEnv.Sln">
+            <summary>
+            Access to Solution data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProjectEnv.Projects">
+            <summary>
+            List of all evaluated projects at current time 
+            with unique configuration for each instance.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProjectEnv.UniqueByGuidProjects">
+            <summary>
+            List of evaluated projects that was filtered by Guid.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProjectEnv.PrjCollection">
+            <summary>
+            Access to global Microsoft.Build.Evaluation.ProjectCollection.
+            Only if you know what you're doing.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.IXProjectEnv.ValidProjects">
+            <summary>
+            List of valid projects from {PrjCollection}.
+            Such as something except `.user`,`.metaproj` but contains FirstChild / LastChild XML node.
+            Only if you know what you're doing.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.XProjectByGuid(System.String,net.r_eg.MvsSln.Core.IConfPlatform)">
+            <summary>
+            Find project by Guid.
+            </summary>
+            <param name="guid">Guid of project.</param>
+            <param name="cfg">Specific configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.XProjectsByGuid(System.String)">
+            <summary>
+            Find project by Guid.
+            </summary>
+            <param name="guid">Guid of project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.XProjectByFile(System.String,net.r_eg.MvsSln.Core.IConfPlatform,System.Boolean)">
+            <summary>
+            Find project by full path to file.
+            </summary>
+            <param name="file">Full path to file.</param>
+            <param name="cfg">Specified configuration.</param>
+            <param name="tryLoad">Try to load if not found in current project collection.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.XProjectByFile(System.String,net.r_eg.MvsSln.Core.IConfPlatform,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Find or load project by full path to file.
+            </summary>
+            <param name="file">Full path to file.</param>
+            <param name="cfg">Specified configuration.</param>
+            <param name="props">Optional properties when loading or null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.XProjectsByFile(System.String)">
+            <summary>
+            Find project by full path to file.
+            </summary>
+            <param name="file">Full path to file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.XProjectsByName(System.String,net.r_eg.MvsSln.Core.IConfPlatform)">
+            <summary>
+            Find projects by name.
+            </summary>
+            <param name="name">ProjectName.</param>
+            <param name="cfg">Specific configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.XProjectsByName(System.String)">
+            <summary>
+            Find projects by name.
+            </summary>
+            <param name="name">ProjectName.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.GetOrLoadProject(net.r_eg.MvsSln.Core.ProjectItem)">
+            <summary>
+            Get or load project using global collection.
+            Uses default configuration.
+            </summary>
+            <param name="pItem">Specific project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.GetOrLoadProject(net.r_eg.MvsSln.Core.ProjectItem,net.r_eg.MvsSln.Core.IConfPlatform)">
+            <summary>
+            Get or load project using global collection.
+            </summary>
+            <param name="pItem">Specified project.</param>
+            <param name="cfg">Configuration of project to load.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.GetOrLoadProject(net.r_eg.MvsSln.Core.ProjectItem,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Get or load project using global collection.
+            </summary>
+            <param name="pItem">Specified project.</param>
+            <param name="properties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.GetProjectProperties(net.r_eg.MvsSln.Core.ProjectItem,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Get project properties from solution properties.
+            </summary>
+            <param name="pItem"></param>
+            <param name="slnProps">Solution properties.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.LoadProjects(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.ProjectItemCfg})">
+            <summary>
+            Load available projects via configurations.
+            It will be added without unloading of previous.
+            </summary>
+            <param name="pItems">Specified list or null value to load all available.</param>
+            <returns>Loaded projects.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.LoadMinimalProjects">
+            <summary>
+            Load the only one configuration for each available project.
+            </summary>
+            <returns>Loaded projects.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.Assign(System.Collections.Generic.IEnumerable{Microsoft.Build.Evaluation.Project})">
+            <summary>
+            Assign an existing `Microsoft.Build.Evaluation.Project` instances for local collection.
+            </summary>
+            <param name="projects">Will use {ValidProjects} if null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.AddOrGet(Microsoft.Build.Evaluation.Project)">
+            <summary>
+            Adds `Microsoft.Build.Evaluation.Project` instance into IXProject collection if it does not exist.
+            </summary>
+            <param name="project"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.ExtractItemCfg(Microsoft.Build.Evaluation.Project)">
+            <summary>
+            Prepares data from `Microsoft.Build.Evaluation.Project` instance.
+            </summary>
+            <param name="project"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.UnloadAll(System.Boolean)">
+            <summary>
+            Unloads all evaluated projects at current time.
+            Decreases `IXProjectEnv.Projects` collection.
+            </summary>
+            <param name="throwIfErr">When true, may throw exception if some project cannot be unloaded by some reason.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.IXProjectEnv.Unload(net.r_eg.MvsSln.Core.IXProject)">
+            <summary>
+            Unloads specified project.
+            Decreases `IXProjectEnv.Projects` collection.
+            </summary>
+            <param name="xp"></param>
+            <returns>False if project was not unloaded by some reason. Otherwise true.</returns>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.MsgResource">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.MsgResource.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.MsgResource.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.MsgResource.ValueNoEmptyOrNull">
+            <summary>
+              Looks up a localized string similar to Value cannot be null or empty..
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.HandlerValue.value">
+            <summary>
+            Unspecified value for handler.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.IObjHandler.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.WAbstract.SP">
+            <summary>
+            Default indent.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WAbstract.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ObjHandlers.WAbstract.Id">
+            <summary>
+            Gets unique id of listener.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WExtensibilityGlobals.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WExtensibilityGlobals.#ctor(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <param name="items">Extensible Key[-Value] records like `SolutionGuid` and so on.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WNestedProjects.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WNestedProjects.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.SolutionFolder})">
+            <param name="folders">Information about folders.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WNestedProjects.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.ProjectItem})">
+            <param name="pItems">Information about project items.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WNestedProjects.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.SolutionFolder},System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.ProjectItem})">
+            <param name="folders">Information about folders.</param>
+            <param name="pItems">Information about project items.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.WProject.projectItems">
+            <summary>
+            All found projects in solution.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.WProject.projectDependencies">
+            <summary>
+            Solution Project Dependencies.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WProject.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WProject.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.ProjectItem},net.r_eg.MvsSln.Core.ISlnProjectDependencies)">
+            <param name="pItems">List of projects in solution.</param>
+            <param name="deps">Solution Project Dependencies.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.WProjectConfigurationPlatforms.configs">
+            <summary>
+            Project configurations with platforms.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WProjectConfigurationPlatforms.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WProjectConfigurationPlatforms.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.IConfPlatformPrj})">
+            <param name="configs">Project configurations with platforms.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.WProjectSolutionItems.folders">
+            <summary>
+            List of solution folders.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WProjectSolutionItems.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WProjectSolutionItems.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.SolutionFolder})">
+            <param name="folders">List of solution folders.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.WSolutionConfigurationPlatforms.configs">
+            <summary>
+            Solution configurations with platforms.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WSolutionConfigurationPlatforms.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WSolutionConfigurationPlatforms.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.IConfPlatform})">
+            <param name="configs">Solution configurations with platforms.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ObjHandlers.WVisualStudioVersion.header">
+            <summary>
+            Header information.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ObjHandlers.WVisualStudioVersion.Extract(System.Object)">
+            <summary>
+            To extract prepared raw-data.
+            </summary>
+            <param name="data">Any object data which is ready for this IObjHandler.</param>
+            <returns>Final part of sln data.</returns>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.ProjectItem">
+            <summary>
+            Properties of project in solution file
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectItem.pGuid">
+            <summary>
+            Project GUID.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectItem.pType">
+            <summary>
+            Project type GUID.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectItem.name">
+            <summary>
+            Project name.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectItem.path">
+            <summary>
+            Relative path to project.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectItem.fullPath">
+            <summary>
+            Evaluated full path to project.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectItem.parent">
+            <summary>
+            Contains parent item or null if it's a root element.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectItem.EpType">
+            <summary>
+            Evaluated project type.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.ProjectTypeBy(System.String)">
+            <summary>
+            Evaluate project type via GUID.
+            </summary>
+            <param name="guid">Project type GUID.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.#ctor(System.String,net.r_eg.MvsSln.Core.ProjectType,System.Nullable{net.r_eg.MvsSln.Core.SolutionFolder})">
+            <param name="name">Project name.</param>
+            <param name="pType">Project type GUID.</param>
+            <param name="parent">Parent folder.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.#ctor(System.String,net.r_eg.MvsSln.Core.ProjectType,System.String,System.Nullable{net.r_eg.MvsSln.Core.SolutionFolder},System.String)">
+            <param name="name">Project name.</param>
+            <param name="pType">Project type GUID.</param>
+            <param name="path"></param>
+            <param name="parent">Parent folder.</param>
+            <param name="slnDir">To evaluate `fullPath` define path to solution directory.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.#ctor(System.String,System.String,net.r_eg.MvsSln.Core.ProjectType,System.Nullable{net.r_eg.MvsSln.Core.SolutionFolder})">
+            <param name="pGuid">Project GUID.</param>
+            <param name="name">Project name.</param>
+            <param name="pType">Project type GUID.</param>
+            <param name="parent">Parent folder.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.#ctor(System.String,System.String,net.r_eg.MvsSln.Core.ProjectType,System.String,System.Nullable{net.r_eg.MvsSln.Core.SolutionFolder},System.String)">
+            <param name="pGuid">Project GUID.</param>
+            <param name="name">Project name.</param>
+            <param name="pType">Project type GUID.</param>
+            <param name="path">Relative path to project.</param>
+            <param name="parent">Parent folder.</param>
+            <param name="slnDir">To evaluate `fullPath` define path to solution directory.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <param name="pGuid">Project GUID.</param>
+            <param name="name">Project name.</param>
+            <param name="path">Relative path to project.</param>
+            <param name="pType">Project type GUID.</param>
+            <param name="slnDir">To evaluate `fullPath` define path to solution directory.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.#ctor(net.r_eg.MvsSln.Core.ProjectItem)">
+            <param name="prj">Initialize data from other project.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.#ctor(System.String,System.String)">
+            <param name="raw">Initialize data from raw line.</param>
+            <param name="solutionDir">To evaluate `fullPath` define path to solution directory.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectItem.SetProjectType(System.String)">
+            <summary>
+            We reserved raw type for future new Guids before our updates.
+            </summary>
+            <param name="pType"></param>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.ProjectItemCfg">
+            <summary>
+            Aggregates links to ProjectItem and its configurations.
+            </summary>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.ProjectReferences">
+            <summary>
+            Use it for additional work with project references and it's dependencies in ISlnPDManager manner.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ProjectReferences.References">
+            <summary>
+            List of ProjectReferences by project Guid.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ProjectReferences.Parent">
+            <summary>
+            Parent data of the solution ProjectDependencies that initialized this object.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.ProjectReferences.XProjects">
+            <summary>
+            Access to XProjects.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectReferences.GetReferences(System.String)">
+            <summary>
+            Get ProjectReferences by project Guid.
+            </summary>
+            <param name="guid">Identifier of project.</param>
+            <returns>All found ProjectReferences.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.ProjectReferences.#ctor(net.r_eg.MvsSln.Core.ISlnPDManager,System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.IXProject})">
+            <param name="slndep">Parent data.</param>
+            <param name="xprojects">List of evaluated projects to consider of dependencies.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectType.Vb">
+            <summary>
+            Legacy Visual Basic.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectType.Cs">
+            <summary>
+            Legacy C#.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectType.Fs">
+            <summary>
+            Legacy F#.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectType.Sf">
+            <summary>
+            Service Fabric project.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectType.VbSdk">
+            <summary>
+            SDK based Visual Basic.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectType.FsSdk">
+            <summary>
+            SDK based F#.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.ProjectType.CsSdk">
+            <summary>
+            SDK based C#.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.RawText.trimmed">
+            <summary>
+            data without whitespace characters.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.RawText.#ctor(System.String)">
+            <param name="data"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.RawText.#ctor(System.String,System.Text.Encoding)">
+            <param name="data"></param>
+            <param name="enc"></param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.RPatterns.ProjectLine">
+            <summary>
+            Pattern of 'Project(' line - based on crackProjectLine from Microsoft.Build.BuildEngine.Shared.SolutionParser
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.RPatterns.PropertyLine">
+            <summary>
+            Pattern of 'ProjectSection(ProjectDependencies)' lines - based on crackPropertyLine from Microsoft.Build.BuildEngine.Shared.SolutionParser
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.RuleOfConfig.Platform(System.String)">
+            <summary>
+            Rules of platform names.
+            details: https://github.com/3F/vsSolutionBuildEvent/issues/14
+                   + MS Connect Issue #503935
+            </summary>
+            <param name="name">Platform name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.RuleOfConfig.Configuration(System.String)">
+            <summary>
+            Rules of configuration names.
+            </summary>
+            <param name="name">Configuration name.</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.Section.Handler">
+            <summary>
+            Contains handler which is ready to process this section, or already processes.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.Section.Line">
+            <summary>
+            Known line number to this section.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.Section.Raw">
+            <summary>
+            Raw data from stream.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.Section.Ignore">
+            <summary>
+            To ignore this from other sections.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.Section.User">
+            <summary>
+            User's mixed object for anything.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.Section.UpdateHandler(System.Object)">
+            <summary>
+            To update handler which is ready to process this section.
+            </summary>
+            <param name="handler">New handler.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.Section.Clone">
+            <summary>
+            Clone data from this section into new ISection instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.SlnHandlers.CoHandlers">
+            <summary>
+            TODO: review
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.CoHandlers.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler})">
+            <param name="slnHandlers"></param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler.CoHandlers">
+            <summary>
+            Completeness of implementation.
+            Aggregates additional handlers that will process same line.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler.LineControl">
+            <summary>
+            Action with incoming line.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler.PreProcessing(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            The logic before processing file.
+            </summary>
+            <param name="svc"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler.PostProcessing(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            The logic after processing file.
+            </summary>
+            <param name="svc"></param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.CurrentEncoding">
+            <summary>
+            Used encoding for all data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.Sln">
+            <summary>
+            Prepared solution data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.UData">
+            <summary>
+            Unspecified storage of the user scope.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.ReadLine">
+            <summary>
+            Reads a line of characters from stream.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.ReadLine(System.Object)">
+            <summary>
+            Reads a line of characters from stream with tracking.
+            </summary>
+            <param name="handler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.ResetStream">
+            <summary>
+            Resets stream and its related data.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.Track(net.r_eg.MvsSln.Core.RawText,System.Object)">
+            <summary>
+            Tracking for line.
+            </summary>
+            <param name="line"></param>
+            <param name="handler">Specific handler if used, or null as an unspecified.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.TransactTrack(net.r_eg.MvsSln.Core.RawText,System.Object)">
+            <summary>
+            Transact tracking for line.
+            </summary>
+            <param name="line"></param>
+            <param name="handler">Specific handler if used, or null as an unspecified.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.ISvc.TransactTrack(net.r_eg.MvsSln.Core.ISection@,net.r_eg.MvsSln.Core.RawText,System.Object)">
+            <summary>
+            Transact tracking for line.
+            </summary>
+            <param name="section">Provides requested section.</param>
+            <param name="line"></param>
+            <param name="handler">Specific handler if used, or null as an unspecified.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.CoHandlers">
+            <summary>
+            Completeness of implementation.
+            Aggregates additional handlers that will process same line.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.LineControl">
+            <summary>
+            Action with incoming line.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.Id">
+            <summary>
+            Gets unique id of listener.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.PreProcessing(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            The logic before processing file.
+            </summary>
+            <param name="svc"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.PostProcessing(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            The logic after processing file.
+            </summary>
+            <param name="svc"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LAbstract.GetProjectItem(System.String,System.String)">
+            <param name="line">Initialize data from raw line.</param>
+            <param name="solutionDir">Path to solution directory.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LExtensibilityGlobals.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LExtensibilityGlobals.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LExtensibilityGlobals.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LNestedProjects.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LNestedProjects.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LNestedProjects.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LProject.CoHandlers">
+            <summary>
+            Completeness of implementation.
+            Aggregates additional handlers that will process same line.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProject.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProject.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProject.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectConfigurationPlatforms.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectConfigurationPlatforms.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectConfigurationPlatforms.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectConfigurationPlatforms.Parse(System.String@,net.r_eg.MvsSln.Core.SlnHandlers.LProjectConfigurationPlatforms.LineAttr@)">
+            <summary>
+            
+            [Projects Guid]                        [Solution pair]     [ltype]     [Project pair]
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.CI_Release|Any CPU.ActiveCfg = Release|Any CPU   - available configuration
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.CI_Release|Any CPU.Build.0 = Release|Any CPU     - active Build (this line exists only when this flag is true)
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.CI_Release|Any CPU.Deploy.0 = Release|Any CPU    - active Deployment (this line exists only when this flag is true)
+            
+            Possible symbols for Solution/Project pair includes `.` and `=`:
+            https://github.com/3F/MvsSln/issues/13
+            
+            -_- awesome format as follow:
+            {A7BF1F9C-F18D-423E-9354-859DC3CFAFD4}.Debug.x64.x86|Any.CPU.etc.Build.0 = Debug.x64.x86|Any.CPU.etc
+            \___________________________________/  \___________/ \_________/ \_____/ ^ \___________/ \_________/
+            
+            For `=` we will not support this due to errors by VS itself (VS bug from VS2010 to modern VS2019)
+            https://github.com/3F/MvsSln/issues/13#issuecomment-501346079
+            </summary>
+            <param name="raw"></param>
+            <param name="ltype"></param>
+            <returns></returns>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies">
+            <summary>
+            Project Build Order from .sln file.
+            
+            Please note: initially it was part of https://github.com/3F/vsSolutionBuildEvent
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.order">
+            <summary>
+            Direct order of identifiers.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.map">
+            <summary>
+            Map of projects.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.GuidList">
+            <summary>
+            List of project Guids.
+            In direct order of definitions with considering of ProjectDependencies.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.Dependencies">
+            <summary>
+            Projects and their dependencies.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.Projects">
+            <summary>
+            List of projects by Guid.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.FirstProject">
+            <summary>
+            Get first project from defined list.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.LastProject">
+            <summary>
+            Get last project from defined list.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.FirstBy(net.r_eg.MvsSln.BuildType)">
+            <summary>
+            Get first project in Project Build Order.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.LastBy(net.r_eg.MvsSln.BuildType)">
+            <summary>
+            Get last project in Project Build Order.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.GetProjectBy(System.String)">
+            <summary>
+            Get project by Guid string.
+            </summary>
+            <param name="guid">Identifier of project.</param>
+            <returns></returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.LineControl">
+            <summary>
+            Action with incoming line.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.PreProcessing(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            The logic before processing file.
+            </summary>
+            <param name="svc"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectDependencies.PostProcessing(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            The logic after processing file.
+            </summary>
+            <param name="svc"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectSolutionItems.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectSolutionItems.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LProjectSolutionItems.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LSolutionConfigurationPlatforms.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LSolutionConfigurationPlatforms.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LSolutionConfigurationPlatforms.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LVisualStudioVersion.IsActivated(net.r_eg.MvsSln.Core.SlnHandlers.ISvc)">
+            <summary>
+            Checks the readiness to process data.
+            </summary>
+            <param name="svc"></param>
+            <returns>True value if it's ready at current time.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LVisualStudioVersion.Condition(net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            Condition for line to continue processing.
+            </summary>
+            <param name="line"></param>
+            <returns>true value to continue.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.LVisualStudioVersion.Positioned(net.r_eg.MvsSln.Core.SlnHandlers.ISvc,net.r_eg.MvsSln.Core.RawText)">
+            <summary>
+            New position in stream.
+            </summary>
+            <param name="svc"></param>
+            <param name="line">Received line.</param>
+            <returns>true if it was processed by current handler, otherwise it means ignoring.</returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.Svc.CurrentEncoding">
+            <summary>
+            Used encoding for all data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.Svc.Sln">
+            <summary>
+            Prepared solution data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHandlers.Svc.UData">
+            <summary>
+            Unspecified storage of the user scope.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.ReadLine">
+            <summary>
+            Reads a line of characters from stream.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.ReadLine(System.Object)">
+            <summary>
+            Reads a line of characters from stream with tracking.
+            </summary>
+            <param name="handler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.ResetStream">
+            <summary>
+            Resets stream and its related data.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.Track(net.r_eg.MvsSln.Core.RawText,System.Object)">
+            <summary>
+            Non-Transact tracking for line.
+            </summary>
+            <param name="line"></param>
+            <param name="handler">Specific handler if used, or null as an unspecified.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.TransactTrack(net.r_eg.MvsSln.Core.RawText,System.Object)">
+            <summary>
+            Transact tracking for line.
+            </summary>
+            <param name="line"></param>
+            <param name="handler">Specific handler if used, or null as an unspecified.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.TransactTrack(net.r_eg.MvsSln.Core.ISection@,net.r_eg.MvsSln.Core.RawText,System.Object)">
+            <summary>
+            Transact tracking for line.
+            </summary>
+            <param name="section">Provides requested section.</param>
+            <param name="line"></param>
+            <param name="handler">Specific handler if used, or null as an unspecified.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.#ctor(System.IO.StreamReader,net.r_eg.MvsSln.Core.ISlnResultSvc)">
+            <param name="reader"></param>
+            <param name="rsln"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.Svc.#ctor(System.IO.StreamReader)">
+            <param name="reader"></param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHeader.FormatVersion">
+            <summary>
+            ... Format Version 12.00
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHeader.ProgramVersion">
+            <summary>
+            # Visual Studio 15
+            ...
+            # Visual Studio 2010
+            ...
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHeader.VisualStudioVersion">
+            <summary>
+            VisualStudioVersion = 15.0.26730.15
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnHeader.MinimumVisualStudioVersion">
+            <summary>
+            MinimumVisualStudioVersion = 10.0.40219.1
+            </summary>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.SlnParser">
+            <summary>
+            Parser for basic elements from .sln files.
+            
+            Please note: initially it was part of https://github.com/3F/vsSolutionBuildEvent
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SlnParser.MEM_FILE">
+            <summary>
+            The name of file if used stream from memory.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SlnParser.encoding">
+            <summary>
+            To use specific Encoding by default for some operations with data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnParser.SlnHandlers">
+            <summary>
+            Available solution handlers.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnParser.RawXmlProjects">
+            <summary>
+            Dictionary of raw xml projects by Guid.
+            Will be used if projects cannot be accessed from filesystem.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnParser.SetDefaultHandlers">
+            <summary>
+            To reset and register all default handlers.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnParser.Parse(System.String,net.r_eg.MvsSln.SlnItems)">
+            <summary>
+            Parse of selected .sln file.
+            </summary>
+            <param name="sln">Solution file</param>
+            <param name="type">Allowed type of operations.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnParser.Parse(System.IO.StreamReader,net.r_eg.MvsSln.SlnItems)">
+            <summary>
+            To parse data from used stream.
+            </summary>
+            <param name="reader"></param>
+            <param name="type">Allowed type of operations.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnParser.#ctor(System.Boolean)">
+            <param name="defaultHandlers">To register and activate all handlers by default if true.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnParser.Aliases(net.r_eg.MvsSln.Core.SlnResult)">
+            <summary>
+            TODO: another way to manage aliases for data.
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.SolutionDir">
+            <summary>
+            Full path to root solution directory.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.SolutionFile">
+            <summary>
+            Full path to an solution file.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ResultType">
+            <summary>
+            Processed type for result.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.Header">
+            <summary>
+            Header information.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.SolutionConfigs">
+            <summary>
+            Solution configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ProjectConfigs">
+            <summary>
+            Project configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ProjectConfigurationPlatforms">
+            <summary>
+            Alias of the relation of solution configuration to project configurations.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ProjectItems">
+            <summary>
+            All found projects in solution.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ProjectItemsConfigs">
+            <summary>
+            Alias for ProjectItems and its configurations.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.SolutionFolders">
+            <summary>
+            List of solution folders.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.DefaultConfig">
+            <summary>
+            Default Configuration and Platform for current solution.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.Properties">
+            <summary>
+            All available global properties for solution.
+            Use optional {PropertyNames} to access to popular properties.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ProjectDependencies">
+            <summary>
+            Solution Project Dependencies.
+            See also `ProjectReferences` class if you need additional work with project references.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ExtItems">
+            <summary>
+            Optional Key[-Value] records like `SolutionGuid` and so on
+            that can be presented inside an ExtensibilityGlobals section.
+            
+            ie. Flags/Key-only records are possible too (values will contain null).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.Env">
+            <summary>
+            Environment for current data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.Map">
+            <summary>
+            Contains map of all found (known/unknown) solution data.
+            This value is never null.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.SolutionConfigList">
+            <summary>
+            Solution configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ProjectConfigList">
+            <summary>
+            Project configurations with platforms.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.ProjectItemList">
+            <summary>
+            All found projects in solution.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnResult.SolutionFolderList">
+            <summary>
+            List of solution folders.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnResult.SetProjectDependencies(net.r_eg.MvsSln.Core.ISlnPDManager)">
+            <summary>
+            Updates instance of the Solution Project Dependencies.
+            </summary>
+            <param name="dep"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnResult.SetHeader(net.r_eg.MvsSln.Core.SlnHeader)">
+            <summary>
+            Updates header info.
+            </summary>
+            <param name="info"></param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SlnWriter.Handlers">
+            <summary>
+            Available writers to process sections.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnWriter.Write(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.ISection})">
+            <summary>
+            To write all not ignored sections with rules from handlers.
+            </summary>
+            <param name="sections"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnWriter.Write(net.r_eg.MvsSln.Core.ISection)">
+            <summary>
+            To write a single section with rules from handlers.
+            </summary>
+            <param name="section"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnWriter.#ctor(System.String,System.Collections.Generic.IDictionary{System.Type,net.r_eg.MvsSln.Core.ObjHandlers.HandlerValue})">
+            <param name="sln">Destination file.</param>
+            <param name="handlers">Should contain writers by specific types of readers.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnWriter.#ctor(System.String,System.Collections.Generic.IDictionary{System.Type,net.r_eg.MvsSln.Core.ObjHandlers.HandlerValue},System.Text.Encoding)">
+            <param name="sln">Destination file.</param>
+            <param name="handlers">Should contain writers by specific types of readers.</param>
+            <param name="enc">Use specific encoding.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SlnWriter.#ctor(System.IO.StreamWriter,System.Collections.Generic.IDictionary{System.Type,net.r_eg.MvsSln.Core.ObjHandlers.HandlerValue})">
+            <param name="writer"></param>
+            <param name="handlers">Should contain writers by specific types of readers.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SolutionFolder.header">
+            <summary>
+            Information about folder section.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SolutionFolder.items">
+            <summary>
+            Available items for this folder.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.Equals(System.Object)">
+            <summary>
+            Elements will not compared.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.RawText})">
+            <param name="fGuid">Not null Folder GUID.</param>
+            <param name="name">Not null Solution folder name.</param>
+            <param name="items">Optional items inside.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.Guid,System.String)">
+            <param name="fGuid">Not null Folder GUID.</param>
+            <param name="name">Not null Solution folder name.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.String,System.String,net.r_eg.MvsSln.Core.SolutionFolder,net.r_eg.MvsSln.Core.RawText[])">
+            <param name="fGuid">Not null Folder GUID.</param>
+            <param name="name">Not null Solution folder name.</param>
+            <param name="parent">Parent folder.</param>
+            <param name="items">Optional items inside.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.String,System.String,System.Nullable{net.r_eg.MvsSln.Core.SolutionFolder},System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.RawText})">
+            <param name="fGuid">Not null Folder GUID.</param>
+            <param name="name">Not null Solution folder name.</param>
+            <param name="parent">Parent folder.</param>
+            <param name="items">Optional items inside.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.String,net.r_eg.MvsSln.Core.RawText[])">
+            <param name="name">Not null Solution folder name.</param>
+            <param name="items">Optional items inside.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.String,System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.RawText})">
+            <param name="name">Not null Solution folder name.</param>
+            <param name="items">Optional items inside.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.String,net.r_eg.MvsSln.Core.SolutionFolder,net.r_eg.MvsSln.Core.RawText[])">
+            <param name="name">Not null Solution folder name.</param>
+            <param name="parent">Parent folder.</param>
+            <param name="items">Optional items inside.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(System.String,net.r_eg.MvsSln.Core.SolutionFolder,System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.RawText})">
+            <param name="name">Not null Solution folder name.</param>
+            <param name="parent">Parent folder.</param>
+            <param name="items">Optional items inside.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(net.r_eg.MvsSln.Core.ProjectItem,net.r_eg.MvsSln.Core.RawText[])">
+            <param name="pItem">Information about folder.</param>
+            <param name="def">List of items for this folder.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(net.r_eg.MvsSln.Core.ProjectItem,System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.RawText})">
+            <param name="pItem">Information about folder.</param>
+            <param name="def">List of items for this folder.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SolutionFolder.#ctor(net.r_eg.MvsSln.Core.SolutionFolder)">
+            <param name="folder">Initialize data from other folder.</param>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.SynchSubscribers`1">
+            <summary>
+            Thread-safe container of listeners.
+            </summary>
+            <typeparam name="T">IListener based type.</typeparam>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SynchSubscribers`1.listeners">
+            <summary>
+            justification: A common using of SynchSubscribers should be as an only sequential accessing to all elements at once - that is O(1).
+                           And most important - it's contiguous storage in order of adding of elements, because we need to save priority by listeners.
+            But for any single accessing it should be O(n), thus we also use O(1) accessor below to improve performance of the List type.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.SynchSubscribers`1.accessor">
+            <summary>
+            A shallow copy of listeners which has O(1) for any single accessing to elements.
+            This is not an ordered, thread-safe container, and unfortunately we can't use this as primarily container (read justification above).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SynchSubscribers`1.Count">
+            <summary>
+            Number of elements contained in the thread-safe collection.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.SynchSubscribers`1.SyncRoot">
+            <summary>
+            Gets the object used to synchronize access to the thread-safe collection.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SynchSubscribers`1.Register(`0)">
+            <summary>
+            Adds an listener to thread-safe collection.
+            </summary>
+            <param name="listener"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SynchSubscribers`1.Unregister(`0)">
+            <summary>
+            Removes specified listener from the collection.
+            </summary>
+            <param name="listener"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SynchSubscribers`1.Reset">
+            <summary>
+            Reset all collection.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SynchSubscribers`1.Contains(`0)">
+            <summary>
+            Determines whether the collection contains an listener.
+            </summary>
+            <param name="listener"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SynchSubscribers`1.Exists(System.Guid)">
+            <summary>
+            Checks existence of listener by Guid.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.SynchSubscribers`1.GetById(System.Guid)">
+            <summary>
+            Get listener by specific id.
+            </summary>
+            <param name="id"></param>
+            <returns>null if not found.</returns>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.Project">
+            <summary>
+            Access to project instance of Microsoft.Build.Evaluation.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.ProjectItem">
+            <summary>
+            ProjectItem and its configurations.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.Sln">
+            <summary>
+            Access to solution data if this was initialized with its context.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.PId">
+            <summary>
+            Provides unique identifier for project (not instance).
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.ProjectGuid">
+            <summary>
+            The Guid of this project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.ProjectName">
+            <summary>
+            The ProjectName of this project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.ProjectPath">
+            <summary>
+            Gets the root directory for this project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.ProjectFullPath">
+            <summary>
+            Gets the full path to the project source file.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.GlobalProperties">
+            <summary>
+            Access to global properties of project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProject.RootPath">
+            <summary>
+            The base path for MakeRelativePath() functions etc.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.Save">
+            <summary>
+            Saves the project to the file system, if modified.
+            //TODO: ~"... has been modified outside the environment."
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.Save(System.String,System.Text.Encoding)">
+            <summary>
+            Saves the project to the file system, if modified or if the path to the project
+            source code changes, using the given character encoding.
+            </summary>
+            <param name="path">Destination path of the the project source code.</param>
+            <param name="enc"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddImport(System.String,System.Boolean,System.String)">
+            <summary>
+            To add 'Import' element.
+            </summary>
+            <param name="target">Target project.</param>
+            <param name="checking">To check existence of target via 'Condition' attr.</param>
+            <param name="label">Optional 'Label' attr.</param>
+            <returns>true value if target has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddImport(System.String,System.String,System.String)">
+            <summary>
+            To add 'import' element.
+            </summary>
+            <param name="target">Target project.</param>
+            <param name="condition">Use 'Condition' attr. Can be null to avoid this attr.</param>
+            <param name="label">Optional 'Label' attr.</param>
+            <returns>true value if target has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddImport(net.r_eg.MvsSln.Projects.ImportElement)">
+            <summary>
+            To add 'import' element.
+            </summary>
+            <param name="element">Specified 'Import' element to add.</param>
+            <returns>true value if it has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddImport(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Projects.ImportElement},System.String,System.String)">
+            <summary>
+            To add 'import' elements inside ImportGroup.
+            Will stop the adding if some of this cannot be added.
+            </summary>
+            <param name="elements">List of specified 'Import' elements to add.</param>
+            <param name="condition">Optional 'Condition' attr for group.</param>
+            <param name="label">Optional 'Label' attr for group.</param>
+            <returns>true value only if all 'import' elements has been successfully added. False if one of this is failed.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveImport(System.String)">
+            <summary>
+            To remove the first found 'Import' element.
+            </summary>
+            <param name="project">Target project.</param>
+            <returns>true value if it has been found and removed.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveImport(net.r_eg.MvsSln.Projects.ImportElement,System.Boolean)">
+            <summary>
+            To remove 'Import' element.
+            </summary>
+            <param name="element">Specified 'Import' element to remove.</param>
+            <param name="holdEmptyGroup">Holds empty group if it was inside.</param>
+            <returns>true value if it has been removed.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetImport(System.String)">
+            <summary>
+            Retrieve the first found 'Import' element if it exists.
+            </summary>
+            <param name="project">Optional filter by the Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetImport(System.String,System.String,System.Boolean)">
+            <summary>
+            Retrieve the first found 'Import' element if it exists.
+            </summary>
+            <param name="project">Filter by the Project attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="label">Filter by the Label attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="eq">Equals() if true or EndsWith() function for comparing Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetImports(System.String)">
+            <summary>
+            Retrieve the all found 'Import' elements.
+            </summary>
+            <param name="project">Optional filter by the Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetImports(System.String,System.String,System.Boolean)">
+            <summary>
+            Retrieve the all found 'Import' elements.
+            </summary>
+            <param name="project">Filter by the Project attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="label">Filter by the Label attribute. Case-insensitive variant. Can be null to skip comparing.</param>
+            <param name="eq">Equals() if true or EndsWith() function for comparing Project attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetProperty(System.String,System.Boolean)">
+            <summary>
+            The property in this project that has the specified name.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="localScope">If true, will return default value for any special and imported properties type.</param>
+            <returns>null if no property of that name and scope exists.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.SetProperty(System.String,System.String)">
+            <summary>
+            Sets or adds a property with the given name and unevaluated value to the project.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="unevaluated">The new unevaluated value of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.SetProperty(System.String,System.String,System.String)">
+            <summary>
+            Sets or adds a property with the given name and unevaluated value to the project.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="unevaluated">The new unevaluated value of the property.</param>
+            <param name="condition">Use 'Condition' attr.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.SetProperties(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+            <summary>
+            Sets or adds properties inside group.
+            To remove group, just delete all properties inside.
+            </summary>
+            <param name="properties">List of properties name=unevaluatedValue.</param>
+            <param name="condition">Optional 'Condition' attr for group.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.SetProperties(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Projects.PropertyItem},System.String)">
+            <summary>
+            Sets or adds properties inside group.
+            To remove group, just delete all properties inside.
+            </summary>
+            <param name="properties">List of properties via PropertyItem.</param>
+            <param name="condition">Optional 'Condition' attr for group.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveProperty(System.String,System.Boolean)">
+            <summary>
+            Removes an property from the project. Local Scope only.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="revalue">if true, will reevaluate data of project after removing.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveProperty(net.r_eg.MvsSln.Projects.PropertyItem,System.Boolean)">
+            <summary>
+            Removes an property from the project.
+            </summary>
+            <param name="property"></param>
+            <param name="revalue">if true, will reevaluate data of project after removing</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetProperties">
+            <summary>
+            All properties in this project.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.Reevaluate">
+            <summary>
+            Reevaluates data of project if necessary.
+            For example, if project contains 2 or more same properties by name:
+            * After RemoveProperty(...) the second property still will be unavailable for GetProperty(...) 
+             because its node does not contain this at all. Use this to update nodes.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetRelativePath(System.String)">
+            <summary>
+            Makes relative path from this project.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetFullPath(System.String)">
+            <summary>
+            Makes full path using path to this project as the base.
+            </summary>
+            <param name="relative">any not null path relative to the current project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddReference(System.String)">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="inc">Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddReference(System.Reflection.Assembly,System.Boolean,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="asm">Assembly for adding.</param>
+            <param name="local">Meta 'Private' - i.e. Copy Local.</param>
+            <param name="embed">Meta 'EmbedInteropTypes'.</param>
+            <param name="spec">Meta 'SpecificVersion'.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddReference(System.String,System.Boolean,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="fullpath">Full path to binary file.</param>
+            <param name="local">Meta 'Private' - i.e. Copy Local.</param>
+            <param name="embed">Meta 'EmbedInteropTypes'.</param>
+            <param name="spec">Meta 'SpecificVersion'.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddReference(System.String,System.String,System.Boolean,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Adds 'Reference' item.
+            </summary>
+            <param name="inc">Include attribute.</param>
+            <param name="path">Meta 'HintPath'.</param>
+            <param name="local">Meta 'Private' - i.e. Copy Local.</param>
+            <param name="embed">Meta 'EmbedInteropTypes'.</param>
+            <param name="spec">Meta 'SpecificVersion'.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddProjectReference(net.r_eg.MvsSln.Core.ProjectItem)">
+            <summary>
+            Adds 'ProjectReference' item.
+            </summary>
+            <param name="project">Information about project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddProjectReference(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Adds 'ProjectReference' item.
+            </summary>
+            <param name="path">Path to project file.</param>
+            <param name="guid">The Guid of project.</param>
+            <param name="name">The name of project.</param>
+            <param name="makeRelative">Make relative path.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddPackageReference(System.String,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Adds 'PackageReference' item.
+            </summary>
+            <param name="id">Package id: `MvsSln`; `Conari`; ...</param>
+            <param name="version">Package version: 2.5; 1.6.0-beta3; ...</param>
+            <param name="meta">Optional metadata, eg. ExcludeAssets="runtime" etc.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.AddItem(System.String,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Adds an item to the project.
+            </summary>
+            <param name="type">The item type.</param>
+            <param name="inc">The Include attribute of this item.</param>
+            <param name="meta">Optional metadata list.</param>
+            <returns>true if item has been added.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetItems(System.String,System.String)">
+            <summary>
+            Retrieve all available items from projects.
+            </summary>
+            <param name="type">The item type or null value to get all.</param>
+            <param name="inc">The unevaluated value of the Include attribute or null value to get all.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetItem(System.String,System.String)">
+            <summary>
+            Retrieve first item by type.
+            </summary>
+            <param name="type">The item type.</param>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetReferences(System.String)">
+            <summary>
+            Get all available 'Reference' items.
+            </summary>
+            <param name="inc">The Include attribute to be found or null value to get all.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetProjectReferences(System.String)">
+            <summary>
+            Get all available 'ProjectReference' items.
+            </summary>
+            <param name="inc">The Include attribute to be found or null value to get all.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetFirstReference(System.String)">
+            <summary>
+            Get first available 'Reference' item.
+            </summary>
+            <param name="inc">The Include attribute to be found.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetFirstProjectReference(System.String)">
+            <summary>
+            Get first available 'ProjectReference' item.
+            </summary>
+            <param name="inc">The Include attribute to be found.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.GetFirstPackageReference(System.String)">
+            <summary>
+            Get first available 'PackageReference' item.
+            </summary>
+            <param name="id">Package id: `MvsSln`; `Conari`; ...</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveItem(System.String,System.String)">
+            <summary>
+            Remove first item from project by type.
+            </summary>
+            <param name="type">The item type.</param>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveItem(net.r_eg.MvsSln.Projects.Item)">
+            <summary>
+            Remove selected item from project.
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveReference(System.String)">
+            <summary>
+            Remove 'Reference' item from project.
+            </summary>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemoveProjectReference(System.String)">
+            <summary>
+            Remove 'ProjectReference' item from project.
+            </summary>
+            <param name="inc">The unevaluated value of the Include attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProject.RemovePackageReference(System.String)">
+            <summary>
+            Remove 'PackageReference' item from project.
+            </summary>
+            <param name="id">Package id: `MvsSln`; `Conari`; ...</param>
+            <returns></returns>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Core.XProjectEnv">
+            <summary>
+            An XProject Environment.
+            
+            Please note: initially it was part of https://github.com/3F/vsSolutionBuildEvent
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.XProjectEnv.slnProperties">
+            <summary>
+            Solution properties.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Core.XProjectEnv.rawXmlProjects">
+            <summary>
+            Dictionary of raw xml projects by Guid.
+            Will be used if projects cannot be accessed from filesystem.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProjectEnv.Sln">
+            <summary>
+            Access to Solution data.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProjectEnv.Projects">
+            <summary>
+            List of all evaluated projects at current time 
+            with unique configuration for each instance.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProjectEnv.UniqueByGuidProjects">
+            <summary>
+            List of evaluated projects that was filtered by Guid.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProjectEnv.PrjCollection">
+            <summary>
+            Access to global Microsoft.Build.Evaluation.ProjectCollection.
+            Only if you know what you're doing.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Core.XProjectEnv.ValidProjects">
+            <summary>
+            List of valid projects from {PrjCollection}.
+            Such as something except `.user`,`.metaproj` but contains FirstChild / LastChild XML node.
+            Only if you know what you're doing.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.XProjectByGuid(System.String,net.r_eg.MvsSln.Core.IConfPlatform)">
+            <summary>
+            Find project by Guid.
+            </summary>
+            <param name="guid">Guid of project.</param>
+            <param name="cfg">Specific configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.XProjectsByGuid(System.String)">
+            <summary>
+            Find project by Guid.
+            </summary>
+            <param name="guid">Guid of project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.XProjectByFile(System.String,net.r_eg.MvsSln.Core.IConfPlatform,System.Boolean)">
+            <summary>
+            Find project by full path to file.
+            </summary>
+            <param name="file">Full path to file.</param>
+            <param name="cfg">Specified configuration.</param>
+            <param name="tryLoad">Try to load if not found in current project collection.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.XProjectByFile(System.String,net.r_eg.MvsSln.Core.IConfPlatform,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Find or load project by full path to file.
+            </summary>
+            <param name="file">Full path to file.</param>
+            <param name="cfg">Specified configuration.</param>
+            <param name="props">Optional properties when loading or null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.XProjectsByFile(System.String)">
+            <summary>
+            Find project by full path to file.
+            </summary>
+            <param name="file">Full path to file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.XProjectsByName(System.String,net.r_eg.MvsSln.Core.IConfPlatform)">
+            <summary>
+            Find projects by name.
+            </summary>
+            <param name="name">ProjectName.</param>
+            <param name="cfg">Specific configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.XProjectsByName(System.String)">
+            <summary>
+            Find projects by name.
+            </summary>
+            <param name="name">ProjectName.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.GetOrLoadProject(net.r_eg.MvsSln.Core.ProjectItem)">
+            <summary>
+            Get or load project using global collection.
+            Uses default configuration.
+            </summary>
+            <param name="pItem">Specific project.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.GetOrLoadProject(net.r_eg.MvsSln.Core.ProjectItem,net.r_eg.MvsSln.Core.IConfPlatform)">
+            <summary>
+            Get or load project using global collection.
+            </summary>
+            <param name="pItem">Specified project.</param>
+            <param name="cfg">Configuration of project to load.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.GetOrLoadProject(net.r_eg.MvsSln.Core.ProjectItem,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Get or load project using global collection.
+            </summary>
+            <param name="pItem">Specified project.</param>
+            <param name="properties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.GetProjectProperties(net.r_eg.MvsSln.Core.ProjectItem,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Get project properties from solution properties.
+            </summary>
+            <param name="pItem"></param>
+            <param name="slnProps">Solution properties.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.LoadProjects(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.ProjectItemCfg})">
+            <summary>
+            Load available projects via configurations.
+            It will be added without unloading of previous.
+            </summary>
+            <param name="pItems">Specified list or null value to load all available.</param>
+            <returns>Loaded projects.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.LoadMinimalProjects">
+            <summary>
+            Load the only one configuration for each available project.
+            </summary>
+            <returns>Loaded projects.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.Assign(System.Collections.Generic.IEnumerable{Microsoft.Build.Evaluation.Project})">
+            <summary>
+            Assign an existing `Microsoft.Build.Evaluation.Project` instances for local collection.
+            </summary>
+            <param name="projects">Will use {ValidProjects} if null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.AddOrGet(Microsoft.Build.Evaluation.Project)">
+            <summary>
+            Adds `Microsoft.Build.Evaluation.Project` instance into IXProject collection if it does not exist.
+            </summary>
+            <param name="project"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.ExtractItemCfg(Microsoft.Build.Evaluation.Project)">
+            <summary>
+            Prepares data from `Microsoft.Build.Evaluation.Project` instance.
+            </summary>
+            <param name="project"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.UnloadAll(System.Boolean)">
+            <summary>
+            Unloads all evaluated projects at current time.
+            Decreases `IXProjectEnv.Projects` collection.
+            </summary>
+            <param name="throwIfErr">When true, may throw exception if some project cannot be unloaded by some reason.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.Unload(net.r_eg.MvsSln.Core.IXProject)">
+            <summary>
+            Unloads specified project.
+            Decreases `IXProjectEnv.Projects` collection.
+            </summary>
+            <param name="xp"></param>
+            <returns>False if project was not unloaded by some reason. Otherwise true.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.#ctor(net.r_eg.MvsSln.Core.ISlnResult,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,net.r_eg.MvsSln.Core.RawText})">
+            <param name="data">Prepared data from solution parser.</param>
+            <param name="properties">Specified sln properties.</param>
+            <param name="raw">Optional dictionary of raw xml projects by Guid.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.#ctor(net.r_eg.MvsSln.Core.ISlnResult,System.Collections.Generic.IDictionary{System.String,net.r_eg.MvsSln.Core.RawText})">
+            <param name="data">Prepared data from solution parser.</param>
+            <param name="raw">Optional dictionary of raw xml projects by Guid.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.Load(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.ProjectItemCfg})">
+            <param name="pItems"></param>
+            <returns>List of loaded.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Core.XProjectEnv.DefProperties(net.r_eg.MvsSln.Core.IConfPlatform,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Defines required properties for project via IConfPlatform.
+            </summary>
+            <param name="conf">Specific configuration.</param>
+            <param name="properties">Common properties.</param>
+            <returns></returns>
+        </member>
+        <member name="T:net.r_eg.MvsSln.EnvDTE.DProject">
+            <summary>
+            Wrapper of dynamic EnvDTE.Project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.EnvDTE.DProject.FullName">
+            <summary>
+            Gets the full path and name of the EnvDTE.Project object's file.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.EnvDTE.DProject.References">
+            <summary>
+            The references in the project.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.EnvDTE.DProject.Raw">
+            <summary>
+            Dynamic access to EnvDTE.Project.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.EnvDTE.DProject.HasReference(System.String,System.String)">
+            <summary>
+            To check existence of references by name and PublicKeyToken.
+            https://msdn.microsoft.com/en-us/library/vslangproj.reference.aspx
+            </summary>
+            <param name="name"></param>
+            <param name="pubkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.EnvDTE.DProject.Save(System.String)">
+            <summary>
+            Saves the project or project item.
+            </summary>
+            <param name="FileName">Optional name in which to save the project or project item.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.EnvDTE.DProject.#ctor(System.Object)">
+            <param name="pdte"></param>
+        </member>
+        <member name="T:net.r_eg.MvsSln.EnvDTE.DynDteProject">
+            <summary>
+            Helper for access to EnvDTE.Project without direct reference.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.EnvDTE.DynDteProject.env">
+            <summary>
+            Environment with initialized xprojects.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.EnvDTE.DynDteProject.pdte">
+            <summary>
+            EnvDTE.Project
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.EnvDTE.DynDteProject.Projects">
+            <summary>
+            EnvDTE.Projects wrapped by DProject.
+            https://msdn.microsoft.com/en-us/library/envdte.projects.aspx
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.EnvDTE.DynDteProject.GetAndSaveXProjects(System.String,System.String)">
+            <summary>
+            Access to each IXProject and saving data via EnvDTE.
+            </summary>
+            <param name="metalib">Optional meta-library file name without extension to filter.</param>
+            <param name="metalibKey">PublicKeyToken of meta-library if used.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.EnvDTE.DynDteProject.UpdatePropertyForAllProjects(System.String,System.String,System.String,System.String)">
+            <summary>
+            To update property value for all available projects.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="value">Value of the property.</param>
+            <param name="metalib">Optional meta-library file name without extension to filter.</param>
+            <param name="metalibKey">PublicKeyToken of meta-library if used.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.EnvDTE.DynDteProject.#ctor(System.Object,net.r_eg.MvsSln.Core.IEnvironment)">
+            <param name="pdte"></param>
+            <param name="env"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.CollectionExtension.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Foreach in Linq manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items"></param>
+            <param name="act">The action that should be executed for each item.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.CollectionExtension.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Int64})">
+            <summary>
+            Foreach in Linq manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items"></param>
+            <param name="act">The action that should be executed for each item.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.CollectionExtension.AddOrUpdate(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Adds/Updates data in source via data from `items`.
+            
+            Any duplicates will be just updated:
+            ie. similar to `Concat()` except internal restriction for `Insert()`.
+            </summary>
+            <param name="source"></param>
+            <param name="items"></param>
+            <returns>Updated source.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.CollectionExtension.GetOrDefault``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+            <summary>
+            Returns either value from dictionary or configured default value.
+            </summary>
+            <typeparam name="TKey"></typeparam>
+            <typeparam name="TVal"></typeparam>
+            <param name="data"></param>
+            <param name="key"></param>
+            <param name="def">Use this if key is not found.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.CollectionExtension.Remove``1(System.Collections.Generic.IList{``0},``0,System.Func{``0,``0,System.Boolean})">
+            <summary>
+            Removes element from list by using specific comparer.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="src"></param>
+            <param name="elem"></param>
+            <param name="comparer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.MathExtension.HashPolynom(System.Int32,System.Int32)">
+            <summary>
+            Our optimal polynom for hash functions.
+            </summary>
+            <param name="r">initial vector</param>
+            <param name="x">new value</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.MathExtension.CalculateHashCode(System.Int32,System.Object[])">
+            <summary>
+            Calculate final Hash Code from specified vector and pushed values.
+            </summary>
+            <param name="r">initial vector</param>
+            <param name="values">List of individual Hash Code values.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.ObjectExtension.E``1(``0,System.Action)">
+            <summary>
+            Execute action on value in the chain separately from result.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="act"></param>
+            <returns>Input value.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.ObjectExtension.E``1(``0,System.Action{``0})">
+            <summary>
+            Execute action on value in the chain separately from result.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="act"></param>
+            <returns>Input value.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.Guid(System.String)">
+            <summary>
+            UUID using SHA-1 or MD5 hashing for string.
+            </summary>
+            <param name="str">Any string data for calculation.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.SlnFormat(System.Guid)">
+            <summary>
+            Sln format of GUID:
+            32 uppercase digits separated by hyphens, enclosed in braces:
+            ie. {100FD7F2-3278-49C7-B9D4-A91F1C65BED3}
+            </summary>
+            <param name="guid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.ReformatSlnGuid(System.String)">
+            <summary>
+            Returns string GUID formated via `GuidSlnFormat`
+            </summary>
+            <param name="guid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.NullIfEmpty(System.String)">
+            <summary>
+            Return null when string is empty.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.Before(System.String,System.Char[])">
+            <summary>
+            Gets part of string before specific symbols.
+            </summary>
+            <param name="str"></param>
+            <param name="c">Separators.</param>
+            <returns>Left part of string before symbols, or null value if no any symbols are found.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.GetFileProperties(System.String)">
+            <summary>
+            Extracts file properties:
+            SLN_DIR; SLN_EXT; SLN_FNAME; SLN_NAME; SLN_PATH
+            </summary>
+            <param name="file">Path to Solution file.</param>
+            <returns>Use {PropertyNames} for accessing to extracted data.</returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.FirstNonWhiteSpace(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Get position of first non-WhiteSpace character from string.
+            </summary>
+            <param name="str"></param>
+            <param name="offset">Initial position.</param>
+            <param name="rightToLeft">Moving from right to left if true. Otherwise from left to right if false.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.GetDirectoryFromFile(System.String)">
+            <param name="file">File path; null is possible.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.DirectoryPathFormat(System.String)">
+            <summary>
+            Formatting of the path to directory.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.IsDirectoryPath(System.String)">
+            <summary>
+            Check if this is a directory.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.MakeRelativePath(System.String,System.String)">
+            <summary>
+            Makes relative path from absolute.
+            </summary>
+            <param name="root"></param>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.StringExtension.GetStream(System.String,System.Text.Encoding)">
+            <summary>
+            Gets stream from string.
+            </summary>
+            <param name="str"></param>
+            <param name="enc">Specific encoding or null value to use UTF8 by default.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Extensions.XProjectExtension.IsLimEqual(net.r_eg.MvsSln.Core.IXProject,net.r_eg.MvsSln.Core.IXProject)">
+            <summary>
+            Checking of equality by limited project attributes like full path and its configuration.
+            IXProject does not override Equals() and GetHashCode() 
+            And this can help to compare projects by minimal information for Unload() methods etc.
+            </summary>
+            <param name="x"></param>
+            <param name="prj"></param>
+            <returns></returns>
+        </member>
+        <member name="E:net.r_eg.MvsSln.Log.ISender.Received">
+            <summary>
+            When message has been received.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.ISender.send(System.Object,net.r_eg.MvsSln.Log.Message)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.ISender.send(System.Object,System.String)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.ISender.send(System.Object,System.String,net.r_eg.MvsSln.Log.Message.Level)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.ISender.send``1(net.r_eg.MvsSln.Log.Message)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.ISender.send``1(System.String)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.ISender.send``1(System.String,net.r_eg.MvsSln.Log.Message.Level)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Log.LSender">
+            <summary>
+            A simple retranslator.
+            Use the NLog etc.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.MvsSln.Log.LSender.Received">
+            <summary>
+            When message has been received.
+            </summary>
+        </member>
+        <member name="E:net.r_eg.MvsSln.Log.LSender.SReceived">
+            <summary>
+            Static alias to Received.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.Send(System.Object,net.r_eg.MvsSln.Log.Message)">
+            <summary>
+            Static alias to `send(object sender, Message msg)`
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.Send(System.Object,System.String)">
+            <summary>
+            Static alias to `send(object sender, string msg)`
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.Send(System.Object,System.String,net.r_eg.MvsSln.Log.Message.Level)">
+            <summary>
+            Static alias to `send(object sender, string msg, Message.Level type)`
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.Send``1(net.r_eg.MvsSln.Log.Message)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.Send``1(System.String)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.Send``1(System.String,net.r_eg.MvsSln.Log.Message.Level)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.send(System.Object,net.r_eg.MvsSln.Log.Message)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.send(System.Object,System.String)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.send(System.Object,System.String,net.r_eg.MvsSln.Log.Message.Level)">
+            <summary>
+            To send new message.
+            </summary>
+            <param name="sender"></param>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.send``1(net.r_eg.MvsSln.Log.Message)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.send``1(System.String)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Log.LSender.send``1(System.String,net.r_eg.MvsSln.Log.Message.Level)">
+            <summary>
+            To send new message with default sender as typeof(T).
+            It useful for static methods etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="msg"></param>
+            <param name="type"></param>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Log.LSender._">
+            <summary>
+            Thread-safe getting the instance of the Sender class
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.ImportElement.project">
+            <summary>
+            The Project attribute.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.ImportElement.condition">
+            <summary>
+            The Condition attribute.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.ImportElement.label">
+            <summary>
+            The Label value.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.ImportElement.parentElement">
+            <summary>
+            Access to parent element.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.ImportElement.parentProject">
+            <summary>
+            Link to parent container.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Projects.ImportElement.#ctor(Microsoft.Build.Construction.ProjectImportElement)">
+            <param name="element"></param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.type">
+            <summary>
+            The item type.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.unevaluatedInclude">
+            <summary>
+            The unevaluated value of the Include attribute.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.evaluatedInclude">
+            <summary>
+            The evaluated value of the Include attribute.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.isImported">
+            <summary>
+            True if this item originates from an imported file.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.meta">
+            <summary>
+            All the metadata for this item by name.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.Metadata.name">
+            <summary>
+            The name of the metadata.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.Metadata.evaluated">
+            <summary>
+            The evaluated metadata value.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.Metadata.unevaluated">
+            <summary>
+            The unevaluated metadata value.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.parentItem">
+            <summary>
+            Link to parent Microsoft.Build.Evaluation.ProjectItem.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.Item.parentProject">
+            <summary>
+            Link to parent container.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Projects.Item.Assembly">
+            <summary>
+            Try to extract assembly information, e.g.:
+            Include="DllExport, Version=1.5.1.35977, Culture=neutral, PublicKeyToken=8337224c9ad9e356, processorArchitecture=MSIL"
+            Include="System.Core"
+            ...
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Projects.Item.#ctor(Microsoft.Build.Evaluation.ProjectItem)">
+            <param name="eItem"></param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.name">
+            <summary>
+            The name of the property.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.evaluatedValue">
+            <summary>
+            The evaluated property value.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.unevaluatedValue">
+            <summary>
+            The unevaluated property value.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.condition">
+            <summary>
+            'Condition' attr if defined.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.isEnvironmentProperty">
+            <summary>
+            True if the property originated from an environment variable.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.isGlobalProperty">
+            <summary>
+            True if the property is a global property.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.isReservedProperty">
+            <summary>
+            True if the property is a reserved property, for example 'MSBuildProjectFile'.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.isImported">
+            <summary>
+            True if the property originates from an imported file 
+            and not from an environment variable, a global property, or a reserved property.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.isUserDef">
+            <summary>
+            True if the property has been defined locally by user via available constructor.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.parentProperty">
+            <summary>
+            Link to Microsoft.Build.Evaluation.ProjectProperty.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.Projects.PropertyItem.parentProject">
+            <summary>
+            Link to parent container.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Projects.PropertyItem.#ctor(System.String,System.String,System.String)">
+            <param name="name">The name of property.</param>
+            <param name="value">Unevaluated value.</param>
+            <param name="condition">Optional 'Condition' attr.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Projects.PropertyItem.#ctor(Microsoft.Build.Evaluation.ProjectProperty)">
+            <param name="eProperty"></param>
+        </member>
+        <member name="T:net.r_eg.MvsSln.PropertyNames">
+            <summary>
+            Regular MSBuild Properties and related.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.PropertyNames.UNDEFINED">
+            <summary>
+            Any undefined properties.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.PropertyNames.PRJ_PLATFORM">
+            <summary>
+            Platform Target for binaries.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.PropertyNames.PRJ_NAMESPACE">
+            <summary>
+            Used namespace for project.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.PropertyNames.DEVENV_DIR">
+            <summary>
+            Default for VS env.
+            __VSSPROPID Enumeration (Microsoft.VisualStudio.Shell.Interop)
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.PropertyNames.VS_BUILD">
+            <summary>
+            Default for VS env:
+            "true" (can be changed in other components) in Microsoft.VisualStudio.Project.ProjectNode 
+            :: DoMSBuildSubmission + SetupProjectGlobalPropertiesThatAllProjectSystemsMustSet
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.PropertyNames.CODE_ANAL_ORUN">
+            <summary>
+            Default for VS env:
+            "false" in Microsoft.VisualStudio.Package.GlobalPropertyHandler
+            </summary>
+        </member>
+        <member name="T:net.r_eg.MvsSln.Sln">
+            <summary>
+            Wrapper of the default solution parser.
+            </summary>
+        </member>
+        <member name="P:net.r_eg.MvsSln.Sln.Result">
+            <summary>
+            Parsed solution data.
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Sln.#ctor(System.String,net.r_eg.MvsSln.SlnItems)">
+            <param name="file">Solution file</param>
+            <param name="type">Allowed type of operations.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Sln.#ctor(System.IO.StreamReader,net.r_eg.MvsSln.SlnItems)">
+            <param name="reader"></param>
+            <param name="type">Allowed type of operations.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Sln.#ctor(net.r_eg.MvsSln.SlnItems,System.String,System.Text.Encoding)">
+            <param name="type">Allowed type of operations.</param>
+            <param name="raw">Raw data inside string.</param>
+            <param name="Enc">Encoding of raw data.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Sln.#ctor(net.r_eg.MvsSln.SlnItems,System.String)">
+            <param name="type">Allowed type of operations.</param>
+            <param name="raw">Raw data inside string.</param>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Sln.#ctor(net.r_eg.MvsSln.SlnItems,net.r_eg.MvsSln.Core.RawText,System.Collections.Generic.IDictionary{System.String,net.r_eg.MvsSln.Core.RawText})">
+            <param name="type">Allowed type of operations.</param>
+            <param name="raw">Solution raw data.</param>
+            <param name="projects">Dictionary of raw xml projects by Guid.</param>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.All">
+            <summary>
+            All supported data.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.Projects">
+            <summary>
+            All found projects from solution.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.SolutionConfPlatforms">
+            <summary>
+            Solution configurations with platforms.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.ProjectConfPlatforms">
+            <summary>
+            Project configurations with platforms.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.ProjectDependencies">
+            <summary>
+            Project Build Order from .sln file.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.Env">
+            <summary>
+            To prepare environment without loading projects.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.LoadDefaultData">
+            <summary>
+            To load all possible default data.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.LoadMinimalDefaultData">
+            <summary>
+            To load only minimal default data.
+            For example, the only one configuration for each project.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.EnvWithProjects">
+            <summary>
+            To prepare environment with loaded projects by default.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.EnvWithMinimalProjects">
+            <summary>
+            To prepare environment with minimal loaded projects.
+            The only one configuration for each project. 
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.Map">
+            <summary>
+            Creates map when processing sln data.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.SolutionItems">
+            <summary>
+            ProjectSection - SolutionItems
+            +NestedProjects dependencies
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.Header">
+            <summary>
+            Header information.
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.ExtItems">
+            <summary>
+            Includes ExtensibilityGlobals
+            </summary>
+        </member>
+        <member name="F:net.r_eg.MvsSln.SlnItems.ProjectDependenciesXml">
+            <summary>
+            Covers ProjectDependencies (SLN) logic using data from project files (XML).
+            Helps eliminate miscellaneous units between VS and msbuild world:
+            https://github.com/3F/MvsSln/issues/25#issuecomment-617956253
+            
+            Requires Env with loaded projects (LoadMinimalDefaultData or LoadDefaultData).
+            </summary>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Types.FileExt.GetProjectTypeByFile(System.String)">
+            <summary>
+            Evaluate project type via its file.
+            </summary>
+            <param name="file">File name with extension.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Types.FileExt.GetProjectTypeByExt(System.String)">
+            <summary>
+            Evaluate project type via its file extension.
+            </summary>
+            <param name="ext">File extension.</param>
+            <returns></returns>
+        </member>
+        <member name="M:net.r_eg.MvsSln.Types.FileExt.GetFileExtensionBy(net.r_eg.MvsSln.Core.ProjectType)">
+            <summary>
+            Evaluate file extension via ProjectType enum.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

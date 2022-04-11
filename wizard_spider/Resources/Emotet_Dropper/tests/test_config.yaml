@@ -1,0 +1,5 @@
+---
+
+url_to_payload: "http://127.0.0.1:8080/test_program.exe"
+directory_to_write_payload: "$env:APPDATA\\Testing"
+payload_file_name: "test_program.exe"

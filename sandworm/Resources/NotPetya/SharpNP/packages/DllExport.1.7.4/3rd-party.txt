@@ -1,0 +1,59 @@
+DllExport - https://github.com/3F/DllExport
+- - - - - - - - - - - - - - - - - - - - - - 
+
+# Third-party software components
+
+    ## DllExport project includes:
+
+        ### CoreCLR ILAsm & ILDasm
+
+            * https://github.com/3F/coreclr
+            
+        ### Mono.Cecil
+
+            * https://github.com/jbevain/cecil
+
+        ### MvSln 
+
+            * https://github.com/3F/MvsSln
+            
+        ### Conari
+        
+            * https://github.com/3F/Conari
+
+        ### GetNuTool + hMSBuild 
+
+              As the main core for new manager 
+              and helpers for modern SDK-based projects.
+              
+            * https://github.com/3F/GetNuTool
+            * https://github.com/3F/hMSBuild
+        
+        
+    ## Dev Dependencies includes the following tools for src:
+        
+        * vsSolutionBuildEvent
+            https://github.com/3F/vsSolutionBuildEvent
+            
+        * MSTest Framework
+            https://github.com/microsoft/testfx
+            
+        * hMSBuild
+            https://github.com/3F/hMSBuild
+            
+        * GetNuTool
+            https://github.com/3F/GetNuTool
+
+
+    ## Graphics
+    
+        ### The Visual Studio image library 
+        
+            (Visual Studio 2017; 28 November 2017)
+            Over 1,000 images can be used to create applications that look visually consistent with Microsoft software:
+            https://docs.microsoft.com/en-us/visualstudio/designers/the-visual-studio-image-library?view=vs-2017
+            
+            License Terms:
+            
+            * ./Resources/vsico/Visual Studio 2017 Image Library EULA.RTF
+              https://download.microsoft.com/download/0/6/0/0607D8EA-9BB7-440B-A36A-A24EB8C9C67E/Visual%20Studio%202017%20Image%20Library%20EULA.RTF 

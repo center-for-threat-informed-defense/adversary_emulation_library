@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DllExport</name>
+    </assembly>
+    <members>
+        <member name="T:D3F00FF1770DED978EC774BA389F2DC9.DllExportAttribute">
+            <summary>
+            To export this as __cdecl C-exported function. Named as current method where is used attribute.
+            [.NET DllExport]
+            
+            About our meta-information in user-code:
+            https://github.com/3F/DllExport/issues/16
+            </summary>
+        </member>
+        <member name="P:D3F00FF1770DED978EC774BA389F2DC9.DllExportAttribute.CallingConvention">
+            <summary>
+            Specified calling convention.
+            
+            __cdecl is the default convention in .NET DllExport like for other C/C++ programs (Microsoft Specific).
+            __stdCall mostly used with winapi.
+            
+            https://msdn.microsoft.com/en-us/library/zkwh89ks.aspx
+            https://msdn.microsoft.com/en-us/library/56h2zst2.aspx
+            https://github.com/3F/Conari also uses __cdecl by default
+            </summary>
+        </member>
+        <member name="P:D3F00FF1770DED978EC774BA389F2DC9.DllExportAttribute.ExportName">
+            <summary>
+            Optional name for C-exported function.
+            </summary>
+        </member>
+        <member name="M:D3F00FF1770DED978EC774BA389F2DC9.DllExportAttribute.#ctor(System.String,System.Runtime.InteropServices.CallingConvention)">
+            <param name="function">Optional name for C-exported function.</param>
+            <param name="convention">Specified calling convention. __cdecl is the default convention in .NET DllExport.</param>
+        </member>
+        <member name="M:D3F00FF1770DED978EC774BA389F2DC9.DllExportAttribute.#ctor(System.String)">
+            <param name="function">Optional name for C-exported function.</param>
+        </member>
+        <member name="M:D3F00FF1770DED978EC774BA389F2DC9.DllExportAttribute.#ctor(System.Runtime.InteropServices.CallingConvention)">
+            <param name="convention">Specified calling convention. __cdecl is the default convention in .NET DllExport.</param>
+        </member>
+        <member name="M:D3F00FF1770DED978EC774BA389F2DC9.DllExportAttribute.#ctor">
+            <summary>
+            To export this as __cdecl C-exported function. Named as current method where is used attribute.
+            </summary>
+        </member>
+    </members>
+</doc>

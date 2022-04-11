@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0279D000-1097-4838-9277-8A9521C6F63B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SharpNP</RootNamespace>
+    <AssemblyName>SharpNP</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <DllExportIdent>4878435E-E1CC-4600-BD64-A7B3A69FB1B7</DllExportIdent>
+    <DllExportMetaLibName>DllExport.dll</DllExportMetaLibName>
+    <DllExportNamespace>SharpNP</DllExportNamespace>
+    <DllExportDDNSCecil>true</DllExportDDNSCecil>
+    <DllExportSkipOnAnyCpu>false</DllExportSkipOnAnyCpu>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DllExportOrdinalsBase>1</DllExportOrdinalsBase>
+    <DllExportGenExpLib>false</DllExportGenExpLib>
+    <DllExportOurILAsm>false</DllExportOurILAsm>
+    <DllExportSysObjRebase>false</DllExportSysObjRebase>
+    <DllExportLeaveIntermediateFiles>false</DllExportLeaveIntermediateFiles>
+    <DllExportTimeout>30000</DllExportTimeout>
+    <DllExportPeCheck>2</DllExportPeCheck>
+    <DllExportPatches>0</DllExportPatches>
+    <DllExportPreProcType>0</DllExportPreProcType>
+    <DllExportPostProcType>0</DllExportPostProcType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArpDiscovery.cs" />
+    <Compile Include="CpAdminShare.cs" />
+    <Compile Include="NPCredEnum.cs" />
+    <Compile Include="NPDiscovery.cs" />
+    <Compile Include="NPMain.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TcpConnDiscovery.cs" />
+    <Compile Include="ProcExec.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ImportGroup Label=".NET DllExport">
+    <Import Project="../packages/UnmanagedExports.1.2.7/tools/RGiesecke.DllExport.targets" Condition="Exists('../packages/UnmanagedExports.1.2.7/tools/RGiesecke.DllExport.targets')" />
+    <Import Project="../packages/UnmanagedExports.1.2.7/tools/RGiesecke.DllExport.targets" Condition="Exists('../packages/UnmanagedExports.1.2.7/tools/RGiesecke.DllExport.targets')" />
+  </ImportGroup>
+  <ImportGroup Label=".NET DllExport">
+    <Import Project="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Condition="Exists($([MSBuild]::Escape('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')))" Label="8337224c9ad9e356" />
+  </ImportGroup>
+  <Target Name="DllExportRestorePkg" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(SolutionDir)DllExport.bat')" Text="DllExport.bat is not found. Path: '$(SolutionDir)' - https://github.com/3F/DllExport" />
+    <Exec Condition="('$(DllExportModImported)' != 'true' Or !Exists('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')) And Exists('$(SolutionDir)DllExport.bat')" Command=".\DllExport.bat  -action Restore" WorkingDirectory="$(SolutionDir)" />
+    <MSBuild Condition="'$(DllExportModImported)' != 'true'" Projects="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Targets="DllExportMetaXBaseTarget" Properties="TargetFramework=$(TargetFramework)">
+      <Output TaskParameter="TargetOutputs" PropertyName="DllExportMetaXBase" />
+    </MSBuild>
+    <ItemGroup>
+      <Reference Include="DllExport, PublicKeyToken=8337224c9ad9e356">
+        <HintPath>$(SolutionDir)packages\DllExport.1.7.4\gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\$(DllExportMetaLibName)</HintPath>
+        <Private>False</Private>
+        <SpecificVersion>False</SpecificVersion>
+      </Reference>
+    </ItemGroup>
+  </Target>
+  <Target Name="DllExportRPkgDynamicImport" BeforeTargets="PostBuildEvent" DependsOnTargets="GetFrameworkPaths" Condition="'$(DllExportModImported)' != 'true' And '$(DllExportRPkgDyn)' != 'false'">
+    <MSBuild BuildInParallel="true" UseResultsCache="true" Projects="$(MSBuildProjectFullPath)" Properties="DllExportRPkgDyn=true" Targets="Build" />
+  </Target>
+</Project>

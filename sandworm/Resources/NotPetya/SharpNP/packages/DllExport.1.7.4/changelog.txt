@@ -1,0 +1,885 @@
+- - - - - - - - - - - - - - - - - - - - - - - - -
+.NET DllExport - https://github.com/3F/DllExport
+- - - - - - - - - - - - - - - - - - - - - - - - -
+
+[v1.7.4] 2021.01.02
+
+    * FIXED: Basic project integration stuck on adding property message. Issue #175.
+             Modern VS/MSBuild 16.8+
+    
+    * FIXED: Fixed integration with Conari and merging modules via ILMerge. Issue #170.
+    
+    * FIXED: double.NaN leads to errors for non exported methods. Issue #174.
+             ```
+             syntax error at token '-' in: IL_0029: ldc.r8 -nan(ind)
+             ```
+             
+    * NEW: Manager. Implemented `-no-mgr` key:
+            - Do not use manager for automatic restore the remote package.
+            
+    * CHANGED: FIPS compliant algorithms.
+               Unable to install when FIPS enabled. Issue #171.
+               
+    * CHANGED: Improved the searching paths logic for RootPath and PkgPath, 
+                to be more loyal when no keys for some reason. Part of #175.
+               
+    * CHANGED: Updated MvsSln 2.5.3
+               https://github.com/3F/MvsSln/releases/tag/2.5.3
+               
+    * CHANGED: Use special edition for DllExport project. Part of issue #171.
+               https://github.com/3F/MvsSln
+               branch: edition/DllExport
+
+
+[v1.7.3] 2020.06.12
+
+    * FIXED: Fixed syntax error at token '-' in: IL_002d: ldc.r8 -nan(ind) with "return Double.NaN"
+             Through "Single + Double NaN token patching" option. Issue #158.
+                ```
+                .field = float32(-nan(ind)) -> 0xFFC00000
+                .field = float64(-nan(ind)) -> 0xFFF8000000000000
+
+                ldc.r8 -nan(ind) -> 00 00 00 00 00 00 F8 FF
+                ldc.r4 -nan(ind) -> 00 00 C0 FF
+                ```
+             
+    * FIXED: NuGet packages are not visible as installed when DLLExport enabled for project.
+             Issue #152.
+    
+    * FIXED: Concurrency Issue with Parallel Project Builds. Issue #73.
+    
+    * FIXED: Fixed the first phase of the build when restoring. Related issue #159.
+    
+    * FIXED: Fixed VS NuGet PM possible error:
+             "You cannot call a method on a null-valued expression."
+             
+    * CHANGED: Improves package integration. PR  #161.
+                - Updated logic for packages through `-pkg-link` key.
+                - Removed `-force` key from the project files 
+                  if it was pushed together with other commands for manager.
+
+
+[v1.7.2] 
+
+    * NOTE: Version 1.7.2 does not exist! 
+            To avoid confusion and additional misunderstanding with 1.2.7, 
+            👉 Minor version 1.7.2 will be numbered as [ 1.7.3 ]
+            
+            https://github.com/3F/DllExport/milestone/11
+
+[v1.7.1] 2020.05.07
+
+    * NEW: Pre-Processing feature. PR #146.
+           Related issue #40
+           
+           Official ILMerge support;
+           https://github.com/dotnet/ILMerge
+           
+           Quick integration with Conari for most easy access to unmanaged features;
+           https://github.com/3F/Conari
+           
+           +Other related tools and assembly manipulations.
+           Manual configuring: https://github.com/3F/DllExport/issues/40#issuecomment-593147220
+           
+    * NEW: Post-Processing. PR #148.
+           Continues direction of Pre-Processing feature. PR #146
+           Related issue #144
+           
+           Explanation and details:
+           https://ko-fi.com/Blog/Post/ILMerge---Conari---Debug-information---DllExport-=-O5O61MV8A
+    
+           1.7.1 Provides only basic GUI support for predefined options. Thus,
+
+            *! Some Post-Proc features are not yet available in GUI. 
+            But you can already configure it with msbuild:
+            ```
+            <Target Name="DllExportPostProc">
+
+                <!-- After activation, you can access the following properties and items:
+                
+                $(DllExport)     - version
+                $(DllExportSln)  - full path to .sln which controls current project
+                $(DllExportPrj)  - full path to current project where processed .NET DllExport
+                
+                @(DllExportDirX64)    - $(TargetDir)x64\*.*
+                @(DllExportDirX86)    - $(TargetDir)x86\*.*
+                @(DllExportDirBefore) - $(TargetDir)Before\*.*
+                @(DllExportDirAfter)  - $(TargetDir)After\*.*
+                
+                @(DllExportDependents + populated property name) 
+                   - each populated properties from DllExportProcEnv, 
+                      e.g. DllExportDependentsTargetDir
+                      
+                @(DllExportDependencies + populated property name) 
+                  - each populated properties from DllExportProcEnv, 
+                      e.g. DllExportDependenciesTargetDir
+                      
+                @(DllExportSeqDependents + populated property name) 
+                   - each populated properties from DllExportProcEnv, 
+                      e.g. DllExportSeqDependentsTargetDir
+                      
+                -->
+
+            </Target>
+            ```
+            https://github.com/3F/DllExport/pull/148#issuecomment-622115091
+            
+    * NEW: Optional copying of intermediate files + x86+x64 directories into output 
+               for projects that dependent on projects where used DllExport. Issue #144.
+               
+               Including sequential referencing through other projects:
+               https://github.com/3F/DllExport/pull/148#issuecomment-625193408
+    
+    * FIXED: Fixed #140 ... failed to create safe SSL/TLS context.
+    
+    * FIXED: Pack of fixes for .net.dllexport.targets. PR #147.
+    
+            * Fixed "Cannot modify an evaluated object originating in an imported file".
+            * Fixed possible duplication in .net.dllexport.targets when configuring.
+            * Adds removing TargetsFile if not used.
+            * Fixed possible loss of settings in .targets when configuring.
+    
+    * FIXED: Fixed #143 'Microsoft.NET.Sdk' specified could not be found.
+    
+    * FIXED: A multiple empty `<PropertyGroup />` in project files during new configuration.
+    
+    * CHANGED: Wizard. Dropped support for ssl3 + tls1.0 + tls1.1
+    
+    * CHANGED: Wizard. Simplified notification for stable versions.
+
+    * CHANGED: Manager. Access to hMSBuild tool (packed) via `-hMSBuild` key.
+                        https://github.com/3F/hMSBuild
+                        Since it uses packed version (while GetNuTool is integrated inside), 
+                        you need use -dxp-version to control specific version.
+                        
+    * CHANGED: Updated Cecil 0.11.2
+               https://github.com/jbevain/cecil/releases/tag/0.11.2
+    
+    * CHANGED: Updated MvsSln 2.5.2
+               https://github.com/3F/MvsSln/releases/tag/2.5.2
+
+
+[v1.7] 2020.01.31
+
+    * NEW: .NET Core based projects support. 
+           Issues: #90, #67
+           PR: #123
+           
+    * NEW: .NET Standard 1.1 and above targeting support.
+    
+    * NEW: Implemented "Single + Double Inf/-Inf token patching" option. 
+           Related Issue #128.
+           
+    * NEW: Implemented "Rebase System Object" option for our assembler.
+    
+            Helps to avoid possible "Invalid memory access" (JNA/Java). Issue #125.
+            For C/C++ such as "Unhandled exception at ... (KernelBase)"
+            
+            https://twitter.com/GitHub3F/status/1201904821093187585
+            Part of PR #123
+    
+    * NEW: Implemented updater for wizard. Issue #109.
+    
+    * NEW: Textual export of affected data to diag.
+           
+    * CHANGED: Updated CoreCLR 3.1.0 LTS \ IL Assembler 4.700.2.
+               https://github.com/3F/coreclr/releases/tag/ILAsm.4.700.2
+               
+               Includes an implemented `/REBASE` feature for related issue #125.
+               
+    * CHANGED: New installation behavior through official NuGet.    
+               init.ps1 also adds optional copying of package data for our manager.
+               
+               Please note: This is not nuget support! 
+                            It just replaces known info-form that was in 1.6.x.
+    
+    * CHANGED: New wizard layout for 1.7.
+    
+    * CHANGED: Local scope when invoking .\DllExport manager in project files.
+    
+    * CHANGED: Updated logic for an offline versions 
+                with optional converting to online if needed.
+                            
+    * CHANGED: Updated MvsSln 2.5.1
+               https://github.com/3F/MvsSln/releases/tag/2.5.1
+               
+    * CHANGED: Updated hMSBuild 2.3
+               https://github.com/3F/hMSBuild/releases/tag/v2.3
+               
+    * KNOWN: You can finally get another System.Object in modified assembly:
+             https://github.com/3F/DllExport/issues/90#issuecomment-546637702
+             
+    * NOTE: You need an updated/modern manager to avoid problem  
+            when "Possible incorrect Sdk-based project types": PR #123
+            https://github.com/3F/MvsSln/issues/23
+            
+            Use it from official 1.7 release:
+            https://github.com/3F/DllExport/releases/tag/v1.7
+            https://www.nuget.org/packages/DllExport/1.7.0
+            
+            Otherwise you need provide manually msbuild instance 
+            that can process modern Sdk-types due to modern VS/dotnet sdk 
+            dependencies for netcore-based projects.
+            
+            For example, through hMSBuild https://github.com/3F/hMSBuild
+            ```
+            DllExport ... -msb hMSBuild
+            ```
+            
+    * NOTE: For command-line mode, To upgrade configured version to 1.7:
+            ```
+                DllExport -action Upgrade -dxp-version 1.7.0
+            ```
+            
+            
+[v1.7-RC] 2020.01.27
+
+    * NOTE: Release Candidate includes all actual fixes from 
+            [ 1.7 beta-1 to beta-4 ] releases. And also adds the following:
+    
+    * NEW: Implemented updater for wizard. Issue #109.
+    
+    * NEW: Textual export of affected data to diag.
+    
+    * CHANGED: Updated logic for an offline versions 
+                with optional converting to online if needed.
+                
+    * CHANGED: `.gitattributes` now will be distributed with packages. 
+               Use this to avoid related problems: 
+               `a7, a8, a9 - is not recognized as an internal or external command`
+               https://github.com/3F/hMSBuild/issues/2
+
+
+[v1.7-beta4] 2020.01.21
+
+    * NEW: Allowed .NET Standard 1.1 and above targeting.
+
+    * FIXED: Fixed "Sdk.WindowsDesktop" problem for .NET Core / SDK-based projects.
+             Details in PR #123.
+
+    * FIXED: Fixed beta3 incorrect layout (Thanks @Genteure, PR #131).
+    
+             Related problem with `Inf/-Inf token patching` option:
+             https://github.com/3F/DllExport/issues/128#issuecomment-566360606
+             
+    * FIXED: DllExport crashing with proxy authentication error. Issue #133.
+    
+    * FIXED: Fixed actions for `-mgr-up` key.
+             Including `-action Upgrade` ( Update + mgr-up + force keys )
+             
+    * FIXED: Fixes possible MSB1006 for proxycfg property.
+             "MSB1006: Property is not valid. Switch: proxycfg"
+             
+    * CHANGED: UI. VS project icons under Visual Studio 2017 Image Library EULA.RTF license.
+    
+    * CHANGED: init.ps1 adds optional copying of package data for our manager.
+               Part of the "new installation behavior through official NuGet." (beta2)
+               
+               Please note: This is not nuget support! 
+                            It just replaces known info-form that was in 1.6.x.
+    
+    * CHANGED: Local scope when invoking .\DllExport manager in project files.
+             
+    * CHANGED: Updated GetNuTool 1.8
+               https://github.com/3F/GetNuTool/releases/tag/1.8
+               
+    * NOTE: Please don't use beta releases in production!
+    
+    * NOTE: Please report about something here: https://github.com/3F/DllExport/issues
+
+
+[v1.6.6] 2020.01.16
+
+    * NOTE: Please don't forget to test latest 1.7 BETA releases (not for production)
+            with .NET Core support!
+            https://github.com/3F/DllExport
+            
+    * FIXED: Fixed possible duplication of `PlatformTarget` during setup.
+    
+    * FIXED: Fixed error when switching between .sln in UI. Wizard.
+    
+    * FIXED: DllExport crashing with proxy authentication error. Issue #133.
+    
+    * FIXED: Fixed actions for `-mgr-up` key.
+             Including `-action Upgrade` ( Update + mgr-up + force keys )
+             
+    * FIXED: Fixes possible MSB1006 for proxycfg property.
+             "MSB1006: Property is not valid. Switch: proxycfg"
+
+    * CHANGED: Updated MvsSln 2.5
+               https://github.com/3F/MvsSln/releases/tag/2.5
+    
+    * CHANGED: Updated Mono Cecil 0.11.1
+               https://github.com/jbevain/cecil/releases/tag/0.11.1
+               
+    * CHANGED: Updated GetNuTool 1.8
+               https://github.com/3F/GetNuTool/releases/tag/1.8
+    
+    * CHANGED: Updated Conari 1.4
+               https://github.com/3F/Conari/releases/tag/1.4
+               
+               
+[v1.7-beta3] 2019.12.15
+
+    * FIXED: Mismatch of the name of the exported function with the specified value. 
+             Issue #129.
+    
+    * FIXED: Unchangeable cdecl convention. Part of Issue #129.
+    
+    * FIXED: Fixed possible duplication of `DllExportSysObjRebase` during setup.
+    
+    * NEW: Implemented "Single + Double Inf/-Inf token patching" option. 
+           Related Issue #128.
+           
+    * KNOWN: You can finally get another System.Object in modified assembly:
+             https://github.com/3F/DllExport/issues/90#issuecomment-546637702
+           
+    * NOTE: Please don't use beta releases in production!
+    
+    * NOTE: Please report about something here: https://github.com/3F/DllExport/issues
+    
+
+[v1.7-beta2] 2019.12.14
+
+    * FIXED: Fixed possible "Invalid memory access" (JNA/Java). Issue #125.
+             For C/C++ such as "Unhandled exception at ... (KernelBase)"
+             
+             https://twitter.com/GitHub3F/status/1201904821093187585
+    
+    * FIXED: Fixed 'Failed to resolve assembly...' when .NET Standard. Issue #127.
+    
+    * FIXED: Fixed error when switching between .sln in UI. Wizard.
+    
+    * FIXED: Fixed possible duplication of `PlatformTarget` during setup.
+    
+    * NEW: Implemented "Rebase System Object" option for our assembler.
+    
+    * CHANGED: New installation behavior through official NuGet.
+    
+    * CHANGED: New wizard layout for 1.7.
+    
+    * CHANGED: Updated CoreCLR 3.1.0 RTM \ IL Assembler 4.700.2.
+               https://github.com/3F/coreclr/releases/tag/ILAsm.4.700.2
+               
+               Includes an implemented `/REBASE` feature for related issue #125.
+               
+    * CHANGED: Updated Mono Cecil 0.11.1
+               https://github.com/jbevain/cecil/releases/tag/0.11.1
+    
+    * CHANGED: Updated Conari 1.4
+               https://github.com/3F/Conari/releases/tag/1.4
+               
+    * KNOWN: Possible syntax error at token 'inf'. Issue #128.
+             https://github.com/3F/DllExport/issues/128
+             
+    * KNOWN: You can finally get another System.Object in modified assembly:
+             https://github.com/3F/DllExport/issues/90#issuecomment-546637702
+             
+    * NOTE: Please don't use beta releases in production!
+    
+    * NOTE: Please report about something here: https://github.com/3F/DllExport/issues
+    
+
+[v1.7-beta] 2019.11.04
+
+    * NEW: Basic support for the netcore-based projects. 
+           Issues: #90, #67
+           PR: #123
+           
+    * CHANGED: Updated CoreCLR 3.0 IL Assembler 4.700.1
+               https://github.com/3F/coreclr
+    
+    * CHANGED: Updated Mono Cecil 0.11
+    
+    * CHANGED: Updated MvsSln 2.5
+    
+    * NOTE: You also need an updated manager to avoid problem  
+            when "Possible incorrect Sdk-based project types": PR #123
+            https://github.com/3F/MvsSln/issues/23
+            
+            Use it from official 1.7-beta release:
+            https://github.com/3F/DllExport/releases/tag/v1.7-beta
+            https://www.nuget.org/packages/DllExport/1.7.0-beta
+            
+            Otherwise you need provide manually msbuild instance 
+            that can process modern Sdk-types due to modern VS/dotnet sdk 
+            dependencies for netcore-based projects.
+            
+            For example, through hMSBuild https://github.com/3F/hMSBuild
+            ```
+            DllExport ... -msb hMSBuild
+            ```            
+            
+    * NOTE: To upgrade configured version to 1.7 beta:
+            ```
+                DllExport -action Upgrade -dxp-version 1.7.0-beta
+            ``` 
+            
+    * NOTE: Please don't use beta releases in production!
+    
+    * NOTE: Please report about something here: https://github.com/3F/DllExport/issues
+    
+    * KNOWN: You can finally get another System.Object in modified assembly:
+             https://github.com/3F/DllExport/issues/90#issuecomment-546637702
+
+
+[v1.6.5] 2019.08.10
+
+    * FIXED: Possible "The format ... of configuration is not supported." 
+             Issue #114.
+    
+    * FIXED: XML meta comments for DllExport Metadata.
+    
+    * CHANGED: Updated MvsSln 2.4
+               Release notes:
+               https://github.com/3F/MvsSln/releases/tag/v2.4
+               
+    * NOTE: To upgrade configured version to v1.6.5: 
+            ```
+                DllExport -action Upgrade -dxp-version 1.6.5
+            ```  
+
+[v1.6.4] 2019.07.04
+
+    * FIXED: Possible "The process cannot access the file because it is being used by another process"
+             Issue #106
+    
+    * CHANGED: Updated Mono.Cecil 0.10.4
+               https://github.com/jbevain/cecil/commits/0.10.4
+               
+    * CHANGED: Updated MvsSln 2.3
+               Release notes:
+               https://github.com/3F/MvsSln/releases/tag/v2.3
+               
+    * NOTE: To upgrade configured version to v1.6.4: 
+            ```
+                DllExport -action Upgrade -dxp-version 1.6.4
+            ```    
+
+[v1.6.3] 2019.05.30
+
+    * NEW: Support of unicode characters in namespaces. Issue #80
+    
+    * NEW: Integrated `-action Configure` command by default. Issue #96
+           Configure everything in one click.
+           https://github.com/3F/DllExport/wiki/Quick-start
+    
+    * CHANGED: Updated Mono.Cecil 0.10.3
+               https://github.com/jbevain/cecil/commits/0.10.3
+               
+    * CHANGED: Updated MvsSln 2.2
+               Release notes:
+               https://github.com/3F/MvsSln/releases/tag/v2.2
+               
+    * NOTE: To upgrade configured version to v1.6.3: 
+            ```
+                DllExport -action Upgrade -dxp-version 1.6.3
+            ```
+    
+[v1.6.2] 2018.12.27
+
+    * NEW: Added option 'auto' into panel of platforms as an automatic configuring platform from user settings.
+           An easy configuring between different configurations, like from BasicExport example: 
+           https://github.com/3F/Examples/tree/master/DllExport/BasicExport
+      
+    * FIXED: MSB3073 for paths with `%` and `;`.
+    * FIXED: Inactive `-packages` key. (broken in 1.6.1)
+    * FIXED: Problems with relative paths for `-pkg-link`. (incomplete logic from 1.6.0)
+    * FIXED: Fixed problems with special symbols in path. Related Issue #88.
+            ```
+             ' &!~`@#$^(+)_=%-;[.]{,}
+            ```
+            
+    * FIXED: Fixes possible Null Exception for empty project collection when applying filter.
+    * FIXED: Build problem when project is configured from arguments ending with `"` (double quote mark).
+             For example: `-action Configure -sln-dir "path"`
+             
+    * CHANGED: Removed obsolete Configurator (old PowerShell way) from NuGet package.
+    * CHANGED: Updated hMSBuild 2.0 & GetNuTool 1.7.
+               Release notes:
+                * https://github.com/3F/GetNuTool/releases/tag/v1.7
+                * https://github.com/3F/hMSBuild/releases/tag/v2.0
+            
+    * NOTE: To upgrade configured version on v1.6.2: 
+            ```
+                DllExport -action Upgrade -dxp-version 1.6.2
+            ```
+    
+[v1.6.1] 2018.08.05
+
+    * FIXED: Fixed bug when some methods cannot be exported. Issue #59.
+    * FIXED: Bug 'The node is not parented by this object' when Configuring projects. Issue: #77.
+    * FIXED: Fixed GDI objects leak in Wizard.
+    * FIXED: `-msb` key cannot affect for GetNuTool section. Issue #74.
+    * FIXED: Bug when automatic restoring still uses default keys from manager after configuring with custom `-server`.
+    * FIXED: Problem with double quotes for `-packages` key. 
+    * FIXED: Possible incorrect repetition of the relative path for `-packages` key. 
+    * FIXED: Possible problem 'The request was aborted: Could not create SSL/TLS secure channel.'. Issue: #77.
+    * FIXED: Possible problem with path when `-msb` key contains round brackets, 
+             e.g.: `D:\C\Program Files (x86)\Microsoft Visual Studio\`...
+             
+    * NEW: Implemented features for additional automation. Issue #76.
+            New actions:             
+                * `-action Export` 
+                * `-action Recover`
+                * `-action Unset`
+            
+            Documentation: https://github.com/3F/DllExport/wiki/DllExport-Manager#automation
+            
+    * NEW: Added proxy support for manager.
+            The common format: `[usr[:pwd]@]host[:port]`
+            
+            Documentation: https://github.com/3F/DllExport/wiki/DllExport-Manager#proxy
+            
+    * NEW: Wizard. Added sorting an projects in main window by its installing status and by availability.
+    * NEW: Wizard. Added filter for list of projects in main wizard window.
+    * NEW: New 'Offline' versions from our packages. See GitHub Releases page.
+    * NEW: Added key to force update `Reference` without PublicKeyToken. Issue #65.
+    * NEW: Added `-force` key for manager to use aggressive behavior, e.g. like removing pkg when updating. 
+           Wiki: https://github.com/3F/DllExport/wiki/DllExport-Manager#receiving-new-package-version
+
+    * NEW: New action `-action Upgrade`.
+           Aggregates an Update action with additions for upgrading. 
+
+                Today's an Upgrade action:
+                ```
+                DllExport -action Upgrade ...
+                ```
+
+                is equal to:
+                ```
+                DllExport -action Update -mgr-up -force ...
+                ```
+                
+                Wiki: https://github.com/3F/DllExport/wiki/DllExport-Manager#updating
+
+    * CHANGED: Case sensitivity for the Action names.
+    * CHANGED: `-action Default` for nothing.
+    * CHANGED: UI layout fixes for -Info form (Thanks @Genteure, Issue #61). 
+    * CHANGED: Allows absolute path for `-packages` key.
+    * CHANGED: `-sln-file` key now can affect to `-action Configure`
+    * CHANGED: hMSBuild tool now is also distributed inside root directory of the packages zip & nupkg.
+               Use this for EXP0014 problem: "RunIlAsm. The library manager still cannot be found."
+               Example: https://www.youtube.com/watch?v=zUejJ4vUPGw
+
+    * CHANGED: Updated GetNuTool v1.6.2
+    * CHANGED: Updated MvsSln v2.1.0        
+    * OTHER: Some other fixes and changes with manager and wizard.
+    * NOTE: To upgrade configured version: `DllExport -action Upgrade ...`
+    * NOTE: Configuring projects: `DllExport -action Configure ...`
+    * NOTE: Screencasts:
+                * Quick start: https://www.youtube.com/watch?v=sBWt-KdQtoc
+                * Basic examples for C++ and C#: https://www.youtube.com/watch?v=9Hyg3_WE9Ks
+                * Complex types and Strings: https://www.youtube.com/watch?v=QXMj9-8XJnY
+                
+    * NOTE: Our actual wiki - https://github.com/3F/DllExport/wiki
+            * Documentation for manager: https://github.com/3F/DllExport/wiki/DllExport-Manager
+
+[v1.6] 2017.12.29
+
+    * NEW: The new embeddable lightweight manager for distribution via MvsSln & GetNuTool projects. Issue #38.
+           Based on hMSBuild logic and includes GetNuTool core v1.6.1.
+           
+           Now you shouldn't use standard nuget clients anymore:
+           https://www.youtube.com/watch?v=9bYgywZ9pPE
+           
+           Quick start: https://www.youtube.com/watch?v=sBWt-KdQtoc
+            ==============================
+            DllExport -action Configure
+            ==============================
+           
+           Package from nuget.org already contains manager, but you can also get it directly.
+           Latest manager: https://3F.github.io/DllExport/releases/latest/manager/
+           ~18 Kb text-based embeddable batch-script that does not require powershell and dotnet-cli.
+           
+           Automatic restoring still is available but you can also use: `DllExport -action Restore`
+           All available features: `DllExport -h`
+           
+           Direct links to remote package (without nuget server) via `-pkg-link {uri}` key. Issue #53.
+           NuGet Server by default: nuget.org.
+           
+    * NEW: The new Wizard (configurator via MvsSln). To easy configure your projects in any place. Part of Issue #38.
+           MvsSln v2.0: https://github.com/3F/MvsSln
+           
+    * NEW: Added support of empty/global namespaces - Issue #47. 
+           Use `Direct-Mod` if Cecil will not process this correctly.
+           
+    * NEW: Implemented another storage for configuration: '.net.dllexport.targets'. Issue #49.
+    
+    * NEW: New settings for configurator (Wizard):
+            * Path to custom ILAsm.
+            * Flag to keep intermediate Files (IL Code, Resources, ...).
+            * Timeout of execution in milliseconds.
+    
+    * NEW: Implemented automatic checking existence of a correct exported proc via Conari. Issue #55.
+           Wizard controls it via `$(DllExportPeCheck)`:
+            * 0x01 bit - Will check count of all planned exports from final PE32/PE32+ module.
+            * 0x02 bit - Will check existence of all planned exports (IL code) in actual PE32/PE32+ module.
+            
+    * NEW: Implemented PE32/PE32+ Viewer to check manually available exports from final modules. Issue #55.
+           New key for manager:
+            ```
+            -pe-exp-list {module} - To list all available exports from PE32/PE32+ module.
+            ```
+
+            Sample:
+            ```
+            DllExport -pe-exp-list bin\Debug\regXwild.dll
+            ```
+            
+    * FIXED: Fixed target platform detection. Issue #34.
+             Details: https://github.com/3F/DllExport/issues/34#issuecomment-306171060
+             
+    * FIXED: Fixed problem when the Post-Build event is triggered before our tool. Issue #35.
+             Use this if still is needed:
+             ```
+             <Target Name="PostBuildEventBeforeDllExport" BeforeTargets="DllExportMod">
+                ...
+             </Target>
+             ```
+             
+    * FIXED: Fixed generation of exp + .lib via MS Library Manager for VS2017. Issue #37.
+             Now it also includes processing through VsDevCmd & VcVarsAll initializer scripts. 
+             Use the folowing msbuild properties to override values by default:
+             * $(DllExportVcVarsAll); $(DllExportVsDevCmd)
+             
+    * FIXED: Fixes possible problem with multiple properties that contains *Undefined* word, 
+             e.g.: *Undefined*\path1;C:\path2 ...
+             
+    * CHANGED: Added information about finding lib tool. Issue #44.
+    
+    * CHANGED: UI. Selected platform now affects to all configurations of project instead of active as before.
+    
+    * CHANGED: Now nuget package does not contain library in `lib/.../` Details in #36.
+    
+    * CHANGED: Now we also distribute .zip package for work through our manager etc.
+               https://github.com/3F/DllExport/releases
+               
+    * NOTE: How to avoid EXP0014: RunIlAsm. The library manager still cannot be found.
+            https://www.youtube.com/watch?v=zUejJ4vUPGw
+            Related Issue #44
+            
+    * NOTE: Quick start (Configuring, Automatic restoring, Pe-Viewer): 
+            https://www.youtube.com/watch?v=sBWt-KdQtoc
+            
+    * NOTE: The latest text-based manager: 
+            https://3F.github.io/DllExport/releases/latest/manager/
+            
+               Other versions you can find from GitHub Releases:
+               * https://github.com/3F/DllExport/releases
+               
+               Or get it from nuget packages starting with v1.6+
+               
+    * NOTE: PE-features via Conari v1.3.0 https://github.com/3F/Conari
+               
+    * KNOWN: Bug when - "Build successful but methods are not exported." Issue #59
+             For today, anyone else may also try to use https://github.com/3F/Conari to avoid similar @Genteure's problem.
+             
+    * DIFF(v1.6-RC):
+    
+        * FIXED: Wizard. Fixed incorrect layout for zh_CN Simplified Chinese (Thanks @Genteure). Issue #61
+        * FIXED: Fixes automatic restoring the package via msbuild. Issue #62
+        
+
+[v1.6-RC] 2017.11.26
+
+    * FIXED: Avoids crashes when project cannot be loaded for some reasons. Issue #56
+    * FIXED: Fixed usage of manager outside the Solution directory.
+    * FIXED: Fixed restoring package when using `-pe-exp-list` command.
+    * NEW: Added `-mgr-up` key. Will update manager to version from '-dxp-version'.
+    * NOTE: Thanks for your feedback. Now we're ready for release v1.6, soon. 
+            Please check release-candidate as carefully as possible.
+            
+            Start with:
+            ==============================
+            DllExport -action Configure
+            ==============================
+            https://3F.github.io/DllExport/releases/latest/manager/
+            https://www.youtube.com/watch?v=okPThdWDZMM&t=46s 
+            
+
+[v1.6-beta3] 2017.10.27
+
+    * NEW: Implemented another storage for configuration: '.net.dllexport.targets'. Issue #49.
+    * NEW: Implemented automatic checking existence of a correct exported proc via Conari. Issue #55.
+           Wizard controls it via `$(DllExportPeCheck)`:
+            * 0x01 bit - Will check count of all planned exports from final PE32/PE32+ module.
+            * 0x02 bit - Will check existence of all planned exports (IL code) in actual PE32/PE32+ module.
+            
+    * NEW: Implemented PE32/PE32+ Viewer to check manually available exports from final modules. Issue #55.
+           New key for manager:
+            ```
+            -pe-exp-list {module} - To list all available exports from PE32/PE32+ module.
+            ```
+
+            Sample:
+            ```
+            DllExport -pe-exp-list bin\Debug\regXwild.dll
+            ```
+            
+    * NEW: Implemented `-pkg-link {uri}` key for DllExport manager. Issue #53.
+    * NEW: New settings for Wizard:
+            * Path to custom ILAsm.
+            * Flag to keep intermediate Files (IL Code, Resources, ...).
+            * Timeout of execution in milliseconds.
+            
+    * CHANGED: Updated MvsSln v2.0. Full changelog: https://github.com/3F/MvsSln/blob/master/changelog.txt
+    * NOTE: PE-features via Conari v1.3.0 https://github.com/3F/Conari
+
+
+[v1.6-beta2] 2017.08.19
+
+    * NOTE: This release contains trivial fixes only for our manager because of problems with nuget.org. Issue #38.
+            Please read all changes in previous beta release and please note again - you shouldn't use standard nuget clients anymore: 
+            https://www.youtube.com/watch?v=okPThdWDZMM 
+            
+            Test and comment anything about this in Issue #38 if you need.
+            
+    * FIXED: Updated GetNuTool v1.6.1 to fix problems with possible incorrect CRC & Compressed size info from nuget.org.
+            
+             Changelog here:
+             https://github.com/3F/GetNuTool/blob/master/changelog.txt
+            
+             Related issues:
+             * https://github.com/3F/GetNuTool/issues/3
+             * https://github.com/3F/DllExport/issues/38#issuecomment-322250229
+             
+    * CHANGED: Changed url to get latest manager directly. Please use this if you need:
+               * https://3F.github.io/DllExport/releases/latest/manager/
+               
+               Other versions you can find from GitHub Releases:
+               * https://github.com/3F/DllExport/releases
+               
+               Or get it from nuget packages starting with v1.6+
+
+[v1.6-beta] 2017.08.12
+
+    * NEW: The new lightweight manager & distribution via MvsSln & GetNuTool projects. Issue #38.
+           Based on hMSBuild logic and includes GetNuTool core.
+           
+           Now you shouldn't use standard nuget clients anymore:
+           https://www.youtube.com/watch?v=okPThdWDZMM 
+           
+           Package from nuget.org already contains this, but you can also get it directly.
+           Latest version: https://raw.githubusercontent.com/3F/DllExport/latest/manager/DllExport.bat
+           ~18 Kb text-based embeddable batch-scripts that does not require powershell and dotnet-cli.
+           
+           To install/uninstall or to reconfigure your projects: `DllExport -action Configure`
+           To manually restore package: `DllExport -action Restore`
+           All available features: `DllExport -h`
+           
+           Server by default - nuget.org 
+           
+    * NEW: The new Wizard (configurator via MvsSln). To easy configure your projects in any place. Issue #38.
+           MvsSln v1.0.1.43422: https://github.com/3F/MvsSln
+           
+    * NEW: Added support of global namespaces - Issue #47. 
+           Use `Direct-Mod` if Cecil will not process this correctly.
+           
+    * FIXED: Fixed target platform detection. Issue #34.
+             Details: https://github.com/3F/DllExport/issues/34#issuecomment-306171060
+             
+    * FIXED: Fixed problem when the Post-Build event is triggered before our tool. Issue #35.
+             Use this if still is needed:
+             ```
+             <Target Name="PostBuildEventBeforeDllExport" BeforeTargets="DllExportMod">
+                ...
+             </Target>
+             ```
+             
+    * FIXED: Fixed generation of exp + .lib via MS Library Manager for VS2017. Issue #37.
+             Now it also includes processing through VsDevCmd & VcVarsAll initializer scripts. 
+             Use the folowing msbuild properties to override values by default:
+             * $(DllExportVcVarsAll); $(DllExportVsDevCmd)
+             
+    * FIXED: Fixes possible problem with multiple properties that contains *Undefined* word, 
+             e.g.: *Undefined*\path1;C:\path2 ...
+             
+    * CHANGED: Added information about finding lib tool. Issue #44.
+    * CHANGED: UI. Selected platform now affects to all configurations of project instead of active as before.
+    * CHANGED: Now, nuget package does not contain library in `lib/.../` Details in #36.
+    * CHANGED: Now, we also distribute .zip package for work through our manager etc.
+               https://github.com/3F/DllExport/releases
+               
+               The latest text-based manager you can find here: 
+               https://raw.githubusercontent.com/3F/DllExport/latest/manager/DllExport.bat
+               Illustration here: https://www.youtube.com/watch?v=okPThdWDZMM 
+               
+
+[v1.5.2] 2017.03.13
+    
+    * FIXED: Failing to compile in VS2017. Issue #29
+             `Error The "DllExportAppDomainIsolatedTask" task failed unexpectedly. System.ArgumentException: Requested value 'Version46' was not found.`
+             
+    * FIXED: Possible error `Could not load file or assembly Microsoft.Build.Utilities or one of its dependencies.`
+    * CHANGED: Updated script for loading of the Configurator to avoid problem with old assemblies. Issue #22
+    
+[v1.5.1] 2016.11.12
+
+    * FIXED: Error : Invalid Option: /CVRES= Issue #20
+    * NOTE: Our coreclr version was compiled with MSVC 14.0. Related Issue #21
+
+[v1.5] 2016.11.04
+
+    * FIXED: Fixed problem with white-space chars in path: `Cannot find path '<any full path with spaces>' because it does not exist ...`
+    * FIXED: Fixed typo with fullseq (ddNS) - incorrect `0x30 0x30` ~0x007A7-0x007A8  /details in #14
+    * FIXED: Possible problem with NullReferenceException when removing package.
+    * FIXED: Fixed problem with old NS data when we try to install package for project A, then for project B
+    * NEW: Implemented 'Generate .exp + .lib via MS Library Manager' #9
+           GUI Configurator + MSBuild property: `DllExportGenExpLib`
+           
+    * NEW: Added support of unmanaged-export for Executable Modules (.exe) #18
+    * NEW: Cecil variant for ddNS features /#14, #2
+    * NEW: Added our custom IL Assembler as option to fix incorrect 0x13 / 0x11 opcodes. #17
+           GUI Configurator + MSBuild property: `DllExportOurILAsm`
+           It should help for users of Fody projects, etc.
+           https://github.com/Fody/Fody/issues/271
+           
+           IlAsm 4.5.1 https://github.com/3F/coreclr
+           based on 4.5.22220.0 / coreclr 1.0.4
+           changelog of our coreclr for this release: https://github.com/3F/coreclr/blob/master/changelog.txt
+           
+    * CHANGED: Updated scripts of installing/removing package for more correct loading of our assemblies.
+
+[v1.4] 2016.10.05
+
+    * FIXED: Fixed bug - `An item with the same key has already been added`. Issue #10
+    * FIXED: Bug with Meta library: Incorrect default values. Issue #16
+             please note, the __cdecl is the default calling convention for our library 
+             as and for C and C++ programs.
+
+    * FIXED?: Probably fixed bug - `Script errors on package install` Issue #6
+    * FIXED?: Probably fixed bug - `non-English system language - syntax error` Issue #7
+    * NEW: GUI Configurator with updated ddNS features.
+    * NEW: Implemented feature 'Export for platform': [ x86 / x64 / x86 + x64 ] Issue #9
+    * NEW: Implemented feature 'Base for ordinals'. Issue #11
+           There is also alternative to configure this number - MSBuild property: DllExportOrdinalsBase
+         
+    * NEW: The one (1) now is used by default as Base for all ordinals. 
+           `Mimic ordinal counter (start from 1 instead of 0)` Issue #8
+         
+    * CHANGED: The ddNS features now as binary cmdlet `NSBin`. Use `nsbin.bat` if needed.
+    * CHANGED: `Set "Inherited = false" in AttributeUsage for DllExportAttribute`. Issue #15
+    * OTHER: other possible changes and fixes.
+
+[v1.3] 2016.08.21
+
+    * FIXED: bug 'Incorrect library' when DllExport installed for 2+ projects.
+    * CHANGED: DllExport now uses `Cdecl` calling convention by default.
+    * CHANGED: Mono.Cecil v0.9.6.4
+
+[v1.2] 2016.07.13
+
+    * CHANGED: dynamic definition of namespace for user scope. Issue #2
+
+[v1.1] 2016.06.29
+
+    * CHANGED: DllExport now is part of System.Runtime.InteropServices as and DllImport.
+    * CHANGED: Mono.Cecil v0.9.6.1
+    * NEW: 0x80070005 meaning... Issue #1
+    * NEW: +DllExport(CallingConvention convention) signature
+
+[v1.0] 2016.06.25
+
+    * Initial the open release, based on v1.2.7.38850
+

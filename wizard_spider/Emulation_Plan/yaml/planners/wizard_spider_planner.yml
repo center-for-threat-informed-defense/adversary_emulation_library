@@ -1,0 +1,91 @@
+---
+
+id: 43f4e42d-5c93-43a7-89f4-227071014893
+name: Wizard Spider Planner
+description: |
+  Planner to be used with the Wizard Spider adversary emulation profile.
+  Requires the user to have agents already running in the following groups: kali, dorothy, toto, and wizard.
+  The "kali" agent must run on an attacker-controlled Linux machine, and the agent will run commands that
+  originate from the attacker's machine. The other agent groups will run
+  commands specific to only their corresponding host.
+module: plugins.emu.app.group_filtered_planner
+params:
+  filtered_groups_by_ability:
+    605bb8dc-f6ef-411c-ad1f-94d91bc23ee6: # 1.A.1 Upload Agent Executable to Initial Target
+      - kali
+    5ca7a1b3-ff43-4057-b41f-0d8d4ecae848: # 1.A.1 RDP connection to Initial Target
+      - kali
+    bdf16e6e-ad27-4513-9d54-64289440265f: # 1.A.1 Run Agent Executable for Initial Access
+      - kali
+    04cf7962-28c4-40fb-8915-1fd632393a6f: # 2.A.1 Emotet Persistence
+      - dorothy
+    1a925a0f-7f95-4d5c-9f95-9408f65063a6: # 3.A.1 Emotet System Info Discovery
+      - dorothy
+    69ce4dd6-ab00-4c63-bcfd-ab02da96c63a: # 3.A.2 Emotet Process Discovery
+      - dorothy
+    b80ca347-2d2a-4e33-8683-1975cda6664f: # 3.A.3 Emotet Download Outlook Scraper DLL
+      - dorothy
+    16abc48a-1f69-4246-83e3-4d0cec0e8d81: # 3.A.4 Emotet Scrape email content from Outlook
+      - dorothy
+    5a5c65c7-d0ff-4275-8f8e-ea0b617369bd: # 3.A.5 Emotet Scrape Email Addresses from Outlook
+      - dorothy
+    94942df6-6833-4e69-a6f7-89fda0ef25e1: # 3.A.5 Terminate RDP Connection to Initial Target
+      - kali
+    070bfb3d-6938-4745-b1e7-039c97fdb7ca: # 4.A.1-2 Lateral Movement Via RDP (Toto)
+      - kali
+    1b21e49a-9550-4616-b125-d790a73165a6: # 4.A.3 Download and Execute Agent for Lateral Movement (Toto)
+      - kali
+    4750c01e-98fc-43f8-8178-14bcc66c2cc9: # 5.A.1 TrickBot System Information Discovery
+      - toto
+    dc4236df-0484-4763-891a-c2f6ede5293d: # 5.A.2 TrickBot System Service Discovery (systeminfo)
+      - toto
+    53e87d17-b904-4739-92f0-4b5169d9a1d4: # 5.A.3 TrickBot Local Account Discovery
+      - toto
+    e639caf1-8987-4aad-b6f1-6a1d186e2ec9: # 5.A.4 TrickBot Domain Account Discovery
+      - toto
+    f6de05d2-5ec5-4d27-b19c-f8cf817d6213: # 5.A.5 TrickBot System Network Configuration Discovery
+      - toto
+    aa1b8eef-2c76-4184-b7a7-2b5c175e49f6: # 5.A.6 TrickBot System Network Connections Discovery
+      - toto
+    1f30fdc6-88c0-4c69-958d-6101468bd0ec: # 5.A.7 TrickBot System Information Discovery (net config)
+      - toto
+    ed40220d-9d1f-4191-b73f-54f17278e256: # 5.A.8 TrickBot Domain Trust Discovery
+      - toto
+    ced2de73-54fa-49ec-b60d-de635dcde620: # 5.A.9 TrickBot Permission Groups Discovery
+      - toto
+    3de63509-4171-488f-8938-ce346677a5a6: # 6.A.1-2 TrickBot Perform Kerberoasting
+      - toto
+    dedb77a9-16b9-498c-bd07-074891abd345: # 6.A.2 Terminate RDP Session to Second Target (Toto)
+      - kali
+    b8ad9654-80a1-4fde-b2d4-c0de7648621c: # 7.A.1 Prepare Tools for Ingress Tool Transfer (Wizard)
+      - kali
+    6b9da996-145e-40b1-935f-6818a89bb561: # 7.A.1-2 Lateral Movement Via RDP (Wizard)
+      - kali
+    7a46a8c9-f46a-481b-8b38-68a3aea68114: # 7.A.3 Download and Execute Agent for Lateral Movement (Wizard)
+      - kali
+    1536bbcf-858e-44c2-95cb-ebd46d7434be: # 7.A.4 Wizard Spider Registry Persistence
+      - wizard
+    46430565-f9e8-4580-b497-f5f561962d95: # 7.A.5 Wizard Spider Domain Group Discovery
+      - wizard
+    5746a074-1f51-4a96-8e69-f7eb81578f5e: # 8.A.1 Wizard Spider Create Volume Shadow Copy
+      - wizard
+    05202302-6b80-4549-b3bb-2ead90c249a5: # 8.A.1 Wizard Spider Exfil Volume Shadow Copy
+      - wizard
+    bb98782b-2519-4721-a723-b8f027b441d4: # 8.A.2 Wizard Spider Save Registry Hive
+      - wizard
+    d9787a1d-0fd4-4776-a073-00423a33e7e2: # 9.A.1 Wizard Spider Downloads kill.bat
+      - wizard
+    180eb3b8-1590-4b77-9b8c-7972c198f09e: # 9.A.2-3 Wizard Spider Runs kill.bat
+      - wizard
+    69b0a93e-3c71-42f5-8019-13289d9353b3: # 9.A.4 Wizard Spider Downloads window.bat
+      - wizard
+    3f878fc6-d5b0-4c95-b022-88f0becbb61e: # 9.A.5 Wizard Spider Runs window.bat
+      - wizard
+    06b694af-f503-44ca-bc3c-bd017f75ed89: # 10.A.1 Wizard Spider Downloads ryuk.exe
+      - wizard
+    cd16fcb6-e1f0-4e0f-bb83-2369516587f2: # 10.A.2-7 Wizard Spider Executes Ryuk Ransomware
+      - wizard
+    95d6c92c-e328-4997-ae01-507b709dfa7b: # 10.A.7 Terminate RDP Session to Domain Controller
+      - kali
+ignore_enforcement_modules: []
+allow_repeatable_abilities: False

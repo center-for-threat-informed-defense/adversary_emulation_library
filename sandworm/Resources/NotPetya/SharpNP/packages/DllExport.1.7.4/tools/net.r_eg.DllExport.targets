@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://github.com/3F/DllExport -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <DllExportModImported>true</DllExportModImported>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DllExportDirMetaCore Condition="$(DllExportDirMetaCore) == ''">metacor</DllExportDirMetaCore>
+    <DllExportDirMetaFX Condition="$(DllExportDirMetaFX) == ''">metalib</DllExportDirMetaFX>
+  </PropertyGroup>
+
+  <!-- TODO: metalib / metacor  -->
+  <PropertyGroup>
+    <IsNetCoreBased Condition="$(TargetFramework.StartsWith('netc')) Or $(TargetFramework.StartsWith('nets'))">true</IsNetCoreBased>
+    <DllExportMetaXBase Condition="$(IsNetCoreBased) == 'true'">$(DllExportDirMetaCore)</DllExportMetaXBase>
+    <DllExportMetaXBase Condition="$(IsNetCoreBased) != 'true'">$(DllExportDirMetaFX)</DllExportMetaXBase>
+    <DllExportLibPath Condition="'$(DllExportLibPath)' == ''">gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\</DllExportLibPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DllExportRootPkg Condition="'$(DllExportRootPkg)' == ''">$(MSBuildThisFileDirectory)..\</DllExportRootPkg>
+    <DllExportVSRoot Condition="'$(DllExportVSRoot)' == '' And '$(VsInstallRoot)' != ''">$(VsInstallRoot)\</DllExportVSRoot>
+    <DllExportVSRoot Condition="'$(DllExportVSRoot)' == ''">$(DevEnvDir)\..\..\</DllExportVSRoot>
+    <DllExportVSBin Condition="'$(DllExportVSBin)' == ''">$(DllExportVSRoot)Common7\IDE\</DllExportVSBin>
+
+    <DllExportMetaXBase Condition="'$(DllExportMetaXBase)' == ''">metalib</DllExportMetaXBase>
+    <DllExportLibPath Condition="'$(DllExportLibPath)' == ''">gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\</DllExportLibPath>
+    <DllExportToolsPath Condition="'$(DllExportToolsPath)' == ''">tools\</DllExportToolsPath>
+
+    <DllExportNamespace Condition="'$(DllExportNamespace)' == ''"></DllExportNamespace>
+    <DllExportLibFullPath Condition="'$(DllExportLibFullPath)' == ''">$(DllExportRootPkg)$(DllExportLibPath)</DllExportLibFullPath>
+    <DllExportMetaLibAttr Condition="'$(DllExportMetaLibAttr)' == ''">DllExportAttribute</DllExportMetaLibAttr>
+    <DllExportMetaLibName Condition="'$(DllExportMetaLibName)' == ''">DllExport.dll</DllExportMetaLibName>
+    <DllExportMetaLibFullPath Condition="'$(DllExportMetaLibFullPath)' == ''">$(DllExportLibFullPath)$(DllExportMetaLibName)</DllExportMetaLibFullPath>
+    <DllExportOurILAsmPath Condition="'$(DllExportOurILAsmPath)' == ''">$(DllExportRootPkg)$(DllExportToolsPath)coreclr\</DllExportOurILAsmPath>
+    <DllExportILAsmCustomPath Condition="'$(DllExportILAsmCustomPath)' == ''"></DllExportILAsmCustomPath>
+
+    <DllExportAttributeFullName Condition="'$(DllExportNamespace)' != ''">$(DllExportNamespace).$(DllExportMetaLibAttr)</DllExportAttributeFullName>
+    <DllExportAttributeFullName Condition="'$(DllExportNamespace)' == ''">$(DllExportMetaLibAttr)</DllExportAttributeFullName>
+
+    <DllExportDefPlatform>$(PlatformTarget)</DllExportDefPlatform>
+    <DllExportDefPlatform Condition="'$(DllExportDefPlatform)' == ''">AnyCPU</DllExportDefPlatform>
+  </PropertyGroup>
+
+  <Target Name="DllExportMod" BeforeTargets="PostBuildEvent" DependsOnTargets="GetFrameworkPaths">
+    <PropertyGroup>
+      <DllExportPlatform Condition="'$(DllExportPlatform)' == '' Or '$(DllExportPlatform)' == 'Auto'">$(DllExportDefPlatform)</DllExportPlatform>
+      <DllExportCpuType Condition="'$(DllExportCpuType)' == ''">$(CpuType)</DllExportCpuType>
+      <DllExportEmitDebugSymbols Condition="'$(DllExportEmitDebugSymbols)' == ''">$(DebugSymbols)</DllExportEmitDebugSymbols>
+      <DllExportLeaveIntermediateFiles Condition="'$(DllExportLeaveIntermediateFiles)' == ''">false</DllExportLeaveIntermediateFiles>
+      <DllExportTimeout Condition="'$(DllExportTimeout)' == ''">45000</DllExportTimeout>
+      <DllExportKeyContainer Condition="'$(DllExportKeyContainer)' == ''">$(KeyContainerName)$(AssemblyKeyContainerName)</DllExportKeyContainer>
+      <DllExportKeyFile Condition="'$(DllExportKeyFile)' == ''">$(KeyOriginatorFile)</DllExportKeyFile>
+      <DllExportProjectDirectory Condition="'$(DllExportProjectDirectory)' == ''">$(MSBuildProjectDirectory)</DllExportProjectDirectory>
+      <DllExportInputFileName Condition="'$(DllExportInputFileName)' == ''">$(TargetPath)</DllExportInputFileName>
+      <DllExportFrameworkPath Condition="'$(DllExportFrameworkPath)' == ''">$(DllExportILAsmCustomPath);$(TargetedFrameworkDir);$(TargetFrameworkDirectory)</DllExportFrameworkPath>
+      <DllExportLibToolPath Condition="'$(DllExportLibToolPath)' == ''">$(DllExportVSRoot)VC\bin</DllExportLibToolPath>
+      <DllExportLibToolDllPath Condition="'$(DllExportLibToolDllPath)' == ''">$(DllExportVSBin)</DllExportLibToolDllPath>
+      <DllExportTargetFrameworkVersion Condition="'$(DllExportTargetFrameworkVersion)' == ''">$(TargetFrameworkVersion)</DllExportTargetFrameworkVersion>
+      <DllExportSdkPath Condition="'$(DllExportSdkPath)' == ''">$(DllExportILAsmCustomPath);$(TargetFrameworkSDKToolsDirectory)</DllExportSdkPath>
+      <DllExportSkipOnAnyCpu Condition="'$(DllExportSkipOnAnyCpu)' == ''">$(NoDllExportsForAnyCpu)</DllExportSkipOnAnyCpu>
+      <DllExportDDNSCecil Condition="'$(DllExportDDNSCecil)' == ''">true</DllExportDDNSCecil>
+      <DllExportOurILAsm Condition="'$(DllExportOurILAsm)' == ''">false</DllExportOurILAsm>
+      <DllExportSysObjRebase Condition="'$(DllExportSysObjRebase)' == ''">false</DllExportSysObjRebase>
+      <DllExportOrdinalsBase Condition="'$(DllExportOrdinalsBase)' == ''">1</DllExportOrdinalsBase>
+      <DllExportGenExpLib Condition="'$(DllExportGenExpLib)' == ''">false</DllExportGenExpLib>
+      <DllExportOurILAsmPath Condition="'$(DllExportOurILAsm)' != 'true'"></DllExportOurILAsmPath>
+      <DllExportVsDevCmd Condition="'$(DllExportVsDevCmd)' == ''">$(DllExportVSRoot)Common7\Tools\VsDevCmd.bat</DllExportVsDevCmd>
+      <DllExportVcVarsAll Condition="'$(DllExportVcVarsAll)' == ''">$(DllExportVSRoot)VC\vcvarsall.bat;$(DllExportVSRoot)VC\Auxiliary\Build\vcvarsall.bat</DllExportVcVarsAll>
+      <DllExportPeCheck Condition="'$(DllExportPeCheck)' == ''"></DllExportPeCheck>
+      <DllExportPatches Condition="'$(DllExportPatches)' == ''"></DllExportPatches>
+    </PropertyGroup>
+
+    <DllExportAppDomainIsolatedTask
+          Platform="$(DllExportPlatform)"
+          CpuType="$(DllExportCpuType)"
+          DllExportAttributeFullName="$(DllExportAttributeFullName)"
+          EmitDebugSymbols="$(DllExportEmitDebugSymbols)"
+          LeaveIntermediateFiles="$(DllExportLeaveIntermediateFiles)"
+          Timeout="$(DllExportTimeout)"
+          KeyContainer="$(DllExportKeyContainer)"
+          KeyFile="$(DllExportKeyFile)"
+          ProjectDirectory="$(DllExportProjectDirectory)"
+          ProcEnv="$(DllExportProcEnv)"
+          InputFileName="$(DllExportInputFileName)"
+          FrameworkPath="$(DllExportFrameworkPath)"
+          VsDevCmd="$(DllExportVsDevCmd)"
+          VcVarsAll="$(DllExportVcVarsAll)"
+          LibToolPath="$(DllExportLibToolPath)"
+          LibToolDllPath="$(DllExportLibToolDllPath)"
+          TargetFrameworkVersion="$(DllExportTargetFrameworkVersion)"
+          SdkPath="$(DllExportSdkPath)"
+          SkipOnAnyCpu="$(DllExportSkipOnAnyCpu)"
+          OrdinalsBase="$(DllExportOrdinalsBase)"
+          GenExpLib="$(DllExportGenExpLib)"
+          OurILAsmPath="$(DllExportOurILAsmPath)"
+          MetaLib="$(DllExportMetaLibFullPath)"
+          PeCheckRaw="$(DllExportPeCheck)"
+          PatchesRaw="$(DllExportPatches)"
+          SysObjRebase="$(DllExportSysObjRebase)"
+         />
+
+    <PropertyGroup>
+      <DllExportModExecuted>true</DllExportModExecuted>
+    </PropertyGroup>
+  </Target>
+  <UsingTask TaskName="RGiesecke.DllExport.MSBuild.DllExportAppDomainIsolatedTask" AssemblyFile="RGiesecke.DllExport.MSBuild.dll" />
+
+  <!-- To support multi-targeting in SDK-Based projects: netstandard2.0;net40;... -->
+  <Target Name="DllExportMetaXBaseTarget" BeforeTargets="GenerateTargetFrameworkMonikerAttribute" Inputs="$(TargetFramework)" Outputs="$(DllExportMetaXBase)">
+    <PropertyGroup>
+      <IsNetCoreBased Condition="$(TargetFramework.StartsWith('netc')) Or $(TargetFramework.StartsWith('nets'))">true</IsNetCoreBased>
+      <DllExportMetaXBase Condition="$(IsNetCoreBased) == 'true'">$(DllExportDirMetaCore)</DllExportMetaXBase>
+      <DllExportMetaXBase Condition="$(IsNetCoreBased) != 'true'">$(DllExportDirMetaFX)</DllExportMetaXBase>
+      <DllExportLibPath Condition="'$(DllExportLibPath)' == ''">gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\</DllExportLibPath>
+    </PropertyGroup>
+  </Target>
+
+</Project>

