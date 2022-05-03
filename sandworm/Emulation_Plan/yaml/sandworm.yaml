@@ -823,7 +823,7 @@
 - id: 690e889f-5844-473e-98c5-c90c9f1772dc
   name: Prepare Tools for Ingress Tool Transfer (Arrakis)
   description: |
-    TODO
+    
   tactic: command-and-control
   technique:
     attack_id: T1105
@@ -849,7 +849,6 @@
 - id: 2f107b88-065f-4d91-9d46-212212b235d5
   name: Lateral Movement Via RDP (Arrakis)
   description: |
-    TODO
     This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
     since the RDP connection must originate from the attacker's machine.
   tactic: lateral-movement

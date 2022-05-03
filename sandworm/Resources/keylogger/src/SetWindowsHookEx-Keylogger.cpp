@@ -165,7 +165,7 @@ std::string HookCode(DWORD code, BOOL caps, BOOL shift)
         case VK_OEM_4:      key = shift ? "{" : "["; break;
         case VK_OEM_5:      key = shift ? "\\" : "|"; break;
         case VK_OEM_6:      key = shift ? "}" : "]"; break;
-        case VK_OEM_7:      key = shift ? "'" : "'"; break; //TODO: Escape this char: "
+        case VK_OEM_7:      key = shift ? "'" : "'"; break; 
         // Action Keys
         case VK_PLAY:       key = "[PLAY]"; break;
         case VK_ZOOM:       key = "[ZOOM]"; break;

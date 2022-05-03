@@ -221,7 +221,6 @@
         <member name="P:net.r_eg.Conari.Core.Config.TransactionStrategy">
             <summary>
             To use `commit` methods for end calling.
-            TODO:
             </summary>
         </member>
         <member name="P:net.r_eg.Conari.Core.Config.LazyLoading">
@@ -1217,8 +1216,7 @@
         </member>
         <member name="T:net.r_eg.Conari.Extension.MemberBinderExtension">
             <summary>
-            welcometothehell
-            TODO: FIXME
+            
             </summary>
         </member>
         <member name="M:net.r_eg.Conari.Extension.ObjectExtension.Invoke(System.Object,System.String,System.Object[])">

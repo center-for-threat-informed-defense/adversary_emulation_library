@@ -64,8 +64,6 @@ ssh fherbert@10.0.1.5 "chmod 755 /tmp/setup_caladan.sh && sudo /tmp/setup_calada
 ssh fherbert@10.0.1.5 "sudo reboot"
 ```
 
-ToDo - add check script to make sure each host is properly configured
-
 ## Configure Gammu - 10.0.1.7
 
 1. RDP into Gammu:

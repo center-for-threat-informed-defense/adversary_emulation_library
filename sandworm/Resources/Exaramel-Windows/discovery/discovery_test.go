@@ -20,7 +20,6 @@ func TestGetCurrentserName(t *testing.T) {
 }
 
 func TestGetOSInfo(t *testing.T) {
-	// ToDo - update this test logic to be more flexible.
 	want := "OS Info: Windows 10 Pro 10 0 19042"
 	got, err := discovery.GetOSInfo()
 	if err != nil {

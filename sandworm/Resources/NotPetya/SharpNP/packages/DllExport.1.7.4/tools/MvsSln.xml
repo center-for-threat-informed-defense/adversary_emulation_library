@@ -186,7 +186,6 @@
         </member>
         <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_WEB">
             <summary>
-            
             </summary>
         </member>
         <member name="F:net.r_eg.MvsSln.Core.Guids.PROJECT_DEPLOY">
@@ -1555,7 +1554,6 @@
         </member>
         <member name="T:net.r_eg.MvsSln.Core.SlnHandlers.CoHandlers">
             <summary>
-            TODO: review
             </summary>
         </member>
         <member name="M:net.r_eg.MvsSln.Core.SlnHandlers.CoHandlers.#ctor(System.Collections.Generic.IEnumerable{net.r_eg.MvsSln.Core.SlnHandlers.ISlnHandler})">
@@ -2144,7 +2142,7 @@
         </member>
         <member name="M:net.r_eg.MvsSln.Core.SlnParser.Aliases(net.r_eg.MvsSln.Core.SlnResult)">
             <summary>
-            TODO: another way to manage aliases for data.
+            Another way to manage aliases for data.
             </summary>
             <param name="data"></param>
         </member>
@@ -2493,7 +2491,6 @@
         <member name="M:net.r_eg.MvsSln.Core.XProject.Save">
             <summary>
             Saves the project to the file system, if modified.
-            //TODO: ~"... has been modified outside the environment."
             </summary>
         </member>
         <member name="M:net.r_eg.MvsSln.Core.XProject.Save(System.String,System.Text.Encoding)">
