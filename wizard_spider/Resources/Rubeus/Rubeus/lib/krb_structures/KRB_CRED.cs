@@ -81,7 +81,6 @@ namespace Rubeus
 
 
             // tickets         [2] SEQUENCE OF Ticket
-            //  TODO: encode/handle multiple tickets!
             AsnElt ticketAsn = tickets[0].Encode();
             AsnElt ticketSeq = AsnElt.Make(AsnElt.SEQUENCE, new AsnElt[] { ticketAsn });
             AsnElt ticketSeq2 = AsnElt.Make(AsnElt.SEQUENCE, new AsnElt[] { ticketSeq });

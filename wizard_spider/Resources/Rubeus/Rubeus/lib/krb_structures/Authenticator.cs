@@ -79,7 +79,6 @@ namespace Rubeus
             }
 
 
-            // TODO: correct format (UInt32)?
             // cusec                   [4] Microseconds
             AsnElt nonceAsn = AsnElt.MakeInteger(cusec);
             AsnElt nonceSeq = AsnElt.Make(AsnElt.SEQUENCE, new[] { nonceAsn });

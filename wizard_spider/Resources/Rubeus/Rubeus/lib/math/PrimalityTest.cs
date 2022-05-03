@@ -206,8 +206,5 @@ namespace Mono.Math.Prime {
 
 		#endregion
 
-		// TODO: Implement the Lucus test
-		// TODO: Implement other new primality tests
-		// TODO: Implement primality proving
 	}
 }

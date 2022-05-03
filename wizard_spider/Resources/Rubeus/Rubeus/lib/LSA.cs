@@ -172,7 +172,7 @@ namespace Rubeus
                 unmanagedAddr, newStructSize, out responsePointer,
                 out returnBufferLength, out protocalStatus);
             
-            // TODO: is this needed?
+            
             //if (retCode != 0)
             //{
             //    throw new NtException(retCode);
@@ -1322,20 +1322,6 @@ namespace Rubeus
             var kirbiBytes = kirbi.Encode().Encode();
 
             LSA.DisplayTicket(kirbi, 2, false, true);
-
-            // TODO: check this code!
-
-            //var kirbiString = Convert.ToBase64String(kirbiBytes);
-
-            //Console.WriteLine("[*] base64(ticket.kirbi):\r\n", kirbiString);
-
-            //// display the .kirbi base64, columns of 80 chararacters
-            //foreach (var line in Helpers.Split(kirbiString, 80))
-            //{
-            //    Console.WriteLine("      {0}", line);
-            //}
-
-            //DisplayTicket(kirbi, false);
 
             if (ptt || ((ulong)luid != 0))
             {

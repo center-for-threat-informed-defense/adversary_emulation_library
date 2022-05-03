@@ -45,10 +45,10 @@ namespace Rubeus
             //cname_in_pa_data = 0x00040000,
             enc_pa_rep = 0x00010000,
             reserved1 = 0x00000001
-            // TODO: constrained delegation?
+            
         }
 
-        // TODO: order flipped? https://github.com/gentilkiwi/kekeo/blob/master/modules/asn1/KerberosV5Spec2.asn#L167-L190
+        // https://github.com/gentilkiwi/kekeo/blob/master/modules/asn1/KerberosV5Spec2.asn#L167-L190
         // Correcting some of these from here, which packet captures suggest is correct: https://github.com/dotnet/Kerberos.NET/blob/develop/Kerberos.NET/Entities/Krb/KdcOptions.cs
         [Flags]
         public enum KdcOptions : uint

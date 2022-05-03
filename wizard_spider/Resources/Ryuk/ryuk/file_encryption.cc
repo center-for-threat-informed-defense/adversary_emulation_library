@@ -457,7 +457,6 @@ namespace ryuk {
     INT EncryptionProcedure(const TCHAR* tFileLocation)
     {
 
-        // TODO: Implement the encryption logic in this section.
         // The source code was defanged to reduce abuse of this sample.
 
         return 0;

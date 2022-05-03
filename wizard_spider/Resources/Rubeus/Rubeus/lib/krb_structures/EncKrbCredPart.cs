@@ -17,7 +17,6 @@ namespace Rubeus
     {
         public EncKrbCredPart()
         {
-            // TODO: defaults for creation
             ticket_info = new List<KrbCredInfo>();
         }
 
@@ -37,7 +36,6 @@ namespace Rubeus
         {
             // ticket-info     [0] SEQUENCE OF KrbCredInfo
             //  assume just one ticket-info for now
-            //  TODO: handle multiple ticket-infos
             AsnElt infoAsn = ticket_info[0].Encode();
             AsnElt seq1 = AsnElt.Make(AsnElt.SEQUENCE, new[] { infoAsn });
             AsnElt seq2 = AsnElt.Make(AsnElt.SEQUENCE, new[] { seq1 });

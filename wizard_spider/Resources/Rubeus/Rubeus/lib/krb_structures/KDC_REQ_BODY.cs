@@ -124,7 +124,6 @@ namespace Rubeus
 
         public AsnElt Encode()
         {
-            // TODO: error-checking!
 
             List<AsnElt> allNodes = new List<AsnElt>();
 

@@ -17,7 +17,7 @@ namespace Rubeus {
                     DHRepInfo = new KrbDHRepInfo(asnElt.Sub[0]);
                     break;
 
-                case 1: //encKeyPack: TODO
+                case 1: //encKeyPack: 
                     break;
 
                 default:

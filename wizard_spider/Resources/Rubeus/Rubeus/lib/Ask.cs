@@ -446,7 +446,6 @@ namespace Rubeus {
             }
 
             // decrypt the enc_part containing the session key/etc.
-            // TODO: error checking on the decryption "failing"...
             byte[] outBytes;
 
             if (etype == Interop.KERB_ETYPE.des_cbc_md5)

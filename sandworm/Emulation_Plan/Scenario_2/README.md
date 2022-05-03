@@ -427,8 +427,6 @@ xfreerdp +clipboard /u:WORKGROUP\\fherbert /p:"Whg42WbhhCE17FEzrqeJ" /v:10.0.1.7
 
 :warning: Keep the gammu-RDP window open.
 
-`ToDo - this RDP connection should come from a different host rather than the attack platform`
-
 On login, the fherbert registry persistence will execute the exaramel-windows-dropper (wsmprovav.exe).
 
 The dropper will download Exaramel-Windows over HTTP. The dropper then executes the Exaramel-Windows (wsmprovav.dll) using rundll32.exe.

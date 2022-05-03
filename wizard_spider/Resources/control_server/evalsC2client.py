@@ -4,8 +4,6 @@ import argparse
 import pprint
 import requests
 
-# ToDo - need to add unit tests for this script
-
 def get_server_version():
     url = "http://localhost:9999/api/v1.0/version"
     r = requests.get(url)

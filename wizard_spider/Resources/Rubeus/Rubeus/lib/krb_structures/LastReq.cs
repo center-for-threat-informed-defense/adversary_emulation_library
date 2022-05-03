@@ -32,7 +32,6 @@ namespace Rubeus
 
         public AsnElt Encode()
         {
-            // TODO: implement
             return null;
         }
 

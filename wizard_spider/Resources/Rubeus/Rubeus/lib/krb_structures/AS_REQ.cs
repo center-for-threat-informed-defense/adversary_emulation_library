@@ -110,7 +110,6 @@ namespace Rubeus
             return req; 
         }
 
-        //TODO: Insert DHKeyPair parameter also.
         public static AS_REQ NewASReq(string userName, string domain, X509Certificate2 cert, KDCKeyAgreement agreement, Interop.KERB_ETYPE etype, bool verifyCerts = false) {
 
             // build a new AS-REQ for the given userName, domain, and etype, w/ PA-ENC-TIMESTAMP
