@@ -22,16 +22,16 @@ Associated Names: ELECTRUM, Telebots, IRON VIKING, BlackEnergy (Group), Quedagh,
 [10]:https://www.mandiant.com/resources/ukraine-and-sandworm-team
 
 ## Emulation Overview
-![Operations Flow Diagram](/Resources/images/SoftwareFlow.jpeg)
+![Operations Flow Diagram](./Resources/images/SoftwareFlow.jpeg)
 
 # Quick Links
 ### For Engineers 🧑‍💻
 
 ### Resources
 
-The [Resources Folder](/Resources/) contains the emulated software source code. Executables are provided in password protected zip files located in the specified software folder.  The password is `malware`.
+The [Resources Folder](./Resources/) contains the emulated software source code. Executables are provided in password protected zip files located in the specified software folder.  The password is `malware`.
 
-We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](./Resources/utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 $ cd sandworm
@@ -40,27 +40,27 @@ $ python3 Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
 ```
 ### YARA Rules
 
-[YARA rules](/yara-rules) are provided to assist the community in researching, preventing, and detecting malware specimens used in this emulation plan.
+[YARA rules](./yara-rules) are provided to assist the community in researching, preventing, and detecting malware specimens used in this emulation plan.
 
 ### Emulation Key Software 💻
 
-- [P.A.S. webshell](/Resources/phpWebShell/)
+- [P.A.S. webshell](./Resources/phpWebShell/)
 
-- [Exaramel](/Resources/Exaramel)
+- [Exaramel](./Resources/Exaramel)
 
-- [NotPetya](/Resources/NotPetya/)
+- [NotPetya](./Resources/NotPetya/)
 
-- [OraDump/LaZagne Varient](/Resources/browser-creds/)
+- [OraDump/LaZagne Varient](./Resources/browser-creds/)
 
-- [Win64/Spy.KeyLogger.G](/Resources/keylogger/)
+- [Win64/Spy.KeyLogger.G](./Resources/keylogger/)
 
 ### Scenario Walkthrough
-- [Detection Scenario](/Emulation_Plan/Scenario_1/) - Step by Step walkthrough of Scenario's procedures (9 steps). 
-- [Protection Scenario](/Emulation_Plan/Scenario_2/) - Step by Step walkthrough of Scenario's procedures (3 tests)
+- [Detection Scenario](./Emulation_Plan/Scenario_1/) - Step by Step walkthrough of Scenario's procedures (9 steps). 
+- [Protection Scenario](./Emulation_Plan/Scenario_2/) - Step by Step walkthrough of Scenario's procedures (3 tests)
 
 ## For Analysts 🔎
-- [Operation Flow](/Operations_Flow/Operations_Flow.md/) - High-level summary of the scenario & infrastructure with diagrams. 
-- [Intelligence Summary](/Intelligence_Summary/Intelligence_Summary.md) - General overview of the Adversary with links to reporting used throughout the scenario. 
+- [Operation Flow](./Operations_Flow/Operations_Flow.md/) - High-level summary of the scenario & infrastructure with diagrams. 
+- [Intelligence Summary](./Intelligence_Summary/Intelligence_Summary.md) - General overview of the Adversary with links to reporting used throughout the scenario. 
 
 ## Acknowledgements
 
