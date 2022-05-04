@@ -1,0 +1,1 @@
+g++ main.cpp -o Exaramel-Windows-Dropper.exe

@@ -1,0 +1,64 @@
+coreclr \ ILAsm - https://github.com/3F/coreclr
+- - - - - - - - -
+
+[v4.700.2]
+
+    * NEW: Implemented new `/REBASE` key feature for IL Assembler. Issue #7.
+           It will try to rebase system object: `netstandard` } `System.Runtime` } `mscorlib`
+           
+           Full explanation in related issue: 
+           https://github.com/3F/DllExport/issues/125#issuecomment-561245575
+    
+    * CHANGED: Removed any use of the cvtres via CLR system directory.
+    
+    * CHANGED: Updated coreclr 3.1.0 RTM
+
+
+[v4.700.1]
+
+    * FIXED: ILDAsm. Fixed dasm.rc to correctly display list of available commands in console.
+
+    * FIXED: ILAsm /CVRES key & trailing spaces from double quotes. Issue #5.
+    
+    * CHANGED: Updated coreclr 3.0.0
+
+    * CHANGED: ILDAsm. Added /NOBAR key (disassembly progress) to eliminate the difference between other versions.
+               Helpful for projects like .NET DllExport that can use various versions.
+
+    * CHANGED: Added the following tools to nupkg packages for related build processes.
+
+               https://nuget.org/packages/ILAsm
+               * tools\gnt.bat - https://github.com/3F/GetNuTool
+               * tools\hMSBuild.bat - https://github.com/3F/hMSBuild
+
+    * CHANGED: Updated original fixes for ILAsm & ILDAsm that points to coreclr 3 release.
+    
+    * NOTE: Don't forget to provide compatible converter of resources to obj COFF-format when using ILAsm.
+            Use /CVRES (/CVR) key. Related issue: https://github.com/3F/coreclr/issues/2
+
+    * NOTE: MSBuild Properties for nupkg packages:
+            ```
+            * $(ILAsm_RootPkg) - path to root folder of this package after install.
+            * $(ILAsm_PathToBin) - path to `\bin` folder., eg.: $(ILAsm_PathToBin)Win.x64\ilasm.exe
+            ```
+
+    * NOTE: PDB files (240 MB+) are available through GitHub Releases:
+            https://github.com/3F/coreclr/releases
+
+
+[v4.5.1]
+
+    * FIXED: Fixed using of cvtres (.res -> obj COFF-format) in mscorpe.
+             Possible crash: https://github.com/3F/coreclr/issues/2
+             Related Issue: https://github.com/3F/DllExport/issues/17
+           
+    * NEW: Implemented additional searching of the converters of resources:
+           Environment PATH, local directory, and other additional from user path.
+           Now it also can be wrapped like ` mytool.cmd -> cvtres.exe %* ` etc.
+           
+    * NEW: Added new /CVRES (/CVR) key to ilasm.exe
+           `/CVRES=<path_to_file>   Set path to cvtres tool: /CVR=cvtres.exe /CVR=tool\cvtres.cmd /CVR=D:\tool\`
+           
+    * NOTE: based on 4.5.22220.0  / coreclr 1.0.4
+                     
+

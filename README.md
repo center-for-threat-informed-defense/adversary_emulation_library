@@ -13,6 +13,8 @@ Available adversary emulation plans are listed below:
 | [menuPass](/menuPass/) | [menuPass is thought to be threat group motivated by collection objectives, with targeting that is consistent with Chinese strategic objectives...](/menuPass/Intelligence_Summary.md) |
 | [Carbanak Group](/carbanak/) | [Carbanak is a threat group who has been found to manipulate financial assets, such as by transferring funds from bank accounts or by taking over ATM infrastructures...](/carbanak/Intelligence_Summary.md) |
 | [FIN7](/fin7/) | [FIN7 is a financially-motivated threat group that has been associated with malicious operations dating back to late 2015. The group is characterized by their persistent targeting and large-scale theft of payment card data from victim systems...](/fin7/Intelligence_Summary.md) |
+| [Sandworm](/sandworm/) | [Sandworm Team is a destructive threat group attributed to Russia's General Staff of the Armed Forces, Main Intelligence Directorate (GRU) that has been reportedly active since 2009. Sandworm is known for conducting large scale, well funded, destructive, and aggressive campaigns such as Olympic Destroyer, CrashOverride/Industroyer, and NotPetya...](/sandworm/Intelligence_Summary/Intelligence_Summary.md) |
+| [Wizard Spider](/wizard_spider/) | [Wizard Spider is a Russia-based e-crime group originally known for the Trickbot banking malware. In August 2018, Wizard Spider added capabilities to their Trickbot software enabling the deployment of the Ryuk ransomware. This resulted in "big game hunting" campaigns, focused on targeting large organizations for high-ransom return rates.](/wizard_spider/Intelligence_Summary/Intelligence_Summary.md).. |
 
 ## Philosophy
 

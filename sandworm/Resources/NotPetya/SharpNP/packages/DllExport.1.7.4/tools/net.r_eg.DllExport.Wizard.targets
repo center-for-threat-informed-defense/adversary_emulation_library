@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://github.com/3F/DllExport -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <PropertyGroup>
+    <DllExportWizardImported>true</DllExportWizardImported>
+  </PropertyGroup>
+  
+  <Target Name="DllExportWizard">
+    
+    <PropertyGroup>
+      <wMetaLib Condition="'$(wMetaLib)' == ''">tools\raw\lib\net20\DllExport.dll</wMetaLib>
+      <wMetaCor Condition="'$(wMetaCor)' == ''">tools\raw\lib\netstd\DllExport.dll</wMetaCor>
+      <wDxpTarget Condition="'$(wDxpTarget)' == ''">tools\net.r_eg.DllExport.targets</wDxpTarget>
+      <wAction Condition="'$(wAction)' == ''">Restore</wAction> <!-- Action by default. enum `ActionType`. -->
+    </PropertyGroup>
+    
+    <PropertyGroup Label="Optional">
+      <wSlnDir Condition="'$(wSlnDir)' == ''"></wSlnDir> <!-- Path to solution directory -->
+      <wPkgPath Condition="'$(wPkgPath)' == ''"></wPkgPath> <!-- Path to root package directory -->
+      
+      <!-- SlnFile: Optional predefined .sln file to process via the restore operations etc. -->
+      <wSlnFile Condition="'$(wSlnFile)' == ''"></wSlnFile> <!-- will be used the first found .sln file if it's empty -->
+      <wRootPath Condition="'$(wRootPath)' == ''"></wRootPath> <!-- Optional root path of user paths. Affects on wSlnFile, wSlnDir, wPkgPath -->
+      <wStoragePath Condition="'$(wStoragePath)' == ''"></wStoragePath> <!-- Optional path to external storage if used. -->
+      <wStorage Condition="'$(wStorage)' == ''">Default</wStorage> <!-- Where to store configuration data. enum `CfgStorageType`. -->
+      <wMgrArgs Condition="'$(wMgrArgs)' == ''"></wMgrArgs>
+      <wPkgVer Condition="'$(wPkgVer)' == ''"></wPkgVer> <!-- Version of the package that invokes target -->
+      <wProxy Condition="'$(wProxy)' == ''"></wProxy>
+      <wDxpOpt Condition="'$(wDxpOpt)' == ''">0</wDxpOpt>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Debug">
+      <!-- MsgGuiLevel: 
+            Will show messages via GUI dlg for selected level (any positive number) and above.
+            Levels: 0 - 5 (see Message.Level)
+            '4' = means 4 (Error) + 5 (Fatal) levels.
+            Any negative number disables this.
+            It affects only for messages to GUI.
+      -->
+      <MsgGuiLevel Condition="'$(MsgGuiLevel)' == ''">-1</MsgGuiLevel>
+    </PropertyGroup>
+
+    <DllExportCfgTask 
+        RootPath="$(wRootPath)" 
+        SlnDir="$(wSlnDir)" 
+        SlnFile="$(wSlnFile)" 
+        PkgPath="$(wPkgPath)" 
+        MetaLib="$(wMetaLib)"
+        MetaCor="$(wMetaCor)" 
+        MgrArgs="$(wMgrArgs)" 
+        DxpTarget="$(wDxpTarget)" 
+        StoragePath="$(wStoragePath)" 
+        Storage="$(wStorage)" 
+        Action="$(wAction)" 
+        PkgVer="$(wPkgVer)" 
+        Proxy="$(wProxy)" 
+        DxpOpt="$(wDxpOpt)" 
+        MsgGuiLevel="$(MsgGuiLevel)" 
+    />
+
+    <PropertyGroup>
+      <DllExportWizardExecuted>true</DllExportWizardExecuted>
+    </PropertyGroup>
+  </Target>
+  <UsingTask TaskName="net.r_eg.DllExport.Wizard.DllExportCfgTask" AssemblyFile="net.r_eg.DllExport.Wizard.dll" />
+  
+  <Target Name="Build" DependsOnTargets="DllExportWizard" />
+</Project>

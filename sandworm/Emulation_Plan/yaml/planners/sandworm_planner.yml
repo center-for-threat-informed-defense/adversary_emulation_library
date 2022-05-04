@@ -1,0 +1,96 @@
+---
+
+id: 6f46e3a4-f20e-49ed-8088-32a3094aad77
+name: Sandworm Planner
+description: |
+  Planner to be used with the Sandworm adversary emulation profile.
+  Requires the user to have agents already running in the following groups: kali and arrakis.
+  An agent will spawn in each of the "caladan" and "gammu" groups during the course of the operation.
+  The "kali" agent must run on an attacker-controlled Linux machine, and the agent will run commands that
+  originate from the attacker's machine. The other agent groups will run
+  commands specific to only their corresponding host.
+module: plugins.emu.app.group_filtered_planner
+params:
+  filtered_groups_by_ability:
+    60c4ddd6-2ce0-4f5c-8ddb-c5eccd744686: # 11.A.1-3 Transfer Webshell
+      - kali
+    6249ff61-75ec-4ead-8ca2-e8d9fbbc225a: # 11.A.4 Deploy Webshell
+      - kali
+    06dd8117-caaf-4535-a70f-cc31268fd9b8: # 12.A.1-2 Webshell whoami
+      - kali
+    75efc0b8-eafa-4300-8e7b-5e56179944e8: # 12.A.3 Webshell - Uname
+      - kali
+    65dd006d-a76e-423d-83f2-6c29b66690e1: # 12.A.4 Webshell - ls
+      - kali
+    c7e4a043-e67a-4199-8e52-d7d5219a7614: # 12.A.5 Webshell - cat /etc/passwd
+      - kali
+    a85bd5a0-c977-4fd1-b339-97fffed54f8c: # 13.A.1 Download Agent Executable to Caladan
+      - kali
+    decf0a4d-6ff1-474f-af0c-5b652401a5e4: # 13.A.2 Sandworm Set Up SUID for Agent Execution
+      - kali
+    8ba8405b-d8b9-4c9d-ae8e-3b21ae8f64c6: # 13.A.2-5 Sandworm Execute Agent via SUID Binary
+      - kali
+    c3f875d8-ab9b-46ef-acf6-7926f7b93d78: # 13.A.2-5 Sandworm Wait for Elevated Beacon
+      - kali
+    f6d72009-d093-461a-986c-e1ab9b04db51: # 14.A.1 Establish Crontab Persistence
+      - caladan
+    82d61362-0f60-45d9-a3e1-26ec20cb3387: # 14.A.2 Establish Systemd Persistence
+      - caladan
+    8e965415-40be-40f8-8786-da4f67748fef: # 14.A.3 Reads /etc/shadow
+      - caladan
+    40934e60-6b0d-4d3b-a8f5-ad111c6a0abc: # 14.A.4 Get Bash History
+      - caladan
+    dc3152ac-1014-4f96-98c9-a64d5a61712e: # 14.A.4 Get SSH Keys
+      - caladan
+    ee1e23ad-87d4-4d69-932f-2e5631508c8e: # 15.A.1-3 Upload Agent to Windows Host
+      - kali
+    57771abd-0789-4dda-bb02-31359e6860db: # 15.A.4-7 Service Creation/Execution and Registry Persistence
+      - kali
+    c4c08a1f-15d6-4dfd-9ba7-9b61594762ff: # 15.A.7-10 RDP to Execute Agent Implant
+      - kali
+    236fd943-2bd8-400a-9a63-33f724629ca4: # 15.A.7-10 Wait For Lat Move Target Beacon
+      - kali
+    e870a202-354f-4214-82e6-c5f88cb33b65: # 16.A.1 Windows Discovery - Current User
+      - gammu
+    90cbd004-d5e9-4b05-9abe-12b93f77ede3: # 16.A.2 Windows Discovery - Windows Version Info
+      - gammu
+    fa3ea4c1-c980-41b1-be78-c8c932d68e98: # 16.A.3 Windows Discovery - List Entire File System
+      - gammu
+    73decaa1-5ba3-4739-812d-633929a158fd: # 16.A.4-5 Windows Discovery - List RDP Connections
+      - gammu
+    9a438a2a-c95b-4fd2-a29f-8b1250fc3adc: # 17.A.1 Download Web Credential Dumper
+      - gammu
+    1da1b17e-66fd-4f39-bf10-203570a62624: # 17.A.2 Execute Web Credential Dumper
+      - gammu
+    ccbb3c07-dc04-46f5-83d3-54fe71deab3c: # 17.A.3 Download Keylogger
+      - gammu
+    1d317399-d786-4c58-889f-01cf496ba5d2: # 17.A.4 Log Keystrokes
+      - gammu
+    e895decc-93fa-42bb-8609-3a62d14fcb60: # 17.A.4 Wait 30 seconds for keystroke logging
+      - kali
+    5c034afc-1f10-4e92-8d77-afed302d7de5: # 17.A.4 Verify Keystroke File
+      - gammu
+    854c63de-cc94-4581-81b0-4c2292123898: # 17.A.6 Upload Keystroke File
+      - gammu
+    65639630-733c-4179-8543-2c64cb577ca0: # 17.A.6 Stop Keystroke Logger
+      - gammu
+    6222bcab-b7ec-4523-a236-273d48270649: # 17.A.7 Remote System Discovery (dsquery)
+      - gammu
+    d91962e6-cb75-4f29-b2ce-36db15415e40: # 17.A.8 Cleanup Artifacts
+      - gammu
+    2093de68-db55-4c75-82d1-3abd5fc58028: # 17.A.8 Terminate RDP session (gammu)
+      - kali
+    690e889f-5844-473e-98c5-c90c9f1772dc: # 18.A.1 Prepare Tools for Ingress Tool Transfer (Arrakis)
+      - kali
+    2f107b88-065f-4d91-9d46-212212b235d5: # 18.A.1-2 Lateral Movement Via RDP (Arrakis)
+      - kali
+    58cf78ef-e777-4de8-aeaa-8cc8349be6f7: # 18.A.3 Download and Execute Agent for Lateral Movement (Arrakis
+      - kali
+    ba30987a-efc8-46a6-b0ec-94f4cc53dbff: # 18.A.3-4 Download NotPetya
+      - arrakis
+    9a39f75e-215d-4ef5-b505-ce81be74d58f: # 19.A Execute NotPetya (perfc.dat)
+      - arrakis
+    a86485c0-772d-4159-aa6f-5c2a9bb13ac8: # 19.A Terminate RDP session (Arrakis)
+      - kali
+ignore_enforcement_modules: []
+allow_repeatable_abilities: False

