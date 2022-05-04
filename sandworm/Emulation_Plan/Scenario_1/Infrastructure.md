@@ -7,9 +7,9 @@ We hope to capture the general structure of what is reported to have been seen b
 The requirements described herein should be considered a bare minimum to execute the scenario. If you have the time and resources to remain true-to-form, you may elect to stand up multiple of each of these servers, non-contiguous IP space, etc. If you are not concerned with emulating the [Sandworm Team](https://attack.mitre.org/groups/G0034/) to this degree, this level of effort is not necessary. You could for instance, phish, serve payload, and exfil from/to the same server.
 
 ## Resources
-Please note that binary executable files hosted in [Resources](/Resources/) have been added to password protected zip files. The password for these files is "malware."
+Please note that binary executable files hosted in [Resources](../../Resources/) have been added to password protected zip files. The password for these files is "malware."
 
-We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](../../Resources/utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 cd sandworm/
@@ -38,7 +38,7 @@ This methodology assumes the following static IP address configurations:
 
 - This evaluation utilizes a combination of modified open-source and custom utilities that are representative of NotPetya ransomeware.
 - These utilities include credential dumpers, variants of process injection techniques, and file encryption.
-- Some pre-compiled payloads are available in the [resources](/Resources) directory; however, they are configured to connect back to static IP address 192.168.0.4.
+- Some pre-compiled payloads are available in the [resources](../../Resources) directory; however, they are configured to connect back to static IP address 192.168.0.4.
 
 ### Linux Attack Platform Setup
 
@@ -160,20 +160,19 @@ Restart-Computer -Force
 
   
 
--  [Intelligence Summary](/Intelligence_Summary/Intelligence_Summary.md)
--  [Operations Flow](/Operations_Flow/Operations_Flow.md)
--  [Emulation Plan](/Emulation_Plan)
--  [Scenario 1 - Infrastructure](/Emulation_Plan/Scenario_1/Infrastructure.md)
--  [Scenario 1 - Detections](/Emulation_Plan/Scenario_1)
--  [Scenario 2 - Infrastructure](/Emulation_Plan/Scenario_2/Infrastructure.md)
--  [Scenario 2 - Protections](/Emulation_Plan/Scenario_2)
+-  [Intelligence Summary](../../Intelligence_Summary/Intelligence_Summary.md)
+-  [Operations Flow](../../Operations_Flow/Operations_Flow.md)
+-  [Emulation Plan](../../Emulation_Plan)
+-  [Scenario 1 - Infrastructure](../../Emulation_Plan/Scenario_1/Infrastructure.md)
+-  [Scenario 1 - Detections](../../Emulation_Plan/Scenario_1)
+-  [Scenario 2 - Infrastructure](../../Emulation_Plan/Scenario_2/Infrastructure.md)
+-  [Scenario 2 - Protections](../../Emulation_Plan/Scenario_2)
 -  [Issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
--  [Change Log](/CHANGE_LOG.md)
 
   
 
 ## Network Diagram
 
-A network diagram is [available here](/Resources/images/InfrastructureDiagram.png) that displays the domains and infrastructure that was used to support the setup and execution of the [Emulation plan](/Emulation_plan/Scenario_1).
+A network diagram is [available here](../../Resources/images/InfrastructureDiagram.png) that displays the domains and infrastructure that was used to support the setup and execution of the [Emulation plan](../../Emulation_plan/Scenario_1).
 
-![Infrastructure Image](/Resources/images/InfrastructureDiagram.png)
+![Infrastructure Image](../../Resources/images/InfrastructureDiagram.png)
