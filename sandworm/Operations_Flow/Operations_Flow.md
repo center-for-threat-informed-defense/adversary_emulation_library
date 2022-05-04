@@ -1,6 +1,6 @@
 Based on open-source intelligence, the ATT&CK ® Evaluations team created the below scenario leveraging techniques seen from Sandworm in the wild. We have adapted the scenario based on tools and resources available at the time. Below is a diagram, [scenario overview](#emulation-scenario), [step-by-step breakdown](#scenario-steps), and an [infrastructure diagram](#infrastructure-diagram). 
 
-![Software Flow Diagram](/Resources/images/SoftwareFlow.jpeg)
+![Software Flow Diagram](../Resources/images/SoftwareFlow.jpeg)
 
 # Emulation Scenario
 📖 
@@ -29,4 +29,4 @@ Steps start at 11 to follow emulation procedures
 |Step 19|After additional discovery, the Arrakis host is determined the ideal location to deploy NotPetya. When executed, NotPetya creates a scheduled task, searches for connected devices, dumps credentials, copies itself to discovered hosts, and executes itself on the new host. Simultaiously, NotPetya searches for files with specific file extensions, encrypts the files, drops a ransom note, clears Window's event logs and executes the scheduled task to reboot. | NotPetya| https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html<br>https://www.us-cert.gov/ncas/alerts/TA17-181A<br>https://www.justice.gov/opa/press-release/file/1328521/download|
 
 # Infrastructure Diagram
-![Infrastructure Diagram](/Resources/images/InfrastructureDiagram.png)
+![Infrastructure Diagram](../Resources/images/InfrastructureDiagram.png)
