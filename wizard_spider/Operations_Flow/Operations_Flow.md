@@ -1,7 +1,7 @@
 Based on open-source intelligence, the ATT&CK ® Evaluations team created the below scenario leveraging techniques seen from Wizard Spider in the wild. We have adapted the scenario based on tools and resources available at the time. Below is a diagram, [scenario overview](#emulation-scenario), [step-by-step breakdown](#scenario-steps), and an [infrastructure diagram](#infrastructure-diagram). 
 
 
-![Software Flow Diagram](/Resources/images/SoftwareFlow.jpeg)
+![Software Flow Diagram](../Resources/images/SoftwareFlow.jpeg)
 
 # Emulation Scenario
 📖 
@@ -31,4 +31,4 @@ Steps start at 01 to follow emulation procedures
 | Phase 3: Step 10<br>(T1105)​<br>(T1134)​<br>(T1057)​<br>(T1055.002)​<br>(T1082)​<br>(T1083)​<br>(T1486)​<br>|Using the previously established RDP-network mounted shared, Ryuk is uploaded to the domain controller and executed from CMD. Ryuk escalates privileges, injects into notepad.exe process space and encrypts files on its current host recursively, using a combination of AES and RSA encryption.<br>**Analyst Note:** early versions of our Ryuk emulation encrypted the entire filesystem; however, this proces took hours, rather than minutes, so we scaled it back due to time constraints.|Ryuk|https://www.crowdstrike.com/blog/big-game-hunting-with-ryuk-another-lucrative-targeted-ransomware/<br>https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-006.pdf <br>https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/<br>https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/ <br>https://n1ght-w0lf.github.io/malware%20analysis/ryuk-ransomware/|
 
 # Infrastructure Diagram
-![Infrastructure Diagram](/Resources/images/InfrastructureDiagram.png)
+![Infrastructure Diagram](../Resources/images/InfrastructureDiagram.png)
