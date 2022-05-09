@@ -33,7 +33,7 @@ The [Resources Folder](./Resources/) contains the emulated software source code.
 
 The [Binaries.zip](./Resources/Binaries) contains all executables in one zip file for easy download. The password is `malware`.
 
-We provide a [script](./Resources/Utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 $ cd wizard_spider
