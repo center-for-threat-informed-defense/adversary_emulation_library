@@ -22,18 +22,18 @@ Associated Names: UNC1878, TEMP.MixMaster, Grim Spider, Team9 
 [9]:https://intel471.com/blog/ransomware-as-a-service-2020-ryuk-maze-revil-egregor-doppelpaymer/
 
 ## Emulation Overview
-![Software Flow Diagram](/Resources/images/SoftwareFlow.jpeg)
+![Software Flow Diagram](./Resources/images/SoftwareFlow.jpeg)
 
 # Quick Links
 ### For Engineers 🧑‍💻
 
 ### Resources
 
-The [Resources Folder](/Resources/) contains the emulated software source code. Executables are provided in password protected zip files located in the specified software folder.  The password is `malware`.
+The [Resources Folder](./Resources/) contains the emulated software source code. Executables are provided in password protected zip files located in the specified software folder.  The password is `malware`.
 
-The [Binaries.zip](/Resources/Binaries) contains all executables in one zip file for easy download. The password is `malware`.
+The [Binaries.zip](./Resources/Binaries) contains all executables in one zip file for easy download. The password is `malware`.
 
-We provide a [script](/Resources/utilities/crypt_executables.py) to automatically decrypt these files:
+We provide a [script](./Resources/Utilities/crypt_executables.py) to automatically decrypt these files:
 
 ```
 $ cd wizard_spider
@@ -43,23 +43,23 @@ $ python3 Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
 
 ### YARA Rules
 
-[YARA rules](/yara-rules) are provided to assist the community in researching, preventing, and detecting malware specimens used in this emulation plan.
+[YARA rules](./yara-rules) are provided to assist the community in researching, preventing, and detecting malware specimens used in this emulation plan.
 
 ### Emulation Key Software 💻
 
-- [Emotet](/Resources/Emotet/)
+- [Emotet](./Resources/Emotet/)
 
-- [TrickBot](/Resources/TrickBot)
+- [TrickBot](./Resources/TrickBot)
 
-- [Ryuk](/Resources/Ryuk/)
+- [Ryuk](./Resources/Ryuk/)
 
 ### Scenario Walkthrough
-- [Detection Scenario](/Emulation_Plan/Scenario_1/) - Step by Step walkthrough of Scenario's procedures (10 steps). 
-- [Protection Scenario](/Emulation_Plan/Scenario_2/) - Step by Step walkthrough of Scenario's procedures (6 tests)
+- [Detection Scenario](./Emulation_Plan/Scenario_1/) - Step by Step walkthrough of Scenario's procedures (10 steps). 
+- [Protection Scenario](./Emulation_Plan/Scenario_2/) - Step by Step walkthrough of Scenario's procedures (6 tests)
 
 ## For Analysts 🔎
-- [Operation Flow](/Operations_Flow/Operations_Flow.md/) - High-level summary of the scenario & infrastructure with diagrams. 
-- [Intelligence Summary](/Intelligence_Summary/Intelligence_Summary.md) - General overview of the Adversary with links to reporting used throughout the scenario. 
+- [Operation Flow](./Operations_Flow/Operations_Flow.md/) - High-level summary of the scenario & infrastructure with diagrams. 
+- [Intelligence Summary](./Intelligence_Summary/Intelligence_Summary.md) - General overview of the Adversary with links to reporting used throughout the scenario. 
 
 ## Acknowledgements
 
