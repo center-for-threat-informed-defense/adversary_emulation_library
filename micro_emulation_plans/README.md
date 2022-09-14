@@ -5,7 +5,7 @@
 
 This collection expands the impact of the Adversary Emulation
 Library
-by developing easy-to-execute emulation content that targets specific behaviors
+by developing easy-to-execute adversary emulation content that targets specific behaviors
 and challenges facing defenders. Rather than modeling full-scope breach
 scenarios, these micro emulation plans focus on smaller, more specific
 combinations of techniques. (We call these short sequences "compound behaviors"
@@ -16,7 +16,7 @@ preventative controls.
 
 These micro emulation plans are optimized for ease-of-use (most are
 click-to-run) but are also flexible enough to integrate with breach and attack
-simulation (BAS) tools. (See the [CALDERA example](./caldera-integration/).)
+simulation tools. (See the [CALDERA example](./caldera-integration/).)
 
 **Table Of Contents:**
 
@@ -33,21 +33,21 @@ simulation (BAS) tools. (See the [CALDERA example](./caldera-integration/).)
 
 |                  Micro Emulation Plan                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | :----------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [File Access and File Modification](./src/file_access/) | Emulate file access and modification behaviors commonly associated with [TA0009 Collection](https://attack.mitre.org/tactics/TA0009/) as well as [T1486 Data Encrypted for Impact](https://attack.mitre.org/techniques/T1486/). (Data source: [DS0022 File](https://attack.mitre.org/datasources/DS0022/))                                                                                                                                                    |
+| [File Access and File Modification](./src/file_access/) | Emulates file access and modification behaviors commonly associated with [TA0009 Collection](https://attack.mitre.org/tactics/TA0009/) as well as [T1486 Data Encrypted for Impact](https://attack.mitre.org/techniques/T1486/). (Data source: [DS0022 File](https://attack.mitre.org/datasources/DS0022/))                                                                                                                                                    |
 |            [Named Pipes](./src/named_pipes/)            | Emulates the creation and use of named pipes [commonly abused by malware](https://labs.withsecure.com/blog/detecting-cobalt-strike-default-modules-via-named-pipe-analysis/) (Data source: [DS0023 Named Pipe](https://attack.mitre.org/datasources/DS0023/)).                                                                                                                                                                                                |
 |       [Windows Registry](./src/windows_registry/)       | Emulates a few common methods that adversaries use to modify the Windows Registry. (Data Source: [DS0024 Windows Registry](https://attack.mitre.org/datasources/DS0024/))                                                                                                                                                                                                                                                                                     |
 |              [Web Shells](./src/webshell/)              | Emulates the compound behavior of planting a web shell ([T1505.003 Server Software Component: Web Shell](https://attack.mitre.org/techniques/T1505/003/)) and then executing arbitrary commands through it ([T1059 Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059/)).                                                                                                                                                           |
 |      [Process Injection](./src/process_injection/)      | Emulates the compound behavior of [T1055 Process Injection](https://attack.mitre.org/techniques/T1055/) followed by execution of arbitrary commands ([T1059 Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059/)).                                                                                                                                                                                                                  |
 |         [User Execution](./src/user_execution/)         | Emulates the compound behavior of delivering a malicious `.doc`, `.lnk`, or `.iso` file (e.g. via [T1566.001 Phishing: Spearphishing Attachment](https://attack.mitre.org/techniques/T1566/001/)) and then executing arbitrary commands after a user invokes the file ([T1204.002 User Execution: Malicious File](https://attack.mitre.org/techniques/T1204/002/) and [T1059 Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059/)). |
-|     [Active Directory Enumeration](./src/ad_enum/)      | Emulate multiple [TA0007 Discovery](https://attack.mitre.org/tactics/TA0007/) behaviors through commonly abused interfaces and services such as Active Directory (AD).                                                                                                                                                                                                                                                                                        |
+|     [Active Directory Enumeration](./src/ad_enum/)      | Emulates multiple [TA0007 Discovery](https://attack.mitre.org/tactics/TA0007/) behaviors through commonly abused interfaces and services such as Active Directory (AD).                                                                                                                                                                                                                                                                                        |
 
 ## What is a Micro Emulation Plan?
 
 **Abstraction matters.** We are HUGE fans of using threat-informed adversary
 emulation to inspire, prioritize, and direct security testing and tuning. We
 celebrate the community adoption and investment in this approach, but also
-recognize that not all organizations have the resources to build and execute
-large emulation plans.
+recognize that the high cost to build and execute full-scope emulation plans can 
+be a barrier to adoption.
 
 Community projects such as [Atomic Red
 Team™](https://github.com/redcanaryco/atomic-red-team) have **greatly** reduced
@@ -73,7 +73,7 @@ Code and documentation for each micro emulation plan are available in
 includes:
 
 - Description of Emulated Behaviors (What are we doing?)
-- CTI / Background (Why you should care?)
+- Cyber Threat Intel / Background (Why you should care?)
 - Execution Instructions / Resources (How you can use this plan)
 - Execution Demo (What successful execution looks like)
 - Defensive Lessons Learned (Detection and mitigation guidance)
@@ -105,10 +105,7 @@ directly for more general inquiries.
 
 ## Notice
 
-Release number CT0054
-
-Copyright 2022 MITRE Engenuity. Approved for public release. Document number
-XXXXX
+Copyright 2022 MITRE Engenuity. Approved for public release. Document number CT0054
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
