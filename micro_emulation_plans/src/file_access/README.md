@@ -15,7 +15,7 @@ ransomware.
 **Table Of Contents:**
 
 - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
+- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
 - [Execution Instructions / Resources](#execution-instructions--resources)
   - [Execution Demo](#execution-demo)
 - [Defensive Lessons Learned](#defensive-lessons-learned)
@@ -30,7 +30,7 @@ if none is specified. The executable will append a new line to `*.txt` files and
 add a `.bk` extension to non-text files. It logs all of its filesystem activity
 for auditing and cleanup purposes.
 
-## CTI / Background
+## Cyber Threat Intel / Background
 
 **Why should you care?** File access and modification behavior can be found
 during ransomware attacks ([T1486 Data Encrypted for
