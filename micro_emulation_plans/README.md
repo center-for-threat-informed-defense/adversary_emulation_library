@@ -69,7 +69,7 @@ for future research and micro emulation plan development.
 ### Getting Started
 
 Code and documentation for each micro emulation plan are available in
-[`/src`](/src). The `README` file for each plan is structured the same and
+[`/src`](./src). The `README` file for each plan is structured the same and
 includes:
 
 - Description of Emulated Behaviors (What are we doing?)
@@ -96,7 +96,7 @@ organization.
 
 We welcome your feedback and contributions to help advance **Micro Emulation**.
 Please see the guidance for contributors if are you interested in [contributing
-or simply reporting issues.](/CONTRIBUTING.md)
+or simply reporting issues.](./CONTRIBUTING.md)
 
 Please submit
 [issues](https://github.com/center-for-threat-informed-defense/micro-emulation-plans/issues)
