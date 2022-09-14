@@ -14,7 +14,7 @@ This emulation focuses on the latter varaint.
 **Table Of Contents:**
 
 - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
+- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
 - [Execution Instructions / Resources](#execution-instructions--resources)
   - [Execution Demo](#execution-demo)
 - [Defensive Lessons Learned](#defensive-lessons-learned)
@@ -41,7 +41,7 @@ The local discovery commands used in step 2 are used to emulate an adversary enu
 - `qwinsta`
 - `tasklist`
 
-## CTI / Background
+## Cyber Threat Intel / Background
 
 **Why should you care?** [T1055 Process
 Injection](https://attack.mitre.org/techniques/T1055) is [very commonly abused
