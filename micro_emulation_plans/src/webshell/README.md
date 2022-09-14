@@ -12,7 +12,7 @@ shells targeting both Windows and Linux infrastructure.
 **Table Of Contents:**
 
 - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
+- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
 - [Execution Instructions / Resources](#execution-instructions--resources)
   - [Execution Demo](#execution-demo)
 - [Defensive Lessons Learned](#defensive-lessons-learned)
@@ -30,7 +30,7 @@ emulation plans supports several variants of web shells that each:
 3. Execute a series of user-defined (default is local discovery) shell commands
    using the web server
 
-## CTI / Background
+## Cyber Threat Intel / Background
 
 **Why you should care?** [Web
 shells](https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF)
