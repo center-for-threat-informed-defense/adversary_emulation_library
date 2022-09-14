@@ -13,7 +13,7 @@ Escalation as well as hiding payloads or other operational information.
 **Table Of Contents:**
 
 - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
+- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
 - [Execution Instructions / Resources](#execution-instructions--resources)
   - [Execution Demo](#execution-demo)
 - [Defensive Lessons Learned](#defensive-lessons-learned)
@@ -39,7 +39,7 @@ All three variants follow the same execution flow:
 3. Update the subkey value (Base64 encoded representation of same `{username_timestamp}` value)
 4. Delete the key and subkey
 
-## CTI / Background
+## Cyber Threat Intel / Background
 
 **Why should you care?** The data in the Registry controls many OS and
 application settings and is thus associated with a broad range of adversary
