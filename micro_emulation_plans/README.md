@@ -59,7 +59,7 @@ These micro emulation plans answer questions such as:
 
 > Are we collecting the right data about [data source]?
 >
-> How well do we detect or prevent [a particular part of an intrusion]?`
+> How well do we detect or prevent [a particular part of an intrusion]?
 
 We hope that these plans offer both actionable resources as well as inspiration
 for future research and micro emulation plan development.
