@@ -16,7 +16,7 @@ preventative controls.
 
 These micro emulation plans are optimized for ease-of-use (most are
 click-to-run) but are also flexible enough to integrate with breach and attack
-simulation (BAS) tools. (See the [CALDERA example](/caldera-integration/).)
+simulation (BAS) tools. (See the [CALDERA example](./caldera-integration/).)
 
 **Table Of Contents:**
 
