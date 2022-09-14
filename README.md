@@ -12,7 +12,7 @@ Also see our blogs on the [Adversary Emulation Library](https://medium.com/mitre
 
 Available adversary emulation plans are listed below:
 
-| Full Emulation Plans <img width=170/> | Intelligence Summary |
+| Full Emulation Plans | Intelligence Summary |
 |:------:|------|
 | [FIN6](/fin6/) | [FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015...](/fin6/Intelligence_Summary.md) |
 | [APT29](/apt29/) | [APT29 is thought to be an organized and well-resourced cyber threat actor whose collection objectives appear to align with the interests of the Russian Federation...](/apt29/Intelligence_Summary.md) |
@@ -21,9 +21,7 @@ Available adversary emulation plans are listed below:
 | [FIN7](/fin7/) | [FIN7 is a financially-motivated threat group that has been associated with malicious operations dating back to late 2015. The group is characterized by their persistent targeting and large-scale theft of payment card data from victim systems...](/fin7/Intelligence_Summary.md) |
 | [Sandworm](/sandworm/) | [Sandworm Team is a destructive threat group attributed to Russia's General Staff of the Armed Forces, Main Intelligence Directorate (GRU) that has been reportedly active since 2009. Sandworm is known for conducting large scale, well funded, destructive, and aggressive campaigns such as Olympic Destroyer, CrashOverride/Industroyer, and NotPetya...](/sandworm/Intelligence_Summary/Intelligence_Summary.md) |
 | [Wizard Spider](/wizard_spider/) | [Wizard Spider is a Russia-based e-crime group originally known for the Trickbot banking malware. In August 2018, Wizard Spider added capabilities to their Trickbot software enabling the deployment of the Ryuk ransomware. This resulted in "big game hunting" campaigns, focused on targeting large organizations for high-ransom return rates.](/wizard_spider/Intelligence_Summary/Intelligence_Summary.md).. |
-
-| Micro Emulation Plans  | Intelligence Summary |
-|:----:|-----|
+| **Micro Emulation Plans**  | **Intelligence Summary** |
 |[Active Directory Enumeration](/micro_emulation_plans/src/ad_enum/)| [Targets compound behaviors associated with TA0007 Discovery using behaviors associated with abuse of Active Directory...](/micro_emulation_plans/src/ad_enum#Micro-Emulation-Plan-Windows-Registry)|
 |[File Access](/micro_emulation_plans/src/file_access/) | [Targets the DS0022 File: File Access and DS0022 File: File Modification data sources. It covers file interactions like reading a file and modifying a file’s contents...](/micro_emulation_plans/src/file_access#micro-emulation-plans-file-access) |
 |[Named Pipes](/micro_emulation_plans/src/named_pipes/) | [Targets the data source DS0023 Named Pipe. Named pipes are shared memory used for inter-process communication...](/micro_emulation_plans/src/named_pipes#micro-emulation-plan-named-pipes) |
