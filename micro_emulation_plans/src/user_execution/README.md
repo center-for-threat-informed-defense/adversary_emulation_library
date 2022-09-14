@@ -10,7 +10,7 @@ campaigns.
 **Table Of Contents:**
 
 - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
+- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
 - [Execution Instructions / Resources](#execution-instructions--resources)
   - [Execution Demo](#execution-demo)
 - [Defensive Lessons Learned](#defensive-lessons-learned)
@@ -26,7 +26,7 @@ adversary's malicious payload. These modules support 3 variants that each:
 1. Plant the malicious payload on disk
 2. Invoke command execution through the payload file(s)
 
-## CTI / Background
+## Cyber Threat Intel / Background
 
 **Why should you care?** [T1204 User
 Execution](https://attack.mitre.org/techniques/T1204) is commonly abused as a
