@@ -1,0 +1,13 @@
+# Created by csc compiler
+bin
+obj
+
+# Extension of executable built with the default name
+*.exe
+
+# Host-specific manually copied DLL dependencies directory
+DLL/*.dll
+DLL/*.DLL
+
+# Artifacts generated
+*.docm
