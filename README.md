@@ -2,12 +2,13 @@
 
 In collaboration with Center Participants, the [Center for Threat-Informed Defense (Center)](https://ctid.mitre-engenuity.org/) is building a library of adversary emulation plans to allow organizations to evaluate their defensive capabilities against the real-world threats they face. Emulation plans are an essential component in testing current defenses for organizations that are looking to prioritize their defenses around actual adversary behavior. Focusing our energies on developing a set of common emulation plans that are available to all means that organizations can use their limited time and resources to focus on understanding how their defenses actually fare against real-world threats.
 
-Also see our recent blog on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b).
+Also see our blog on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b) and [Micro Emulation Plans](https://medium.com/mitre-engenuity/ahhh-this-emulation-is-just-right-introducing-micro-emulation-plans-7bf4c26451d3).
 
 Available adversary emulation plans are listed below:
 
 | Emulation Plan | Intelligence Summary |
 |:-----:|------|
+| [Micro Emulation Plans](/micro_emulation_plans/) | [Micro Emulation Plans offer easy-to-execute emulation content that targets specific behaviors and challenges facing defenders. Rather than modeling full-scope breach scenarios, these micro emulation plans focus on smaller, more specific combinations of techniques...](/micro_emulation_plans/)|
 | [FIN6](/fin6/) | [FIN6 is thought to be a financially motivated cyber-crime group. The group has aggressively targeted and compromised high-volume POS systems in the hospitality and retail sectors since at least 2015...](/fin6/Intelligence_Summary.md) |
 | [APT29](/apt29/) | [APT29 is thought to be an organized and well-resourced cyber threat actor whose collection objectives appear to align with the interests of the Russian Federation...](/apt29/Intelligence_Summary.md) |
 | [menuPass](/menuPass/) | [menuPass is thought to be threat group motivated by collection objectives, with targeting that is consistent with Chinese strategic objectives...](/menuPass/Intelligence_Summary.md) |
