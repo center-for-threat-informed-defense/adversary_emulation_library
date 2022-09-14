@@ -96,7 +96,7 @@ organization.
 
 We welcome your feedback and contributions to help advance **Micro Emulation**.
 Please see the guidance for contributors if are you interested in [contributing
-or simply reporting issues.](./CONTRIBUTING.md)
+or simply reporting issues.](../CONTRIBUTING.md)
 
 Please submit
 [issues](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/issues)
