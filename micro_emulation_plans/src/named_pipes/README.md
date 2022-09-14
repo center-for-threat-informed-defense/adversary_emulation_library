@@ -13,7 +13,7 @@ while injecting/retrieving payloads and commands.
 **Table Of Contents:**
 
 - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
+- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
 - [Execution Instructions / Resources](#execution-instructions--resources)
   - [Command Arguments](#command-arguments)
   - [Customizing the Executables](#customizing-the-executables)
@@ -36,7 +36,7 @@ and sending data over a named pipe. The module is split into 3 parts:
    on hard-coded values based on [CTI-inspired
    templates](https://www.cobaltstrike.com/blog/learn-pipe-fitting-for-all-of-your-offense-projects/).
 
-## CTI / Background
+## Cyber Threat Intel / Background
 
 **Why should you care?** Named pipes are commonly abused by malware to transfer
 malicious payloads and data between processes ([T1559 Inter-Process
