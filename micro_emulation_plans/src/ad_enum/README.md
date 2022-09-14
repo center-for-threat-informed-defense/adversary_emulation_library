@@ -13,7 +13,7 @@ objects in a network.
 
 - [Micro Emulation Plan: Active Directory Enumeration](#micro-emulation-plan-active-directory-enumeration)
   - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-  - [CTI / Background](#cti--background)
+  - [Cyber Threat Intel / Background](#cyber-threat-intel--background)
   - [Execution Instructions / Resources](#execution-instructions--resources)
     - [Execution Demo](#execution-demo)
   - [Defensive Lessons Learned](#defensive-lessons-learned)
@@ -36,7 +36,7 @@ The following ATT&CK v11 techniques are used in this emulation plan:
 * [T1049 System Network Connections Discovery](https://attack.mitre.org/techniques/T1049)
 * [T1033 System Owner/User Discovery](https://attack.mitre.org/techniques/T1033)
 
-## CTI / Background
+## Cyber Threat Intel / Background
 
 **Why you should care?** Threat actors and malware use [TA
 Discovery](https://attack.mitre.org/tactics/TA0007/) to gather internal
