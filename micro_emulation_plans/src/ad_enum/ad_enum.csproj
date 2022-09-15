@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.DirectoryServices" Version="7.0.0-preview.6.22324.4" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="7.0.0-preview.6.22324.4" />
+  </ItemGroup>
+
+</Project>

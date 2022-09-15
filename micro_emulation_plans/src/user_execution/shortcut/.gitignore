@@ -1,0 +1,12 @@
+# Ignore auto generated folders
+/bin
+/obj
+
+# Ignore build directory
+/build
+
+# Ignore vscode folder
+/.vscode
+
+# Ignore local modified nuget.config
+nuget.config
