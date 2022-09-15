@@ -18,9 +18,9 @@ jobs:
     - name: "Install dependencies"
       run: pip install jsonschema ruamel.yaml==0.17.4
     - name: "Validate FIN6 plan"
-      run: poetry run python resources/plan_validator.py fin6/Emulation_Plan/yaml/FIN6.yaml -schema_document resources/format_schema.json
+      run: python resources/plan_validator.py fin6/Emulation_Plan/yaml/FIN6.yaml -schema_document resources/format_schema.json
     - name: "Validate APT29 plan"
-      run: poetry run python resources/plan_validator.py apt29/Emulation_Plan/yaml/APT29.yaml -schema_document resources/format_schema.json
+      run: python resources/plan_validator.py apt29/Emulation_Plan/yaml/APT29.yaml -schema_document resources/format_schema.json
     - name: "Validate menuPass plan"
-      run: poetry run python resources/plan_validator.py menuPass/Emulation_Plan/yaml/menupass.yaml -schema_document resources/format_schema.json
+      run: python resources/plan_validator.py menuPass/Emulation_Plan/yaml/menupass.yaml -schema_document resources/format_schema.json
 

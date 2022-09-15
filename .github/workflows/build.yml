@@ -17,8 +17,7 @@ jobs:
 
     # webshell:
     - name: Make release folders
-      working-directory: ./micro_emulation_plans/src/webshell
-      run: mkdir -p release/Webshell/Linux
+      run: mkdir -p ./release/Webshell/Linux
 
     - name: Make build folders
       working-directory: ./micro_emulation_plans/src/webshell
@@ -35,16 +34,15 @@ jobs:
         cd ../build/linux
 
     - name: Copy webshell artifacts
-      working-directory: ./micro_emulation_plans/src/webshell
       run: |
-        cp ./README*.md ./release/Webshell/
-        cp ./build/linux/* ./release/Webshell/Linux
+        cp ./micro_emulation_plans/src/webshell/README*.md ./release/Webshell/
+        cp ./micro_emulation_plans/src/webshell/build/linux/* ./release/Webshell/Linux
 
     # upload artifacts for use in make-release
     - uses: actions/upload-artifact@v3
       with:
         name: linux-tools
-        path: release/
+        path: ./release
 
   windows-build:
     name: "Windows Build"
