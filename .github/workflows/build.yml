@@ -17,16 +17,12 @@ jobs:
 
     # webshell:
     - name: Make release folders
-      run: |
-        mkdir release
-        mkdir release/Webshell
-        mkdir release/Webshell/Linux
+      working-directory: ./micro_emulation_plans/src/webshell
+      run: mkdir -p release/Webshell/Linux
 
     - name: Make build folders
       working-directory: ./micro_emulation_plans/src/webshell
-      run: |
-        mkdir ./build
-        mkdir ./build/linux
+      run: mkdir -p ./build/linux
 
     - name: Build Linux PHP release
       working-directory: ./micro_emulation_plans/src/webshell
@@ -54,6 +50,10 @@ jobs:
     runs-on: "windows-2022"
 
     steps:
+    # fixes build issue on windows with long file paths
+    - name: Enable long paths
+      run: git config --system core.longpaths true
+
     - uses: actions/checkout@v3
     - uses: actions/setup-dotnet@v2
       with:

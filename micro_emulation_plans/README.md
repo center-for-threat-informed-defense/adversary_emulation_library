@@ -1,5 +1,4 @@
 [![MITRE ATT&CK® v11](https://img.shields.io/badge/MITRE%20ATT%26CK®-v11-red)](https://attack.mitre.org/versions/v11/)
-[![codecov](https://codecov.io/gh/center-for-threat-informed-defense/project-template/branch/main/graph/badge.svg?token=ygDiymg8y3)](https://codecov.io/gh/center-for-threat-informed-defense/project-template)
 
 # Micro Emulation Plans
 
@@ -46,7 +45,7 @@ simulation tools. (See the [CALDERA example](./caldera-integration/).)
 **Abstraction matters.** We are HUGE fans of using threat-informed adversary
 emulation to inspire, prioritize, and direct security testing and tuning. We
 celebrate the community adoption and investment in this approach, but also
-recognize that the high cost to build and execute full-scope emulation plans can 
+recognize that the high cost to build and execute full-scope emulation plans can
 be a barrier to adoption.
 
 Community projects such as [Atomic Red
