@@ -35,9 +35,10 @@ jobs:
         cd ../build/linux
 
     - name: Copy webshell artifacts
+      working-directory: ./micro_emulation_plans/src/webshell
       run: |
-        cp ./micro_emulation_plans/src/webshell/README*.md release/Webshell/
-        cp ./micro_emulation_plans/src/webshell/build/linux/* release/Webshell/Linux
+        cp ./README*.md ./release/Webshell/
+        cp ./build/linux/* ./release/Webshell/Linux
 
     # upload artifacts for use in make-release
     - uses: actions/upload-artifact@v3
