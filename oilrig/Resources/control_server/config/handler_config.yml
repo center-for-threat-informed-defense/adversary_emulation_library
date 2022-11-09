@@ -1,0 +1,28 @@
+simplehttp: 
+  host: 192.168.0.4
+  port: 8080
+  enabled: false
+https: 
+  host: 192.168.0.4
+  port: 443
+  cert_file: ""
+  key_file: ""
+  enabled: false
+trickbot: 
+  host: 192.168.0.4
+  port: 447
+  enabled: false
+emotet: 
+  host: 192.168.0.4
+  port: 80
+  enabled: false
+exaramel: 
+  host: 192.168.0.4
+  port: 8443
+  cert_file: ""
+  key_file: ""
+  enabled: false
+sidetwist:
+  host: 192.168.0.4
+  port: 443
+  enabled: false
