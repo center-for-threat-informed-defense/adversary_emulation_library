@@ -1,4 +1,4 @@
-name: "Build"
+name: "Build Micro Plans"
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
     tags:
       - "v*"
   pull_request:
+    paths:
+      - "micro_emulation_plans/**"
 
 jobs:
   linux-build:
