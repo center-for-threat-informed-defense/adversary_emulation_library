@@ -583,7 +583,11 @@
 # Phase 16
 
 - id: 03afada1-1714-408f-bde5-f528b91dc89d
-  name: Access Token Manipulation
+  name: 5.B.1 - Access Token Manipulation (T1134),
+    6.A.1 - Query Registry (T1012),
+    7.B.1 - Remote File Copy (T1105),
+    7.C.1 - Scheduled Tasks (T1053),
+    8.A.1/2 - File and Directory Discovery (T1083)
   description: A token theft script was executed to steal and assume the token of another user’s existing process, changing the user context of the process.
   tactic: defensive-evasion
   technique:
