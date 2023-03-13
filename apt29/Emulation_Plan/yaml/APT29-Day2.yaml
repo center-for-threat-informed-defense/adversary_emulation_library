@@ -309,6 +309,7 @@
       psh,pwsh:
         command: |
           . .\stepFourteen_credDump.ps1;
+          wmidump;
         payloads:
         - stepFourteen_credDump.ps1
 
@@ -316,6 +317,7 @@
   - name: powershell
     command: |
       . .\stepFourteen_credDump.ps1;
+      wmidump;
 
 # Step 15 - Establish Persistence
 
@@ -427,7 +429,7 @@
     name: "Ingress Tool Transfer"
   cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
   procedure_group: procedure_lat_movement
-  procedure_step: "16.C"
+  procedure_step: "16.C-16.D"
   platforms:
     windows:
       psh,pwsh:
