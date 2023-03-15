@@ -6,7 +6,7 @@ The library contains two types of adversary emulation plans: full emulation and 
 
 **Full emulation plans** are a comprehensive approach to emulating a specific adversary, e.g. [FIN6](/fin6/), from initial access to exfiltration. These plans emulate a wide range of ATT&CK tactics & techniques and are designed to emulate a real breach from the designated adversary. 
 
-**Micro emulation plans** are a focused approach to emulating compound behaviors seen across multiple adversaries, e.g. [webshells](/micro_emulation_plans/src/webshells). These plans emulate a small amount of ATT&CK techniques that are typically performed as part of one adversary action. 
+**Micro emulation plans** are a focused approach to emulating compound behaviors seen across multiple adversaries, e.g. [webshells](/micro_emulation_plans/src/webshell). These plans emulate a small amount of ATT&CK techniques that are typically performed as part of one adversary action. 
 
 Also see our blogs on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b) and [Micro Emulation Plans](https://medium.com/mitre-engenuity/ahhh-this-emulation-is-just-right-introducing-micro-emulation-plans-7bf4c26451d3).
 
@@ -22,7 +22,9 @@ Available adversary emulation plans are listed below:
 | [Sandworm](/sandworm/) | [Sandworm Team is a destructive threat group attributed to Russia's General Staff of the Armed Forces, Main Intelligence Directorate (GRU) that has been reportedly active since 2009. Sandworm is known for conducting large scale, well funded, destructive, and aggressive campaigns such as Olympic Destroyer, CrashOverride/Industroyer, and NotPetya...](/sandworm/Intelligence_Summary/Intelligence_Summary.md) |
 | [Wizard Spider](/wizard_spider/) | [Wizard Spider is a Russia-based e-crime group originally known for the Trickbot banking malware. In August 2018, Wizard Spider added capabilities to their Trickbot software enabling the deployment of the Ryuk ransomware. This resulted in "big game hunting" campaigns, focused on targeting large organizations for high-ransom return rates.](/wizard_spider/Intelligence_Summary/Intelligence_Summary.md).. |
 | [OilRig](/oilrig/) | [OilRig is a cyber threat actor with operations aligning to the strategic objectives of the Iranian government. OilRig has been operational since at least 2014 and has a history of widespread impact, with operations directed against financial, government, energy, chemical, telecommunications and other sectors around the globe...](/oilrig/Intelligence_Summary/Intelligence_Summary.md) |
-| **Micro Emulation Plans**  | **Intelligence Summary** |
+
+| Micro Emulation Plans | Intelligence Summary |
+|:------:|------|
 |[Active Directory Enumeration](/micro_emulation_plans/src/ad_enum/)| [Targets compound behaviors associated with TA0007 Discovery using behaviors associated with abuse of Active Directory...](/micro_emulation_plans/src/ad_enum#Micro-Emulation-Plan-Windows-Registry)|
 |[File Access](/micro_emulation_plans/src/file_access/) | [Targets the DS0022 File: File Access and DS0022 File: File Modification data sources. It covers file interactions like reading a file and modifying a file’s contents...](/micro_emulation_plans/src/file_access#micro-emulation-plans-file-access) |
 |[Named Pipes](/micro_emulation_plans/src/named_pipes/) | [Targets the data source DS0023 Named Pipe. Named pipes are shared memory used for inter-process communication...](/micro_emulation_plans/src/named_pipes#micro-emulation-plan-named-pipes) |
@@ -59,7 +61,7 @@ The content to execute the scenario(s) is broken down into step-by-step procedur
 
 Detailed documenation for our full emulation plan structure can be found [here.](/structure/emulation_plan_structure.md)
 
-## Getting Starting with Micro Emulation Plans
+## Getting Started with Micro Emulation Plans
 
 Similar to full emulation plans, micro emulation plans are a type of adversary emulation that is designed to help us test and tune our defenses. However, these plans can be executed without a red team and without the need for an offensive assessment. Each plan is still composed of an intelligence overview for the behaviors being emulated, however we are emulating behaviors that are common across multiple adversaries as opposed to a singular adversary. 
 
