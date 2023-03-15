@@ -61,7 +61,7 @@ The content to execute the scenario(s) is broken down into step-by-step procedur
 
 Detailed documenation for our full emulation plan structure can be found [here.](/structure/emulation_plan_structure.md)
 
-## Getting Starting with Micro Emulation Plans
+## Getting Started with Micro Emulation Plans
 
 Similar to full emulation plans, micro emulation plans are a type of adversary emulation that is designed to help us test and tune our defenses. However, these plans can be executed without a red team and without the need for an offensive assessment. Each plan is still composed of an intelligence overview for the behaviors being emulated, however we are emulating behaviors that are common across multiple adversaries as opposed to a singular adversary. 
 
