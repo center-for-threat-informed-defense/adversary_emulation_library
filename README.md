@@ -6,7 +6,7 @@ The library contains two types of adversary emulation plans: full emulation and 
 
 **Full emulation plans** are a comprehensive approach to emulating a specific adversary, e.g. [FIN6](/fin6/), from initial access to exfiltration. These plans emulate a wide range of ATT&CK tactics & techniques and are designed to emulate a real breach from the designated adversary. 
 
-**Micro emulation plans** are a focused approach to emulating compound behaviors seen across multiple adversaries, e.g. [webshells](/micro_emulation_plans/src/webshells). These plans emulate a small amount of ATT&CK techniques that are typically performed as part of one adversary action. 
+**Micro emulation plans** are a focused approach to emulating compound behaviors seen across multiple adversaries, e.g. [webshells](/micro_emulation_plans/src/webshell). These plans emulate a small amount of ATT&CK techniques that are typically performed as part of one adversary action. 
 
 Also see our blogs on the [Adversary Emulation Library](https://medium.com/mitre-engenuity/introducing-the-all-new-adversary-emulation-plan-library-234b1d543f6b) and [Micro Emulation Plans](https://medium.com/mitre-engenuity/ahhh-this-emulation-is-just-right-introducing-micro-emulation-plans-7bf4c26451d3).
 
