@@ -39,7 +39,7 @@ downloading and staging additional payloads onto the victim host.
 
 ## Execution Instructions / Resources
 
-This repository includes modules that execute three variants of user execution:
+This repository includes modules that execute multiple variants of user execution:
 
 * Office documents containing macros: [README_macros.md](macros/README.md)
 * Shortcut (LNK) files containing PowerShell commands:
