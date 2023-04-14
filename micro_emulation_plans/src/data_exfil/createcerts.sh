@@ -1,0 +1,1 @@
+openssl req -x509 -nodes -newkey rsa:4096 -keyout key-server.pem -out cert-server.pem -sha256

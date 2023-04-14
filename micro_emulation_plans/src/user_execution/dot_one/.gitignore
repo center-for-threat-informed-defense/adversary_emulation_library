@@ -1,0 +1,9 @@
+# File Extensions
+*.exe
+
+# Folder Exclusion
+.vs/*
+bin/*
+
+# Build-specific
+build/*.exe

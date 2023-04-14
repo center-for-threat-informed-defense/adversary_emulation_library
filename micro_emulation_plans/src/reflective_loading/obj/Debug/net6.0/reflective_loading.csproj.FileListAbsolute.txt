@@ -1,0 +1,15 @@
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\bin\Debug\net6.0\reflective_loading.exe
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\bin\Debug\net6.0\reflective_loading.deps.json
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\bin\Debug\net6.0\reflective_loading.runtimeconfig.json
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\bin\Debug\net6.0\reflective_loading.dll
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\bin\Debug\net6.0\reflective_loading.pdb
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.csproj.AssemblyReference.cache
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.AssemblyInfoInputs.cache
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.AssemblyInfo.cs
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.csproj.CoreCompileInputs.cache
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.dll
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\refint\reflective_loading.dll
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.pdb
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\reflective_loading.genruntimeconfig.cache
+C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\obj\Debug\net6.0\ref\reflective_loading.dll

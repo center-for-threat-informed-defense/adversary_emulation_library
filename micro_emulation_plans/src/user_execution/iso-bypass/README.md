@@ -1,4 +1,4 @@
-# README for User Execution of ISO-Bypass
+# User Execution of ISO-Bypass
 
 ## Prerequisites
 

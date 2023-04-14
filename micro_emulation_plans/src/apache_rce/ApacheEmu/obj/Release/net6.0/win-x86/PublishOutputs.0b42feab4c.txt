@@ -1,0 +1,2 @@
+C:\Users\zoe\Git\micro-emulation-plans\src\apache_rce\ApacheEmu\bin\Release\net6.0\publish\win-x86\ApacheEmu.pdb
+C:\Users\zoe\Git\micro-emulation-plans\src\apache_rce\ApacheEmu\bin\Release\net6.0\publish\win-x86\ApacheEmu.exe

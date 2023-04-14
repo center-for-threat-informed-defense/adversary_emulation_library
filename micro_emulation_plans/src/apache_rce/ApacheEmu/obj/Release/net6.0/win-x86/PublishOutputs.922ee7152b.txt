@@ -1,0 +1,2 @@
+C:\Users\zoe\source\repos\ApacheEmu\ApacheEmu\bin\Release\net6.0\publish\win-x86\ApacheEmu.pdb
+C:\Users\zoe\source\repos\ApacheEmu\ApacheEmu\bin\Release\net6.0\publish\win-x86\ApacheEmu.exe
