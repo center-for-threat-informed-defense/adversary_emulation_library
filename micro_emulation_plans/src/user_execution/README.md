@@ -9,13 +9,14 @@ campaigns.
 
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: User Execution](#micro-emulation-plan-user-execution)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [CTI / Background](#cti--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 
@@ -26,7 +27,7 @@ adversary's malicious payload. These modules support 3 variants that each:
 1. Plant the malicious payload on disk
 2. Invoke command execution through the payload file(s)
 
-## Cyber Threat Intel / Background
+## CTI / Background
 
 **Why should you care?** [T1204 User
 Execution](https://attack.mitre.org/techniques/T1204) is commonly abused as a
@@ -45,6 +46,7 @@ This repository includes modules that execute three variants of user execution:
   [README_shortcut.md](shortcut/README.md)
 * Container (ISO) files containing commands in a batch script:
   [README_bypass.md](iso-bypass/README.md)
+* OneNote file containing malicious batch script: [README_dotone.md](dot_one/README.md)
 
 ### Execution Demo
 
