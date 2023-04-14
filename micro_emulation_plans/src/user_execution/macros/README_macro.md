@@ -1,4 +1,4 @@
-# README for User Execution of Macros
+# User Execution of Macros
 
 ## Prerequisites
 
