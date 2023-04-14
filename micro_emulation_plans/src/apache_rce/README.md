@@ -1,6 +1,6 @@
 # Micro Emulation Plan: Remote Application Exploitation
 
-This micro emulation plan targets remote exploitation activity. Exploitation of vulnerabilities (especially those that enable remote code execution) are very often abused to enable [TA0001 Initial Access](https://attack.mitre.org/tactics/TA0001/) (e.g., [T1190 Exploit Public-Facing Application](https://attack.mitre.org/techniques/T1190/)), but may also be included in post-compromise activity (e.g., [T1210 Exploitation of Remote Services](https://attack.mitre.org/techniques/T1210/) as part of [TA0008 Lateral Movement](https://attack.mitre.org/techniques/T1210/)).
+This micro emulation plan targets remote exploitation activity. Exploitation of vulnerabilities (especially those that enable remote code execution) are very often abused to enable [TA0001 Initial Access](https://attack.mitre.org/tactics/TA0001/) (e.g., [T1190 Exploit Public-Facing Application](https://attack.mitre.org/techniques/T1190/)), but may also be included in post-compromise activity (e.g., [T1210 Exploitation of Remote Services](https://attack.mitre.org/techniques/T1210/) as part of [TA0008 Lateral Movement](https://attack.mitre.org/tactics/TA0008/)).
 
 **Table Of Contents:**
 
