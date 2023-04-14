@@ -176,7 +176,7 @@ jobs:
 
     # dot_one:
     - name: build dot_one
-      working-directory: ./src/user_execution/dot_one
+      working-directory: ./micro_emulation_plans/src/user_execution/dot_one
       run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
 
     - name: Make dot_one folder
