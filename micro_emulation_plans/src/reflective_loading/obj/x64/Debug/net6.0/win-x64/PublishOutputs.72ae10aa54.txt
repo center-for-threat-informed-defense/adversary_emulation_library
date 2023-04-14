@@ -1,2 +1,0 @@
-C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\bin\Release\net6.0\publish\reflective_loading.pdb
-C:\Users\zoe\Git\micro-emulation-plans\src\reflective_loading\bin\Release\net6.0\publish\reflective_loading.exe

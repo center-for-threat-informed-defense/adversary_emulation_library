@@ -9,14 +9,13 @@ campaigns.
 
 **Table Of Contents:**
 
-- [Micro Emulation Plan: User Execution](#micro-emulation-plan-user-execution)
-  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-  - [CTI / Background](#cti--background)
-  - [Execution Instructions / Resources](#execution-instructions--resources)
-    - [Execution Demo](#execution-demo)
-  - [Defensive Lessons Learned](#defensive-lessons-learned)
-    - [Detection](#detection)
-    - [Mitigation](#mitigation)
+- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+- [CTI / Background](#cti--background)
+- [Execution Instructions / Resources](#execution-instructions--resources)
+  - [Execution Demo](#execution-demo)
+- [Defensive Lessons Learned](#defensive-lessons-learned)
+  - [Detection](#detection)
+  - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

@@ -4,15 +4,14 @@ This micro emulation plan targets remote exploitation activity. Exploitation of 
 
 **Table Of Contents:**
 
-- [Micro Emulation Plan: Remote Application Exploitation](#micro-emulation-plan-remote-application-exploitation)
-  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-  - [CTI / Background](#cti--background)
-  - [Execution Instructions / Resources](#execution-instructions--resources)
-    - [Command Arguments](#command-arguments)
-    - [Execution Demo](#execution-demo)
-  - [Defensive Lessons Learned](#defensive-lessons-learned)
-    - [Detection](#detection)
-    - [Mitigation](#mitigation)
+- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+- [CTI / Background](#cti--background)
+- [Execution Instructions / Resources](#execution-instructions--resources)
+  - [Command Arguments](#command-arguments)
+  - [Execution Demo](#execution-demo)
+- [Defensive Lessons Learned](#defensive-lessons-learned)
+  - [Detection](#detection)
+  - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 
@@ -24,7 +23,7 @@ This micro emulation plan targets remote exploitation activity. Exploitation of 
 
 ## CTI / Background
 
-**Why should you care?** Exploitation of vulnerabilities in applications and services is very often abused as a means to enable adversary [TA0001 Initial Access](https://attack.mitre.org/tactics/TA0001/) (e.g., [T1190 Exploit Public-Facing Application](https://attack.mitre.org/techniques/T1190/)), but may also be included in post-compromise activity (e.g., [T1210 Exploitation of Remote Services](https://attack.mitre.org/techniques/T1210/) as part of [TA0008 Lateral Movement](https://attack.mitre.org/techniques/T1210/)).
+**Why should you care?** Exploitation of vulnerabilities in applications and services is very often abused as a means to enable adversary [TA0001 Initial Access](https://attack.mitre.org/tactics/TA0001/) (e.g., [T1190 Exploit Public-Facing Application](https://attack.mitre.org/techniques/T1190/)), but may also be included in post-compromise activity (e.g., [T1210 Exploitation of Remote Services](https://attack.mitre.org/techniques/T1210/) as part of [TA0008 Lateral Movement](https://attack.mitre.org/tactics/TA0008/)).
 
 This problem continually evolves and is exaggerated by the growing diversity and complexity of technologies within network environments. Risks from vulnerabilities in exposed applications can not always be remediated in time to prevent exploitation from adversaries. This micro plan uses [`CVE-2021-41773`](https://nvd.nist.gov/vuln/detail/CVE-2021-41773) as a medium to broadly emulate remote code execution (RCE) exploitation, where an adversary leverages a vulnerability to execute arbitrary code/commands/scripts.
 
@@ -38,7 +37,7 @@ The standalone `ApacheEmu.exe` tool coordinates setup, exploitation, and cleanup
 
 Default parameters are set to enable simple execution requiring no user inputs (i.e. double click), but the tool can also be run from the command-line in an reactive session with the `-r` option.
 
-With no arguments, the tool will exploit the web serve, then execute three commands (`whoami`, `systeminfo`, `ipconfig /all`) using malicious HTTP requests.
+With no arguments, the tool will exploit the web server, then execute three commands (`whoami`, `systeminfo`, `ipconfig /all`) using malicious HTTP requests.
 
 The reactive session created with `-r` will setup the vulnerable web server, at which point the user can:
 

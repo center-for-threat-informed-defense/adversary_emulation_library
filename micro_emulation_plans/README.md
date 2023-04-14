@@ -20,14 +20,13 @@ simulation (BAS) tools. (See the [CALDERA example](/caldera-integration/).)
 
 **Table Of Contents:**
 
-- [Micro Emulation Plans](#micro-emulation-plans)
-  - [Available Plans](#available-plans)
-  - [What is a Micro Emulation Plan?](#what-is-a-micro-emulation-plan)
-  - [User Guidance](#user-guidance)
-    - [Getting Started](#getting-started)
-    - [Making These Plans Your Own](#making-these-plans-your-own)
-  - [How Do I Contribute?](#how-do-i-contribute)
-  - [Notice](#notice)
+- [Available Plans](#available-plans)
+- [What is a Micro Emulation Plan?](#what-is-a-micro-emulation-plan)
+- [User Guidance](#user-guidance)
+  - [Getting Started](#getting-started)
+  - [Making These Plans Your Own](#making-these-plans-your-own)
+- [How Do I Contribute?](#how-do-i-contribute)
+- [Notice](#notice)
 
 ## Available Plans
 

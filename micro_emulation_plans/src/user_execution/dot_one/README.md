@@ -25,9 +25,8 @@
 - Application: Microsoft Visual Studio
 
 1. Use [this cyberchef link](https://gchq.github.io/CyberChef/#recipe=Encode_text('UTF-16LE%20(1200)')To_Base64('A-Za-z0-9%2B/%3D')&input=c2NodGFza3MgL0NyZWF0ZSAvRiAvU0MgTUlOVVRFIC9NTyAzIC9TVCAwNzowMCAvVE4gQ01EVGVzdFRhc2sgL1RSICJjbWQgL2MgZGF0ZSAvVCA%2BIEM6XFdpbmRvd3NcVGVtcFxjdXJyZW50X2RhdGUudHh0Ig), replacing the `input` with the desired PowerShell commands
-2. Paste the `output` from CyberChef into a new file `README.md`
-3. In Visual Studio, double-click the `Resource1.resx` file in Solution Explorer and replace the default `README.md` with your new version
-4. Compile as normal
+2. Paste the `output` from CyberChef into the [README.md](./Resources/README.md) in the resources folder
+3. Open the project in Visual Studio and compiel as normal
  
 ## Updating the .one file
 

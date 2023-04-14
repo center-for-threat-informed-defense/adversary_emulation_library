@@ -6,14 +6,13 @@ This micro emulation plan targets malicious activity associated with [T1070.001 
 
 **Table Of Contents:**
 
-- [Micro Emulation Plan: Clear Windows Event Logs](#micro-emulation-plan-clear-windows-event-logs)
-  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-  - [CTI / Background](#cti--background)
-  - [Execution Instructions / Resources](#execution-instructions--resources)
-    - [Execution Demo](#execution-demo)
-  - [Defensive Lessons Learned](#defensive-lessons-learned)
-    - [Detection](#detection)
-    - [Mitigation](#mitigation)
+- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+- [CTI / Background](#cti--background)
+- [Execution Instructions / Resources](#execution-instructions--resources)
+  - [Execution Demo](#execution-demo)
+- [Defensive Lessons Learned](#defensive-lessons-learned)
+  - [Detection](#detection)
+  - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

@@ -4,15 +4,14 @@ This micro emulation plan targets malicious activity surrounding [TA0010 Exfiltr
 
 **Table Of Contents:**
 
-- [Micro Emulation Plan: Data Exfiltration](#micro-emulation-plan-data-exfiltration)
-  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-  - [CTI / Background](#cti--background)
-  - [Execution Instructions / Resources](#execution-instructions--resources)
-    - [Command Arguments](#command-arguments)
-    - [Execution Demo](#execution-demo)
-  - [Defensive Lessons Learned](#defensive-lessons-learned)
-    - [Detection](#detection)
-    - [Mitigation](#mitigation)
+- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+- [CTI / Background](#cti--background)
+- [Execution Instructions / Resources](#execution-instructions--resources)
+  - [Command Arguments](#command-arguments)
+  - [Execution Demo](#execution-demo)
+- [Defensive Lessons Learned](#defensive-lessons-learned)
+  - [Detection](#detection)
+  - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 
@@ -53,7 +52,7 @@ For TLS and QUIC protocols, a certificate + key is required (and also provided i
 
 ### Detection
 
-Detecting data theft in aggregate may be challenging, as many of the relevant actions are otherwise benign and potentially high volume. Decomposing the compound behavior into individual technique may reveal actionable defensive opportunities, such as:
+Detecting data theft in aggregate may be challenging, as many of the relevant actions are otherwise benign and potentially high volume. Decomposing the compound behavior into individual techniques may reveal actionable defensive opportunities, such as:
 
 - Abnormal [file access patterns](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/master/micro_emulation_plans/src/file_access#detection), especially high volumes targeting potentially sensitive data
 - Execution of processes (e.g., `WinRAR.exe`) as well as creation of files (e.g., `.zip`) associated with creating data archives
