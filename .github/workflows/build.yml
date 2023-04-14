@@ -26,7 +26,7 @@ jobs:
         mkdir release/DataExfil/Linux
 
     - name: Make build folders
-      working-directory: ./src/data_exfil
+      working-directory: ./micro_emulation_plans/src/data_exfil
       run: |
         mkdir ./build
         mkdir ./build/linux
