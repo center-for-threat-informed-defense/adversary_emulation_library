@@ -48,12 +48,6 @@ jobs:
         cp ./micro_emulation_plans/src/data_exfil/README*.md release/DataExfil/
         cp ./micro_emulation_plans/src/data_exfil/build/linux/* release/DataExfil/Linux
 
-    # upload artifacts for use in make-release
-    - uses: actions/upload-artifact@v3
-      with:
-        name: linux-tools
-        path: release/
-
     # webshell:
     - name: Make release folders
       run: |
