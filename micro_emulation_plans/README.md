@@ -1,5 +1,5 @@
 [![MITRE ATT&CK® v11](https://img.shields.io/badge/MITRE%20ATT%26CK®-v11-red)](https://attack.mitre.org/versions/v11/)
-[![codecov](https://codecov.io/gh/center-for-threat-informed-defense/project-template/branch/main/graph/badge.svg?token=ygDiymg8y3)](https://codecov.io/gh/center-for-threat-informed-defense/project-template)
+
 
 # Micro Emulation Plans
 
@@ -33,7 +33,7 @@ simulation (BAS) tools. (See the [CALDERA example](/caldera-integration/).)
 
 |                  Micro Emulation Plan                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | :----------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [File Access and File Modification](./src/file_access/) | Emulate file access and modification behaviors commonly associated with [TA0009 Collection](https://attack.mitre.org/tactics/TA0009/) as well as [T1486 Data Encrypted for Impact](https://attack.mitre.org/techniques/T1486/). (Data source: [DS0022 File](https://attack.mitre.org/datasources/DS0022/))                                                                                                                                                    |
+| [File Access and File Modification](./src/file_access/) | Emulates file access and modification behaviors commonly associated with [TA0009 Collection](https://attack.mitre.org/tactics/TA0009/) as well as [T1486 Data Encrypted for Impact](https://attack.mitre.org/techniques/T1486/). (Data source: [DS0022 File](https://attack.mitre.org/datasources/DS0022/))                                                                                                                                                    |
 |            [Named Pipes](./src/named_pipes/)            | Emulates the creation and use of named pipes [commonly abused by malware](https://labs.withsecure.com/blog/detecting-cobalt-strike-default-modules-via-named-pipe-analysis/) (Data source: [DS0023 Named Pipe](https://attack.mitre.org/datasources/DS0023/))                                                                                                                                                                                                |
 |       [Windows Registry](./src/windows_registry/)       | Emulates a few common methods that adversaries use to modify the Windows Registry. (Data Source: [DS0024 Windows Registry](https://attack.mitre.org/datasources/DS0024/))                                                                                                                                                                                                                                                                                     |
 |              [Web Shells](./src/webshell/)              | Emulates the compound behavior of planting a web shell ([T1505.003 Server Software Component: Web Shell](https://attack.mitre.org/techniques/T1505/003/)) and then executing arbitrary commands through it ([T1059 Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059/))                                                                                                                                                           |
@@ -64,7 +64,7 @@ These micro emulation plans answer questions such as:
 
 > Are we collecting the right data about [data source]?
 >
-> How well do we detect or prevent [a particular part of an intrusion]?`
+> How well do we detect or prevent [a particular part of an intrusion]?
 
 We hope that these plans offer both actionable resources as well as inspiration
 for future research and micro emulation plan development.
@@ -74,7 +74,7 @@ for future research and micro emulation plan development.
 ### Getting Started
 
 Code and documentation for each micro emulation plan are available in
-[`/src`](/src). The `README` file for each plan is structured the same and
+[`/src`](./src). The `README` file for each plan is structured the same and
 includes:
 
 - Description of Emulated Behaviors (What are we doing?)
