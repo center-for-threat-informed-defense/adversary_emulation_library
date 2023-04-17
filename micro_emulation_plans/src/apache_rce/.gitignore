@@ -1,0 +1,8 @@
+# File extensions
+*.exe
+
+# This build is meant to be independent of VS Code
+.vs/*
+
+# Values specific to this project / module
+build/*.exe

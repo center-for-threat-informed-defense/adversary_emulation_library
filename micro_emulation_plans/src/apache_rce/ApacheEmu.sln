@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApacheEmu", "ApacheEmu\ApacheEmu.csproj", "{B6AC32F1-C0F0-4D98-A845-A930C1D5783F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6AC32F1-C0F0-4D98-A845-A930C1D5783F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6AC32F1-C0F0-4D98-A845-A930C1D5783F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6AC32F1-C0F0-4D98-A845-A930C1D5783F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6AC32F1-C0F0-4D98-A845-A930C1D5783F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3AAC8D4D-6C3E-431C-BB7A-8F0C63950FBE}
+	EndGlobalSection
+EndGlobal

@@ -1,4 +1,4 @@
-name: "Build Micro Plans"
+name: "Build"
 
 on:
   push:
@@ -16,14 +16,49 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/setup-go@v4
+      with:
+        go-version: '1.19'
+
+    #data_exfil
+    - name: Make release folders
+      run: |
+        mkdir release
+        mkdir release/DataExfil
+        mkdir release/DataExfil/Linux
+
+    - name: Make build folders
+      working-directory: ./micro_emulation_plans/src/data_exfil
+      run: |
+        mkdir ./build
+        mkdir ./build/linux
+        
+    - name: Install data_exfil dependencies
+      working-directory: ./micro_emulation_plans/src/data_exfil
+      run:
+        go get ./...
+
+    - name: Build Linux data exfiltration release
+      working-directory: ./micro_emulation_plans/src/data_exfil
+      run: |
+        go build -o build/linux/data_exfil ./cmd/main.go
+
+    - name: Copy data_exfil artifacts
+      run: |
+        cp ./micro_emulation_plans/src/data_exfil/README*.md release/DataExfil/
+        cp ./micro_emulation_plans/src/data_exfil/build/linux/* release/DataExfil/Linux
 
     # webshell:
     - name: Make release folders
-      run: mkdir -p ./release/Webshell/Linux
+      run: |
+        mkdir release/Webshell
+        mkdir release/Webshell/Linux
 
     - name: Make build folders
       working-directory: ./micro_emulation_plans/src/webshell
-      run: mkdir -p ./build/linux
+      run: |
+        mkdir ./build
+        mkdir ./build/linux
 
     - name: Build Linux PHP release
       working-directory: ./micro_emulation_plans/src/webshell
@@ -37,29 +72,47 @@ jobs:
 
     - name: Copy webshell artifacts
       run: |
-        cp ./micro_emulation_plans/src/webshell/README*.md ./release/Webshell/
-        cp ./micro_emulation_plans/src/webshell/build/linux/* ./release/Webshell/Linux
+        cp ./micro_emulation_plans/src/webshell/README*.md release/Webshell/
+        cp ./micro_emulation_plans/src/webshell/build/linux/* release/Webshell/Linux
 
     # upload artifacts for use in make-release
     - uses: actions/upload-artifact@v3
       with:
         name: linux-tools
-        path: ./release
+        path: release/
 
   windows-build:
     name: "Windows Build"
     runs-on: "windows-2022"
 
     steps:
-    # fixes build issue on windows with long file paths
-    - name: Enable long paths
-      run: git config --system core.longpaths true
-
     - uses: actions/checkout@v3
     - uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '6.0.300'
+    - uses: actions/setup-go@v4
+      with:
+        go-version: '1.19'
 
+      #data_exfil  
+    - name: Install data_exfil dependencies
+      working-directory: ./micro_emulation_plans/src/data_exfil
+      run:
+        go get ./...
+
+    - name: Build data_exfil
+      working-directory: ./micro_emulation_plans/src/data_exfil
+      run: go build ./cmd/main.go
+
+
+    - name: Make data_exfil folder
+      run: mkdir release/DataExfil/Windows
+
+    - name: Copy data_exfil artifacts
+      run: |
+        cp ./micro_emulation_plans/src/data_exfil/README.md release/DataExfil/README.md
+        cp ./micro_emulation_plans/src/data_exfil/main.exe release/DataExfil/DataExfil.exe
+  
     # ad_enum:
     - name: Install ad_enum dependencies
       working-directory: ./micro_emulation_plans/src/ad_enum
@@ -80,6 +133,31 @@ jobs:
         cp ./micro_emulation_plans/src/ad_enum/README.md release/ActiveDirectoryEnumeration/README.md
         cp ./micro_emulation_plans/src/ad_enum/build/ad_enum.exe release/ActiveDirectoryEnumeration/ActiveDirectoryEnumeration.exe
 
+    # Apache_rce:
+    - name: build apache_rce
+      working-directory: ./micro_emulation_plans/src/apache_rce
+      run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
+
+    - name: Make apache_rce folder
+      run: mkdir release/ApacheRCE
+    
+    - name: Copy apache_rce artifacts
+      run: |
+        cp ./micro_emulation_plans/src/apache_rce/build/ApacheEMU.exe release/ApacheRCE/ApacheRCE.exe
+
+
+    # reflective_loading:
+    - name: build reflective_loading
+      working-directory: ./micro_emulation_plans/src/reflective_loading
+      run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
+
+    - name: Make reflective_loading folder
+      run: mkdir release/ReflectiveLoading
+
+    - name: Copy reflective_loading artifacts
+      run: cp ./micro_emulation_plans/src/reflective_loading/build/reflective_loading.exe release/ReflectiveLoading/reflective_loading.exe
+
+    
     # file_access:
     - name: Install file_access dependencies
       working-directory: ./micro_emulation_plans/src/file_access
@@ -137,24 +215,37 @@ jobs:
     # user_execution:
     - name: Create user_execution release folder
       run: mkdir release/UserExecution
-
-    # iso-bypass:
-    - name: Install iso-bypass dependencies
-      working-directory: ./micro_emulation_plans/src/user_execution/iso-bypass
-      run: dotnet restore
-
-    - name: Build iso-bypass
-      working-directory: ./micro_emulation_plans/src/user_execution/iso-bypass
+    
+    # dot_one:
+    - name: build dot_one
+      working-directory: ./micro_emulation_plans/src/user_execution/dot_one
       run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
 
-    - name: Make iso-bypass folder
+    - name: Make dot_one folder
+      run: mkdir release/UserExecution/DotOne
+    
+    - name: Copy dot_one artifacts
+      run: |
+        cp ./micro_emulation_plans/src/user_execution/dot_one/build/dot_one.exe release/UserExecution/DotOne/dot_one.exe
+        cp ./micro_emulation_plans/src/user_execution/dot_one/README_dot_one.md release/UserExecution/DotOne/README_dot_one.md 
+
+    # iso_bypass:
+    - name: Install iso_bypass dependencies
+      working-directory: ./micro_emulation_plans/src/user_execution/iso_bypass
+      run: dotnet restore
+
+    - name: Build iso_bypass
+      working-directory: ./micro_emulation_plans/src/user_execution/iso_bypass
+      run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
+
+    - name: Make iso_bypass folder
       run: mkdir release/UserExecution/ISOBypass
 
-    - name: Copy iso-bypass artifacts
+    - name: Copy iso_bypass artifacts
       run: |
-        cp ./micro_emulation_plans/src/user_execution/iso-bypass/README.md release/UserExecution/ISOBypass/README.md
-        cp ./micro_emulation_plans/src/user_execution/iso-bypass/download.iso release/UserExecution/ISOBypass/download.iso
-        cp ./micro_emulation_plans/src/user_execution/iso-bypass/build/iso.exe release/UserExecution/ISOBypass/ISOBypass.exe
+        cp ./micro_emulation_plans/src/user_execution/iso_bypass/README_iso_bypass.md release/UserExecution/ISOBypass/README_iso_bypass.md
+        cp ./micro_emulation_plans/src/user_execution/iso_bypass/download.iso release/UserExecution/ISOBypass/download.iso
+        cp ./micro_emulation_plans/src/user_execution/iso_bypass/build/iso.exe release/UserExecution/ISOBypass/ISOBypass.exe
 
     # macros: - unsure if we want to do the commented out stuff, but it should work
     - name: Get DLLs
@@ -196,7 +287,7 @@ jobs:
         cp ./micro_emulation_plans/src/user_execution/macros/docs/enable_macros/*.jpg release/UserExecution/Macros/docs/enable_macros
         cp ./micro_emulation_plans/src/user_execution/macros/payload_code/whoami.md release/UserExecution/Macros/payload_code/whoami.md
         cp ./micro_emulation_plans/src/user_execution/macros/payloads/whoami.docm release/UserExecution/Macros/payloads/whoami.docm
-        cp ./micro_emulation_plans/src/user_execution/macros/README.md release/UserExecution/Macros/README.md
+        cp ./micro_emulation_plans/src/user_execution/macros/README_macros.md release/UserExecution/Macros/README.md
 
     # shortcut:
     - name: Install shortcut dependencies
@@ -212,7 +303,7 @@ jobs:
 
     - name: Copy shortcut artifacts
       run: |
-        cp ./micro_emulation_plans/src/user_execution/shortcut/README.md release/UserExecution/Shortcut/README.md
+        cp ./micro_emulation_plans/src/user_execution/shortcut/README_shortcut.md release/UserExecution/Shortcut/README_shortcut.md
         cp ./micro_emulation_plans/src/user_execution/shortcut/build/generate_lnk.exe release/UserExecution/Shortcut/Shortcut.exe
 
     # webshell:
