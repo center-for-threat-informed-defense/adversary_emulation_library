@@ -303,7 +303,7 @@ jobs:
 
     - name: Copy shortcut artifacts
       run: |
-        cp ./micro_emulation_plans/src/user_execution/shortcut/README.md release/UserExecution/Shortcut/README.md
+        cp ./micro_emulation_plans/src/user_execution/shortcut/README_shortcut.md release/UserExecution/Shortcut/README_shortcut.md
         cp ./micro_emulation_plans/src/user_execution/shortcut/build/generate_lnk.exe release/UserExecution/Shortcut/Shortcut.exe
 
     # webshell:
