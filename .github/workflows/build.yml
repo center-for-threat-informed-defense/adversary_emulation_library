@@ -134,7 +134,6 @@ jobs:
         cp ./micro_emulation_plans/src/ad_enum/build/ad_enum.exe release/ActiveDirectoryEnumeration/ActiveDirectoryEnumeration.exe
 
     # Apache_rce:
-
     - name: build apache_rce
       working-directory: ./micro_emulation_plans/src/apache_rce
       run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
@@ -173,18 +172,6 @@ jobs:
 
     - name: Copy file_access artifacts
       run: cp ./micro_emulation_plans/src/file_access/README.md, ./micro_emulation_plans/src/file_access/build/FileAccess.exe release/FileAccess
-
-    # dot_one:
-    - name: build dot_one
-      working-directory: ./micro_emulation_plans/src/user_execution/dot_one
-      run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
-
-    - name: Make dot_one folder
-      run: mkdir release/DotOne
-    
-    - name: Copy dot_one artifacts
-      run: |
-        cp ./micro_emulation_plans/src/user_execution/dot_one/build/dot_one.exe release/DotOne/dot_one.exe
 
     # named_pipes:
     - name: Make named_pipes build folder
@@ -228,24 +215,37 @@ jobs:
     # user_execution:
     - name: Create user_execution release folder
       run: mkdir release/UserExecution
-
-    # iso-bypass:
-    - name: Install iso-bypass dependencies
-      working-directory: ./micro_emulation_plans/src/user_execution/iso-bypass
-      run: dotnet restore
-
-    - name: Build iso-bypass
-      working-directory: ./micro_emulation_plans/src/user_execution/iso-bypass
+    
+    # dot_one:
+    - name: build dot_one
+      working-directory: ./micro_emulation_plans/src/user_execution/dot_one
       run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
 
-    - name: Make iso-bypass folder
+    - name: Make dot_one folder
+      run: mkdir release/UserExecution/DotOne
+    
+    - name: Copy dot_one artifacts
+      run: |
+        cp ./micro_emulation_plans/src/user_execution/dot_one/build/dot_one.exe release/UserExecution/DotOne/dot_one.exe
+        cp ./micro_emulation_plans/src/user_execution/dot_one/README_dot_one.md release/UserExecution/DotOne/README_dot_one.md 
+
+    # iso_bypass:
+    - name: Install iso_bypass dependencies
+      working-directory: ./micro_emulation_plans/src/user_execution/iso_bypass
+      run: dotnet restore
+
+    - name: Build iso_bypass
+      working-directory: ./micro_emulation_plans/src/user_execution/iso_bypass
+      run: dotnet publish --configuration Release -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./build
+
+    - name: Make iso_bypass folder
       run: mkdir release/UserExecution/ISOBypass
 
-    - name: Copy iso-bypass artifacts
+    - name: Copy iso_bypass artifacts
       run: |
-        cp ./micro_emulation_plans/src/user_execution/iso-bypass/README.md release/UserExecution/ISOBypass/README.md
-        cp ./micro_emulation_plans/src/user_execution/iso-bypass/download.iso release/UserExecution/ISOBypass/download.iso
-        cp ./micro_emulation_plans/src/user_execution/iso-bypass/build/iso.exe release/UserExecution/ISOBypass/ISOBypass.exe
+        cp ./micro_emulation_plans/src/user_execution/iso_bypass/README_iso_bypass.md release/UserExecution/ISOBypass/README_iso_bypass.md
+        cp ./micro_emulation_plans/src/user_execution/iso_bypass/download.iso release/UserExecution/ISOBypass/download.iso
+        cp ./micro_emulation_plans/src/user_execution/iso_bypass/build/iso.exe release/UserExecution/ISOBypass/ISOBypass.exe
 
     # macros: - unsure if we want to do the commented out stuff, but it should work
     - name: Get DLLs
@@ -287,7 +287,7 @@ jobs:
         cp ./micro_emulation_plans/src/user_execution/macros/docs/enable_macros/*.jpg release/UserExecution/Macros/docs/enable_macros
         cp ./micro_emulation_plans/src/user_execution/macros/payload_code/whoami.md release/UserExecution/Macros/payload_code/whoami.md
         cp ./micro_emulation_plans/src/user_execution/macros/payloads/whoami.docm release/UserExecution/Macros/payloads/whoami.docm
-        cp ./micro_emulation_plans/src/user_execution/macros/README.md release/UserExecution/Macros/README.md
+        cp ./micro_emulation_plans/src/user_execution/macros/README_macros.md release/UserExecution/Macros/README.md
 
     # shortcut:
     - name: Install shortcut dependencies

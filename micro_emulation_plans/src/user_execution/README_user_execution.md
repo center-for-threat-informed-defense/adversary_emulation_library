@@ -40,12 +40,12 @@ downloading and staging additional payloads onto the victim host.
 
 This repository includes modules that execute multiple variants of user execution:
 
-* Office documents containing macros: [README_macros.md](macros/README.md)
+* Office documents containing macros: [README_macros.md](macros/README_macros.md)
 * Shortcut (LNK) files containing PowerShell commands:
-  [README_shortcut.md](shortcut/README.md)
+  [README_shortcut.md](shortcut/README_shortcut.md)
 * Container (ISO) files containing commands in a batch script:
-  [README_bypass.md](iso-bypass/README.md)
-* OneNote file containing malicious batch script: [README_dotone.md](dot_one/README.md)
+  [README_iso_bypass.md](iso_bypass/README_iso_bypass.md)
+* OneNote file containing malicious batch script: [README_dotone.md](dot_one/README_dot_one.md)
 
 ### Execution Demo
 
