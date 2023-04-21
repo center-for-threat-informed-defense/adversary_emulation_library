@@ -94,36 +94,7 @@ jobs:
       with:
         go-version: '1.19'
 
-    # dll_sideloading
-    - name: Build dll_sideloading
-      working-directory: ./micro_emulation_plans/src/dll_sideloading
-      run: gcc src/dll_sideloading.c -o dll_sideloading.exe
-
-    - name: Make dll_sideloading folder
-      run: mkdir release/DLLSideloading
-
-    - name: Copy dll_sideloading artifacts
-      run: |
-        cp ./micro_emulation_plans/src/dll_sideloading/README.md release/DLLSideloading/README.md
-        cp ./micro_emulation_plans/src/dll_sideloading/src/libgcc_s_seh-1.dll release/DLLSideloading/libgcc_s_seh-1.dll
-        cp ./micro_emulation_plans/src/dll_sideloading/src/libstdc++-6.dll release/DLLSideloading/libstdc++-6.dll
-        cp ./micro_emulation_plans/src/dll_sideloading/src/libwinpthread-1.dll release/DLLSideloading/libwinpthread-1.dll
-        cp ./micro_emulation_plans/src/dll_sideloading/dll_sideloading.exe release/DLLSideloading/dll_sideloading.exe
-
-    # log_clearing
-    - name: Build log_clearing
-      working-directory: ./micro_emulation_plans/src/log_clearing
-      run: gcc src/log_clearing.c -o log_clearing.exe
-
-    - name: Make log_clearing folder
-      run: mkdir release/LogClearing
-
-    - name: Copy log_clearing artifacts
-      run: |
-        cp ./micro_emulation_plans/src/log_clearing/README.md release/LogClearing/README.md
-        cp ./micro_emulation_plans/src/log_clearing/log_clearing.exe release/LogClearing/log_clearing.exe
-
-    #data_exfil  
+      #data_exfil  
     - name: Install data_exfil dependencies
       working-directory: ./micro_emulation_plans/src/data_exfil
       run:
