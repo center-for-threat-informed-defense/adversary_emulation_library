@@ -1,6 +1,6 @@
 # Adversary Emulation Library
 
-In collaboration with Center Participants, the [Center for Threat-Informed Defense (Center)](https://ctid.mitre-engenuity.org/) has built a library of adversary emulation plans to allow organizations to evaluate their defensive capabilities against the real-world threats they face. Emulation plans are an essential component in testing current defenses for organizations that are looking to prioritize their defenses around actual adversary behavior. Focusing our energies on developing a set of common emulation plans that are available to all means that organizations can use their limited time and resources to focus on understanding how their defenses actually fare against real-world threats.
+In collaboration with Center Participants, the [Center for Threat-Informed Defense (Center)](https://ctid.mitre-engenuity.org/) maintains a library of adversary emulation plans to allow organizations to evaluate their defensive capabilities against the real-world threats they face. Emulation plans are an essential component in testing current defenses for organizations that are looking to prioritize their defenses around actual adversary behavior. Focusing our energies on developing a set of common emulation plans that are available to all means that organizations can use their limited time and resources to focus on understanding how their defenses actually fare against real-world threats.
 
 The library contains two types of adversary emulation plans: full emulation and micro emulation. 
 
