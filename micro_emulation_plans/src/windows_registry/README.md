@@ -10,15 +10,18 @@ values. Abuse of the Registry spans numerous diverse adversary behaviors,
 including tampering with system settings to enable Persistence or Privilege
 Escalation as well as hiding payloads or other operational information.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: Windows Registry](#micro-emulation-plan-windows-registry)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [Cyber Threat Intel / Background](#cyber-threat-intel--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

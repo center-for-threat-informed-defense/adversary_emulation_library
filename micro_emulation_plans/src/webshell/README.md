@@ -9,15 +9,18 @@ arbitrary commands/functions on the victim server through a HTTP(S)
 communication channel with the web shell. Various threat actors have abused web
 shells targeting both Windows and Linux infrastructure.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: Web Shells](#micro-emulation-plan-web-shells)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [Cyber Threat Intel / Background](#cyber-threat-intel--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

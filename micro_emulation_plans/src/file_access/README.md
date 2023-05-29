@@ -12,15 +12,18 @@ conduct file access or modification behaviors during various stages of an
 attack, but the cadence between the two will be much slower than with
 ransomware.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: File Access and File Modification](#micro-emulation-plan-file-access-and-file-modification)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [Cyber Threat Intel / Background](#cyber-threat-intel--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

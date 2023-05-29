@@ -2,15 +2,18 @@
 
 This micro emulation plan targets malicious activity associated with [T1574.002 Hijack Execution Flow: DLL Side-Loading](https://attack.mitre.org/techniques/T1574/002/). DLL side-loading involves adversaries executing an otherwise legitimate/benign application in order to hijack the modules/libraries it loads to instead execute their malicious payload. This behavior is very often abused to execute malware within trusted, potentially privileged (i.e. [TA0004 Privilege Escalation](https://attack.mitre.org/tactics/TA0004/)) applications.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: DLL Side-loading](#micro-emulation-plan-dll-side-loading)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [CTI / Background](#cti--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

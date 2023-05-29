@@ -2,16 +2,19 @@
 
 This micro emulation plan targets malicious activity surrounding [TA0010 Exfiltration](https://attack.mitre.org/tactics/TA0010/). Data theft via exfiltration is very often part of, if not the primary objective, of an intrusion/campaign and is comprised of compound behaviors involving both exfiltration as well as [TA0009 Collection](https://attack.mitre.org/tactics/TA0009/) techniques.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Command Arguments](#command-arguments)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: Data Exfiltration](#micro-emulation-plan-data-exfiltration)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [CTI / Background](#cti--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Command Arguments](#command-arguments)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

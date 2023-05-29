@@ -10,17 +10,20 @@ SMB. Named pipes are commonly abused by malware (ex: [Cobalt
 Strike](https://labs.f-secure.com/blog/detecting-cobalt-strike-default-modules-via-named-pipe-analysis/))
 while injecting/retrieving payloads and commands.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [Cyber Threat Intel / Background](#cyber-threat-intel--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Command Arguments](#command-arguments)
-  - [Customizing the Executables](#customizing-the-executables)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: Named Pipes](#micro-emulation-plan-named-pipes)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [Cyber Threat Intel / Background](#cyber-threat-intel--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Command Arguments](#command-arguments)
+    - [Customizing the Executables](#customizing-the-executables)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

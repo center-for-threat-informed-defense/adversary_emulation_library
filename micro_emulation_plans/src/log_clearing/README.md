@@ -4,15 +4,18 @@
 
 This micro emulation plan targets malicious activity associated with [T1070.001 Indicator Removal: Clear Windows Event Logs](https://attack.mitre.org/techniques/T1070/001/). Adversaries and malware often target clearing and/or disabling the native logging provided by Windows events in order to evade detections, while also inhibiting response and recovery from breaches.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: Clear Windows Event Logs](#micro-emulation-plan-clear-windows-event-logs)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [CTI / Background](#cti--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

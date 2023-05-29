@@ -2,15 +2,18 @@
 
 This micro emulation plan targets compound behaviors related to [T1620 Reflective Code Loading](https://attack.mitre.org/techniques/T1620/). [Malware commonly abuses reflective loading](https://thewover.github.io/Introducing-Donut/) to execute malicious code within an otherwise seemingly benign host process. There are many variations of reflectively loading code (this emulation focuses on a few very common variants) that highlight potentially broader defensive lessons learned.
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: Reflective Code Loading](#micro-emulation-plan-reflective-code-loading)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [CTI / Background](#cti--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

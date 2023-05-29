@@ -7,15 +7,18 @@ behavior specifically highlights execution invoked by the victim in the form of
 clicking or otherwise invoking malicious code from phishing or other delivery
 campaigns.
 
+You can access the binaries for these micro plans as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: User Execution](#micro-emulation-plan-user-execution)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [CTI / Background](#cti--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 

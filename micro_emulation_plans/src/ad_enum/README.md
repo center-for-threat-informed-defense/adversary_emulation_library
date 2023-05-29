@@ -9,8 +9,9 @@ DS)](https://docs.microsoft.com/windows-server/identity/ad-ds/get-started/virtua
 is often targeted as rich and accessible source of information about various
 objects in a network.
 
-**Table Of Contents:**
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
 
+**Table Of Contents:**
 - [Micro Emulation Plan: Active Directory Enumeration](#micro-emulation-plan-active-directory-enumeration)
   - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
   - [Cyber Threat Intel / Background](#cyber-threat-intel--background)

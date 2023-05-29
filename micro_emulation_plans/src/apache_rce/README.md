@@ -1,17 +1,20 @@
-# Micro Emulation Plan: Remote Application Exploitation
+# Micro Emulation Plan: Remote Application Exploitation <!-- TOC ignore:true -->
 
 This micro emulation plan targets remote exploitation activity. Exploitation of vulnerabilities (especially those that enable remote code execution) are very often abused to enable [TA0001 Initial Access](https://attack.mitre.org/tactics/TA0001/) (e.g., [T1190 Exploit Public-Facing Application](https://attack.mitre.org/techniques/T1190/)), but may also be included in post-compromise activity (e.g., [T1210 Exploitation of Remote Services](https://attack.mitre.org/techniques/T1210/) as part of [TA0008 Lateral Movement](https://attack.mitre.org/tactics/TA0008/)).
 
+You can access the binary for this micro plan as part of the [latest release](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/releases). 
+
 **Table Of Contents:**
 
-- [Description of Emulated Behaviors](#description-of-emulated-behaviors)
-- [CTI / Background](#cti--background)
-- [Execution Instructions / Resources](#execution-instructions--resources)
-  - [Command Arguments](#command-arguments)
-  - [Execution Demo](#execution-demo)
-- [Defensive Lessons Learned](#defensive-lessons-learned)
-  - [Detection](#detection)
-  - [Mitigation](#mitigation)
+- [Micro Emulation Plan: Remote Application Exploitation ](#micro-emulation-plan-remote-application-exploitation-)
+  - [Description of Emulated Behaviors](#description-of-emulated-behaviors)
+  - [CTI / Background](#cti--background)
+  - [Execution Instructions / Resources](#execution-instructions--resources)
+    - [Command Arguments](#command-arguments)
+    - [Execution Demo](#execution-demo)
+  - [Defensive Lessons Learned](#defensive-lessons-learned)
+    - [Detection](#detection)
+    - [Mitigation](#mitigation)
 
 ## Description of Emulated Behaviors
 
