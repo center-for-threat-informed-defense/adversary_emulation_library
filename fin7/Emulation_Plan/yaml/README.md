@@ -17,7 +17,7 @@ As new files are added, please list them in the below table.
 ## Skipped Procedures
 
 A number of procedures within the emulation plan are not present within the YAML file.
-This is because these procedures integrate with external frameworks or involve interaction with a GUI, which cannot be simple expressed in an automatable format.
+This is because these procedures integrate with external frameworks or involve interaction with a GUI, which cannot be simply expressed in an automatable format.
 
 The table below lists the steps/procedures that were skipped along with the reason why.
 
