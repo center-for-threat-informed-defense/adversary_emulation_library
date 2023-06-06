@@ -9,3 +9,4 @@ docs/_build/
 *.tmp
 TODO*
 xcuserdata/
+.DS_Store
