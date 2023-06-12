@@ -31,7 +31,7 @@ body:
       label: Operating System
       description: You may select more than one.
       multiple: true
-      options: select all that apply
+      options:
         - Linux
         - macOS
         - Windows
