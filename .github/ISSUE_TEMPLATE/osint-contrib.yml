@@ -7,9 +7,7 @@ body:
       value: |
         ### :pray: Thank you for taking the time to contribute! :love_letter: :raised_hands:
         This issue template is for Community-based open-source intelligence (OSINT) contributions on specific adversaries. Please review the [Contributing Wiki](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/wiki/Contributing) for guidance on the type of information to contribute. 
-
         Please add the adversary lable to this issue. :label:
-
   - type: textarea
     id: description
     attributes:
@@ -18,7 +16,7 @@ body:
       placeholder: i.e. RE analsysis, ATT&CK procedures, proof of concept code
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: files
     attributes:
       label: Supporting files or evidence
@@ -34,6 +32,7 @@ body:
     id: os
     attributes:
       label: Operating System
+      description: You may select more than one.
       multiple: true
       options: select all that apply
         - Linux
