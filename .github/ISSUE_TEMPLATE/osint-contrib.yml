@@ -27,7 +27,7 @@ body:
     id: osint-verify
     attributes:
       label: Where did you find this information? 
-      description: Is this information publicly citable or is this original analysis? If original analysis, please be detailed and thorough in your assessments with technical proof.   
+      description: Is this information publicly citable or is this original analysis? If original analysis, please be detailed and thorough in your assessments with technical proof. Use the [Contributing Wiki](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/wiki/Contributing) for example assessments.     
       placeholder: 
   - type: dropdown
     id: os
