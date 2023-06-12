@@ -4,7 +4,11 @@ title: ":love_letter: [OSINT Contribution]: Title "
 body:
   - type: markdown
     attributes:
-      value: "### :pray: Thank you for taking the time to contribute! :love_letter: :raised_hands:"
+      value: |
+        ### :pray: Thank you for taking the time to contribute! :love_letter: :raised_hands:
+        This issue template is for Community-based open-source intelligence (OSINT) contributions on specific adversaries. Please review the [Contributing Wiki](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/wiki/Contributing) for guidance on the type of information to contribute. 
+        
+        Please add the adversary lable to this issue. :label:
   - type: textarea
     id: description
     attributes:
