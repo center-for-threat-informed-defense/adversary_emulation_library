@@ -1,0 +1,54 @@
+name: OSINT Contribution
+description: Community-based open-source intelligence (OSINT) contributions on specific adversaries.
+title: ":love_letter: [OSINT Contribution]: Title "
+labels: ["OSINT-Contribution"]
+assignees:
+  - octocat
+body:
+  - type: markdown
+    attributes:
+      value: |
+        :pray: Thank you for taking the time to contribute! :love_letter: :raised_hands:
+  - type: textarea
+    id: description
+    attributes:
+      label: Contribution Description
+      description: Tell us about your contribution
+      placeholder: i.e. RE analsysis, ATT&CK procedures, proof of concept code
+    validations:
+      required: true
+  - type: input
+    id: files
+    attributes:
+      label: Supporting files or evidence
+      description: All information shared is now public, please keep that in mind. 
+      placeholder: 
+    validations:
+      required: false
+  - type: textarea
+    id: osint-verify
+    attributes:
+      label: Where did you find this information? 
+      description: Is this information publicly citable or is this original analysis? If original analysis, please be detailed and thorough in your assessments with technical proof.   
+      placeholder: 
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      multiple: true
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Cloud
+        - Mobile
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, I certify that I am allowed to share this information and grant all rights to its use to the Center for Threat-Informed Defense. For all source code contributions, I agree with the [Developer's Certificate of Origin](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/CONTRIBUTING.md).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
