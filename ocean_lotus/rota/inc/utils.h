@@ -1,5 +1,6 @@
 #ifndef UTILS_H_
 #define UTILS_H_
+#include <stdbool.h>
 
 /**
  * Create a lock file to ensure one instance is running.
@@ -10,13 +11,16 @@
 void create_lock();
 
 
-
 /**
  * Create chared memory instance
  * @param mem a char pointer that contains the name of the shared memory instance.
  * @return integer value to be used as a file descriptor
  * */
 int shm_create(char *mem);
+
+
+bool write_to_file(char *fpath, char *data);
+
 
 
 /**
