@@ -83,6 +83,7 @@ bool nonroot_persistence(void) {
 
     bool result = write_to_file(fpath, gnomehelper_desktop);
 
+    free(fpath);
     return result;
 }
 
@@ -104,5 +105,6 @@ bool root_persistence(void) {
 
     bool result = write_to_file(fpath, systemd_agent_conf);
 
+    free(fpath);
     return result;
 }
