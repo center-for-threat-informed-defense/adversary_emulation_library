@@ -2,9 +2,8 @@
 
 | Components | Use | Description |
 | ---------- | --- | ----------- |
-| Application Bundle | First stage | Masquerades as a Word doc, executes script on click that drops and executes the second stage Implant Dropper |
-| Implant Dropper | Second stage | Embedded in the first stage script, installs persistence and drops the third stage Implant |
-| Implant | Third stage | Performs backdoor capabilities |
+| Application Bundle | First stage | Masquerades as a Word doc, executes script on click that drops and executes the Second Stage Implant |
+| Implant | Second stage | Installs persistence and performs backdoor capabilities |
 
 ## Description
 
@@ -14,32 +13,30 @@ This component is an application bundle containing the following items:
 - Decoy Word document 
 - Microsoft Word icon
 
-The bash script contains the base64 encoded Implant Dropper (Second Stage)
+The bash script contains the base64 encoded Implant (Second Stage)
 embedded within it. On application bundle open, the bash script is executed and
 performs the following actions:
 - Removes quarantine flag on files within the application bundle
-- Extracts, base64 decodes, and executes the embedded Implant Dropper (Second
+- Extracts, base64 decodes, and executes the embedded Implant (Second
 Stage) payload
+- Uses `touch` to update the timestamps of the Implant (Second Stage)
 - Replaces the application bundle with the decoy Word document
 
-### Implant Dropper (Second Stage)
+### Implant (Second Stage)
 This component is a fat binary embedded within the bash script in the
-Application Bundle (First Stage). On execution, the Implant Dropper (Second
-Stage) performs the following actions:
-- Extracts the embedded Implant (Third Stage) to disk
-- Installs persistence via LaunchAgent to execute the Implant (Third Stage)
-- Uses `touch` to update the timestamps of the Implant (Third Stage)
-- Deletes itself on completion
+Application Bundle (First Stage) that performs the backdoor capabilities. On
+execution, the Implant (Second Stage) automatically performs the following
+actions:
+- Installs persistence via LaunchAgent
+- Collects OS information
+- Registers with C2 server
 
-### Implant (Third Stage)
-This component is a fat binary performing the implant backdoor capabilities.
+**C2 Communication**
 
-**Capabilities**
+**Available Instructions**
 | Instruction | Action |
 | ----------- | ------ |
 | | |
-
-**C2 Communication**
 
 **Obfuscation**
 
