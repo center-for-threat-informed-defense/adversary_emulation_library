@@ -1,7 +1,10 @@
 #include "utils.h"
 
 #include <stdlib.h>
+#include <strings.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/shm.h>
@@ -66,6 +69,25 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
 
     return filePathBuff;
 }
+
+
+bool write_to_file(char *fpath, char *data) {
+
+    // TODO - double check file permissions
+    int fd = open(fpath, O_CREAT | O_WRONLY, S_IRUSR|S_IEXEC);
+
+    int numbyteswritten = write(fd, data, strlen(data));
+
+    close(fd);
+    if (numbyteswritten == strlen(data)) {
+        return true;
+    } else {
+        return false;
+    }
+
+    return false;
+}
+
 
 
 /**
