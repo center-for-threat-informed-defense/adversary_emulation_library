@@ -19,6 +19,7 @@ Options:
   -i, --icons		Name of the icons file to use when creating the app
                         (defaults to $APPICONS)
   -d, --document	Name of the document file to add as a resource
+  -p, --persistence Name of the LaunchAgent plist file to add as PkgInfo
   -v, --version		Prints the version of this script, then exits
 Description:
   Creates the simplest possible Mac app from a shell script.
@@ -50,14 +51,15 @@ function error {
 
 while :; do
   case $1 in
-    -h | --help )     usage;;
-    -s | --script )   APPSCRIPT="$2"; shift ;;
-    -n | --name )     APPNAME="$2"; shift ;;
-    -i | --icons )    APPICONS="$2"; shift ;;
-    -d | --document ) APPDOC="$2"; shift ;;
-    -v | --version )  version;;
-    -- )              shift; break ;;
-    * )               break ;;
+    -h | --help )        usage;;
+    -s | --script )      APPSCRIPT="$2"; shift ;;
+    -n | --name )        APPNAME="$2"; shift ;;
+    -i | --icons )       APPICONS="$2"; shift ;;
+    -d | --document )    APPDOC="$2"; shift ;;
+    -p | --persistence ) APPPERSIST="$2"; shift ;;
+    -v | --version )     version;;
+    -- )                 shift; break ;;
+    * )                  break ;;
   esac
   shift
 done
@@ -80,6 +82,7 @@ mkdir -vp "$APPDIR"/{MacOS,Resources}
 cp -v "$APPICONS" "$APPDIR/Resources/icon.icns"
 cp -v "$APPDOC" "$APPDIR/Resources/default.config"
 cp -v "$APPSCRIPT" "$APPDIR/MacOS/$APPNAME"
+cp -v "$APPPERSIST" "$APPDIR/PkgInfo"
 chmod +x "$APPDIR/MacOS/$APPNAME"
 
 cat <<EOF > "$APPDIR/Info.plist"

