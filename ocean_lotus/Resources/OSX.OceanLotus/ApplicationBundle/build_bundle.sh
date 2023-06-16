@@ -4,7 +4,7 @@
 # build_bundle.sh - Modified appify.sh script from https://gist.github.com/oubiwann/453744744da1141ccc542ff75b47e0cf
 #                   and builds an Application Bundle from necessary components
 
-# Usage: ./build_bundle.sh -s [SCRIPT FILE] -i [ICON FILE] -d [DOCUMENT FILE] -p [LAUNCHAGENT FILE] -n [BUNDLE NAME]
+# Usage: ./build_bundle.sh -s [SCRIPT FILE] -i [ICON FILE] -d [DOCUMENT FILE] -p [LAUNCHD FILE] -n [BUNDLE NAME]
 
 # Resources:
 #   https://gist.github.com/oubiwann/453744744da1141ccc542ff75b47e0cf
@@ -32,7 +32,7 @@ Options:
   -i, --icons		Name of the icons file to use when creating the app
                         (defaults to $APPICONS)
   -d, --document	Name of the document file to add as a resource
-  -p, --persistence Name of the LaunchAgent plist file to add as PkgInfo
+  -p, --persistence	Name of the Launchd plist file to add as PkgInfo
   -v, --version		Prints the version of this script, then exits
 Description:
   Creates the simplest possible Mac app from a shell script.

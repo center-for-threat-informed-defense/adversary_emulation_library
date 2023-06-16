@@ -12,7 +12,7 @@ This component is an application bundle containing the following items:
 - Bash script
 - Decoy Word document 
 - Microsoft Word icon
-- LaunchAgent plist file (PkgInfo)
+- Launchd plist file (PkgInfo)
 
 The bash script contains the base64 encoded Implant (Second Stage)
 embedded within it. On application bundle open, the bash script is executed and
@@ -20,7 +20,7 @@ performs the following actions:
 - Removes quarantine flag on files within the application bundle
 - Extracts, base64 decodes, and executes the embedded Implant (Second
 Stage) payload
-- Installs persistence via LaunchAgent
+- Installs persistence via LaunchAgent or LaunchDaemon
 - Uses `touch` to update the timestamps of the Implant (Second Stage) artifacts
 - Uses `chmod` to make the Implant (Second Stage) binary file executable by
 changing file permissions to 755

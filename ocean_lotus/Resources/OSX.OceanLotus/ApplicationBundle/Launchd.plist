@@ -6,7 +6,7 @@
     <string>com.apple.launchpad</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/mchan/Library/WebKit/com.apple.launchpad</string>
+        <string>/Library/WebKit/com.apple.launchpad</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
