@@ -35,6 +35,7 @@ void create_lock() {
     char *x11dir= "/.X11";
     int x11path_size = strlen(HOME) + strlen(x11dir);
     char *dirpath = (char *)malloc(x11path_size);
+    bzero(dirpath, x11path_size);
     strncat(dirpath, HOME, strlen(HOME));
     strncat(dirpath, x11dir, strlen(x11dir));
     if (access(dirpath, F_OK) == -1) {
@@ -47,6 +48,8 @@ void create_lock() {
         flock(fd, LOCK_EX);
     }
 
+    free(flock_path);
+    free(dirpath);
     // lock file must already exist...
     close(fd);
 }
@@ -59,12 +62,12 @@ void create_lock() {
  **/
 bool self_delete(char *fpath) {
 
-        int res = unlink(fpath);
-        if (res < 0){
-            fprintf(stderr, "Error self-deleting: %s", strerror(errno));
-            return false;
-        }
-        return true;
+    int res = unlink(fpath);
+    if (res < 0){
+        fprintf(stderr, "Error self-deleting: %s", strerror(errno));
+        return false;
+    }
+    return true;
 }
 
 
@@ -104,7 +107,6 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
 // helper function to create *new* files.
 bool write_to_file(char *fpath, char *data) {
 
-    // TODO - double check file permissions from rota samples.
     int fd = open(fpath, O_CREAT | O_WRONLY, S_IRUSR|S_IEXEC);
     int numbyteswritten = write(fd, data, strlen(data));
     close(fd);
