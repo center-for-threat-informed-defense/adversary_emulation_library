@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# ---------------------------------------------------------------------------
+# cleanup_osx.oceanlotus.sh - Cleanup script for OSX.OceanLotus implant
+
+# Usage: ./cleanup_osx.oceanlotus.sh [PATH]
+
+# Revision History:
+
+# ---------------------------------------------------------------------------
+
 printf "Identified executing directory as: $1\n\n"
 
 function check_file_exists () {

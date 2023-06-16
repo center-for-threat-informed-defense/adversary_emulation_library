@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# ---------------------------------------------------------------------------
+# build_bundle.sh - Modified appify.sh script from https://gist.github.com/oubiwann/453744744da1141ccc542ff75b47e0cf
+#                   and builds an Application Bundle from necessary components
+
+# Usage: ./build_bundle.sh -s [SCRIPT FILE] -i [ICON FILE] -d [DOCUMENT FILE] -p [LAUNCHAGENT FILE] -n [BUNDLE NAME]
+
+# Resources:
+#   https://gist.github.com/oubiwann/453744744da1141ccc542ff75b47e0cf
+
+# Revision History:
+
+# ---------------------------------------------------------------------------
+
 VERSION=4.0.1
 SCRIPT=`basename "$0"`
 APPNAME="My App"
