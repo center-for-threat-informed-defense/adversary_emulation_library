@@ -64,7 +64,7 @@ bool self_delete(char *fpath) {
 
     int res = unlink(fpath);
     if (res < 0){
-        fprintf(stderr, "Error self-deleting: %s", strerror(errno));
+        fprintf(stderr, "[self_delete] Error: %s\n", strerror(errno));
         return false;
     }
     return true;

