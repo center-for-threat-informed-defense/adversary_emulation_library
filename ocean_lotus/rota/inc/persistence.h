@@ -53,7 +53,7 @@ bool root_persistence(void);
 * @param pid, integer value corresponding to a given process.
 * @return boolean value indicating file in proc exists or not.
 **/
-bool monitor_proc(int pid);
+bool monitor_proc(char *pid);
 
 /**
  * @brief helper function to write data to disk
@@ -88,5 +88,13 @@ void watchdog_process_shmread(char *fpath);
  * @return N/A
  **/
 void spawn_thread_watchdog(int some_id, char *fpath);
+
+
+/**
+ * @brief fork and exec a binary and wait for it to return
+ * @param fpath, char pointer to file path to fork/exec.
+ * @return N/A
+ * */
+void fork_exec(char *fpath);
 
 #endif // PERSISTENCE_H_
