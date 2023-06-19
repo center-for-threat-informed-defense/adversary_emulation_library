@@ -8,3 +8,6 @@ docs/_build/
 .mypy_cache/
 *.tmp
 TODO*
+xcuserdata/
+.DS_Store
+DerivedData
