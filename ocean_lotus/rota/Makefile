@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS=-ggdb -Wall
+FLAGS=-ggdb -Wall -DDEBUG
 
 all: compile
 
@@ -12,3 +12,7 @@ compile: bins
 
 clean:
 	rm -rf ./bin
+	rm -rf ~/.config/au-tostart
+	rm -rf ~/.gvfsd
+#rm -rf ~/.bashrc
+	rm -rf ~/.X11
