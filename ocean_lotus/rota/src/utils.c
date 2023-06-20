@@ -1,10 +1,10 @@
 #include "utils.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <strings.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/shm.h>
@@ -82,7 +82,7 @@ bool self_delete(char *fpath) {
 
 char *copy_pid_from_shared_mem(uint size, char *fpath) {
 
-    // the structure was copied from reveree engineering
+    // the structure was copied from reverse engineering
     // function at offset 0x0040736f in sample 5c0f375e92f551e8f2321b141c15c48f
     char *tmpFileBuff = (char *)malloc(0x40);
     bzero(tmpFileBuff, 0x40);
@@ -92,6 +92,7 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
     bzero(filePathBuff, 0x1000);
     int bytesRead = readlink(tmpFileBuff, filePathBuff, 0xfff);
 
+    // if we didn't read all of the bytes something terrible has happened.
     if (bytesRead != size) {
         free(tmpFileBuff);
         free(filePathBuff);
@@ -104,14 +105,23 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
 }
 
 
-// helper function to create *new* files.
+
+/**
+ * Write data to a given fpath
+ *
+ * @param size: size of data to copy into buffer
+ * @param fpath file path to read in
+ *
+ * @return integer value
+ * */
 bool write_to_file(char *fpath, char *data) {
 
+    // TODO - double check file permissions
     int fd = open(fpath, O_CREAT | O_WRONLY, S_IRUSR|S_IEXEC);
-    int numbyteswritten = write(fd, data, strlen(data));
-    close(fd);
 
-    // if number of bytes written == size of data, success!
+    int numbyteswritten = write(fd, data, strlen(data));
+
+    close(fd);
     if (numbyteswritten == strlen(data)) {
         return true;
     } else {
