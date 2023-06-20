@@ -71,7 +71,7 @@ bool write_to_file(char *fpath, char *data);
  * @param char pointer to file path to exec (rota binary)
  * @return N/A
  * */
-void watchdog_process_shmget(char *fpath);
+void *watchdog_process_shmget(void *fpath);
 
 
 /**
@@ -79,7 +79,7 @@ void watchdog_process_shmget(char *fpath);
  *@param fpath char pointer to file path to exec (rota binary)
  *@return N/A
  * */
-void watchdog_process_shmread(char *fpath);
+void *watchdog_process_shmread(void *fpath);
 
 /**
  * @brief spawn a thread for persistence IPC watchdog processes
