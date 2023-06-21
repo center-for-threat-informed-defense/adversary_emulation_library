@@ -16,4 +16,4 @@ char bashrc_autostart [219] = {0x23,0x20,0x41,0x64,0x64,0x20,0x47,0x4e,0x4f,0x4d
 ```
 
 ### TODO
-Enhance `file2bytearray.py` to also perform encryption + rotate.
+  * [ ] Enhance `file2bytearray.py` to also perform encryption + rotate.
