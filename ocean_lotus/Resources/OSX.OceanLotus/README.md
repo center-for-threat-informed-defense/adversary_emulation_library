@@ -60,6 +60,20 @@ the path to the folder where the application bundle was executed:
 ./cleanup_osx.oceanlotus.sh $HOME/Documents
 ```
 
+Expected output:
+```
+Identified executing directory as: /Users/bob/Documents
+
+[+] /Users/bob/Library/LaunchAgents/com.apple.launchpad exists, removing...
+  [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad was removed successfully
+[+] /Users/bob/Library/WebKit/com.apple.launchpad exists, removing...
+  [+] /Users/bob/Library/WebKit/com.apple.launchpad was removed successfully
+[+] /Users/bob/Documents/Decoy.doc exists, removing..
+  [+] /Users/bob/Documents/Decoy.doc was removed successfully
+[+] Removing any .log files in /tmp
+[+] TextEdit found, killing...
+```
+
 ## For Developers 
 
 ### Dependencies
@@ -72,7 +86,16 @@ To build the application bundle, run the following script from the
 `ApplicationBundle` directory:
 
 ```
-./build_bundle.sh -s first_stage.sh -i icon.icns -d decoy.doc -n "TestApp"
+./build_bundle.sh -s first_stage.sh -i W8BN.icns -d decoy.doc -p Launchd.plist -n "TestApp"
+```
+
+Expected output:
+```
+W8BN.icns -> TestApp.app/Contents/Resources/icon.icns
+decoy.doc -> TestApp.app/Contents/Resources/default.config
+first_stage.sh -> TestApp.app/Contents/MacOS/TestApp
+Launchd.plist -> TestApp.app/Contents/PkgInfo
+Application bundle created at '/Users/bob/ocean-lotus/Resources/OSX.OceanLotus/ApplicationBundle/TestApp.app'
 ```
 
 ### Testing
