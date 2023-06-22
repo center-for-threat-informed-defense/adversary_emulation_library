@@ -24,7 +24,7 @@ public:
 
     static void runClient(int dwRandomTimeSleep);
 
-    static int8_t clientPP::createClientID();
+    static int8_t createClientID();
 };
 
 

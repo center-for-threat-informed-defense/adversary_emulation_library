@@ -66,6 +66,32 @@ the path to the folder where the application bundle was executed:
 
 ### Building
 
+**Build All**
+
+To build all, run the build script from the OSX.OceanLotus directory:
+```
+./build_osx.oceanlotus.sh
+```
+
+Expected output:
+```
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Implant build -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Using build description from disk
+
+** BUILD SUCCEEDED **
+
+W8BN.icns -> TestApp.app/Contents/Resources/icon.icns
+decoy.doc -> TestApp.app/Contents/Resources/default.config
+first_stage.sh -> TestApp.app/Contents/MacOS/TestApp
+Launchd.plist -> TestApp.app/Contents/PkgInfo
+Application bundle created at '/Users/bob/ocean-lotus/Resources/OSX.OceanLotus/ApplicationBundle/TestApp.app'
+```
+
 **Application Bundle**
 
 To build the application bundle, run the following script from the
@@ -73,6 +99,27 @@ To build the application bundle, run the following script from the
 
 ```
 ./build_bundle.sh -s first_stage.sh -i icon.icns -d decoy.doc -n "TestApp"
+```
+
+**Implant**
+
+To build the implant, run the follow command from the `Implant` directory:
+
+```
+xcodebuild -scheme Implant build -configuration Release
+```
+
+Expected output:
+```
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Implant build -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Using build description from disk
+
+** BUILD SUCCEEDED **
 ```
 
 ### Testing
