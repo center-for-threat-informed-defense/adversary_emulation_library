@@ -1,60 +1,30 @@
-#include "clientPP.hpp"
+#include "ClientPP.hpp"
 
-/* 
-osInfo
-    About:
-        Modeled after HandlePP::infoClient function. Responsible for collecting
-        OS info and submitting info to the C2 server.
-    Result:
-        boolean - true if already executed or executed successfully, false
-                otherwise
-    MITRE ATT&CK Techniques:
-    CTI:
-        https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
-    References:
-*/
-bool clientPP::osInfo (int dwRandomTimeSleep) {
+bool ClientPP::osInfo (int dwRandomTimeSleep) {
     // if parameters are populated, just return true
 
-    // otherwise, perform discovery actions, then return true
+    // otherwise, perform discovery actions, send to C2 server, return true
+    //      ClientPP::createClientID()
+    //      getpwuid() > pw_name - https://pubs.opengroup.org/onlinepubs/009604499/functions/getpwuid.html
+    //      scutil --get ComputerName
+    //      uname -m
+    //      system_profiler SPHardwareDataType 2>/dev/null | awk ...
+    //      send POST request with data to C2
     
     // return false on any issues or errors
     return true;
 }
 
-/*
-runClient
-    About:
-        Modeled after HandlePP::runHandle function. Responsible for performing
-        backdoor capabilities
-    Result:
-        void - no return value, just performs backdoor capabilities
-    MITRE ATT&CK Techniques:
-    CTI:
-        https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
-    References:
-*/
-void clientPP::runClient(int dwRandomTimeSleep) {
+void ClientPP::runClient(int dwRandomTimeSleep) {
+    // heartbeat - send HTTP GET request to server
+    // receive and decrypt instructions
+    // execute instructions
+    // encrypt instructions
+    // return output - send HTTP POST request to server
     return;
 }
 
-/*
-createClientID
-    About:
-        Modeled after HandlePP::getClientID method. Responsible for generating
-        an MD5 hash from the following pieces of information:
-            - OS serial number
-            - Hardware UUID
-            - MAC address 
-            - Randomly generated UUID
-    Result:
-        int8_t - pointer to first value of the ID array
-    MITRE ATT&CK Techniques:
-    CTI:
-        https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
-    References:
-*/
-int8_t clientPP::createClientID() {
+int8_t ClientPP::createClientID() {
     int8_t id[24];
 
     //  serial number - ioreg -rdl -c IOPlatformExpertDevice | awk '/IOPlatformSerialNumber/ {split ($0, line, "\""); printf("%s", line[4]); }'
@@ -63,4 +33,9 @@ int8_t clientPP::createClientID() {
     //  randomly generated UUID - uuidgen
 
     return *id;
+}
+
+void ClientPP::performHTTPRequest(std::string type, std::vector<unsigned char> data) {
+    // should call the CommsLib exported function that generates the HTTP request
+    // should return the data type returned by the CommsLib exported function
 }
