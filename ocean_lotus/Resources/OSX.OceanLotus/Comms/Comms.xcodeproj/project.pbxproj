@@ -8,14 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		808E963F2A49CCFE0096DDCA /* Comms.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 808E963E2A49CCFE0096DDCA /* Comms.hpp */; };
-		808E96412A49CCFE0096DDCA /* CommsPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 808E96402A49CCFE0096DDCA /* CommsPriv.hpp */; };
 		808E96432A49CCFE0096DDCA /* Comms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E96422A49CCFE0096DDCA /* Comms.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		808E963B2A49CCFE0096DDCA /* libComms.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libComms.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		808E963E2A49CCFE0096DDCA /* Comms.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Comms.hpp; sourceTree = "<group>"; };
-		808E96402A49CCFE0096DDCA /* CommsPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CommsPriv.hpp; sourceTree = "<group>"; };
 		808E96422A49CCFE0096DDCA /* Comms.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Comms.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -50,7 +48,6 @@
 			isa = PBXGroup;
 			children = (
 				808E963E2A49CCFE0096DDCA /* Comms.hpp */,
-				808E96402A49CCFE0096DDCA /* CommsPriv.hpp */,
 				808E96422A49CCFE0096DDCA /* Comms.cpp */,
 			);
 			path = Comms;
@@ -64,7 +61,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				808E963F2A49CCFE0096DDCA /* Comms.hpp in Headers */,
-				808E96412A49CCFE0096DDCA /* CommsPriv.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

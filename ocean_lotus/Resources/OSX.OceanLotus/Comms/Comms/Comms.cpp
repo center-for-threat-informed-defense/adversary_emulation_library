@@ -1,16 +1,9 @@
 #include <iostream>
 #include "Comms.hpp"
-#include "CommsPriv.hpp"
 
-void HelloWorld(const char * s)
-{
-    CommsPriv *theObj = new CommsPriv;
-    theObj->HelloWorldPriv(s);
-    delete theObj;
-};
-
-void CommsPriv::HelloWorldPriv(const char * s) 
+void sendRequest(const char * s, const std::vector<unsigned char> data)
 {
     std::cout << s << std::endl;
+    std::string test(data.begin(), data.end());
+    std::cout << test << std::endl;
 };
-
