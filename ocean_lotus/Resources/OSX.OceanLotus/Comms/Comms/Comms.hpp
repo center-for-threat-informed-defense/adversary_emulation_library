@@ -7,8 +7,9 @@
 class Comms
 {
     public:
-    void HelloWorld(const char *);
 };
+
+extern "C" void HelloWorld(const char *);
 
 #pragma GCC visibility pop
 #endif

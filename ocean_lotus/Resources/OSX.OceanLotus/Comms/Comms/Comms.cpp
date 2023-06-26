@@ -2,7 +2,7 @@
 #include "Comms.hpp"
 #include "CommsPriv.hpp"
 
-void Comms::HelloWorld(const char * s)
+void HelloWorld(const char * s)
 {
     CommsPriv *theObj = new CommsPriv;
     theObj->HelloWorldPriv(s);
