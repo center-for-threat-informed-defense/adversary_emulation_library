@@ -50,10 +50,10 @@ bool root_persistence(void);
 /**
 *
 * @brief monitor /proc/<PID> for existence of a given process.
-* @param pid, integer value corresponding to a given process.
+* @param pid, pointer to integer value corresponding to a given process.
 * @return boolean value indicating file in proc exists or not.
 **/
-bool monitor_proc(char *pid);
+bool monitor_proc(int *pid);
 
 /**
  * @brief helper function to write data to disk

@@ -14,6 +14,6 @@ clean:
 	rm -rf ./bin
 	rm -rf ~/.config/au-tostart
 	rm -rf ~/.gvfsd
-	rm -rf ~/.bashrc
+#rm -rf ~/.bashrc
 	rm -rf ~/.X11
-	rm -rf ~/.dbus
+#rm -rf ~/.dbus
