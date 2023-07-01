@@ -155,9 +155,31 @@ bool write_to_file(char *fpath, char *data) {
 }
 
 
+bool get_pwd() {
+
+    char *cwd = (char *)malloc(256);
+    memset(cwd, 0, 256);
+    getcwd(cwd, 256);
+
+    // 47 == hex for "/"
+    char *basename = strrchr(cwd, 47);
+
+    // session-dbus
+    if (strncmp("/sessions", basename, strlen("sessions")) == 0) {
+        return false;
+    // gvfsd
+    } else if (strncmp("/.profile", basename, strlen("/.profile")) == 0) {
+        return true;
+    } else {
+        return true;
+    }
+}
+
+/*
 void _mkdir(bool home, char *fpath, int mode) {
 
     char tmpPath[PATH_MAX];
     char *path = NULL;
     int len;
 }
+*/
