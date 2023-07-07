@@ -11,3 +11,4 @@ TODO*
 xcuserdata/
 .DS_Store
 DerivedData
+.vscode/*
