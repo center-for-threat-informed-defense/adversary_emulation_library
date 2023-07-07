@@ -145,6 +145,19 @@ note: Using build description from disk
 ** BUILD SUCCEEDED **
 ```
 
+**Comms**
+To build the Comms library, run the follow command from the `Comms` directory:
+
+```
+xcodebuild -scheme Comms build -configuration Release
+```
+
+>Until Comms is embedded and decrypted to `/tmp/store`, the compiled dylib can
+>just be copied to `/tmp/store`:
+>```
+>cp DerivedData/Comms/Build/Products/Release/libComms.dylib /tmp/store
+>```
+
 ### Testing
 
 ## CTI Reporting
