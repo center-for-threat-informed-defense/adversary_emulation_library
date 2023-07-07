@@ -34,6 +34,7 @@
 		808E95F92A45D2260096DDCA /* Transform.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Transform.hpp; sourceTree = "<group>"; };
 		808E95FC2A45D6270096DDCA /* Communication.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Communication.cpp; sourceTree = "<group>"; };
 		808E95FD2A45D6270096DDCA /* Communication.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Communication.hpp; sourceTree = "<group>"; };
+		808E96762A49DB6F0096DDCA /* Comms.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Comms.hpp; path = ../../Comms/Comms/Comms.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +67,7 @@
 		808E95EB2A44EC120096DDCA /* Implant */ = {
 			isa = PBXGroup;
 			children = (
+				808E96762A49DB6F0096DDCA /* Comms.hpp */,
 				808E95EC2A44EC120096DDCA /* main.cpp */,
 				808E95F42A44EC510096DDCA /* ClientPP.cpp */,
 				808E95F52A44EC510096DDCA /* ClientPP.hpp */,
