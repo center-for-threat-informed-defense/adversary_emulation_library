@@ -1,12 +1,20 @@
 #ifndef ClientPP_hpp
 #define ClientPP_hpp
 
-#include <string>
+#include <chrono>
+#include <iostream>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string>
+#include <thread>
 
+#include "dlfcn.h"
 #include "Communication.hpp"
 #include "Transform.hpp"
+
+namespace client {
+    extern const int RESP_BUFFER_SIZE;
+}
 
 class ClientPP
 {
@@ -63,7 +71,7 @@ public:
             https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
         References:
     */
-    static void runClient(int dwRandomTimeSleep);
+    static void runClient(int dwRandomTimeSleep, void * dylib);
 
     /*
     createClientID
@@ -92,15 +100,14 @@ public:
             calling the loaded CommsLib exported function to generate an HTTP
             request (GET/POST).
         Result:
-            void for now - this should return the data structure holding HTTP
-            request responses, unclear what this data type is going to be
+            vector of unsigned char - holds the HTTP request responses
         MITRE ATT&CK Techniques:
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
         References:
     */
-    static void performHTTPRequest(std::string type, std::vector<unsigned char> data);
+    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data);
 };
 
 

