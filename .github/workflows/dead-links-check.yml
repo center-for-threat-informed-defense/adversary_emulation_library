@@ -1,0 +1,17 @@
+name: Dead Links Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linkChecker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v1.8.0
+        with:
+          args: " --suggest --verbose --no-progress './**/*.md' './**/*.html' './**/*.rst' --exclude-mail -a 403,429 --exclude-path *fin7/Resources/Step7/BOOSTWRITE-src/curl/README.md "
+          fail: true
