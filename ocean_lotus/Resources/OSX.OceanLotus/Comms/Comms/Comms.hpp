@@ -8,8 +8,8 @@ sendRequest
     About:
         Sends an HTTP request of type (GET/POST) with contained data
     Result:
-        void for now - this should return the data structure holding HTTP
-        request responses, unclear what this data type is going to be
+        void - the HTTP response is stored at the addresses pointed to by the
+        response and response_length parameters
     MITRE ATT&CK Techniques:
     CTI:
         https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
@@ -18,7 +18,8 @@ sendRequest
     References:
         https://stackoverflow.com/questions/70550983/http-request-using-sockets-on-c
         https://codereview.stackexchange.com/questions/51270/socket-http-post-request
+        https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/100-Articles/DynamicLibraryDesignGuidelines.html
 */
-extern "C" void sendRequest(const char * type, const std::vector<unsigned char> data);
+extern "C" void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length);
 
 #endif

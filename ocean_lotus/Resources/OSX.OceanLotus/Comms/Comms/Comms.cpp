@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Comms.hpp"
 
+#define EXPORT __attribute__((visibility("default")))
+
 std::string buildGETRequestString(const std::vector<unsigned char> data) {
     // User-Agent: curl/7.11.3
     // Accept: */*
@@ -16,21 +18,23 @@ std::string buildPOSTRequestString(const std::vector<unsigned char> data) {
     return "";
 }
 
-void sendRequest(const char * type, const std::vector<unsigned char> data)
-{
-    std::cout << "Type recieved: " + std::string(type) << std::endl;
-    std::string data_str(data.begin(), data.end());
-    std::cout << "Data: " + data_str << std::endl;
-
+EXPORT
+void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length) {
+    char httpGET[] = "GET";
+    char httpPOST[] = "POST";
     std::string requestBody;
-    if (strcmp(type, "GET")) {
+
+    // convert data to string for building HTTP request
+    std::string data_str(data.begin(), data.end());
+
+    // build HTTP request string
+    if (strcmp(type, httpGET) == 0) {
         requestBody = buildGETRequestString(data);
     }
-    else if (strcmp(type, "POST")) {
+    else if (strcmp(type, httpPOST) == 0) {
         requestBody = buildPOSTRequestString(data);
     }
     else {
-        std::cout << "Ignoring: " + std::string(type) << std::endl;
         return;
     }
 
@@ -40,5 +44,13 @@ void sendRequest(const char * type, const std::vector<unsigned char> data)
 
     // recv data from socket
 
-    // return the data to caller
-};
+    std::string resp_str = "Goodbye";   // temporary received socket data
+
+    std::vector<unsigned char> resp(resp_str.begin(), resp_str.end());
+    unsigned char * converted = &resp[0];
+    int resp_length = resp.size();
+
+    // update response buffer and response length values for return to caller
+    memcpy(*response, converted, resp_length);
+    **response_length = resp_length;
+}
