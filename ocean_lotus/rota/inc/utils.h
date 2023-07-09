@@ -10,6 +10,10 @@
 void create_lock(int lock_id);
 
 
+
+int lock_check(char *fpath);
+
+
 /**
  * @brief
  **/

