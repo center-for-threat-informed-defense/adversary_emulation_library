@@ -60,11 +60,51 @@ the path to the folder where the application bundle was executed:
 ./cleanup_osx.oceanlotus.sh $HOME/Documents
 ```
 
+Expected output:
+```
+Identified executing directory as: /Users/bob/Documents
+
+[+] /Users/bob/Library/LaunchAgents/com.apple.launchpad exists, removing...
+  [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad was removed successfully
+[+] /Users/bob/Library/WebKit/com.apple.launchpad exists, removing...
+  [+] /Users/bob/Library/WebKit/com.apple.launchpad was removed successfully
+[+] /Users/bob/Documents/Decoy.doc exists, removing..
+  [+] /Users/bob/Documents/Decoy.doc was removed successfully
+[+] Removing any .log files in /tmp
+[+] TextEdit found, killing...
+```
+
 ## For Developers 
 
 ### Dependencies
 
 ### Building
+
+**Build All**
+
+To build all, run the build script from the OSX.OceanLotus directory:
+```
+./build_osx.oceanlotus.sh
+```
+
+Expected output:
+```
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Implant build -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Using build description from disk
+
+** BUILD SUCCEEDED **
+
+W8BN.icns -> TestApp.app/Contents/Resources/icon.icns
+decoy.doc -> TestApp.app/Contents/Resources/default.config
+first_stage.sh -> TestApp.app/Contents/MacOS/TestApp
+Launchd.plist -> TestApp.app/Contents/PkgInfo
+Application bundle created at '/Users/bob/ocean-lotus/Resources/OSX.OceanLotus/ApplicationBundle/TestApp.app'
+```
 
 **Application Bundle**
 
@@ -72,8 +112,51 @@ To build the application bundle, run the following script from the
 `ApplicationBundle` directory:
 
 ```
-./build_bundle.sh -s first_stage.sh -i icon.icns -d decoy.doc -n "TestApp"
+./build_bundle.sh -s first_stage.sh -i W8BN.icns -d decoy.doc -p Launchd.plist -n "TestApp"
 ```
+
+Expected output:
+```
+W8BN.icns -> TestApp.app/Contents/Resources/icon.icns
+decoy.doc -> TestApp.app/Contents/Resources/default.config
+first_stage.sh -> TestApp.app/Contents/MacOS/TestApp
+Launchd.plist -> TestApp.app/Contents/PkgInfo
+Application bundle created at '/Users/bob/ocean-lotus/Resources/OSX.OceanLotus/ApplicationBundle/TestApp.app'
+```
+
+**Implant**
+
+To build the implant, run the follow command from the `Implant` directory:
+
+```
+xcodebuild -scheme Implant build -configuration Release
+```
+
+Expected output:
+```
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Implant build -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Using build description from disk
+
+** BUILD SUCCEEDED **
+```
+
+**Comms**
+To build the Comms library, run the follow command from the `Comms` directory:
+
+```
+xcodebuild -scheme Comms build -configuration Release
+```
+
+>Until Comms is embedded and decrypted to `/tmp/store`, the compiled dylib can
+>just be copied to `/tmp/store`:
+>```
+>cp DerivedData/Comms/Build/Products/Release/libComms.dylib /tmp/store
+>```
 
 ### Testing
 
