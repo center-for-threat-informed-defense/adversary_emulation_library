@@ -21,31 +21,11 @@
  * @param N/A
  * @return void
  * */
-void create_lock() {
+void create_lock(int lock_id) {
 
     char *HOME = getenv("HOME");
 
-    //$HOME/.X11/X0-lock
-    char x11_lock_file [14] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x58,0x30,0x2d,0x6c,0x6f,0x63,0x6b};
-
-    //$HOME/.X11/.X11-lock
-    char x11_lock_file_2 [16] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x2e,0x78,0x31,0x31,0x2d,0x6c,0x6f,0x63,0x6b};
-
-    // $HOME/.X11/x0-lock
-    int fpath_size = strlen(HOME) + strlen(x11_lock_file);
-    char *flock_path = (char *)malloc(fpath_size);
-    memset(flock_path, 0, strlen(flock_path));
-    strncat(flock_path, HOME, strlen(HOME));
-    strncat(flock_path, x11_lock_file, strlen(x11_lock_file));
-
-    // $HOME/.X11/x11-lock
-    int fpath_size_2 = strlen(HOME) + strlen(x11_lock_file_2);
-    char *flock_path_2 = (char *)malloc(fpath_size_2);
-    memset(flock_path_2, 0, strlen(flock_path_2));
-    strncat(flock_path_2, HOME, strlen(HOME));
-    strncat(flock_path_2, x11_lock_file_2, strlen(x11_lock_file_2));
-
-    // create .X11 dir
+    // create .X11 dir if it does not exist, required for both lock paths.
     char *x11dir= "/.X11";
     int x11path_size = strlen(HOME) + strlen(x11dir);
     char *dirpath = (char *)malloc(x11path_size);
@@ -56,25 +36,60 @@ void create_lock() {
         mkdir(dirpath, 0755);
     }
 
-    // create directory of .X11 if it does not exist
-    // TODO - what perms?
-    int fd = open(flock_path, O_CREAT);
-    if (fd > 0) {
-        flock(fd, LOCK_EX);
+
+    if (lock_id == 0) {
+        // if lock id == 0 then do ....
+        //$HOME/.X11/X0-lock
+        char x11_lock_file [14] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x58,0x30,0x2d,0x6c,0x6f,0x63,0x6b};
+
+        // $HOME/.X11/x0-lock
+        int fpath_size = strlen(HOME) + strlen(x11_lock_file);
+        char *flock_path = (char *)malloc(fpath_size);
+        memset(flock_path, 0, strlen(flock_path));
+        strncat(flock_path, HOME, strlen(HOME));
+        strncat(flock_path, x11_lock_file, strlen(x11_lock_file));
+
+
+
+
+        // create directory of .X11 if it does not exist
+        // TODO - what perms?
+        int fd = open(flock_path, O_CREAT);
+        if (fd > 0) {
+            flock(fd, LOCK_EX);
+        }
+
+
+        free(flock_path);
+        close(fd);
+    } else if (lock_id == 1) {
+
+
+        // if lock id == 1 then do...
+        // $HOME/.X11/x11-lock
+        //$HOME/.X11/.X11-lock
+        char x11_lock_file_2 [16] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x2e,0x78,0x31,0x31,0x2d,0x6c,0x6f,0x63,0x6b};
+
+        int fpath_size_2 = strlen(HOME) + strlen(x11_lock_file_2);
+        char *flock_path_2 = (char *)malloc(fpath_size_2);
+        memset(flock_path_2, 0, strlen(flock_path_2));
+        strncat(flock_path_2, HOME, strlen(HOME));
+        strncat(flock_path_2, x11_lock_file_2, strlen(x11_lock_file_2));
+
+
+        // create directory of .X11 if it does not exist
+        // TODO - what perms?
+        int fd_2 = open(flock_path_2, O_CREAT);
+        if (fd_2 > 0) {
+            flock(fd_2, LOCK_EX);
+        }
+
+
+        free(flock_path_2);
+        close(fd_2);
     }
 
-    // create directory of .X11 if it does not exist
-    // TODO - what perms?
-    int fd_2 = open(flock_path_2, O_CREAT);
-    if (fd_2 > 0) {
-        flock(fd_2, LOCK_EX);
-    }
-
-    free(flock_path);
-    free(flock_path_2);
     free(dirpath);
-    close(fd);
-    close(fd_2);
 }
 
 

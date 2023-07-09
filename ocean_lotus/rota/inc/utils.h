@@ -4,10 +4,10 @@
 
 /**
  * Create a lock file to ensure one instance is running.
- * @param N/A
- * @return void
+ * @param lock_id, integer value indicating which file to lock and check for.
+ * @return  N/A
  * */
-void create_lock();
+void create_lock(int lock_id);
 
 
 /**
