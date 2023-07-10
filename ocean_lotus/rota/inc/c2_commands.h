@@ -12,10 +12,16 @@
 #ifndef C2_COMMANDS_H_
 #define C2_COMMANDS_H_
 
+
+/**
+ * @brief main c2 loop to process commands from handler
+ * @param N/A
+ * */
+void c2_loop();
+
 /**
 * @brief exit and kill rota via command-id 0x138E3E6
 * @params: N/A
-*
 */
 void c2_exit(void);
 

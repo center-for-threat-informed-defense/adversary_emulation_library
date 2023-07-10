@@ -500,12 +500,14 @@ void spawn_thread_watchdog(int uid) {
     if (uid == 0){
         // the "parent thread" monitors session-dbus
         //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
-         watchdog_process_shmget();
+        pthread_create(&threadid, NULL, watchdog_process_shmget, NULL);
+         //watchdog_process_shmget();
 
         // testing
     } else {
         // the "child thread" monitors gvfsd-helper
         // pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
-        watchdog_process_shmread();
+        pthread_create(&threadid, NULL, watchdog_process_shmread, NULL);
+        //watchdog_process_shmread();
     }
 }

