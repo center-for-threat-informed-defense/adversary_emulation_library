@@ -30,9 +30,11 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
     // build HTTP request string
     if (strcmp(type, httpGET) == 0) {
         requestBody = buildGETRequestString(data);
+        std::cout << "[COMMS] Received data to GET: " + data_str << std::endl;
     }
     else if (strcmp(type, httpPOST) == 0) {
         requestBody = buildPOSTRequestString(data);
+        std::cout << "[COMMS] Received data to POST: " + data_str << std::endl;
     }
     else {
         return;

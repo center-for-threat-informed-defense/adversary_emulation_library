@@ -11,6 +11,8 @@
 		808E95F62A44EC510096DDCA /* ClientPP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E95F42A44EC510096DDCA /* ClientPP.cpp */; };
 		808E95FA2A45D2260096DDCA /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E95F82A45D2260096DDCA /* Transform.cpp */; };
 		808E95FE2A45D6270096DDCA /* Communication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E95FC2A45D6270096DDCA /* Communication.cpp */; };
+		809BFA682A5C3EA9009D84B4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809BFA672A5C3EA9009D84B4 /* CoreFoundation.framework */; };
+		809BFA6A2A5C3EB6009D84B4 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809BFA692A5C3EB6009D84B4 /* IOKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +37,8 @@
 		808E95FC2A45D6270096DDCA /* Communication.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Communication.cpp; sourceTree = "<group>"; };
 		808E95FD2A45D6270096DDCA /* Communication.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Communication.hpp; sourceTree = "<group>"; };
 		808E96762A49DB6F0096DDCA /* Comms.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Comms.hpp; path = ../../Comms/Comms/Comms.hpp; sourceTree = "<group>"; };
+		809BFA672A5C3EA9009D84B4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		809BFA692A5C3EB6009D84B4 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +46,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				809BFA6A2A5C3EB6009D84B4 /* IOKit.framework in Frameworks */,
+				809BFA682A5C3EA9009D84B4 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +59,7 @@
 			children = (
 				808E95EB2A44EC120096DDCA /* Implant */,
 				808E95EA2A44EC120096DDCA /* Products */,
+				809BFA662A5C3EA9009D84B4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -77,6 +84,15 @@
 				808E95FD2A45D6270096DDCA /* Communication.hpp */,
 			);
 			path = Implant;
+			sourceTree = "<group>";
+		};
+		809BFA662A5C3EA9009D84B4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				809BFA692A5C3EB6009D84B4 /* IOKit.framework */,
+				809BFA672A5C3EA9009D84B4 /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

