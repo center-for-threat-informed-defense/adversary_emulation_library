@@ -3,9 +3,6 @@
 #define EXPORT __attribute__((visibility("default")))
 
 std::string buildGETRequestString(std::string data) {
-    // User-Agent: curl/7.11.3
-    // Accept: */*
-    // Cookie: m_pixel_ratio=... | erp=...
     std::ostringstream buf;
 
     buf << "GET / HTTP/1.1\n";
@@ -21,11 +18,6 @@ std::string buildGETRequestString(std::string data) {
 }
 
 std::string buildPOSTRequestString(std::string data) {
-    // User-Agent: curl 7.64.2
-    // Accept: */*
-    // Content-Length: 355
-    // Content-Type: application/x-www-form-urlencoded
-
     std::ostringstream buf;
 
     buf << "POST / HTTP/1.1\n";
