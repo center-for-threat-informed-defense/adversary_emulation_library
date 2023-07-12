@@ -14,9 +14,6 @@ getPathToExecutable
         Get the path to the executable
     Result:
         string representing path to the executable
-    MITRE ATT&CK Techniques:
-    CTI:
-    References:
 */
 std::string getPathToExecutable() {
     std::string exePath;

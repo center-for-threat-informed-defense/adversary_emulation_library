@@ -63,6 +63,7 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
         ClientPP::createClientID(c);
         os_info += c->strClientID + "\n";
 
+        // get system time to populate install time
         std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
         std::chrono::system_clock::duration duration = tp.time_since_epoch();
         c->installTime = duration.count() * std::chrono::system_clock::period::num / std::chrono::system_clock::period::den;

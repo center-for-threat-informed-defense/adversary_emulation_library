@@ -22,8 +22,33 @@
 namespace client {
     extern const int RESP_BUFFER_SIZE;
 
+    /*
+    executeCmd
+        About:
+            Helper function to execute a command on the system using the popen
+            API
+        Result:
+            std::string - output of the command
+        MITRE ATT&CK Techniques:
+            T1059.004 Command and Scripting Interpreter: Unix Shell
+    */
     std::string executeCmd(std::string cmd);
 
+    /*
+    getPlatformExpertDeviceValue
+        About:
+            Helper function to enumerate values from the IOPlatformExpertDevice
+            registry class containing information about device configuration by
+            leveraging the following API calls from IOKit:
+                - IOServiceGetMatchingService
+                - IOServiceMatching
+                - IORegistryEntryCreateCFProperty
+                - IOObjectRelease
+        Result:
+            std::string - value of the provided registry key
+        MITRE ATT&CK Techniques:
+            T1082 System Information Discovery
+    */
     std::string getPlatformExpertDeviceValue(std::string key);
 }
 
@@ -59,6 +84,10 @@ public:
             boolean - true if already executed or executed successfully, false
                     otherwise
         MITRE ATT&CK Techniques:
+            T1082 System Information Discovery
+            T1016 System Network Configuration Discovery
+            T1124 System Time Discovery
+            T1071.001 Application Layer Protocol: Web Protocols
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
             https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
@@ -80,6 +109,7 @@ public:
         Result:
             void - no return value, just performs backdoor capabilities
         MITRE ATT&CK Techniques:
+            T1071.001 Application Layer Protocol: Web Protocols
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
             https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
@@ -99,6 +129,8 @@ public:
         Result:
             clientID updated for the provided ClientPP
         MITRE ATT&CK Techniques:
+            T1082 System Information Discovery
+            T1016 System Network Configuration Discovery
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
         References:
@@ -115,6 +147,7 @@ public:
         Result:
             vector of unsigned char - holds the HTTP request responses
         MITRE ATT&CK Techniques:
+            T1071.001 Application Layer Protocol: Web Protocols
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
