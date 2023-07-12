@@ -3,6 +3,12 @@
 
 #include <iostream>
 #include <vector>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <sstream>
+
+const int RESP_BUFFER_SIZE = 4096;
 
 /*
 sendRequest
@@ -18,8 +24,7 @@ sendRequest
         https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
         https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
     References:
-        https://stackoverflow.com/questions/70550983/http-request-using-sockets-on-c
-        https://codereview.stackexchange.com/questions/51270/socket-http-post-request
+        https://www.geeksforgeeks.org/socket-programming-cc/
         https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/100-Articles/DynamicLibraryDesignGuidelines.html
 */
 extern "C" void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length);

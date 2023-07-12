@@ -110,7 +110,7 @@ public:
             https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
         References:
     */
-    static void runClient(int dwRandomTimeSleep, void * dylib);
+    static void runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib);
 
     /*
     createClientID
