@@ -2,20 +2,15 @@
 #define ClientPP_hpp
 
 #include <chrono>
-#include <ctime>
 #include <iostream>
-#include <pwd.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string>
+#include <cstdio>
 #include <thread>
+#include <dlfcn.h>
+#include <pwd.h>
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
 
-#include "dlfcn.h"
 #include "Communication.hpp"
 #include "Transform.hpp"
 

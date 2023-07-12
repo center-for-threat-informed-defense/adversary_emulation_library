@@ -1,6 +1,7 @@
 #ifndef Comms_
 #define Comms_
 
+#include <iostream>
 #include <vector>
 
 /*

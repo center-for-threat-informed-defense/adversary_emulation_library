@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Comms.hpp"
 
 #define EXPORT __attribute__((visibility("default")))
