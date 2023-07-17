@@ -28,7 +28,7 @@ std::string buildPOSTRequestString(std::string lotusPacket) {
     return buf.str();
 }
 
-void buildLotusHeader(unsigned char * head, int data_length, int key_length) {
+void buildLotusHeader(unsigned char * head, int data_length, int key_length, unsigned char instruction) {
     // magic bytes
     unsigned char magic_bytes[] = {0x3B, 0x91, 0x01, 0x10};
     memcpy(head, magic_bytes, sizeof(magic_bytes));
@@ -48,8 +48,8 @@ void buildLotusHeader(unsigned char * head, int data_length, int key_length) {
     unsigned char marker_2[] = { 0xe5, 0xae, 0xa2 };
     memcpy(&head[24], marker_2, sizeof(marker_2));
 
-    unsigned char heartbeat_instruction[] = { 0x33 };
-    memcpy(&head[27], heartbeat_instruction, sizeof(heartbeat_instruction));
+    unsigned char instruction_arr[] = { instruction };
+    memcpy(&head[27], instruction_arr, sizeof(instruction_arr));
 
     //黑
     memcpy(&head[66], marker_1, sizeof(marker_1));
@@ -60,7 +60,7 @@ void buildLotusHeader(unsigned char * head, int data_length, int key_length) {
 }
 
 EXPORT
-void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length) {
+void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char instruction) {
     char httpGET[] = "GET";
     char httpPOST[] = "POST";
     std::string requestBody;
@@ -68,7 +68,7 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
     std::string key = "";
 
     unsigned char header[82] = { 0 };
-    buildLotusHeader(header, data.size(), key.length());
+    buildLotusHeader(header, data.size(), key.length(), instruction);
     std::vector<unsigned char> lotus_packet(header, header + 82);
     
     // append key after header

