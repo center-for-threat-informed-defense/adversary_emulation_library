@@ -59,9 +59,9 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
     else {
         std::string os_info = "";
 
-        os_info += c->pathProcess + "\n";
         ClientPP::createClientID(c);
         os_info += c->strClientID + "\n";
+        os_info += c->pathProcess + "\n";
 
         // get system time to populate install time
         std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
