@@ -1,6 +1,7 @@
 #ifndef Comms_
 #define Comms_
 
+#include <iostream>
 #include <vector>
 
 /*
@@ -11,6 +12,7 @@ sendRequest
         void - the HTTP response is stored at the addresses pointed to by the
         response and response_length parameters
     MITRE ATT&CK Techniques:
+        T1071.001 Application Layer Protocol: Web Protocols
     CTI:
         https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
         https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
