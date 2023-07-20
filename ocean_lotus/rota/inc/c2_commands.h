@@ -13,6 +13,15 @@
 #define C2_COMMANDS_H_
 
 
+//RotaJakiro Magic Headers
+static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
+static unsigned char payloadLen[] = {0x0f};
+static unsigned char marker_1[] = {0xe9, 0xbb, 0x91};
+static unsigned char marker_2[] = {0xe5, 0xae, 0xa2};
+static unsigned char cmd_id[] = {0x13, 0x37};
+static unsigned char marker_3[] = {0xe9, 0xbb, 0x91};
+static unsigned char marker_4[] = {0x39,0x00};
+
 // RotaJakiro Command IDs
 // Taken from https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
@@ -120,5 +129,14 @@ void c2_run_plugin_3();
  * @return char pointer to ROTA's initial header.
  **/
 char *initial_rota_pkt();
+
+/**
+ * @brief Parse C2 pkt
+ * @param char * to buffer to parse
+ * @return char pointer to ROTA's initial header.
+ **/
+char *parse_c2_pkt(char *buffer);
+
+
 
 #endif // C2_COMMANDS_H_
