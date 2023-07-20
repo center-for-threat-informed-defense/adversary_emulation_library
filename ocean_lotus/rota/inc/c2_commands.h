@@ -14,28 +14,28 @@
 
 
 //RotaJakiro Magic Headers
-static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
-static unsigned char payloadLen[] = {0x0f};
-static unsigned char marker_1[] = {0xe9, 0xbb, 0x91};
-static unsigned char marker_2[] = {0xe5, 0xae, 0xa2};
-static unsigned char cmd_id[] = {0x13, 0x37};
-static unsigned char marker_3[] = {0xe9, 0xbb, 0x91};
-static unsigned char marker_4[] = {0x39,0x00};
+const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
+const static unsigned char payloadLen[] = {0x0f};
+const static unsigned char marker_1[] = {0xe9, 0xbb, 0x91};
+const static unsigned char marker_2[] = {0xe5, 0xae, 0xa2};
+const static unsigned char cmd_id[] = {0x13, 0x37};
+const static unsigned char marker_3[] = {0xe9, 0xbb, 0x91};
+const static unsigned char marker_4[] = {0x39,0x00};
 
 // RotaJakiro Command IDs
 // Taken from https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
-static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
-static unsigned char rota_c2_test[4] = {0x20, 0x83, 0x07, 0x0a};
-static unsigned char rota_c2_heartbeat[4] = {0x5c, 0xca, 0x72, 0x07};
-static unsigned char rota_c2_set_timeout[4] = {0x17,0xB1, 0xCC, 0x04};
-static unsigned char rota_c2_steal_data[4] = {0x25, 0x36, 0x60, 0xEA};
-static unsigned char rota_c2_upload_dev_info[4] = {0x18, 0x32, 0x0e, 0x00};
-static unsigned char rota_c2_upload_file[4] = {0x2E, 0x25, 0x99, 0x02};
-static unsigned char rota_c2_query_file[4] = {0x2C, 0xD9, 0x07, 0x00};
-static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
-static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
-static unsigned char rota_c2_run_plugin_2[4] = {0x15, 0x32, 0xE6, 0x50};
-static unsigned char rota_c2_run_plugin_3[4] = {0x25, 0xD5, 0x08,0x02};
+const static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
+const static unsigned char rota_c2_test[4] = {0x20, 0x83, 0x07, 0x0a};
+const static unsigned char rota_c2_heartbeat[4] = {0x5c, 0xca, 0x72, 0x07};
+const static unsigned char rota_c2_set_timeout[4] = {0x17,0xB1, 0xCC, 0x04};
+const static unsigned char rota_c2_steal_data[4] = {0x25, 0x36, 0x60, 0xEA};
+const static unsigned char rota_c2_upload_dev_info[4] = {0x18, 0x32, 0x0e, 0x00};
+const static unsigned char rota_c2_upload_file[4] = {0x2E, 0x25, 0x99, 0x02};
+const static unsigned char rota_c2_query_file[4] = {0x2C, 0xD9, 0x07, 0x00};
+const static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
+const static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
+const static unsigned char rota_c2_run_plugin_2[4] = {0x15, 0x32, 0xE6, 0x50};
+const static unsigned char rota_c2_run_plugin_3[4] = {0x25, 0xD5, 0x08,0x02};
 
 
 /**

