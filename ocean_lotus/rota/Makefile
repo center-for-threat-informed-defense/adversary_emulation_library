@@ -9,6 +9,10 @@ bins:
 compile: bins
 	$(CC) $(FLAGS) -I ./inc/ $(wildcard ./src/*.c) -o ./bin/rota
 
+kill:
+	pkill gvfsd-helper
+	pkill session-dbus
+
 clean:
 	ipcrm -M 0x0064b2e2
 	rm -rf ./bin
