@@ -4,8 +4,32 @@
 #include <vector>
 #include "stdint.h"
 
+namespace comms {
+    const int HEADER_LENGTH = 82;
+    const unsigned char MAGIC_BYTES[] = {0x3B, 0x91, 0x01, 0x10};
+    const int PAYLOAD_LENGTH_POS = 12;
+    const int KEY_LENGTH_POS = 16;
+    const int INSTRUCTION_POS = 18;
+
+    // defined if we want to implement implant header validation
+    const unsigned char MARKER_1[] = {0xC2};
+    const int MARKER_1A_POS = 19;
+    const unsigned char MARKER_2[] = {0xE2};
+    const int MARKER_2_POS = 24;
+    const unsigned char MARKER_3[] = {0xFF};
+    const int MARKER_1B_POS = 29;
+    const int MARKER_3_POS = 75;
+}
+
 class Communication {
+
 public:
+
+    int payload_length;
+    int key_length;
+    unsigned char instruction;
+    std::vector<unsigned char> key;
+    std::vector<unsigned char> payload;
 
     /*
     Communication constructor
@@ -20,6 +44,15 @@ public:
         References:
     */
     Communication(std::vector<unsigned char> buf, std::vector<unsigned char> key);
+
+    /*
+    Communication constructor
+        About:
+            Parses the buffer values into a Communication object
+        Result:
+            Communication object
+    */
+    Communication(std::vector<unsigned char> buf);
 
     /*
     getPayload
