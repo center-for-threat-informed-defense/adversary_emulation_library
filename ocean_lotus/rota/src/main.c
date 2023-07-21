@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
     } else { // non-root user....
 
-        daemon(0, 0);  // detach from current console
+        //daemon(0, 0);  // detach from current console
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
         printf("initial spawn of gvfsd-helper\n");
 

