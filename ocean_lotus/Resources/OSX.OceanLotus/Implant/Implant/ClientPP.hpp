@@ -2,6 +2,7 @@
 #define ClientPP_hpp
 
 #include <chrono>
+#include <fstream>
 #include <iostream>
 #include <cstdio>
 #include <thread>
@@ -16,6 +17,7 @@
 
 namespace client {
     extern const int RESP_BUFFER_SIZE;
+    extern const std::string DOWNLOAD_FILE_NAME;
 
     /*
     executeCmd
@@ -45,6 +47,7 @@ namespace client {
             T1082 System Information Discovery
     */
     std::string getPlatformExpertDeviceValue(std::string key);
+
 }
 
 class ClientPP
@@ -148,7 +151,7 @@ public:
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
         References:
     */
-    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char instruction);
+    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction);
 
     ~ClientPP();
 

