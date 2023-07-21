@@ -303,8 +303,8 @@ char *initial_rota_pkt() {
     memcpy(&rotaHdr[19], marker_1, sizeof(marker_1));
     memcpy(&rotaHdr[24], marker_2, sizeof(marker_2));
     memcpy(&rotaHdr[27], cmd_id, sizeof(cmd_id));
-    memcpy(&rotaHdr[66], marker_3, sizeof(marker_3));
-    memcpy(&rotaHdr[77], marker_4, sizeof(marker_4));
+    memcpy(&rotaHdr[29], marker_3, sizeof(marker_3));
+    memcpy(&rotaHdr[75], marker_4, sizeof(marker_4));
 
     return rotaHdr;
 }
