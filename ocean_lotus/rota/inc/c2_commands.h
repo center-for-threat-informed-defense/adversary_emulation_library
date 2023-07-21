@@ -17,11 +17,11 @@
 //RotaJakiro Magic Headers
 const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
 const static unsigned char payloadLen[] = {0x0f};
-const static unsigned char marker_1[] = {0xe9, 0xbb, 0x91};
-const static unsigned char marker_2[] = {0xe5, 0xae, 0xa2};
 const static unsigned int cmd_id[] = {0x13, 0x37};
-const static unsigned char marker_3[] = {0xe9, 0xbb, 0x91};
-const static unsigned char marker_4[] = {0x39,0x00};
+const static unsigned char marker_1[] = {0xc2, 0x00};
+const static unsigned char marker_2[] = {0xe2, 0x00};
+const static unsigned char marker_3[] = {0xc2, 0x00};
+const static unsigned char marker_4[] = {0xff,0x00};
 
 // RotaJakiro Command IDs
 // Taken from https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
