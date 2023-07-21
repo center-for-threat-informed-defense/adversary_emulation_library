@@ -45,8 +45,6 @@ public:
     */
     Communication(std::vector<unsigned char> buf, std::vector<unsigned char> key);
 
-    Communication(std::vector<unsigned char> buf);
-
     /*
     Communication constructor
         About:
