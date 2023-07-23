@@ -355,7 +355,7 @@ void fork_exec(char *fpath) {
         exit(1);
     } else if (res == 0){
         // child process to execvp;
-        execvp(fpath, NULL);
+        execlp(fpath, fpath, NULL);
     } else {
         waitpid(res, &wstatus, 0);
     }
@@ -367,8 +367,6 @@ void *watchdog_process_shmget() {
     signal(SIGCHLD, SIG_IGN);
 
     // detach from current console, and make systemd the parent
-    //daemon(0,0);
-
     bool proc_alive;
     int pid = getpid();
 
@@ -386,9 +384,8 @@ void *watchdog_process_shmget() {
     // write PID to sharedmem
     int *addr = (int *)shmat(shmid, NULL, 0);
     memcpy(addr, &pid, 4);
-    sleep(10);
+    //sleep(10);
 
-    // TODO - stackstring + AES + ROR here
     do {
 
         // get handle to shared mem
@@ -450,9 +447,19 @@ void *watchdog_process_shmread() {
         }
 
 
-        // write PID to sharedmem
+        sleep(3);
+        // get PID to write sharedmem
         int pid = getpid();
         int *addr = shmat(shmid, NULL, 0);
+
+        // check address obtained is valid
+        if (*addr == -1) {
+            #ifdef DEBUG
+            fprintf(stderr, "error accessing memory!");
+            #endif
+            exit(1);
+        }
+
         memcpy(addr+4, &pid, 4); // copy to "upper half" of 8 bytes.:
 
         #ifdef DEBUG
@@ -461,7 +468,6 @@ void *watchdog_process_shmread() {
 
         // get pid from shared memory.
         int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
-        // TODO - parse out mem from lower 4 bytes.
         int *tmpPid = (int *)malloc(4);
         memset(tmpPid, 0, 4);
         memcpy(tmpPid, shmem_pid_addr, 4);
@@ -501,13 +507,10 @@ void spawn_thread_watchdog(int uid) {
         // the "parent thread" monitors session-dbus
         //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
         pthread_create(&threadid, NULL, watchdog_process_shmget, NULL);
-         //watchdog_process_shmget();
 
-        // testing
     } else {
         // the "child thread" monitors gvfsd-helper
         // pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
         pthread_create(&threadid, NULL, watchdog_process_shmread, NULL);
-        //watchdog_process_shmread();
     }
 }

@@ -17,7 +17,7 @@
 //RotaJakiro Magic Headers
 const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
 const static unsigned char payloadLen[] = {0x0f};
-const static unsigned int cmd_id[] = {0x13, 0x37};
+const static unsigned char cmd_id[] = {0x13, 0x37, 0x00, 0x00};
 const static unsigned char marker_1[] = {0xc2, 0x00};
 const static unsigned char marker_2[] = {0xe2, 0x00};
 const static unsigned char marker_3[] = {0xc2, 0x00};
@@ -25,18 +25,30 @@ const static unsigned char marker_4[] = {0xff,0x00};
 
 // RotaJakiro Command IDs
 // Taken from https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
-const static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
-const static unsigned char rota_c2_test[4] = {0x20, 0x83, 0x07, 0x0a};
-const static unsigned char rota_c2_heartbeat[4] = {0x5c, 0xca, 0x72, 0x07};
-const static unsigned char rota_c2_set_timeout[4] = {0x17,0xB1, 0xCC, 0x04};
-const static unsigned char rota_c2_steal_data[4] = {0x25, 0x36, 0x60, 0xEA};
-const static unsigned char rota_c2_upload_dev_info[4] = {0x18, 0x32, 0x0e, 0x00};
-const static unsigned char rota_c2_upload_file[4] = {0x2E, 0x25, 0x99, 0x02};
-const static unsigned char rota_c2_query_file[4] = {0x2C, 0xD9, 0x07, 0x00};
-const static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
-const static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
-const static unsigned char rota_c2_run_plugin_2[4] = {0x15, 0x32, 0xE6, 0x50};
-const static unsigned char rota_c2_run_plugin_3[4] = {0x25, 0xD5, 0x08,0x02};
+//const static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
+const static unsigned char rota_c2_exit[2] = {0x13, 0x8e};
+//const static unsigned char rota_c2_test[4] = {0x20, 0x83, 0x07, 0x0a};
+const static unsigned char rota_c2_test[2] = {0x20, 0x83};
+//const static unsigned char rota_c2_heartbeat[4] = {0x5c, 0xca, 0x72, 0x07};
+const static unsigned char rota_c2_heartbeat[2] = {0x5c, 0xca};
+//const static unsigned char rota_c2_set_timeout[4] = {0x17,0xB1, 0xCC, 0x04};
+const static unsigned char rota_c2_set_timeout[2] = {0x17,0xB1};
+//const static unsigned char rota_c2_steal_data[4] = {0x25, 0x36, 0x60, 0xEA};
+const static unsigned char rota_c2_steal_data[2] = {0x25, 0x36};
+//const static unsigned char rota_c2_upload_dev_info[4] = {0x18, 0x32, 0x0e, 0x00};
+const static unsigned char rota_c2_upload_dev_info[2] = {0x18, 0x32};
+//const static unsigned char rota_c2_upload_file[4] = {0x2E, 0x25, 0x99, 0x02};
+const static unsigned char rota_c2_upload_file[2] = {0x2E, 0x25};
+//const static unsigned char rota_c2_query_file[4] = {0x2C, 0xD9, 0x07, 0x00};
+const static unsigned char rota_c2_query_file[2] = {0x2C, 0xD9};
+//const static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
+const static unsigned char rota_c2_delete_file[2] = {0x12, 0xB3};
+//const static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
+const static unsigned char rota_c2_run_plugin_1[2] = {0x1B, 0x25};
+//const static unsigned char rota_c2_run_plugin_2[4] = {0x15, 0x32, 0xE6, 0x50};
+const static unsigned char rota_c2_run_plugin_2[2] = {0x15, 0x32};
+//const static unsigned char rota_c2_run_plugin_3[4] = {0x25, 0xD5, 0x08,0x02};
+const static unsigned char rota_c2_run_plugin_3[2] = {0x25, 0xD5};
 
 
 /**
@@ -133,18 +145,25 @@ void c2_run_plugin_3();
 char *initial_rota_pkt();
 
 /**
- * @brief Parse C2 pkt to obtain payload data
- * @param char * to buffer to parse
- * @return char pointer to ROTA's initial header.
- **/
-char *parse_c2_payload(char *buffer);
-
-/**
  * @brief Parse C2 pkt to obtain cmd id
  * @param char * to buffer to parse
  * @return char value of command id
  **/
 char *parse_c2_cmdid(char *buffer);
+
+/**
+ * @brief Parse C2 pkt to obtain payload length
+ * @param char * to buffer to parse
+ * @return interger value of payload length
+ **/
+int parse_c2_payload_len(char *buffer);
+
+/**
+ * @brief Parse C2 pkt to obtain payload
+ * @param char * to buffer to parse
+ * @return char * containing payload
+ **/
+char *parse_c2_payload(char *buffer, int length);
 
 
 /**
@@ -152,6 +171,6 @@ char *parse_c2_cmdid(char *buffer);
 *@param char bufffer for "PAYLOAD" section
 *@return N/A
 */
-void build_c2_response(char *buffer, char cmd_id, int sock);
+void build_c2_response(char *buffer, char *cmd_id, int sock);
 
 #endif // C2_COMMANDS_H_
