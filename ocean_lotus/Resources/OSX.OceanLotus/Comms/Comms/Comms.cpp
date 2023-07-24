@@ -34,11 +34,11 @@ void buildLotusHeader(unsigned char * head, int data_length, int key_length, uns
 
     // payload length (4 bytes)
     unsigned char payload_length[] = { (unsigned char)data_length };
-    memcpy(&head[4], payload_length, sizeof(payload_length));
+    memcpy(&head[PAYLOAD_LENGTH_POS], payload_length, sizeof(payload_length));
 
     // key length (2 bytes)
     unsigned char key_length_char[] = { (unsigned char)key_length };
-    memcpy(&head[8], key_length_char, sizeof(key_length_char));
+    memcpy(&head[KEY_LENGTH_POS], key_length_char, sizeof(key_length_char));
 
     memcpy(&head[INSTRUCTION_POS], instruction, sizeof(instruction));
 
@@ -64,7 +64,7 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
     std::vector<unsigned char> lotus_packet(header, header + HEADER_LENGTH);
     
     // append key after header
-    // lotus_packet.insert(lotus_packet.end(), key.begin(), key.end());
+    lotus_packet.insert(lotus_packet.end(), key.begin(), key.end());
     
     lotus_packet.insert(lotus_packet.end(), data.begin(), data.end());
 
