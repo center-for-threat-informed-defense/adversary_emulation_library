@@ -48,6 +48,17 @@ namespace client {
     */
     std::string getPlatformExpertDeviceValue(std::string key);
 
+    /*
+    downloadFile
+        About:
+            Helper function write payload bytes to the given path
+        Result:
+            boolean - true if write was successful, false otherwise
+        MITRE ATT&CK Techniques:
+            T1105 Ingress Tool Transfer
+    */
+    bool downloadFile(std::vector<unsigned char> payload, std::string path);
+
 }
 
 class ClientPP
@@ -108,6 +119,8 @@ public:
             void - no return value, just performs backdoor capabilities
         MITRE ATT&CK Techniques:
             T1071.001 Application Layer Protocol: Web Protocols
+            T1105 Ingress Tool Transfer
+            T1059.004 Command and Scripting Interpreter: Unix Shell
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
             https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
