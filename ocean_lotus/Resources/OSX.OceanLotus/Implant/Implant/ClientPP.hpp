@@ -48,6 +48,8 @@ namespace client {
     */
     std::string getPlatformExpertDeviceValue(std::string key);
 
+    bool downloadFile(std::vector<unsigned char> payload, std::string path);
+
 }
 
 class ClientPP
