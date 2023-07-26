@@ -50,12 +50,6 @@ void c2_loop();
 */
 void c2_exit(int sock);
 
-/**
-* @brief check if connection is alive via command-id 0x208307A
-* TODO: double-verify what check does in binary
-*
-**/
-void c2_test();
 
 /**
 * @brief ??? command-id: 0x5CCA727
@@ -145,5 +139,7 @@ char *parse_c2_payload(char *buffer, int length);
 *@return N/A
 */
 void build_c2_response(char *buffer, char *cmd_id, int sock);
+
+
 
 #endif // C2_COMMANDS_H_
