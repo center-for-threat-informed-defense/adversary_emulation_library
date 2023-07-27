@@ -414,7 +414,7 @@ char *initial_rota_pkt() {
     memcpy(&rotaHdr[12], keyLen, sizeof(keyLen));
 
     // 14th -> 18th command id
-    memcpy(&rotaHdr[14], cmd_id, sizeof(cmd_id));
+    memcpy(&rotaHdr[14], initialBytes, sizeof(cmd_id));
 
     memcpy(&rotaHdr[19], marker_1, sizeof(marker_1));
     memcpy(&rotaHdr[24], marker_2, sizeof(marker_2));
