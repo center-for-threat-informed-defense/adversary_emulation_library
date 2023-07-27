@@ -176,7 +176,7 @@ public:
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
         References:
     */
-    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction);
+    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction, std::string clientID);
 
     ~ClientPP();
 

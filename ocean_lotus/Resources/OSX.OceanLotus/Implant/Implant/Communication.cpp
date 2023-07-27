@@ -5,7 +5,7 @@ Communication::Communication(std::vector<unsigned char> buf, std::vector<unsigne
 }
 
 Communication::Communication(std::vector<unsigned char> buf) {
-    payload_length = (int)((uint64_t)buf[comms::PAYLOAD_LENGTH_POS + 3] | (uint64_t)buf[comms::PAYLOAD_LENGTH_POS + 2] << 8);
+    payload_length = (int)((buf[comms::PAYLOAD_LENGTH_POS]) | (buf[comms::PAYLOAD_LENGTH_POS + 1] << 8) | (buf[comms::PAYLOAD_LENGTH_POS + 2] << 16) | (buf[comms::PAYLOAD_LENGTH_POS + 3] << 24));
 //    payload_length = (int)((uint64_t)buf[comms::PAYLOAD_LENGTH_POS + 2] << 24 | (uint64_t)buf[comms::PAYLOAD_LENGTH_POS + 3] << 16 |
 //        (uint64_t)buf[comms::PAYLOAD_LENGTH_POS] << 8 | (uint64_t)buf[comms::PAYLOAD_LENGTH_POS + 1]);
     key_length = buf[comms::KEY_LENGTH_POS];
