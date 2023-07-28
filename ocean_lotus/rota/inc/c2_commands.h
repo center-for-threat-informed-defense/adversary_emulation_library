@@ -51,7 +51,7 @@ void c2_loop();
 * @brief exit and kill rota via command-id 0x138E3E6
 * @params: integer value representing socket to write to
 */
-void c2_exit(int sock);
+void c2_exit(int sock, int sock2);
 
 
 /**
