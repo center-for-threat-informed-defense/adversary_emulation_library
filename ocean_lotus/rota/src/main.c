@@ -8,7 +8,7 @@
 // custom functions
 #include "utils.h"
 #include "persistence.h"
-#include "c2_commands.h"
+#include "c2_loop.h"
 
 int main(int argc, char *argv[]) {
 
