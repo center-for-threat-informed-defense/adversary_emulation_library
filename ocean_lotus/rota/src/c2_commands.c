@@ -69,12 +69,6 @@ void c2_set_timeout(int *sleepTime, int newTime) {
 }
 
 
-char *c2_steal_sensitive_info() {
-
-
-}
-
-
 void c2_upload_device_info(char *buffer) {
     // Netlab 360 make this look like populating a uname struct, /etc/os-relase/etc...
 
