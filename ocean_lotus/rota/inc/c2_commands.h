@@ -29,7 +29,6 @@ const static unsigned char marker_4[] = {0xff,0x00};
 // RotaJakiro Command IDs
 // Taken from https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 const static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
-const static unsigned char rota_c2_test[4] = {0x20, 0x83, 0x07, 0x0a};
 const static unsigned char rota_c2_heartbeat[4] = {0x5c, 0xca, 0x72, 0x07};
 const static unsigned char rota_c2_set_timeout[4] = {0x17,0xB1, 0xCC, 0x04};
 const static unsigned char rota_c2_steal_data[4] = {0x25, 0x36, 0x60, 0xEA};
