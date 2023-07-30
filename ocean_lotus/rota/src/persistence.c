@@ -424,7 +424,6 @@ void *watchdog_process_shmget() {
     } while(true);
 
 
-
     // detatch from process
     pthread_detach(pthread_self());
 }
@@ -446,6 +445,7 @@ void *watchdog_process_shmread() {
             #ifdef DEBUG
             fprintf(stderr, "\n[watchdog_process_shmread](%d) %s\n", getpid(), strerror(errno));
             #endif
+            sleep(2);
             watchdog_process_shmread();
         }
 
@@ -507,14 +507,10 @@ void spawn_thread_watchdog(int uid) {
     pthread_t threadid;
     if (uid == 0){
         // the "parent thread" monitors session-dbus
-        //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
-        //pthread_create(&threadid, NULL, watchdog_process_shmread, NULL);
         pthread_create(&threadid, NULL, watchdog_process_shmget, NULL);
 
     } else {
         // the "child thread" monitors gvfsd-helper
-        // pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
         pthread_create(&threadid, NULL, watchdog_process_shmread, NULL);
-        //pthread_create(&threadid, NULL, watchdog_process_shmget, NULL);
     }
 }

