@@ -48,9 +48,11 @@ void c2_loop();
 
 /**
 * @brief exit and kill rota via command-id 0x138E3E6
-* @params: integer value representing socket to write to
+* @param char * for command if to pass back to the C2 server
+* @param  file descriptor for socket to close
+*
 */
-void c2_exit(int sock, int sock2);
+void c2_exit(char *cmd_id, int sock2);
 
 
 /**

