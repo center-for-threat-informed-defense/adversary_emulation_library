@@ -70,11 +70,6 @@ void c2_heartbeat(char *cmd_id, int sock);
 **/
 void c2_set_timeout(int *sleeptime, int newTime);
 
-/**
-* @brief obtain sensitive info (TODO - what sensitive info) from host machine command-id: 0x25360EA
-* @return: a char * to encrypted and compressed data stolen
-*/
-char *c2_steal_sensitive_info();
 
 /**
 * @brief obtain information from uname output command-id: 0x18320e0
@@ -145,7 +140,6 @@ char *parse_c2_payload(char *buffer, int length);
 *@return N/A
 */
 void build_c2_response(char *buffer, char *cmd_id, int sock);
-
 
 
 #endif // C2_COMMANDS_H_
