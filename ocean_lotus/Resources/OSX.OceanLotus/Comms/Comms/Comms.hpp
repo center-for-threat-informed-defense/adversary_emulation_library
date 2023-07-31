@@ -12,9 +12,9 @@ const int RESP_BUFFER_SIZE = 65535;
 
 const int HEADER_LENGTH = 82;
 const unsigned char MAGIC_BYTES[] = {0x3B, 0x91, 0x01, 0x10};
-const int PAYLOAD_LENGTH_POS = 12;
-const int KEY_LENGTH_POS = 16;
-const int INSTRUCTION_POS = 18;
+const int PAYLOAD_LENGTH_POS = 8;
+const int KEY_LENGTH_POS = 12;
+const int INSTRUCTION_POS = 14;
 const unsigned char MARKER_1[] = {0xC2};
 const int MARKER_1A_POS = 19;
 const unsigned char MARKER_2[] = {0xE2};
@@ -40,6 +40,6 @@ sendRequest
         https://www.geeksforgeeks.org/socket-programming-cc/
         https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/100-Articles/DynamicLibraryDesignGuidelines.html
 */
-extern "C" void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char ** instruction);
+extern "C" void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char ** instruction, const char * clientID);
 
 #endif

