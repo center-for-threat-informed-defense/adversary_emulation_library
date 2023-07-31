@@ -15,10 +15,10 @@ C2_SERVER='"10.10.2.228"'
 C2_PORT=1443
 ```
 
-2. Run make to build executable
+2. Run make to build release/debug executables and an example shared objection for exeuction
 
 ``` sh
-$> make
+$> make all
 ```
 
 * Buidling with Docker (optional)
