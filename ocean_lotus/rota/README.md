@@ -21,6 +21,16 @@ C2_PORT=1443
 $> make
 ```
 
+* Buidling with Docker (optional)
+A Dockerfile is also provided to install a build environment and produce a rota executable.
+
+``` sh
+$> docker build . -t attack:rota; # build the container image
+$> docker run --name rota attack:rota; # run the container image to produce the ELF executable
+$> docker cp rota:/opt/bin/rota .
+```
+
+
 ## Host Artifacts
 
 ## Persistence Overview
