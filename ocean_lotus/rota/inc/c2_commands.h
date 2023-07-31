@@ -17,10 +17,10 @@
 //RotaJakiro Magic Headers
 const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
 const static unsigned char initialBytes[] = {0x21, 0x70, 0x27, 0x20};
-const static unsigned char sessionId[] = {0x01, 0x02, 0x03, 0x04};
-const static unsigned char payloadLen[] = {0x0f};
-const static unsigned char keyLen[] = {0x00,0x00};
-const static unsigned char cmd_id[] = {0x00, 0x00, 0x00, 0x00};
+static unsigned char sessionId[4] = {0x01, 0x02, 0x03, 0x04};
+static unsigned char payloadLen[] = {0x0f};
+static unsigned char keyLen[] = {0x00,0x00};
+static unsigned char cmd_id[] = {0x00, 0x00, 0x00, 0x00};
 const static unsigned char marker_1[] = {0xc2, 0x00};
 const static unsigned char marker_2[] = {0xe2, 0x00};
 const static unsigned char marker_3[] = {0xc2, 0x00};
