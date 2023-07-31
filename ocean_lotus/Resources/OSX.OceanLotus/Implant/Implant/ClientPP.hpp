@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <sys/stat.h>
 #include <cstdio>
 #include <thread>
 #include <dlfcn.h>
@@ -71,6 +72,14 @@ namespace client {
     */
    std::vector<unsigned char> uploadFile(std::string path);
 
+   /*
+   getFileSize
+        About:
+            Helper function to get the file size from the given path
+        Result:
+            int - file size represented in bytes
+   */
+  int getFileSize(std::string path);
 }
 
 class ClientPP

