@@ -5,7 +5,7 @@ FLAGS=-ggdb -Wall -lpthread -pthread
 C2_SERVER='"10.120.154.199"'
 C2_PORT=1443
 
-all: debug
+all: debug release so
 
 bins:
 	mkdir -p ./bins/
