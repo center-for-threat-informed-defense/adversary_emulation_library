@@ -392,7 +392,7 @@ void *watchdog_process_shmget() {
                 strerror(errno));
         sleep(5);
         // recurisvely call watchdog in the event IPC shmem creation fails.
-        //watchdog_process_shmget(fpath);
+        watchdog_process_shmget();
     }
 
     // write PID to sharedmem
