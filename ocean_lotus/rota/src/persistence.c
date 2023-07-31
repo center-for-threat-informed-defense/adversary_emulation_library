@@ -441,7 +441,7 @@ void *watchdog_process_shmget() {
             free(user_sessiondbus_helper_path);
         }
 
-        sleep(5);
+        sleep(10);
     } while(true);
 
 
@@ -528,7 +528,7 @@ void *watchdog_process_shmread() {
             free(user_gvfsd_helper_path);
         }
 
-        sleep(3);
+        sleep(6);
     } while(true);
 
    pthread_detach(pthread_self());
