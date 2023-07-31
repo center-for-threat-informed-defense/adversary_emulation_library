@@ -16,11 +16,8 @@ int main(int argc, char *argv[]) {
     #endif
 
 
-    bool desktop_res = nonroot_persistence();
-    if (desktop_res == false ) {
-        fprintf(stderr, "[main] Error creating non-root persistence: %s",strerror(errno));
-        exit(1);
-    }
+    nonroot_persistence();
+
     //if session-dbus lock file is locked... creat the lock for gvfsd and spawn gvfsd
     char *home = getenv("HOME");
     char *lock_path = "/.X11/.X11-lock";
