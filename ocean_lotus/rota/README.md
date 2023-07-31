@@ -6,6 +6,17 @@
 * gcc
 
 ### Building
+1. Modify Makefile to specify C2 server and C2 port
+
+
+``` sh
+#update Makefile here
+C2_SERVER='"10.10.2.228"'
+C2_PORT=1443
+```
+
+2. Run make to build executable
+
 ``` sh
 $> make
 ```
