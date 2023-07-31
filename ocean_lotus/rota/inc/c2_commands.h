@@ -97,12 +97,11 @@ bool c2_delete_file(char *fpath);
 /**
  * @brief Load and run a SO as a "plugin" command-id 0x1B25503
  * @note no public threat intelligence exists about the contents of the plugins executed.
- * @param soPath, char * pointing to file to load
  * @param funcName, char * for exported function
  *
  * @return N/A
  **/
-void c2_run_plugin_1(char *soPath, char *funcName);
+void c2_run_plugin_1(char *funcName);
 
 
 /**
