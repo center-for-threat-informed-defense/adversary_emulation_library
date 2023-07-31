@@ -27,9 +27,8 @@ A Dockerfile is also provided to install a build environment and produce a rota 
 ``` sh
 $> docker build . -t attack:rota; # build the container image
 $> docker run --name rota attack:rota; # run the container image to produce the ELF executable
-$> docker cp rota:/opt/bin/rota .
+$> docker cp rota:/opt/bin/rota .; # copy rota to local directory
 ```
-
 
 ## Host Artifacts
 
