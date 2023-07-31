@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <sys/stat.h>
+#include <sys/utsname.h>
 #include <cstdio>
 #include <thread>
 #include <dlfcn.h>
@@ -13,6 +14,7 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
+#include <SystemConfiguration/SystemConfiguration.h>
 
 #include "Communication.hpp"
 #include "Transform.hpp"
@@ -49,6 +51,29 @@ namespace client {
             T1082 System Information Discovery
     */
     std::string getPlatformExpertDeviceValue(std::string key);
+
+    /*
+    getComputerName
+        About:
+            Helper function to get computer name using SCDynamicStoreCopyComputerName
+            API from SystemConfiguration framework
+        Result:
+            std::string - representing computer name
+        MITRE ATT&CK Techniques:
+            T1082 System Information Discovery
+    */
+    std::string getComputerName();
+
+    /*
+    getHardwareName
+        About:
+            Helper function to get the hardware name using uname API from utsname.h
+        Result:
+            std::string - representing hardware name
+        MITRE ATT&CK Techniques:
+            T1082 System Information Discovery
+    */
+    std::string getHardwareName();
 
     /*
     downloadFile
