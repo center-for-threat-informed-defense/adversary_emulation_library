@@ -4,6 +4,7 @@
 | ---------- | --- | ----------- |
 | Application Bundle | First stage | Masquerades as a Word doc, executes script on click that drops and executes the Second Stage Implant |
 | Implant | Second stage | Installs persistence and performs backdoor capabilities |
+| Comms | C2 communication | Library containing C2 communication functionality |
 
 ## Description
 
@@ -20,7 +21,16 @@ performs the following actions:
 - Removes quarantine flag on files within the application bundle
 - Extracts, base64 decodes, and executes the embedded Implant (Second
 Stage) payload
-- Installs persistence via LaunchAgent or LaunchDaemon
+- Prepares persistence install via LaunchAgent or LaunchDaemon
+  - **NOTE:** This script *does not* activate/install the persistence mechanism
+  and the implant, once executed, should be tasked to execute the following
+  command:
+    ```
+    launchctl load -w /Users/bob/Library/LaunchAgents/com.apple.launchpad
+    ```
+  - This will return a second OSX implant session, at which point, it is safe
+  to exit or disregard the initial implant session in preference of utilizing
+  the persistent implant session
 - Uses `touch` to update the timestamps of the Implant (Second Stage) artifacts
 - Uses `chmod` to make the Implant (Second Stage) binary file executable by
 changing file permissions to 755
@@ -36,16 +46,76 @@ actions:
 
 **C2 Communication**
 
+The OSX.OceanLotus implant communicates over HTTP to a hardcoded IP address
+within the Comms library.
+
+Data received and sent to the C2 server is contained within the HTTP request 
+body. The data is formatted using the following structure:
+
+| Offset | Length | Section Name | Data |
+| ------ | ------ | ---- | --- |
+| 0      | 4 bytes | Header | Magic bytes `{0x3B, 0x91, 0x01, 0x10}` |
+| 8      | 4 bytes | Header | Length `x` of payload |
+| 12     | 2 bytes | Header | Length `y` of encryption key |
+| 14     | 4 bytes | Header | Command instruction bytes |
+| 19     | 1 byte  | Header | Magic marker byte `0xC2` |
+| 24     | 1 byte  | Header | Magic marker byte `0xE2` |
+| 29     | 1 byte  | Header | Magic marker byte `0xC2` |
+| 75     | 1 byte  | Header | Magic marker byte `0xFF` |
+| 82     | `y` bytes | Key | Encryption key bytes (if no encryption, will be empty and `y` will therefore be 0) |
+| 82 + `y` | `x` bytes | Payload | Payload bytes (if no encryption, will be plaintext and start at index 82) |
+
+*C2 Registration*
+For initial registration with the C2 server, OSX.OceanLotus will send an HTTP
+POST request, in which a generated UUID and discovered OS information will be
+stored within the "Payload" section of the above structure.
+
+**The generated UUID will be stored as a Cookie within all following HTTP
+requests to the C2 server.**
+
+*Heartbeat*
+For checking in with the C2 server, OSX.OceanLotus will send an HTTP GET
+request. The C2 server identifies the request as a valid request based on the
+UUID within the Cookie.
+
+*Task Results*
+For tasks that return output to the C2 server (output of executed commands and
+exfiltrated files), OSX.OceanLotus will send an HTTP POST request, in which
+the returned data will be stored within the "Payload" section of the above
+structure. This POST request will be sent immediately after OSX.OceanLotus has
+completed the task.
+
 **Available Instructions**
-| Instruction | Action |
-| ----------- | ------ |
-| | |
+
+> Note: Because the "Command instruction bytes" is 4 bytes in length, the 
+following instructions are appended with null bytes to pad the remaining length
+of the instruction.
+
+| Instruction | Action | Details |
+| ----------- | ------ | ------- |
+| 0x55 | Heartbeat | Default empty response from C2 server |
+| 0x72 | Upload file | "Payload" section of C2 server response should contain the file path to exfiltrate. OSX.OceanLotus will POST the file bytes |
+| 0x23 or 0x3C | Download file | "Payload" section of C2 server response should contain the file bytes to write |
+| 0xAC | Run command in terminal | "Payload" section of C2 server response should contain the command to execute. OSX.OceanLotus will execute the command then POST the command output |
+| 0xA2 | Download file and execute | "Payload" section of C2 server response should contain the file bytes to write. OSX.OceanLotus will add the executable bit to the written file then POST the output of executing the file |
+| 0x07 | Get configuration information | OSX.OceanLotus will POST the implant configuration information (UUID, path to the executing process, and install time) |
+| 0x33 | Get file size | "Payload" section of C2 server response should contain the file path to get the file size of. OSX.OceanLotus will POST the file size in bytes |
+| 0xE8 | Exit | OSX.OceanLotus will terminate its process
 
 **Obfuscation**
 
 ## For Operators
 
 ### Execution
+
+To activate the persistence mechanism at the user context, task the implant to
+execute the following command:
+```
+launchctl load -w /Users/bob/Library/LaunchAgents/com.apple.launchpad
+```
+
+Replace the above path with `/Library/LaunchAgents/com.apple.launchpad` if the
+implant is running in an elevated (root) context.
 
 ### Troubleshooting
 
