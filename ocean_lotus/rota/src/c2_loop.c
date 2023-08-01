@@ -134,7 +134,7 @@ void c2_loop() {
             exit(0);
         }
         else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
-            c2_heartbeat(cmd_id, sock);
+            c2_heartbeat(cmd_id, sock2);
             break;
 
         }
