@@ -44,7 +44,7 @@ actions:
 - Collects OS information
 - Registers with C2 server
 
-**C2 Communication**
+#### C2 Communication
 
 The OSX.OceanLotus implant communicates over HTTP to a hardcoded IP address
 within the Comms library.
@@ -66,26 +66,29 @@ body. The data is formatted using the following structure:
 | 82 + `y` | `x` bytes | Payload | Payload bytes (if no encryption, will be plaintext and start at index 82) |
 
 *C2 Registration*
+
 For initial registration with the C2 server, OSX.OceanLotus will send an HTTP
 POST request, in which a generated UUID and discovered OS information will be
 stored within the "Payload" section of the above structure.
 
-**The generated UUID will be stored as a Cookie within all following HTTP
+The generated UUID will be stored as a Cookie within **all following HTTP
 requests to the C2 server.**
 
 *Heartbeat*
+
 For checking in with the C2 server, OSX.OceanLotus will send an HTTP GET
 request. The C2 server identifies the request as a valid request based on the
 UUID within the Cookie.
 
 *Task Results*
+
 For tasks that return output to the C2 server (output of executed commands and
 exfiltrated files), OSX.OceanLotus will send an HTTP POST request, in which
 the returned data will be stored within the "Payload" section of the above
 structure. This POST request will be sent immediately after OSX.OceanLotus has
 completed the task.
 
-**Available Instructions**
+#### Available Instructions
 
 > Note: Because the "Command instruction bytes" is 4 bytes in length, the 
 following instructions are appended with null bytes to pad the remaining length
@@ -102,7 +105,7 @@ of the instruction.
 | 0x33 | Get file size | "Payload" section of C2 server response should contain the file path to get the file size of. OSX.OceanLotus will POST the file size in bytes |
 | 0xE8 | Exit | OSX.OceanLotus will terminate its process
 
-**Obfuscation**
+#### Obfuscation
 
 ## For Operators
 
