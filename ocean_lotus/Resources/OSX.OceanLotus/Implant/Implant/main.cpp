@@ -86,12 +86,10 @@ void* loadComms(std::string exePath, std::string self) {
             }
         }
         if (dylibLoaded) {
-            break;
+            closedir(directory);
+            return dylib;
         }
-
     }
-    closedir(directory);
-
     return dylib;
 }
 
