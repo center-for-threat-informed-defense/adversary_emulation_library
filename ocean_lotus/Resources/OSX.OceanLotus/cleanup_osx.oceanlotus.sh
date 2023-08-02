@@ -25,11 +25,14 @@ function check_file_exists () {
     fi
 }
 
-dropped_files=("$HOME/Library/WebKit/com.apple.launchpad" "$1/Decoy.doc")
+dropped_files=("$HOME/Library/WebKit/com.apple.launchpad" "$1/Decoy.doc" "/tmp/store")
 for path in "${dropped_files[@]}"
 do
     check_file_exists $path
 done
+
+launchctl unload -w ~/Library/LaunchAgents/com.apple.launchpad
+printf "[+] Unloaded LaunchAgent persistence\n"
 
 plist_dir="$HOME/Library/LaunchAgents/com.apple.launchpad"
 
@@ -57,6 +60,3 @@ ps aux | grep '[c]om.apple.launchpad' | awk '{print $2}' | while read line; do
     printf "[+] com.apple.launchpad found, killing...\n"
     kill $line
 done
-
-launchctl unload -w ~/Library/LaunchAgents/com.apple.launchpad
-printf "[+] Unloaded LaunchAgent persistence\n"

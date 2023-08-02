@@ -130,21 +130,25 @@ the path to the folder where the application bundle was executed:
 > NOTE: Do not include the trailing slash in the target path
 
 ```
-./cleanup_osx.oceanlotus.sh $HOME/Documents
+./cleanup_osx.oceanlotus.sh $HOME/Downloads
 ```
 
 Expected output:
 ```
-Identified executing directory as: /Users/bob/Documents
+Identified executing directory as: /Users/bob/Downloads
 
-[+] /Users/bob/Library/LaunchAgents/com.apple.launchpad exists, removing...
-  [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad was removed successfully
 [+] /Users/bob/Library/WebKit/com.apple.launchpad exists, removing...
   [+] /Users/bob/Library/WebKit/com.apple.launchpad was removed successfully
-[+] /Users/bob/Documents/Decoy.doc exists, removing..
-  [+] /Users/bob/Documents/Decoy.doc was removed successfully
+[+] /Users/bob/Downloads/Decoy.doc exists, removing...
+  [+] /Users/bob/Downloads/Decoy.doc was removed successfully
+[+] /tmp/store exists, removing...
+  [+] /tmp/store was removed successfully
+[+] Unloaded LaunchAgent persistence
+[+] /Users/bob/Library/LaunchAgents/com.apple.launchpad directory exists, removing...
+  [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad directory was removed successfully
 [+] Removing any .log files in /tmp
 [+] TextEdit found, killing...
+[+] com.apple.launchpad found, killing...
 ```
 
 ## For Developers 
@@ -163,12 +167,40 @@ To build all, run the build script from the OSX.OceanLotus directory:
 Expected output:
 ```
 Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Implant clean -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+
+** CLEAN SUCCEEDED **
+
+Command line invocation:
     /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Implant build -configuration Release
 
 note: Using new build system
 note: Building targets in parallel
 note: Planning build
 note: Using build description from disk
+...
+
+** BUILD SUCCEEDED **
+
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Comms clean -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+
+** CLEAN SUCCEEDED **
+
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Comms build -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Constructing build description
+...
 
 ** BUILD SUCCEEDED **
 
@@ -213,7 +245,7 @@ Command line invocation:
 note: Using new build system
 note: Building targets in parallel
 note: Planning build
-note: Using build description from disk
+...
 
 ** BUILD SUCCEEDED **
 ```
@@ -225,11 +257,24 @@ To build the Comms library, run the follow command from the `Comms` directory:
 xcodebuild -scheme Comms build -configuration Release
 ```
 
->Until Comms is embedded and decrypted to `/tmp/store`, the compiled dylib can
->just be copied to `/tmp/store`:
->```
->cp DerivedData/Comms/Build/Products/Release/libComms.dylib /tmp/store
->```
+Expected output:
+```
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Comms build -configuration Release
+
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Constructing build description
+...
+
+** BUILD SUCCEEDED **
+```
+
+> :information_source: **Note:** The compiled libComms.dylib should be placed
+> in the same directory as the Implant binary. The Implant will traverse its
+> current working directory, copy files to `/tmp/store`, and attempt to load
+> the files as shared objects using `dlopen`
 
 ### Testing
 

