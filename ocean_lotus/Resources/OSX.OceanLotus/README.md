@@ -124,8 +124,8 @@ implant is running in an elevated (root) context.
 
 ### Cleanup
 
-After executing the application bundle, execute the cleanup script and provide
-the path to the folder where the application bundle was executed:
+Execute the [cleanup script](../cleanup/OSX.OceanLotus/cleanup_osx.oceanlotus.sh)
+and provide the path to the folder where the application bundle was executed:
 
 > NOTE: Do not include the trailing slash in the target path
 
@@ -143,12 +143,13 @@ Identified executing directory as: /Users/bob/Downloads
   [+] /Users/bob/Downloads/Decoy.doc was removed successfully
 [+] /tmp/store exists, removing...
   [+] /tmp/store was removed successfully
+[+] Persistence found, removing...
+/Users/bob/Library/LaunchAgents/com.apple.launchpad/com.apple.launchpad.plist: Operation now in progress
 [+] Unloaded LaunchAgent persistence
 [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad directory exists, removing...
   [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad directory was removed successfully
-[+] Removing any .log files in /tmp
+[-] No /tmp/*.log files found
 [+] TextEdit found, killing...
-[+] com.apple.launchpad found, killing...
 ```
 
 ## For Developers 
@@ -204,11 +205,11 @@ note: Constructing build description
 
 ** BUILD SUCCEEDED **
 
-W8BN.icns -> TestApp.app/Contents/Resources/icon.icns
-decoy.doc -> TestApp.app/Contents/Resources/default.config
-first_stage.sh -> TestApp.app/Contents/MacOS/TestApp
-Launchd.plist -> TestApp.app/Contents/PkgInfo
-Application bundle created at '/Users/bob/ocean-lotus/Resources/OSX.OceanLotus/ApplicationBundle/TestApp.app'
+W8BN.icns -> conkylan.app/Contents/Resources/icon.icns
+decoy.doc -> conkylan.app/Contents/Resources/default.config
+first_stage.sh -> conkylan.app/Contents/MacOS/conkylan
+Launchd.plist -> conkylan.app/Contents/PkgInfo
+Application bundle created at '/Users/bob/ocean-lotus/Resources/OSX.OceanLotus/ApplicationBundle/conkylan.app'
 ```
 
 **Application Bundle**

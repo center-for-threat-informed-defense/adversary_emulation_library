@@ -3,6 +3,16 @@
 # ---------------------------------------------------------------------------
 # cleanup_osx.oceanlotus.sh - Cleanup script for OSX.OceanLotus implant
 
+ # Copyright 2023 MITRE Engenuity. Approved for public release. Document number CT0005.
+ # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+ # http://www.apache.org/licenses/LICENSE-2.0
+
+ # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+ # This project makes use of ATT&CK®
+ # ATT&CK Terms of Use - https://attack.mitre.org/resources/terms-of-use/ 
+
 # Usage: ./cleanup_osx.oceanlotus.sh [PATH]
 
 # Revision History:
@@ -31,8 +41,20 @@ do
     check_file_exists $path
 done
 
-launchctl unload -w ~/Library/LaunchAgents/com.apple.launchpad
-printf "[+] Unloaded LaunchAgent persistence\n"
+if [[ $(launchctl list | grep com.apple.launchpad) ]]; then
+    printf "[+] Persistence found, removing...\n"
+    launchctl unload -w $HOME/Library/LaunchAgents/com.apple.launchpad
+    if [[ $(launchctl list | grep com.apple.launchpad) ]]; then
+        printf "[!] Failed to unload LaunchAgent persistence\n"
+    else
+        printf "[+] Unloaded LaunchAgent persistence\n"
+    fi
+else
+    printf "[-] Persistence not found\n"
+fi
+
+
+
 
 plist_dir="$HOME/Library/LaunchAgents/com.apple.launchpad"
 
@@ -48,8 +70,15 @@ else
     printf "[-] $plist_dir direstory does not exist\n"
 fi
 
-printf "[+] Removing any .log files in /tmp\n"
-rm /tmp/*.log
+log_files=$(ls /tmp/*.log 1> /dev/null 2>&1)
+if [[ $? != 0 ]]; then
+    printf "[-] No /tmp/*.log files found\n"
+elif [[ $log_files ]]; then
+    printf "[+] Removing *.log files in /tmp\n"
+    rm /tmp/*.log
+else
+    printf "[-] No /tmp/*.log files found\n"
+fi
 
 ps aux | grep '[T]extEdit' | awk '{print $2}' | while read line; do
     printf "[+] TextEdit found, killing...\n"

@@ -1,0 +1,55 @@
+# Cleanup
+
+## OSX.OceanLotus
+
+1. From the Kali Linux machine, copy the cleanup script to the Mac host,
+entering the password when prompted:
+    ```
+    cd /opt/oceanlotus/Resources/cleanup
+    scp OSX.OceanLotus/cleanup_osx.oceanlotus.sh <Mac user>@<Mac IP>:/tmp/cleanup_osx.oceanlotus.sh
+    ```
+    | Password |
+    | -------- |
+    | <Mac user password> |
+1. SSH from the Kali Linux machine to the Mac host, entering the password when
+prompted:
+    ```
+    ssh <Mac user>@<Mac IP>
+    ```
+    | Password |
+    | -------- |
+    | <Mac user password> |
+1. Using the SSH session, execute the cleanup script:
+    ```
+    cd /tmp
+    ./cleanup_osx.oceanlotus.sh $HOME/Downloads
+    ```
+
+    Expected output:
+    ```
+    Identified executing directory as: /Users/bob/Downloads
+
+    [+] /Users/bob/Library/WebKit/com.apple.launchpad exists, removing...
+      [+] /Users/bob/Library/WebKit/com.apple.launchpad was removed successfully
+    [+] /Users/bob/Downloads/Decoy.doc exists, removing...
+      [+] /Users/bob/Downloads/Decoy.doc was removed successfully
+    [+] /tmp/store exists, removing...
+      [+] /tmp/store was removed successfully
+    [+] Persistence found, removing...
+    /Users/bob/Library/LaunchAgents/com.apple.launchpad/com.apple.launchpad.plist: Operation now in progress
+    [+] Unloaded LaunchAgent persistence
+    [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad directory exists, removing...
+      [+] /Users/bob/Library/LaunchAgents/com.apple.launchpad directory was removed successfully
+    [-] No /tmp/*.log files found
+    [+] TextEdit found, killing...
+    ```
+1. Remove the cleanup script then exit the SSH session:
+    ```
+    rm /tmp/cleanup_osx.oceanlotus.sh
+    exit
+    ```
+
+:information_source: **Note:** This script assumes successful execution of the
+OSX.OceanLotus implant and installation of persistence via LaunchAgent. Any
+unexpected output may imply certain areas of execution where not completed
+successfully.
