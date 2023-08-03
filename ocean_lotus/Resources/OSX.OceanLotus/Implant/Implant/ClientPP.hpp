@@ -18,6 +18,7 @@
 
 #include "Communication.hpp"
 #include "Transform.hpp"
+#include "no_strings.hpp"
 
 namespace client {
     extern const int RESP_BUFFER_SIZE;

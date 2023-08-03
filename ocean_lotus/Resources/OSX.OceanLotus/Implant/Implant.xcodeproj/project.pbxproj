@@ -39,6 +39,7 @@
 		808E95FD2A45D6270096DDCA /* Communication.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Communication.hpp; sourceTree = "<group>"; };
 		808E96762A49DB6F0096DDCA /* Comms.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Comms.hpp; path = ../../Comms/Comms/Comms.hpp; sourceTree = "<group>"; };
 		809003342A7A8675007B02A2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		8090033A2A7BDA64007B02A2 /* no_strings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = no_strings.hpp; sourceTree = "<group>"; };
 		809BFA672A5C3EA9009D84B4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		809BFA692A5C3EB6009D84B4 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -85,6 +86,7 @@
 				808E95F92A45D2260096DDCA /* Transform.hpp */,
 				808E95FC2A45D6270096DDCA /* Communication.cpp */,
 				808E95FD2A45D6270096DDCA /* Communication.hpp */,
+				8090033A2A7BDA64007B02A2 /* no_strings.hpp */,
 			);
 			path = Implant;
 			sourceTree = "<group>";

