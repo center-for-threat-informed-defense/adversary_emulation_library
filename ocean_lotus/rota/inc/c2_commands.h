@@ -138,7 +138,7 @@ char *parse_c2_payload(char *buffer, int length);
 *@param char bufffer for "PAYLOAD" section
 *@return N/A
 */
-void build_c2_response(char *buffer, char *cmd_id, int sock);
+void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock);
 
 
 #endif // C2_COMMANDS_H_

