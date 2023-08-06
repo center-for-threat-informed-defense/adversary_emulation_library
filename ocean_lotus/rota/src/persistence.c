@@ -14,6 +14,19 @@
 #include "persistence.h"
 #include "utils.h"
 
+
+// MyCoolFunction
+//      About:
+//          MyCoolFunction does cool things
+//      Result:
+//          Returns a string capturing all of my cool things
+//      MITRE ATT&CK Techniques:
+//          T1059.001 Command and Scripting Interpreter: Windows Command Shell
+//      CTI:
+//          https://link/to/CTI/report.pdf
+//      Other References:
+//          https://github.com/repo/that/helped/me/write/my/function
+
 bool copy_rota_to_userland(char *destpath) {
     struct stat procstru;
     int fsize;
