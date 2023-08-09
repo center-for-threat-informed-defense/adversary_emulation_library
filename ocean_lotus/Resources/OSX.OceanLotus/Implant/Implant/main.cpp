@@ -78,11 +78,14 @@ void* loadComms(std::string exePath, std::string self) {
                     dylib = dlopen(PATH_TO_COMMS_LIB, RTLD_LAZY);
                     if (dylib != NULL) {
                         dylibLoaded = true;
+                    } else {
+                        char *msg = dlerror();
+                        std::cout << "[IMPLANT] "<< msg << std::endl;
                     }
                 }
             }
             catch(...) {
-                // pass (ignore failures)    
+                // pass (ignore failures)
             }
         }
         if (dylibLoaded) {
@@ -90,6 +93,7 @@ void* loadComms(std::string exePath, std::string self) {
             return dylib;
         }
     }
+//    return dlopen(PATH_TO_COMMS_LIB, RTLD_LAZY);
     return dylib;
 }
 

