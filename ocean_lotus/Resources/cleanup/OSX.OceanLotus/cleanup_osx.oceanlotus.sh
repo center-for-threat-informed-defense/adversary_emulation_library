@@ -35,7 +35,7 @@ function check_file_exists () {
     fi
 }
 
-dropped_files=("$HOME/Library/WebKit/com.apple.launchpad" "$1/Decoy.doc" "/tmp/store")
+dropped_files=("$HOME/Library/WebKit/com.apple.launchpad" $HOME/Library/WebKit/b2NlYW5sb3R1czIz" $HOME/Library/WebKit/osx.download" "$1/conkylan.doc" "/tmp/store")
 for path in "${dropped_files[@]}"
 do
     check_file_exists $path

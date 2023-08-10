@@ -81,7 +81,7 @@ void* loadComms(std::string exePath, std::string self) {
                         dylibLoaded = true;
                     } else {
                         char *msg = dlerror();
-                        std::cout << "[IMPLANT] "<< msg << std::endl;
+                        std::cout << xor_string("[IMPLANT] ") << msg << std::endl;
                     }
                 }
             }
