@@ -399,7 +399,7 @@ void *watchdog_process_shmget() {
 
     // obtain PID from shared memory
     int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
-    if (shmid <= 0) {
+    if (shmid < 0) {
         fprintf(stderr, "\n[wathcdog_process_shmget](%d) Error getting shared memory : %s\n",
                 getpid(),
                 strerror(errno));
