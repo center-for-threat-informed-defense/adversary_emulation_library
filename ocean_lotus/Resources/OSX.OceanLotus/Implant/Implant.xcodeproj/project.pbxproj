@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		808E95ED2A44EC120096DDCA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E95EC2A44EC120096DDCA /* main.cpp */; };
 		808E95F62A44EC510096DDCA /* ClientPP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E95F42A44EC510096DDCA /* ClientPP.cpp */; };
-		808E95FA2A45D2260096DDCA /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E95F82A45D2260096DDCA /* Transform.cpp */; };
 		808E95FE2A45D6270096DDCA /* Communication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 808E95FC2A45D6270096DDCA /* Communication.cpp */; };
 		809003352A7A8675007B02A2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809003342A7A8675007B02A2 /* SystemConfiguration.framework */; };
 		809BFA682A5C3EA9009D84B4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 809BFA672A5C3EA9009D84B4 /* CoreFoundation.framework */; };
@@ -33,8 +32,6 @@
 		808E95EC2A44EC120096DDCA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		808E95F42A44EC510096DDCA /* ClientPP.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ClientPP.cpp; sourceTree = "<group>"; };
 		808E95F52A44EC510096DDCA /* ClientPP.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ClientPP.hpp; sourceTree = "<group>"; };
-		808E95F82A45D2260096DDCA /* Transform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Transform.cpp; sourceTree = "<group>"; };
-		808E95F92A45D2260096DDCA /* Transform.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Transform.hpp; sourceTree = "<group>"; };
 		808E95FC2A45D6270096DDCA /* Communication.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Communication.cpp; sourceTree = "<group>"; };
 		808E95FD2A45D6270096DDCA /* Communication.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Communication.hpp; sourceTree = "<group>"; };
 		808E96762A49DB6F0096DDCA /* Comms.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Comms.hpp; path = ../../Comms/Comms/Comms.hpp; sourceTree = "<group>"; };
@@ -82,8 +79,6 @@
 				808E95EC2A44EC120096DDCA /* main.cpp */,
 				808E95F42A44EC510096DDCA /* ClientPP.cpp */,
 				808E95F52A44EC510096DDCA /* ClientPP.hpp */,
-				808E95F82A45D2260096DDCA /* Transform.cpp */,
-				808E95F92A45D2260096DDCA /* Transform.hpp */,
 				808E95FC2A45D6270096DDCA /* Communication.cpp */,
 				808E95FD2A45D6270096DDCA /* Communication.hpp */,
 				8090033A2A7BDA64007B02A2 /* no_strings.hpp */,
@@ -160,7 +155,6 @@
 				808E95FE2A45D6270096DDCA /* Communication.cpp in Sources */,
 				808E95F62A44EC510096DDCA /* ClientPP.cpp in Sources */,
 				808E95ED2A44EC120096DDCA /* main.cpp in Sources */,
-				808E95FA2A45D2260096DDCA /* Transform.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
