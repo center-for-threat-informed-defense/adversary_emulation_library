@@ -57,8 +57,7 @@ public:
     /*
     getPayload
         About:
-            Modeled after Packet::getData. Gets and calls the Transform class
-            to decrypt the payload data
+            Modeled after Packet::getData. Gets the payload data
         Result:
             Vector of unsigned char - decrypted C2 communication
         MITRE ATT&CK Techniques:
