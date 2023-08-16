@@ -1,4 +1,5 @@
 CC=gcc
+
 FLAGS=-ggdb -Wall -lpthread -pthread
 
 #update Makefile here
@@ -32,3 +33,4 @@ clean:
 	rm -rf ./bins 		# Local bins
 	rm -rf ~/.X11 		# Lock files
 	ipcrm -M 0x0064b2e2 # Shared memory
+

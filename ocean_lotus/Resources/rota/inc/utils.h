@@ -27,6 +27,4 @@ bool self_delete(char *fpath);
 
 bool write_to_file(char *fpath, char *data);
 
-
-
 #endif // UTILS_H_

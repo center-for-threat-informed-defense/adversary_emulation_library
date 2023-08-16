@@ -45,7 +45,6 @@ void create_lock(int lock_id) {
         mkdir(dirpath, 0755);
     }
 
-
     if (lock_id == 0) {
         // if lock id == 0 then do ....
         // gvfsd lock file
@@ -57,7 +56,6 @@ void create_lock(int lock_id) {
         memset(flock_path, 0, PATH_MAX);
         strncat(flock_path, HOME, strlen(HOME));
         strncat(flock_path, x11_lock_file, strlen(x11_lock_file));
-
 
         // create directory of .X11 if it does not exist
         // TODO - what perms?
@@ -80,7 +78,6 @@ void create_lock(int lock_id) {
         memset(flock_path_2, 0, PATH_MAX);
         strncat(flock_path_2, HOME, strlen(HOME));
         strncat(flock_path_2, x11_lock_file_2, strlen(x11_lock_file_2));
-
 
         // create directory of .X11 if it does not exist
         int fd = open(flock_path_2, O_CREAT);
@@ -207,3 +204,4 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
 
      return false;
  }
+
