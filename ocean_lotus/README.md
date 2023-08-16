@@ -1,66 +1,42 @@
 # Ocean Lotus
 
-<!-- TODO Put a one paragraph summary of the project here. -->
+Based on open-source intelligence, the [Center for Threat-Informed Defense](https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/) team created the below scenario based on tools and resources available at the time.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-mollit anim id est laborum.
+## Adversary Overview 
+**Objectives:** [OceanLotus](https://attack.mitre.org/groups/G0050/) is a cyber threat group that began operations since 2014 and whose campaigns align with Vietnamese state interests, targeting private corporations in the manufacturing, consumer product, and hospitality sectors as well as foreign governments, political dissidents, and journalists. <sup>[1](https://www.mandiant.com/resources/blog/cyber-espionage-apt32)</sup> OceanLotus leverages commerically available tools and custom malware to execute strategic web compromises against victim networks. Specifically, the group’s campaigns usually involve phishing and watering hole attacks, spyware, DLL side-loading, DNS tunneling, and data exfiltration. Between February 2018 and November 2020, OceanLotus launched several spyware attacks against Vietnamese human rights activists, bloggers, and nonprofit organizations, believed to be a result of the government’s efforts to censor pro-democratic rhetoric.<sup>[2](https://www.amnestyusa.org/wp-content/uploads/2021/02/Click-and-Bait_Vietnamese-Human-Rights-Defenders-Targeted-with-Spyware-Attacks.pdf)</sup>
 
-**Table Of Contents:**
+Associated Groups: APT32, SeaLotus, APT-C-00
 
-<!--
-TODO The table of contents should include only h2-h6, NOT h1. The "Markdown All In One"
-extension for VS Code will update the TOC automatically for you:
-https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
-Set the extension's TOC:Levels setting to "2..6"
--->
 
-- [Getting Started](#getting-started)
-- [Getting Involved](#getting-involved)
-- [Questions and Feedback](#questions-and-feedback)
-- [How Do I Contribute?](#how-do-i-contribute)
-- [Notice](#notice)
+## Emulation Overview 📖
+This scenario specifically focuses on macOS and Linux environments, starting with a compromised macOS host. OceanLotus uses a multi-phased approach in exfiltrating sensitive data from a targeted victim, by first facilitating a watering hole attack and gaining initial access to the victim's workstation. To establish persistance, the attackers disguise the OSX backdoor as a fake Word document, sent via email to the victim. When the fake document is opened, a bash script is executed in the background that performs the backdoor capabilities of collecting OS information and registering with their C2 server. OceanLotus then searched for ssh keys and known host files, moving laterally to a discovered Linux server.<br>
 
-## Getting Started
+<!-- TODO Add the folder structure (Resource, Binaries, Key Software, etc.) to main repo -->
 
-<!-- TODO Write one paragraph about how users should get started,
-     and update the table of resources below. -->
+## Quick Links
+### For Engineers 💻
+#### Resources
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-mollit anim id est laborum.
 
-| Resource        | Description              |
-| --------------- | ------------------------ |
-| [Resource 1](#) | Description of resource. |
-| [Resource 2](#) | Description of resource. |
-| [Resource 3](#) | Description of resource. |
+#### YARA Rules
 
-## Getting Involved
 
-<!-- TODO Add some bullets telling users how to get involved. -->
+#### Emulation Key Software
 
-There are several ways that you can get involved with this project and help
-advance threat-informed defense:
 
-- **Way to get involved 1.** Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- **Way to get involved 2.** Ut enim ad minim veniam, quis nostrud exercitation ullamco
-  laboris nisi ut aliquip ex ea commodo consequat.
-- **Way to get involved 3.** Duis aute irure dolor in reprehenderit in voluptate velit
-  esse cillum dolore eu fugiat nulla pariatur.
+#### Scenario Walkthrough
 
-## Questions and Feedback
 
-Please submit issues for any technical questions/concerns or contact
-[ctid@mitre-engenuity.org](mailto:ctid@mitre-engenuity.org?subject=Question%20about%20ocean-lotus)
-directly for more general inquiries.
+### For Analysts 🔎
+
+
+## Connect with us 🗨️
+
+We 💖 feedback! Let us know how using this plan has helped you and what we can do better.
+
+Email: ctid@mitre-engenuity.org <br>
+Twitter: https://twitter.com/MITREengenuity <br>
+LinkedIn: https://www.linkedin.com/company/mitre-engenuity/
 
 Also see the guidance for contributors if are you interested in contributing or simply
 reporting issues.
@@ -76,6 +52,10 @@ Please submit
 any technical questions/concerns or contact
 [ctid@mitre-engenuity.org](mailto:ctid@mitre-engenuity.org?subject=subject=Question%20about%20ocean-lotus)
 directly for more general inquiries.
+
+## Liability / Responsible Usage
+
+This content is only to be used with appropriate prior, explicit authorization for the purposes of assessing security posture and/or research.
 
 ## Notice
 

