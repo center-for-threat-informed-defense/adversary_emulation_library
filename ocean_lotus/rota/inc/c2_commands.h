@@ -39,106 +39,138 @@ const static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
 const static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
 
 
-/**
- * @brief main c2 loop to process commands from handler
- * @param N/A
- * @return N/A
- * */
+// c2_loop
+//    About:
+//      Main c2 loop to process commands from handler
+//    Result: Rota is sending heartbeats and recieving commands
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
 void c2_loop();
 
-/**
-* @brief exit and kill rota via command-id 0x138E3E6
-* @param char * for command if to pass back to the C2 server
-* @param  file descriptor for socket to close
-*
-*/
+// c2_exit
+//    About:
+//      exit and kill rota
+//    Result: Rota stops execution.
+//    MITRE ATT&CK Techniques: N/A
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 void c2_exit(char *cmd_id, int sock2);
 
 
-/**
-* @brief ping/pong between handler and agent command-id: 0x5CCA727
-* @params char * to cmd_id, integer value for socket
-* @return N/A
-**/
+// c2_set_timeout
+//    About:
+//      Send heartbeat packet back to C2 Server
+//    Result: update sleep time
+//    MITRE ATT&CK Techniques: N/A
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 void c2_heartbeat(char *cmd_id, int sock);
 
-/**
-* @brief update the c2 call back time command-id 0x17B1CC4
-* @param integer indicating how long to sleep for.
-*
-* @return N/A
-**/
+
+// c2_set_timeout
+//    About:
+//      Set implant to sleep for N-seconds
+//    Result: update sleep time
+//    MITRE ATT&CK Techniques: N/A
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 void c2_set_timeout(int *sleeptime, int newTime);
 
 
-/**
-* @brief obtain information from uname output command-id: 0x18320e0
-* @param cahr *buffer to populate.
-* @return N/A
-*/
+// c2_upload_device_info
+//    About:
+//      Obtain information about host machine
+//    Result: update char buffer with device information
+//    MITRE ATT&CK Techniques:
+//        T1082 System Information Discovery
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 void c2_upload_device_info(char *buffer);
 
-/**
-* @brief check for the existance of a given file/plugin on the file system 0x2CD9070
-* @param fpath file to check exists.
-* @return true a file exists, false it does not.
-*
-*/
+// c2_query_file
+//    About:
+//      Query whether or not a file exixts
+//    Result: boolean value indicating whether or not a file exists.
+//    MITRE ATT&CK Techniques:
+//        T1083.004 File and Directory Discovery
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 bool c2_query_file(char *fpath);
 
 
-/**
-* @brief delete a file/plugin given a specific file path. 0x12B3629
-* @param char* of filepath to delete.
-* @return boolean indicating success/failure of deleting a file
-**/
+// c2_delete_file
+//    About:
+//      Delete a file
+//    Result: boolean value indicating whether or not a file was deleted.
+//    MITRE ATT&CK Techniques:
+//        T1070.004 Indicator removal: File deletion
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 bool c2_delete_file(char *fpath);
 
-/**
- * @brief Load and run a SO as a "plugin" command-id 0x1B25503
- * @note no public threat intelligence exists about the contents of the plugins executed.
- * @param funcName, char * for exported function
- *
- * @return N/A
- **/
+// c2_run_plugin_1
+//    About:
+//       Execute Shared Object
+//    Result: Loading and execution of Shared Objection
+//    MITRE ATT&CK Techniques: N/A
+//         TODO - in new version of ATT&CK?
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References:
+//        https://man7.org/linux/man-pages/man3/dlopen.3.html
 void c2_run_plugin_1(char *funcName);
 
-
-/**
- * @brief prepare initial pkt to send to destination host.
- * @param N/A
- * @return char pointer to ROTA's initial header.
- **/
+// initial_rota_pkt
+//    About:
+//       Create initial 82 byte header for Rota
+//    Result: char * of rota header
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
 char *initial_rota_pkt();
 
-/**
- * @brief Parse C2 pkt to obtain cmd id
- * @param char * to buffer to parse
- * @return char value of command id
- **/
+// parse_c2_cmdid
+//    About:
+//       Parse C2 command id
+//    Result: char * of  command id
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
 char *parse_c2_cmdid(char *buffer);
 
-/**
- * @brief Parse C2 pkt to obtain payload length
- * @param char * to buffer to parse
- * @return interger value of payload length
- **/
+// parse_c2_payload_len
+//    About:
+//       Parse C2 payload len
+//    Result: integer value of payload length
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
 int parse_c2_payload_len(char *buffer);
 
-/**
- * @brief Parse C2 pkt to obtain payload
- * @param char * to buffer to parse
- * @return char * containing payload
- **/
+// parse_c2_payload
+//    About:
+//       Parse C2 payload for command id extraction
+//    Result: char buffer for payload
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
 char *parse_c2_payload(char *buffer, int length);
 
 
-/**
-*@brief populate char buffer to send back to C2 server
-*@param char bufffer for "PAYLOAD" section
-*@return N/A
-*/
+// build_c2_response2
+//    About:
+//       Explicitly specify the size of data to send back to c2 server
+//    Result: void, data is sent to server
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
 void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock);
-
 
 #endif // C2_COMMANDS_H_
