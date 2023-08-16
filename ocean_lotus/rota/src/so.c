@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void create_dir() {
     system("mkdir -p /tmp/.rota;");
