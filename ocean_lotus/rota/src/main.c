@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <limits.h>
 // custom functions
 #include "utils.h"
 #include "persistence.h"
@@ -23,8 +24,11 @@ int main(int argc, char *argv[]) {
     char *home = getenv("HOME");
     char *lock_path = "/.X11/.X11-lock";
     char *lock_path_2 = "/.X11/.X0-lock";
-    char *home_lock_path = (char *)malloc(strlen(home) + strlen(lock_path));
-    char *home_lock_path_2 = (char *)malloc(strlen(home) + strlen(lock_path_2));
+    char *home_lock_path = (char *)malloc(PATH_MAX);
+    char *home_lock_path_2 = (char *)malloc(PATH_MAX);
+
+    memset(home_lock_path, 0, PATH_MAX);
+    memset(home_lock_path_2, 0, PATH_MAX);
 
     memcpy(home_lock_path, home, strlen(home));
     memcpy(home_lock_path_2, home, strlen(home));
