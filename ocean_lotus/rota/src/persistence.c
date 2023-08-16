@@ -253,7 +253,6 @@ bool nonroot_persistence(void) {
 
     char *home = getenv("HOME");
     char *desktop_path = "/.config/au-tostart/gnomehelper.desktop";
-    int desktop_path_size = strlen(home) + strlen(desktop_path);
 
     char *home_desktop_path = (char *)malloc(PATH_MAX);
 		memset(home_desktop_path, 0, PATH_MAX);
