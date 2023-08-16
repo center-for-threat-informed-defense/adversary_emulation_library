@@ -26,11 +26,63 @@ In-line Symbols:
 ## Step 0 - Setup
 
 ### 📖 Voice Track
-- Login to the AWS env - macOS
-- Tests & make sure everthing is this
-- Intro to story, background, naming, & context
 
-Assume download of conkylan.app (unicorn in Vietnamese) resides on the downloads folder. 
+#### Kali Setup
+
+Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file)
+
+1. ssh to the Kali box hosting our C2 server in AWS
+   ```
+   ssh kali@10.90.30.26
+   ```
+   Expected Output:
+   A login session as the kali user
+   ```
+   ┌──(kali㉿kali1)-[~]
+   └─$
+   ```
+1. Start the C2 Server
+   ```
+   sudo ./controlServer
+   ```
+
+
+#### VNC Access to macOS
+1. Setup SSH Tunnel to forward port 5900 to localhost (must use teh ec2-user for this part) 
+   ```
+   # The result should be an active SSH session, with port 5900 
+   # on the Mac forwarded to port 5900 on your local machine.
+   
+   ssh -L 5900:localhost:5900 ec2-user@10.90.30.22
+   ```
+   The result should be an active SSH session, with port 5900 on the AWS macOS forwarded to port 5900 on your local machine.
+   Expected Output: 
+   ```
+   Last login: <insert date from somewhere>
+       ┌───┬──┐   __|  __|_  )
+       │ ╷╭╯╷ │   _|  (     /
+       │  └╮  │  ___|\___|___|
+       │ ╰─┼╯ │  Amazon EC2
+       └───┴──┘  macOS Catalina 10.15.7
+   ```
+1. On a macOS, connect over VNC for a GUI intereface
+   ```
+   open vnc://localhost:5900
+   ```
+1. Enter the Hope Potter's credentials
+   Username
+   ```
+   hpotter
+   ```
+   Password
+   ```
+   noax3teenohb~e
+   ```
+   Expected output:
+   A GUI interface to the Mac Mini should appear on the screen. 
+
+1. Enter the password manually
+1. Verify the conkylan.app file (unicorn in Vietnamese) resides on the downloads folder. 
 
 ---
 
