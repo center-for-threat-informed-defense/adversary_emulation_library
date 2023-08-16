@@ -33,9 +33,8 @@ void create_lock(int lock_id) {
 
     // create .X11 dir if it does not exist, required for both lock paths.
     char *x11dir= "/.X11";
-    int x11path_size = strlen(HOME) + strlen(x11dir);
-    char *dirpath = (char *)malloc(x11path_size);
-    bzero(dirpath, x11path_size);
+    char *dirpath = (char *)malloc(PATH_MAX);
+    memset(dirpath, 0, PATH_MAX);
     strncat(dirpath, HOME, strlen(HOME));
     strncat(dirpath, x11dir, strlen(x11dir));
     if (access(dirpath, F_OK) == -1) {
@@ -51,8 +50,8 @@ void create_lock(int lock_id) {
 
         // $HOME/.X11/x0-lock
         int fpath_size = strlen(HOME) + strlen(x11_lock_file);
-        char *flock_path = (char *)malloc(fpath_size);
-        memset(flock_path, 0, strlen(flock_path));
+        char *flock_path = (char *)malloc(PATH_MAX);
+        memset(flock_path, 0, PATH_MAX);
         strncat(flock_path, HOME, strlen(HOME));
         strncat(flock_path, x11_lock_file, strlen(x11_lock_file));
 
@@ -75,8 +74,8 @@ void create_lock(int lock_id) {
         char x11_lock_file_2 [16] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x2e,0x78,0x31,0x31,0x2d,0x6c,0x6f,0x63,0x6b};
 
         int fpath_size_2 = strlen(HOME) + strlen(x11_lock_file_2);
-        char *flock_path_2 = (char *)malloc(fpath_size_2);
-        memset(flock_path_2, 0, strlen(flock_path_2));
+        char *flock_path_2 = (char *)malloc(PATH_MAX);
+        memset(flock_path_2, 0, PATH_MAX);
         strncat(flock_path_2, HOME, strlen(HOME));
         strncat(flock_path_2, x11_lock_file_2, strlen(x11_lock_file_2));
 
