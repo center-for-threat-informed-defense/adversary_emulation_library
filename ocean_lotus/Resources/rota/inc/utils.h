@@ -1,29 +1,30 @@
 #ifndef UTILS_H_
 #define UTILS_H_
+#include <stdbool.h>
 
-/**
- * Create a lock file to ensure one instance is running.
- * TODO - but how does this apply to the watch dog instances?
- * @param N/A
- * @return void
- * */
-void create_lock();
-
-
-
-/**
- * Create chared memory instance
- * @param mem a char pointer that contains the name of the shared memory instance.
- * @return integer value to be used as a file descriptor
- * */
-int shm_create(char *mem);
+// create_lock
+//     About:
+//         Wrapper function to create lock file, used for specifying what watch dog process to spawn
+//    MITRE ATT&CK Technique:
+//        TODO - *in new version of ATT&CK?*
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+void create_lock(int lock_id);
 
 
-/**
- * Helper function to convert integer value to string value
- * @param num, integer value to convert.
- * @return point to char memory.
- * */
- char *itoa(int num);
+// lock_check
+//     About:
+//         Check if a lock is currently held on a file.
+//    MITRE ATT&CK Technique:
+//        TODO - *in new version of ATT&CK?*
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+int lock_check(char *fpath);
+
+
+bool self_delete(char *fpath);
+
+
+bool write_to_file(char *fpath, char *data);
 
 #endif // UTILS_H_

