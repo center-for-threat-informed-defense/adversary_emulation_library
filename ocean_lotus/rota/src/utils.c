@@ -49,7 +49,6 @@ void create_lock(int lock_id) {
         char x11_lock_file [14] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x58,0x30,0x2d,0x6c,0x6f,0x63,0x6b};
 
         // $HOME/.X11/x0-lock
-        int fpath_size = strlen(HOME) + strlen(x11_lock_file);
         char *flock_path = (char *)malloc(PATH_MAX);
         memset(flock_path, 0, PATH_MAX);
         strncat(flock_path, HOME, strlen(HOME));
@@ -73,7 +72,6 @@ void create_lock(int lock_id) {
         //$HOME/.X11/.X11-lock
         char x11_lock_file_2 [16] = {0x2f,0x2e,0x58,0x31,0x31,0x2f,0x2e,0x78,0x31,0x31,0x2d,0x6c,0x6f,0x63,0x6b};
 
-        int fpath_size_2 = strlen(HOME) + strlen(x11_lock_file_2);
         char *flock_path_2 = (char *)malloc(PATH_MAX);
         memset(flock_path_2, 0, PATH_MAX);
         strncat(flock_path_2, HOME, strlen(HOME));
