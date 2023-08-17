@@ -1,0 +1,273 @@
+//Execellent reference for sending bytes over the wire. https://medium.com/@maximgradan/serialize-a-struct-to-bytes-to-send-it-through-the-network-in-go-part-i-b861c15d2f06
+
+// function to determine if just the head (the only requirement) Handle this differently than if there is a payload and key
+
+/*
+Next steps
+
+go program to send a packet or function to call for write
+
+add into tcp read connections - https://stackoverflow.com/questions/26372227/go-conversion-between-struct-and-byte-array
+
+serializing data - https://medium.com/@maximgradan/serialize-a-struct-to-bytes-to-send-it-through-the-network-in-go-part-i-b861c15d2f06
+
+
+Commands and parsing - https://ieftimov.com/posts/understanding-bytes-golang-build-tcp-protocol/
+*/
+
+package main
+
+import (
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"unsafe"
+
+	"github.com/fatih/color"
+)
+
+// all the stuff that goes into the message
+type packet struct {
+	head    []byte
+	key     []byte
+	payload []byte
+}
+
+const colorRed = "\033[0;31m"
+const colorNone = "\033[0m"
+
+// give enough bytes for the vairables
+const (
+	lotusSize = int(unsafe.Sizeof(packet{}))
+)
+
+// what's sent over the wire
+type oceanLotusMessage struct {
+	Head    [82]byte
+	Key     [8]byte
+	Payload []byte
+}
+
+type Message struct {
+	Type    string `json:"type,omitempty"`
+	Payload string `json:"payload,omitempty"`
+}
+
+func deserializedMessage() {
+	data := []byte(`"happy" "Hello, World!"`)
+
+	var msg Message
+	err := json.Unmarshal(data, &msg)
+	if err != nil {
+		fmt.Println("Error unmarshaling message:", err)
+		return
+	}
+
+	fmt.Println("Deserialized message:", msg)
+}
+
+func serializedMessage() {
+
+	msg := Message{"happy", "Hello, World!"}
+
+	data, err := json.Marshal(msg)
+	if err != nil {
+		fmt.Println("Error marshaling message:", err)
+		return
+	}
+
+	fmt.Println("Serialized message:", string(data))
+}
+
+func convertToHex(byteArray []byte, byteArraySize int) string {
+	// byteArray := []byte("0x18320e0")
+	// byteArraySize := len(byteArray)
+	fmt.Println("\nbyteArray: ", byteArray, "\nSize: ", byteArraySize)
+
+	encodedString := hex.EncodeToString(byteArray)
+
+	//fmt.Println("Encoded Hex String: ", encodedString)
+	return encodedString
+}
+
+func convertToByte() {
+	hexString := "4c6561726e20476f21"
+
+	fmt.Println("Hex String: ", hexString)
+
+	decodedByteArray, err := hex.DecodeString(hexString)
+
+	if err != nil {
+		fmt.Println("Unable to convert hex to byte. ", err)
+	}
+
+	fmt.Printf("Decoded Byte Array: %v \nDecoded String: %s", decodedByteArray, decodedByteArray)
+}
+
+func constructByteStream() []byte {
+
+	packetStream := []byte("16 11 10 b9 03 b1 0c fb 04 20 00 00 00 08 00 e0 20 83 01 c2 20 64 20 01 e2 00 00 00 00 c2 0c 00 00 00 32 42 36 39 33 33 34 46 38 34 31 44 30 44 39 46 41 30 36 35 38 45 43 33 45 32 39 46 41 44 34 39 c8 53 e6 9c 48 c4 8b 77 24 2e 02 1c 96 d9 81 28 ea 9a 1a 18 18 44 26 a0 54 c1 c3 69 00 18 31 e4 a2 5b 10 7f 67 ab d1 4b b2 7b 3d 3f b3 bc 66 6a 26 f6 f6 b3 f7 2e 66 6d")
+
+	fmt.Println("head: ", len(packetStream))
+
+	return packetStream
+
+}
+
+func deconstructByteStream(byteArray []byte, byteArraySize int) packet {
+
+	//parse out the specfic number of bytes per section
+	// add construct & deconstruct head functions for 82 bytes
+	var a packet
+	head := make([]byte, 82)
+	copy(head, byteArray)
+	//save to the struct
+	a.head = head
+	fmt.Println("Head length: ", len(a.head))
+
+	//if greater than function (incase it's just the head)
+	key := make([]byte, 8)
+	copy(key, byteArray[82:])
+	a.key = key
+	fmt.Println("Key length: ", len(a.key))
+
+	//if greater than function in case it's just the head
+	payload := make([]byte, 1024)
+	copy(payload, byteArray[90:])
+	a.payload = payload
+	fmt.Println("Payload length: ", len(a.payload))
+
+	return a
+}
+
+func printPrettyPacket(a packet) {
+	m := color.New(color.FgMagenta)
+	c := color.New(color.FgCyan)
+	m.Println("################# BEGIN Packet stream Byte sized #################")
+	head := a.head[0:8]
+	c.Println("Header: \t", head)
+	c.Println("Key: \t\t", a.key)
+	payload := a.payload[0:8]
+	c.Println("Payload: \t", payload)
+	m.Println("################# END Packet stream Byte sized #################")
+}
+
+func main() {
+	// lotus := oceanLotusSeeds{
+	// 	opcode: "0x2E25992",
+	// }
+	//deserializedMessage()
+	//serializedMessage()
+	//convertToByte()
+	// byteArraySize := len(byteArray)
+	// fmt.Println("Byte Array: ", byteArray, "\nByte Array Size: ", byteArraySize)
+
+	// encodedString := convertToHex(byteArray, byteArraySize)
+	// fmt.Println("MAIN Encoded Hex String: ", encodedString)
+	// buf := []byte("0x2E25992xxxxaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxx")
+
+	// // parse the stream of bytes into the package struct (head, key, payload)
+	// // add functions on how to parse out data
+
+	// fmt.Println("Buffer: ", buf)
+	// fmt.Println("Reading 9 bytes")
+
+	// //create an instance of the struct & assign values
+	// var a packet
+	// //parse out the specfic number of bytes per section
+	// opcode := make([]byte, 9)
+	// copy(opcode, buf)
+	// //save to the struct
+	// a.head = opcode
+
+	// key := make([]byte, 8)
+	// copy(a.key, buf[8:])
+	// a.key = key
+
+	// fmt.Println("---------------------Results---------------------")
+	// fmt.Println("opcode Buffer: ", a.opcode)
+	// fmt.Println("key Buffer: ", a.key)
+	// fmt.Println("old Buffer: ", buf)
+
+	//// create stream
+
+	fakestream := constructByteStream()
+	streamSize := len(fakestream)
+	var x packet
+	x = deconstructByteStream(fakestream, streamSize)
+	printPrettyPacket(x)
+}
+
+/*
+TODO:
+- create a head, key, and payload (testing constant)
+- create a head, key, and payload function
+- read from head, key, payload - print out
+
+
+Next steps:
+Script to send a head, key, payload to server
+
+
+
+*/
+
+/*
+Check packet function... pusdo code
+
+packet_length1 = msg_getlen();
+packet_length2=packet_length1;
+if (packet_length2){
+	result = C2_recv((int*)var1, packet_length2);
+	if (!result)
+		return NULL;
+}
+msg_decrypt(result, packet_length1);
+if(!(unsigned int) msg_valid((int64)result))
+*/
+
+/*
+From Report: https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
+
+Construct packet header pusdo code
+
+header = (char *)malloc (82ULL) ; // call the amount of space needed, 82 bytes char pointer
+time = time (OLL); //implemented in vdso (user space) - super fast way to grab the time - 10 cycles https://stackoverflow.com/questions/4668636/how-expensive-is-calling-timenull-in-server-loop
+srand(time);
+*header = rand();
+
+// dereferenced pointers with variables - makes it hard to reverse.
+*(_DWORD *)(header + 1) = 0x3B91011; // undocumented command code - reused with initialize  code (0x2170272)
+*(_DWORD *)(header + 5) = OX4FBOCB1; // undocumented command code
+
+*(_WORD * (header + 13) = 0;
+*(_DWORD *) (header + 9) = 0;
+header[19] = 0xC2u; //marker probably use seek() function to parse bytes
+*((_DWORD *)header + 5) = 0X1206420; // undocumented command code - used for receiving and executing a command from teh C2 - https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/ - run with 0x1B25503 - Run Plugin_0x39C93E
+header[24] = 0xE2u; //marker probably use seek() function to parse bytes
+*(_DWORD *) (header + 25) = 0;
+header[29] = 0xC2u;//marker probably use seek() function to parse bytes
+*(_DWORD *) (header + 30) = 0;
+bzero(header + 34, Ox20uLL);
+result = header;
+header[66] = 0xC8u;//marker probably use seek() function to parse bytes
+* (_WORD *) (header + 75) = 0xFF;
+header[77] = 9;
+return result; //return the full header
+
+*/
+
+/*
+Understanding TCP protocals:
+
+https://www.ibm.com/docs/en/zos/2.3.0?topic=sockets-transferring-data-between-streams-messages
+A few common techniques are used to imbed information about the length of a message into the stream, as follows:
+
+1. The message type identifier technique - Each message ID is associated with a fixed length known to your application.
+1. The record descriptor word (RDW) technique - same as above but add a field for length
+1. The end-of-message marker technique - add a null byte to the end of a field. C-program heavy
+1. The TCP/IP buffer flushing technique - a send() call followed by a recv() call forces the sending TCP protocol layer to flush its buffers and forward whatever data might exist on the stream to the receiving TCP protocol layer. You can use this method to implement a half-duplex, flip-flop application protocol, where your two partner programs acknowledge the receipt of each message with, for example, a 1-byte application acknowledgment message.
+
+
+
+*/

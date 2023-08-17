@@ -1,0 +1,224 @@
+package main
+
+import (
+	"bytes"
+	"encoding/binary"
+	"encoding/hex"
+
+	"fmt"
+	"math/big"
+	"net"
+	"os"
+	"unsafe"
+)
+
+const (
+	HOST = "10.0.2.10"
+	PORT = "443"
+	TYPE = "tcp"
+)
+
+type headerData struct {
+	magicByte   []byte
+	junkBytes   []byte
+	payloadLen  []byte
+	keyLen      []byte
+	messageCode []byte
+}
+type message struct {
+	head    []byte
+	payload []byte
+}
+
+// give enough bytes for the vairables
+const (
+	streamSize = int(unsafe.Sizeof(message{}))
+)
+
+// create a message to send over the wire to ensure everything is working
+// func createTestMessage() message {
+// 	//  byteArray := []byte("76 61 73 74 20 61 73 20 61 6e 20 6f 63 65 61 6e 0a 72 65 76 65 61 6c 65 64 20 69 6e 20 74 68 65 20 73 75 6e 0a 68 69 64 64 65 6e 20 69 6e 20 6d 6f 6f 6e 6c 69 67 68 74 0a 68 61 72 76 65 73 74 65 64 20 66 6f 72 20 66 75 6e 0a 72 6f 6f 74 73 2e 2e 0a 68 69 64 64 65 6e 20 73 6f 6d 65 74 68 69 6e 67 20 68 69 64 64 65 6e 0a 73 6f 6d 65 74 68 69 6e 67 20 73 70 65 63 69 61 6c 0a 61 20 6e 61 6d 65 20 61 20 74 6f 6b 65 6e 0a 61 20 6e 65 77 20 63 68 61 72 61 63 74 65 72 20 6f 66 20 6c 65 76 65 6c")
+// 	byteArrayStr := []byte("vast as an ocean\nrevealed in the sun\nhidden in moonlight\nharvested for fun\nroots..\nhidden something hidden\nsomething special\na name a token\na new character level\n")
+// 	byteArray := []byte(byteArrayStr)
+
+// 	var a message
+// 	head := make([]byte, 82)
+// 	copy(head, byteArray)
+// 	//save to the struct
+// 	a.head = head
+
+// 	//if greater than function (incase it's just the head)
+// 	// key := make([]byte, 8)
+// 	// copy(key, byteArray[36:])
+// 	// a.key = key
+
+// 	//if greater than function in case it's just the head
+// 	payload := make([]byte, 1024)
+// 	copy(payload, byteArray[83:])
+// 	a.payload = payload
+
+// 	return a
+// }
+
+// func printPrettyMessage(a message) {
+
+//		fmt.Println("################# BEGIN Packet stream Byte sized #################")
+//		head := a.head[0:8]
+//		fmt.Println("Header: \t", head)
+//		fmt.Println("Key: \t\t", a.key)
+//		//payload := a.payload[0:8]
+//		fmt.Println("Payload: \t", a.payload[0:8])
+//		fmt.Println("################# END Packet stream Byte sized #################")
+//	}
+//
+// buffer 65535
+func main() {
+
+	tcpServer, err := net.ResolveTCPAddr(TYPE, HOST+":"+PORT)
+
+	if err != nil {
+		println("ResolveTCPAddr failed:", err.Error())
+		os.Exit(1)
+	}
+
+	conn, err := net.DialTCP(TYPE, nil, tcpServer)
+	if err != nil {
+		println("Dial failed:", err.Error())
+		os.Exit(1)
+	}
+	//write it out
+	// testStream := createHeader()
+	msg := createMessage(createHeader())
+	msgStream := createStream(msg)
+	// _, err = conn.Write(msg.head)
+	// _, err = conn.Write(msg.payload)
+
+	fmt.Println("full message being sent: ", hex.EncodeToString(msgStream))
+	_, err = conn.Write(msgStream)
+
+	if err != nil {
+		println("Write data failed:", err.Error())
+		os.Exit(1)
+	}
+	//read it all in
+	buf := make([]byte, 65535)
+
+	length, err := conn.Read(buf)
+	if err != nil {
+		fmt.Println("Error reading: \n%s", err)
+		return
+	}
+	//verify the stream has the right magic sequence in the header
+	matchResult := verifyPacket(buf)
+	fmt.Println("Verification Result:\n", matchResult)
+	//print out the message from  mothership
+	fmt.Println("Message received from mothership:\n", buf[:length])
+
+
+	conn.Close()
+}
+
+// should be same as on the server, can test out here
+func verifyPacket(header []byte) bool {
+	//TODO: Only read first 82 bytes
+	marker1 := []byte{0xC2}
+	marker2 := []byte{0xE2}
+	marker3 := []byte{0xC2}
+	marker4 := []byte{0xFF}
+	fmt.Println("Correct markers: ", marker1, marker2, marker3, marker4)
+	fmt.Println("Response markers: ", header[19:20], header[24:25], header[29:30], header[75:76])
+
+
+	if bytes.Equal(marker1, header[19:20]) &&
+		bytes.Equal(marker2, header[24:25]) &&
+		bytes.Equal(marker3, header[29:30]) &&
+		bytes.Equal(marker4, header[75:76]) {
+		return true
+	}
+	return false
+}
+
+// Reference code: https://www.golinuxcloud.com/golang-byte-to-int/
+
+func getInt(s []byte) int {
+	var b [8]byte
+	copy(b[8-len(s):], s)
+	return int(binary.BigEndian.Uint64(b[:]))
+}
+
+func getByte(num int64, size int) []byte {
+	// size := int(unsafe.Sizeof(num))
+	arr := make([]byte, size)
+
+	for i := 0; i < size; i++ {
+		byt := *(*uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&num)) + uintptr(i)))
+		arr[size-1-i] = byt
+	}
+	return arr
+}
+func createStream(msg *message) []byte {
+	stream := append(msg.head[:], msg.payload[:]...)
+	return stream
+}
+
+/*
+Helper function
+* expects a byte array from the wire
+* creates a new message struct
+* breaks up the stream to header and payload
+* saves everything to the struct and passes it back
+*/
+func createMessage(header []byte) *message {
+
+	msg := new(message)
+	msg.head = header
+
+	//Make a payload based on the size in the header
+	payloadBytes := header[8:12] //payload length
+	payloadInt := getInt(payloadBytes)
+	if payloadInt != 0 {
+		msg.payload = make([]byte, payloadInt)
+		fmt.Println("payload: ", msg.payload)
+	} else {
+		fmt.Println("No Payload detected. Payload size:", payloadInt)
+		msg.payload = nil
+	}
+	return msg
+
+}
+
+// should be same as on server, can test out changes here
+func createHeader() []byte {
+
+	//create constant values
+	payloadLenBytes := getByte(20, 4)
+	keyLenBytes := getByte(0, 2)
+	// messageCodeCmd := []byte{0x21, 0x70, 0x27, 0x2}
+	messageCodeCmd := []byte{0x13, 0x8e, 0x3e, 0x60} //rota
+	// messageCodeCmd := []byte{0x55, 0x00, 0x00, 0x00} //OSX
+
+	lotus := headerData{
+		magicByte:   []byte{0x3B, 0x91, 0x01, 0x10},
+		junkBytes:   []byte{0x4F, 0xB0, 0xCB, 0x10},
+		payloadLen:  payloadLenBytes,
+		keyLen:      keyLenBytes,
+		messageCode: messageCodeCmd,
+	}
+	fmt.Println("Payload Len: ", getInt(payloadLenBytes), " Key Len: ", getInt(keyLenBytes))
+
+	//create header 82 bytes
+	header := make([]byte, 82)
+	copy(header[0:4], lotus.magicByte)     //magic key
+	copy(header[8:12], lotus.payloadLen)   //payload length
+	copy(header[12:14], lotus.keyLen)      //key length
+	copy(header[14:18], lotus.messageCode) //key length
+
+	//add constants AKA markers
+
+	copy(header[19:], []byte{0xC2}) //marker 1
+	copy(header[24:], []byte{0xE2}) //marker 2
+	copy(header[29:], []byte{0xC2}) //marker 3
+	copy(header[75:], []byte{0xFF}) //marker 4
+
+	return header
+}
