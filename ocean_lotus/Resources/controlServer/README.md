@@ -17,13 +17,13 @@ The control server expects the following folder structure for payloads/uploads:
 1. Build the binary from source
     ```
     go build -o controlServer main.go
-    
     ```
+    
 1. Execute the binary
     ```
     sudo ./controlServer
-    
     ```
+    
 1. Establish an implant session - Run an implant program of your choice (on a victim machine) to connect to the C2. Ensure the corresponding handler is enabled described in the [configuration](##Configuration). 
 
 1. Use the client python script ([evalsC2client.py](../control_server/evalsC2client.py)) to interact with the implant sessions. Use the implant's `README.md` for further information on how to interact with the implant. 
