@@ -2,56 +2,6 @@ simplehttp:
   host: 192.168.0.4
   port: 8080
   enabled: false
-https: 
-  host: 192.168.0.4
-  port: 443
-  cert_file: ""
-  key_file: ""
-  enabled: false
-trickbot: 
-  host: 192.168.0.4
-  port: 447
-  enabled: false
-emotet: 
-  host: 192.168.0.4
-  port: 80
-  enabled: false
-exaramel: 
-  host: 192.168.0.4
-  port: 8443
-  cert_file: ""
-  key_file: ""
-  enabled: false
-sidetwist:
-  host: 192.168.0.4
-  port: 443
-  enabled: false
-snakehttp:
-  host: 10.0.2.7
-  port: 8080
-  enabled: false
-carbonhttp:
-  host: 10.0.2.8
-  port: 80
-  enabled: false
-lightneuron:
-  host: "smtp.mail.local"
-  port: 25
-  mailFrom: ""
-  username: ""
-  password: ""
-  image_file_path: ""
-  watch_dir_path: ""
-  recipientFilePath: ""
-  encryption: true
-  enabled: false
-epic:
-  host: 10.0.2.8
-  port: 8080
-  cert_file: ""
-  key_file: ""
-  use_https: false
-  enabled: false
 oceanlotus:
   host: 10.0.2.10
   port: 443
