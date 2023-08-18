@@ -61,7 +61,35 @@ Open a terminal window on your local machine (assuming a macOS or similar termin
    ```
    sudo ./controlServer
    ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/18 16:32:45 Initializing REST API from config file:  ./config/restAPI_config.yml
+   [SUCCESS] 2023/08/18 16:32:45 REST API configuration set
+   [INFO] 2023/08/18 16:32:45 Starting REST API server
+   [SUCCESS] 2023/08/18 16:32:45 REST API server is listening on:  127.0.0.1:9999
+   [INFO] 2023/08/18 16:32:45 Setting C2 handler configurations from config file:  ./config/handler_config.yml
+   [SUCCESS] 2023/08/18 16:32:45 C2 Handler configuration set
+   [INFO] 2023/08/18 16:32:45 Starting C2 handlers
+   [INFO] 2023/08/18 16:32:45 Starting the oceanlotus Handler...
+   [SUCCESS] 2023/08/18 16:32:45 Started handler oceanlotus
+   [INFO] 2023/08/18 16:32:45 Handler simplehttp disabled. Skipping.
+   [INFO] 2023/08/18 16:32:45 Waiting for connections
+   [INFO] 2023/08/18 16:32:45 Starting Server...
+   10.90.30.26:443
+   ```
+   This window is our listener, communications from implants will display in this window. Leave this window open and set to the side. 
+   
+<details><summary>Trouble Shooting</summary>
+  
+   Check Configuration.
+   - Check the ip address & port in the config file
+   - Recompile the control server with the new IP - In the controlServer folder run the following command.
 
+      ```
+      go build -o controlServer main.go
+      ```
+   
+</details>
 
 #### VNC Access to macOS
 Open a new terminal window on your local machine. 
@@ -80,11 +108,12 @@ Open a new terminal window on your local machine.
        │ ╰─┼╯ │  Amazon EC2
        └───┴──┘  macOS Catalina 10.15.7
    ```
-1. On a macOS, connect over VNC for a GUI intereface
+1. Open another terminal window on your local machine.
+1. Copy/Paste the following command to connect over VNC for a GUI intereface for the macOS machine in AWS.
    ```
    open vnc://localhost:5900
    ```
-1. Enter the Hope Potter's credentials
+1. A window should appear asking for Screen Sharing privillages to sin into "localhost". Enter the Hope Potter's credentials
    Username
    ```
    hpotter
@@ -94,10 +123,24 @@ Open a new terminal window on your local machine.
    noax3teenohb~e
    ```
    Expected output:
-   A GUI interface to the Mac Mini should appear on the screen. 
+   A GUI interface to the Mac Mini should appear on the screen asking for a password.
 
-1. Enter the password manually
-1. Verify the conkylan.app file (unicorn in Vietnamese) resides on the downloads folder. 
+1. Enter the same password from above... manualy. 
+1. Verify the conkylan.app file (unicorn in Vietnamese) resides on the downloads folder.
+
+<details><summary>Trouble Shooting</summary>
+  
+   If you receive this error...
+   ```
+   LSOpenURLsWithRole() failed with error -610 for the URL vnc://localhost:5900.
+   ```
+   
+   Try blah.
+   ```
+   Insert solution here
+   ```
+   
+</details>
 
 ## Step 1 - It began with a double-click
 ### 📖 Overview
@@ -143,17 +186,7 @@ Look for SCP commands in history file - print out
 Expected output: 
 ```
 ```
-<details><summary>Trouble Shooting</summary>
-   If you receive this error...
-   ```
-   LSOpenURLsWithRole() failed with error -610 for the URL vnc://localhost:5900.
-   ```
-   Try blah.
-   ```
-   Insert solution here
-   ```
-   
-</details>
+
 ### 🔮 Reference Code & Reporting
 <br>
 
