@@ -40,7 +40,7 @@ At the end of this step the Attacker C2 should be listening for the implant call
 ### 👾 Red Team Procedures
 
 #### Kali Setup
-Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file)
+Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file and the compiled binary for the control server has been built)
 
 1. ssh to the Kali box hosting our C2 server in AWS
    ```
@@ -52,8 +52,9 @@ Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set
    ┌──(kali㉿kali1)-[~]
    └─$
    ```
-1. Start the C2 Server
+1. Start the C2 Server. Navigate to the ocean-lotus folder and execute the control server. 
    ```
+   cd Resources/controlServer
    sudo ./controlServer
    ```
 
