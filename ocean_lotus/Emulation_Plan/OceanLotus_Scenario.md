@@ -40,7 +40,7 @@ At the end of this step the Attacker C2 should be listening for the implant call
 ### 👾 Red Team Procedures
 
 #### Kali Setup
-Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file and the compiled binary for the control server has been built)
+Ensure OceanLotus GitHub repo is cloned to the Kali host, all payloads are compiled with correct infrastructure information and infrastructure is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file and the compiled binary for the control server has been built).
 
 Open **two** terminal windows on your local machine (assuming a macOS or similar terminal)
 
@@ -130,7 +130,7 @@ Open a new terminal window on your local machine.
    ```
    A window should appear asking for Screen Sharing privillages to sin into "localhost".
    This terminal window is our live SSH session required for our VNC connect to macOS. Leave this window open and move to the side. We will not need to referene this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion. 
-1.  Enter the Hope Potter's credentials
+1. Enter the Hope Potter's credentials
    Username
    ```
    hpotter
@@ -199,24 +199,24 @@ The implant opens a decoy word document while establishing a connection with the
 
    Expected Output:
    ```
-   [INFO] 2023/08/18 17:08:13 Initial data received from implant:
-   /Users/hpotter/Library/WebKit/
-   1692378529
-   hpotter
-   Mac mini
-   x86_64
-   VISERION.COM10.15.7
-   6-Core Intel Core i73.2 GHz
-   32 GB
-   6-Core Intel Core i7
+      [INFO] 2023/08/18 17:08:13 Initial data received from implant:
+      /Users/hpotter/Library/WebKit/
+      1692378529
+      hpotter
+      Mac mini
+      x86_64
+      VISERION.COM10.15.7
+      6-Core Intel Core i73.2 GHz
+      32 GB
+      6-Core Intel Core i7
    ```
    
 1. The implant will continue to send a `OSX_heartbeat` until tasked.
 
    Expected Output:
    ```
-   [INFO] 2023/08/18 17:17:45 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
-   [INFO] 2023/08/18 17:17:45 No tasks available for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
+      [INFO] 2023/08/18 17:17:45 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
+      [INFO] 2023/08/18 17:17:45 No tasks available for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
    ```
    
  1. Verify the persistence file was dropped by the initial payloads.
@@ -393,6 +393,11 @@ Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
 ```
 
 Confirm C2 Registration of Rota on the C2 Server
+
+<details><summary>Trouble Shooting</summary>
+   Check to make sure the binary for rota is in the correct location. Handlers will look for payloads to download using the resources/payloads/<my handler name> logic. 
+   
+</details>
 
 ### 🔮 Reference Code & Reporting
 <br>
