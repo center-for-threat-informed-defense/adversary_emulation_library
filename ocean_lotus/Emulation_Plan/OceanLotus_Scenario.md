@@ -42,9 +42,9 @@ At the end of this step the Attacker C2 should be listening for the implant call
 #### Kali Setup
 Ensure OceanLotus GitHub repo is cloned to the Kali host, all payloads are compiled with correct infrastructure information and infrastructure is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file and the compiled binary for the control server has been built).
 
-Open **two** terminal windows on your local machine (assuming a macOS or similar terminal)
+Open **four** terminal windows on your local machine (assuming a macOS or similar terminal). Two terminal windows are used for the C2 server, two are used for the AWS macOS instance. 
 
-1. On the first terminal window, ssh to the Kali box hosting our C2 server in AWS
+1. In the **first** terminal window, ssh to the Kali box hosting our C2 server in AWS
    ```
    ssh kali@10.90.30.26
    ```
@@ -54,7 +54,7 @@ Open **two** terminal windows on your local machine (assuming a macOS or similar
    ┌──(kali㉿kali1)-[~]
    └─$
    ```
-1. Start the C2 Server. Navigate to the ocean-lotus folder and execute the control server. 
+1. Start the C2 Server. Navigate to the `controlServer` folder of the ocean-lotus cloned repo and start the C2 server. 
    ```
    cd ocean-lotus/Resources/controlServer
    ```
@@ -78,7 +78,7 @@ Open **two** terminal windows on your local machine (assuming a macOS or similar
    10.90.30.26:443
    ```
    This window is our listener, communications from implants will display in this window. Leave this window open and set to the side.
-1. On the second terminal window, establish a second SSH connection.
+1. In the **second** terminal window, establish a second SSH connection.
    ```
    ssh kali@10.90.30.26
    ```
@@ -107,8 +107,7 @@ Open **two** terminal windows on your local machine (assuming a macOS or similar
 </details>
 
 #### VNC Access to macOS
-Open a new terminal window on your local machine. 
-
+1. Navigate to the **thrid** terminal window on your local machine. 
 1. Setup SSH Tunnel to forward port 5900 to localhost (must use teh ec2-user for this part).
    ```
    ssh -L 5900:localhost:5900 ec2-user@10.90.30.22
@@ -123,13 +122,14 @@ Open a new terminal window on your local machine.
        │ ╰─┼╯ │  Amazon EC2
        └───┴──┘  macOS Catalina 10.15.7
    ```
-1. Open another terminal window on your local machine.
+   Leave this window open and move to the side. We will not need to referene this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion.
+1. Navigate to the **fourth**, and last open terminal window on your local machine.
 1. Copy/Paste the following command to connect over VNC for a GUI intereface for the macOS machine in AWS.
    ```
    open vnc://localhost:5900
    ```
    A window should appear asking for Screen Sharing privillages to sin into "localhost".
-   This terminal window is our live SSH session required for our VNC connect to macOS. Leave this window open and move to the side. We will not need to referene this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion. 
+   This terminal window can be closed or terminated after the command is run.   
 1. Enter the Hope Potter's credentials
    Username
    ```
@@ -168,7 +168,7 @@ Open a new terminal window on your local machine.
 
 👋 Handwaving: Assume the user downloaded the conkylan.app (unicorn in Vietnamese) and it  resides on the user's `Downloads` folder. 
 
-The user double-clicks the conkylan.app (note: We were not able to implement the homoglyph file extension due to updates from by apple 🙌 🍎) thinking it's a normal document. 
+Pretend this looks like a normal document but is secretly a .app file type. The user double-clicks the conkylan.app thinking it's a normal document. Note: We were not able to implement the homoglyph file extension due to updates from by apple. 🙌 🍎 
 
 The implant opens a decoy word document while establishing a connection with the C2 server. 
 
