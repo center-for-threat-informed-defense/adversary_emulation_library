@@ -10,7 +10,13 @@
 Upon building the artifact, execute the following command to start rota. The following command will create the persistence locations, and copy rota to the appropriate locations on the file system. By killing the "rota-release" initial binary, the watchdog process will then spawn the follow on proceses and connect to the C2 server.
 
 ``` sh
-nohup ./rota-release&; sleep 5; pkill rota-release
+nohup ./rota-release&2>/dev/null; sleep 5; pkill rota-release
+```
+
+
+For the emulation plan, place the built version of Rota in the payloads directory with a name of "rota". Assuming the Ocean Lotus git repository is in your home directory, the following command can be executed:
+```
+cp rota-release ~/ocean-lotus/Resources/payloads/rota
 ```
 
 ## For Developers
