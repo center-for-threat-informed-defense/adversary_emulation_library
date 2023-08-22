@@ -13,22 +13,166 @@ The control server expects the following folder structure for payloads/uploads:
 - File uploads will be stored in the `files` subdirectory of the current working directory of the C2 server. The repository already has this directory available, but you will need to create the folder before running the binary from a different location.
 - Payload downloads will be fetched from the `payloads` folder of the parent directory of the C2 server's working location. The repository does not contain this payload directory, since the end user will be responsible for providing the payloads according to their specific use case. Ensure that this folder exists in the parent directory when running the C2 server. For example, if the control server is being run from the `Resources/control_server` directory, the payloads must be placed in `Resources/payloads/` in order for the handlers to successfully serve them. The SideTwist handler in particular expects its payloads to be in a separate `SideTwist` directory under the `payloads` directory (e.g. `Resources/payloads/SideTwist`)
 
-## Usage
-1. Build the binary from source
-    ```
-    go build -o controlServer main.go
-    ```
-    
-1. Execute the binary
-    ```
-    sudo ./controlServer
-    ```
-    
-1. Establish an implant session - Run an implant program of your choice (on a victim machine) to connect to the C2. Ensure the corresponding handler is enabled described in the [configuration](##Configuration). 
+The control server is configured using two configuration files - one for handler configuration and one for REST API configuration. By default, the control server will
+pull the handler configuration file from `./config/handler_config.yml` and the REST API config from `./config/restAPI_config.yml`.
 
-1. Use the client python script ([evalsC2client.py](../control_server/evalsC2client.py)) to interact with the implant sessions. Use the implant's `README.md` for further information on how to interact with the implant. 
+You can tell the control server to pull from different config file paths using the `-c` or `--config` option to specify the handler config path and `-r` or `--rest-config` to specify the REST API config path as follows:
 
-Example commands often but not always implemented
+```
+sudo ./controlServer -c ./config/myhandlerconfig.yml -r ./config/myrestapiconfig.yml
+```
+
+## Build from source
+
+```
+go build -o controlServer main.go
+```
+
+To run with default config paths:
+```
+sudo ./controlServer
+```
+
+To specify config paths:
+```
+sudo ./controlServer -c ./config/myhandlerconfig.yml -r ./config/myrestapiconfig.yml
+sudo ./controlServer --config ./config/myhandlerconfig.yml --rest-config ./config/myrestapiconfig.yml
+```
+
+## Test Instructions
+
+```
+sudo go test ./...
+```
+Note: you may need to specify the full path to your golang binary if running under `sudo`.
+
+For example: 
+```
+sudo /usr/local/go/bin/go test ./...
+```
+
+## Usage Examples
+1. Enable C2 handlers and adjust configuration values to change IP address and ports to listen on by editing the default `config/handler_config.yml` file or by creating your own config YML file. 
+To enable a handler, set `enabled` to `true`, like below:
+```
+sidetwist:
+  host: 192.168.0.8
+  port: 443
+  enabled: true
+```
+
+To disable a handler, set `enabled` to `false`, like below:
+```
+sidetwist:
+  host: 192.168.0.8
+  port: 443
+  enabled: false
+```
+
+1. Start the control server:
+
+Using default config file paths:
+```
+sudo ./controlServer
+```
+
+To specify config paths:
+```
+sudo ./controlServer -c ./config/myhandlerconfig.yml -r ./config/myrestapiconfig.yml
+sudo ./controlServer --config ./config/myhandlerconfig.yml --rest-config ./config/myrestapiconfig.yml
+```
+
+Alternatively run direct from source:
+
+```
+go run main.go
+```
+
+Note: you may need to specify the full path to your golang binary if running under `sudo`.
+
+For example: 
+```
+sudo /usr/local/go/bin/go run main.go
+```
+
+
+## Installation Dependencies
+
+Install Go version 1.15 or higher.
+
+```
+sudo apt-get install golang
+```
+
+Run tests from the main repository directory. Go should automatically fetch needed dependencies.
+
+```
+sudo go test ./...
+```
+
+Note: you may need to specify the full path to your golang binary if running under `sudo`.
+
+For example: 
+```
+sudo /usr/local/go/bin/go test ./...
+```
+
+Look at the go.mod file if you want to see the dependencies in detail.
+
+# ATT&CK Evaluations C2 Client
+
+This client is provided to interact with the C2 server via its REST API.
+
+## Build Instructions
+
+Install dependencies using pip3:
+
+```
+pip3 install -r requirements.txt
+```
+
+## Test Instructions
+
+```
+To Do - need to write unit tests
+```
+
+## Usage Examples
+1. Enable C2 handlers and adjust configuration values to change IP address and ports to listen on by editing the default `config/handler_config.yml` file or by creating your own config YML. 
+To enable a handler, set `enabled` to `true`, like below:
+```
+sidetwist:
+  host: 192.168.0.8
+  port: 443
+  enabled: true
+```
+
+To disable a handler, set `enabled` to `false`, like below:
+```
+sidetwist:
+  host: 192.168.0.8
+  port: 443
+  enabled: false
+```
+
+1. Start the control server:
+
+```
+sudo ./controlServer
+```
+
+To specify config paths:
+```
+sudo ./controlServer -c ./config/myhandlerconfig.yml -r ./config/myrestapiconfig.yml
+sudo ./controlServer --config ./config/myhandlerconfig.yml --rest-config ./config/myrestapiconfig.yml
+```
+
+1. Establish an implant session
+
+Run an implant program of your choice to connect to the C2 (make sure that the corresponding handler was enabled). 
+
+1. Run the client python script to manage implant sessions.
+
 ```
 # view help
 ./evalsC2client.py --help
@@ -54,91 +198,25 @@ Example commands often but not always implemented
 # get task output
 ./evalsC2client.py --get-output <guid>
 
+# set a bootstrap task for a handler
+./evalsC2client.py --set-bootstrap-task <handler> <cmd>
+
+# get current bootstrap task for a handler
+./evalsC2client.py --get-bootstrap-task <handler>
+
+# delete current bootstrap task for a handler
+./evalsC2client.py --del-bootstrap-task <handler>
+
+# set a task for a session and then wait for it to complete, using default timeout of 120 seconds. Will return the task output or an error message
+./evalsC2client.py --set-and-complete-task <session guid> <cmd>
+
+# set a task for a session and then wait for it to complete, using a specified timeout value in seconds
+./evalsC2client.py --set-and-complete-task <session guid> <cmd> --task-wait-timeout 180
+
+# set a task for a session and then wait for it to complete, using verbose output
+./evalsC2client.py --set-and-complete-task <session guid> <cmd> -v
+./evalsC2client.py --set-and-complete-task <session guid> <cmd> --verbose
 ```
 
-## Configuration
-
-1.  Navigate to the `config/handler_config.yml` [file](../control_server/config/handler_config.yml). Each implant (usually) has a corrosponding listener with the same name. Locate the listener with the implant name in the file. 
-1.  Enable the C2 handler and adjust configuration values to match your enviornment.
-     - Change the IP address
-     - Change the port
-     - Enable the handler. Set the `enabled` field to `true` in the `config/handler_config.yml` file.
-       ```
-        oceanlotus:
-          host: 123.456.7.8
-          port: 443
-          enabled: true
-       ```
-    - Disable handlers not in use. Set the `enabled` field to `false` in the `config/handler_config.yml` file.
-        ```
-        sidetwist:
-          host: 123.456.7.8
-          port: 443
-          enabled: false
-        ```
-
-1. Start the control server
-
-    ```
-    sudo ./controlServer
-    ```
-    An alternative way to execute the C2 Server
-        
-    Run direct from source
-    ```
-    go run main.go
-    ```
-
-        
-    Note: you may need to specify the full path to your golang binary if running under `sudo`.
-    
-    For example: 
-    ```
-    sudo /usr/local/go/bin/go run main.go
-    ```
-
-
-## Dependencies
-
-On the attacker host, the following needs to be installed. 
-
-1. Go version 1.15 or higher. This is used to build and execute the C2 server. 
-
-    ```
-    sudo apt-get install golang
-    ```
-    
-    Run tests from the main repository directory. Go should automatically fetch needed dependencies.
-    
-    ```
-    sudo go test ./...
-    ```
-    
-    Note: you may need to specify the full path to your golang binary if running under `sudo`.
-    
-    For example: 
-    ```
-    sudo /usr/local/go/bin/go test ./...
-    ```
-
-    Review the (go.mod)[/control_server/go.mod] file to view the dependencies in detail.
-  
-1. ATT&CK Evaluations C2 Client. The client interacts with the C2 server via it's REST API.
-    ```
-    pip3 install -r requirements.txt
-    ```
-
-
-## Test Instructions
-
-```
-sudo go test ./...
-```
-Note: you may need to specify the full path to your golang binary if running under `sudo`.
-
-For example: 
-```
-sudo /usr/local/go/bin/go test ./...
-```
-
+For specific instructions on tasking a particular implant, reference the appropriate README.
 
