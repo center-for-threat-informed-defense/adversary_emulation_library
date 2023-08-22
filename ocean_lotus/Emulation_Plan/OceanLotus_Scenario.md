@@ -244,9 +244,11 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
    ```
 
 
-   <details><summary>Extra Credit</summary>
+   <details><summary>Extra Credit - Execute Persistence</summary>
      
-      This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon. The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
+      This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon, therefore it would be abnormal for the adversary to arbitrarily execute a LaunchAgent when there is an established session. 
+      
+      The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
       
       Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
       
