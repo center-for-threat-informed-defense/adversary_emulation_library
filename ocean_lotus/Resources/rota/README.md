@@ -30,12 +30,34 @@ $> make all
 ```
 
 * Buidling with Docker (optional)
-A Dockerfile is also provided to install a build environment and produce a rota executable.
+A Dockerfile is also provided to install a build environment and produce a rota executable. Since Rota is a dynamically compiled ELF binary, this ensure no glibc issues during execution.
 
 ``` sh
 $> docker build . -t attack:rota; # build the container image
 $> docker run --name rota attack:rota; # run the container image to produce the ELF executable
 $> docker cp rota:/opt/bin/rota .; # copy rota to local directory
+```
+
+Now that you have a built version of rota, follow the documentation in the Emulation plan to copy it to the destintion folder.
+
+### Troubleshooting Docker Builds
+
+If you've already executed a container with the name of "rota", an error similar to the one shown below will be displayed.
+``` sh
+docker: Error response from daemon: Conflict. The container name "/rota" is already in use by container "7d5835315af678be4499b816b20b137cd76f77987c81c18c50df70a4b819a206". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+```
+
+To fix this, either change the name of the container you're running via:
+
+``` sh
+$> docker run --name rota2 attack:rota;
+```
+
+Or remove the old stopped container via:
+
+``` sh
+$> docker rm rota;
 ```
 
 ## Host Artifacts
@@ -93,4 +115,3 @@ The first four bytes store the process id belonging to ```gvfsd-helper```, and t
 * [RotaJakiro: A long lived secret backdoor with 0 VT detection](https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/)
 * [RotaJakiro, The Linux version of Ocean Lotus](https://blog.netlab.360.com/rotajakiro_linux_version_of_oceanlotus/)
 * [The New and Improved macOS Backdoor from Ocean Lotus](https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/)
-  * *The command IDs used are identical across the OS X and Linux Ocean Lotus implant*
