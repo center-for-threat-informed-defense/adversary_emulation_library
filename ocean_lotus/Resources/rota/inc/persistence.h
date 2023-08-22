@@ -64,15 +64,6 @@ bool root_persistence(void);
 bool monitor_proc(int *pid);
 
 
-// write_to_file
-//     About:
-//         Wrapper function to write data to a given file path
-//
-//    Result: Boolean value returned indicating success or failure of data being written to a file.
-//    MITRE ATT&CK Technique: N/A
-//    CTI: N/A
-bool write_to_file(char *fpath, char *data);
-
 
 // watchdog_process_shmget
 //     About:
