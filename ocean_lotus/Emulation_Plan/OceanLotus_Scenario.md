@@ -435,6 +435,7 @@ Execute Rota Jakiro
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
    ```
+   💡 All files are downloaded to the directory where the binary is running. Although the `WebKit/` doesn't seem logical, this is where the binary is running from the applications bundle. 
    
    <details>
       <summary>Trouble Shooting</summary>
