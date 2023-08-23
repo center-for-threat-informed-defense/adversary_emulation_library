@@ -175,7 +175,7 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 
 **Step 1** emulates OceanLotus gaining initial access via a malicious file [T1204.002](https://attack.mitre.org/techniques/T1204/002/) targeting user `hpotter`. 
 
-Thinking it's a normal word document, the user double-clicks the conkylan.app (note: We were not able to disguise the app as a word document using a homoglyph file extension due to OS updates 🙌 🍎). The word document is actually an Application bundle, the first stage payload, which executes the second stage payload. deploys a decoy word document, and connects to the C2 server.
+Thinking it's a normal word document, the user, Hope Potter (hpotter), double-clicks the conkylan.app (note: We were not able to disguise the app as a word document using a homoglyph file extension due to OS updates 🙌 🍎). The word document is actually an Application bundle, the first stage payload, which executes the second stage payload. deploys a decoy word document, and connects to the C2 server.
 
 The first stage payload is an Application bundle that sets up the enviornment for execution through ensuring the second stage payload (Implant) can be dropped and executed. When opened, the first stage payload uses a bash script to perform the following actions.
    - Removes quarantine flag on files within the application bundle
@@ -314,9 +314,11 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
 
 ## Step 2 - macOS Discovery
 ### 📖 Overview
+Step 2 emulates OceanLotus conducting discovery on a macOS host. 
 
+Search for local credentials on the macOS host and use t
 
-
+> CTI Note: There is no open-source reporting to support using the Known_hosts file in conjunction with local SSH keys 😿. During our research, we did not find reporting detailing credential collection on macOS. In order to perform lateral movement for the linux portion of our sceario and staying consitent with using native OS utilities seen in other reporting, we choose using to use known_hosts discovery with locally stored SSH keys. 
 
 ---
 ### 👾 Red Team Procedures
