@@ -1,4 +1,13 @@
 ## Rota
+
+| Components | Use              | Description                                             |
+|------------|------------------|---------------------------------------------------------|
+| inc        | source code      | Header files for Rota Jakiro (rota) implant                    |
+| src | source code | Source files for Rota Jakiro (rota) implant |
+| utils | helperutilities| Files used for building [Stack Strings](https://attack.mitre.org/techniques/T1027/) in Rota |
+
+
+## Description
 [RotaJakiro](https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/)(Rota) is the Linux implant believed to be leveraged by Ocean Lotus. This repo contains the code to emulate the Linux implant based on threat reports listed in the references section below along with reverse engineering efforts by the ATT&CK team.
 
 ## Requirements
