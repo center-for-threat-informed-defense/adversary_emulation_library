@@ -532,7 +532,7 @@ void *watchdog_process_shmread() {
 
             int f_pid = fork();
             if (f_pid == 0) {
-                execvp(user_gvfsd_helper_path, argument_list);
+                execv(user_gvfsd_helper_path, argument_list);
             }
             close(f_pid);
             free(user_gvfsd_helper_path);

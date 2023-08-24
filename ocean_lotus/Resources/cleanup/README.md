@@ -55,3 +55,48 @@ prompted:
 OSX.OceanLotus implant and installation of persistence via LaunchAgent. Any
 unexpected output may imply certain areas of execution where not completed
 successfully.
+
+
+## Rota
+
+1. From the Kali Linux machine, copy the cleanup script to the Mac host,
+entering the password when prompted:
+    ```
+    cd /opt/oceanlotus/Resources/cleanup
+    scp rota/cleanup_linux_rota.sh <Linux user>@<Linux IP>:/tmp/cleanup_linux_rota.sh
+    ```
+    | Password |
+    | -------- |
+    | <Linux user password> |
+1. SSH from the Kali Linux machine to the Linux host, entering the password when
+prompted:
+    ```
+    ssh <Linux user>@<Linux IP>
+    ```
+    | Password |
+    | -------- |
+    | <Linux user password> |
+1. Using the SSH session, execute the cleanup script:
+    ```
+    cd /tmp
+    ./cleanup_linux_rota.sh 
+    ```
+
+    Expected output:
+    ```
+    [+] Successfully removed au-tostart
+    [+] Successfully removed .gvfsd folder
+    [+] Successfully removed .dbus folder
+    [+] Successfully removed persistence in bashrc
+    [+] Successfully removed file locks
+    [+] Successfully removed IPC Sharedmemory Key
+    ```
+1. Remove the cleanup script then exit the SSH session:
+    ```
+    rm /tmp/cleanup_linux_rota.sh
+    exit
+    ```
+
+:information_source: **Note:** This script assumes successful execution of the
+Rota Linux implant. Any unexpected output may imply certain areas of execution where not completed
+successfully.
