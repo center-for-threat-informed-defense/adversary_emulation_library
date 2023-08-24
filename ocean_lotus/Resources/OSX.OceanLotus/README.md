@@ -160,6 +160,12 @@ Identified executing directory as: /Users/hpotter/Downloads/
 
 ### Building
 
+To build the OSX.OceanLotus implant the following requiremnets must be met:
+- Building on a macOS host [Catalina 10.15](https://support.apple.com/en-us/HT211683) ~8.25GB
+- Xcode app is installed (full application)
+- Xcode developer tools are installed (used in the terminal)
+<br>
+
 **Build All**
 
 To build all, run the build script from the OSX.OceanLotus directory:

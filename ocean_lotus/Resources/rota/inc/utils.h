@@ -21,10 +21,6 @@ void create_lock(int lock_id);
 //        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 int lock_check(char *fpath);
 
-
-bool self_delete(char *fpath);
-
-
 bool write_to_file(char *fpath, char *data);
 
 #endif // UTILS_H_

