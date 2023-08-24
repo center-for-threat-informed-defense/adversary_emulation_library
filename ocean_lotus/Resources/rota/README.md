@@ -40,8 +40,8 @@ nohup ./rota-release&2>/dev/null; sleep 5; pkill rota-release
 For the emulation plan, place the built version of Rota in the payloads directory with a name of "rota". Assuming the Ocean Lotus git repository is in your home directory, the following command can be executed:
 ```
 cp rota-release ~/ocean-lotus/Resources/payloads/rota
-cp so_mount.so ~/ocean-lotus/Resources/payloads/somount.so
-cp so_pdf.so ~/ocean-lotus/Resources/payloads/sopdf.so
+cp so_mount.so ~/ocean-lotus/Resources/payloads/mount.so
+cp so_pdf.so ~/ocean-lotus/Resources/payloads/pdf.so
 ```
 
 ## For Developers
