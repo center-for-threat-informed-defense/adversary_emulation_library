@@ -17,6 +17,8 @@ nohup ./rota-release&2>/dev/null; sleep 5; pkill rota-release
 For the emulation plan, place the built version of Rota in the payloads directory with a name of "rota". Assuming the Ocean Lotus git repository is in your home directory, the following command can be executed:
 ```
 cp rota-release ~/ocean-lotus/Resources/payloads/rota
+cp so_mount.so ~/ocean-lotus/Resources/payloads/somount.so
+cp so_pdf.so ~/ocean-lotus/Resources/payloads/sopdf.so
 ```
 
 ## For Developers
@@ -41,7 +43,9 @@ A Dockerfile is also provided to install a build environment and produce a rota 
 ``` sh
 $> docker build . -t attack:rota; # build the container image
 $> docker run --name rota attack:rota; # run the container image to produce the ELF executable
-$> docker cp rota:/opt/bin/rota .; # copy rota to local directory
+$> docker cp rota:/opt/bins/rota-release .; # copy rota to local directory
+$> docker cp rota:/opt/bins/so_pdf.so .; # copy rota to local directory
+$> docker cp rota:/opt/bins/so_mount.so .; # copy rota to local directory
 ```
 
 Now that you have a built version of rota, follow the documentation in the Emulation plan to copy it to the destintion folder.
