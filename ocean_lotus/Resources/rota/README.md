@@ -66,9 +66,9 @@ A Dockerfile is also provided to install a build environment and produce a rota 
 ``` sh
 $> docker build . -t attack:rota; # build the container image
 $> docker run --name rota attack:rota; # run the container image to produce the ELF executable
-$> docker cp rota:/opt/bins/rota-release .; # copy rota to local directory
-$> docker cp rota:/opt/bins/so_pdf.so .; # copy rota to local directory
-$> docker cp rota:/opt/bins/so_mount.so .; # copy rota to local directory
+$> docker cp rota:/opt/bins/rota-release oceanlotus/Resources/payloads/rota; # copy rota to C2 handler payload directory
+$> docker cp rota:/opt/bins/so_pdf.so  oceanlotus/Resources/payloads/; # copy PDF collection shared object to C2 handler payload directory
+$> docker cp rota:/opt/bins/so_mount.so  oceanlotus/Resources/payloads/; # copy mount command execution shared object to C2 handler payload directory
 ```
 
 Now that you have a built version of rota, follow the documentation in the Emulation plan to copy it to the destintion folder.
