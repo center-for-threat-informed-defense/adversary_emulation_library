@@ -537,7 +537,7 @@ The following information is collected.
    ```
    Expected Output:
    ```
-   [Task] 2023/08/21 18:31:26 drogon-Linux-5.15.0-1040-aws 
+   [Task] 2023/08/21 18:31:26 drogon-x86_64-Linux-5.15.0-1040-aws 
    [SUCCESS] 2023/08/21 18:31:26 Successfully set task output.
    ```
 
