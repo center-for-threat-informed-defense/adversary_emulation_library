@@ -618,7 +618,7 @@ Rota Jakiro confirms the target file were created
 
 1. Upload the shared object onto the Linux host.
    ```
-   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "payload.so"}'
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "pdf.so"}'
    ```
    
 1. Verify the shared object was uploaded to the Linux host. 
