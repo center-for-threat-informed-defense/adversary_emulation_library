@@ -1,14 +1,28 @@
 ## Rota
 
-| Components | Use              | Description                                             |
-|------------|------------------|---------------------------------------------------------|
-| inc        | source code      | Header files for Rota Jakiro (rota) implant                    |
-| src | source code | Source files for Rota Jakiro (rota) implant |
-| utils | helperutilities| Files used for building [Stack Strings](https://attack.mitre.org/techniques/T1027/) in Rota |
+| Components | Use             | Description                                                                                 |
+|------------|-----------------|---------------------------------------------------------------------------------------------|
+| inc        | source code     | Header files for Rota Jakiro (rota) implant                                                 |
+| src        | source code     | Source files for Rota Jakiro (rota) implant                                                 |
+| utils      | helperutilities | Files used for building [Stack Strings](https://attack.mitre.org/techniques/T1027/) in Rota |
+| Makefile   | Building Rota   | Build system for building Rota Jakiro (rota) implant                                        |
+| Dockerfile | Building Rota   | Dynamically link Rota against target platform's libc                                        |
 
 
 ## Description
 [RotaJakiro](https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/)(Rota) is the Linux implant believed to be leveraged by Ocean Lotus. This repo contains the code to emulate the Linux implant based on threat reports listed in the references section below along with reverse engineering efforts by the ATT&CK team.
+
+
+### Source Code Organization Explained
+| Components  | Use                               | Description                                                            |
+|-------------|-----------------------------------|------------------------------------------------------------------------|
+| c2_commands | Implant functionality             | Source code for C2 execution                                           |
+| c2_loop     | Execution loop for C2             | Parse C2 handler tasking and execute desired commands from c2_commands |
+| persistence | Persistence functionality of Rota | Watchdog and bashrc/desktop persistence mechanisms                     |
+| utils       | Generic helper functions          | Functions to simplify tasks                                            |
+| so_mount    | Shared Object execution           | Execute mount command for host system discovery                        |
+| so_pdf      | Shared Object execution           | Execute find command to identify and copy PDFs                         |
+
 
 ## Requirements
 * Make
