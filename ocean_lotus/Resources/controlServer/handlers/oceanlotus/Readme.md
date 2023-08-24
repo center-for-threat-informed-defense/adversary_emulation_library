@@ -12,11 +12,15 @@ The handler _will be_ configured to do the following:
 - accept tasking from `.evalsC2client.py` and send the tasks to the implant when requested
 
 ## Usage
-Open a terminal window, navigate to the `/evalsC2server` folder. Build & Start the Listener:
+Open a terminal window, navigate to the `/evalsC2server` folder. Build the listener from source code. 
 ```zsh
 go build -o controlServer main.go
+```
+Start the listener
+```
 sudo ./controlServer
 ```
+
 
 Open a new terminal window, navigate to the same `/evalsC2server` folder. 
 
