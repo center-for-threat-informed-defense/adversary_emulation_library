@@ -1,6 +1,6 @@
 CC=gcc
 
-FLAGS=-ggdb -Wall -lpthread -pthread
+FLAGS=-ggdb -Wno-infinite-recursion -Wall -lpthread -pthread
 
 #update Makefile here
 C2_SERVER='"10.120.154.199"'
