@@ -7,13 +7,13 @@ used by or associated with the OceanLotus actors:
 
 
 ### 🗺️ Legend
-This document is intended to be used as a operational guide for a purple team operation. We recommend pausing ~2m after each step to give any detection tools or logs time to caputre the information.
+This document is intended to be used as an operational guide for a purple team operation. We recommend pausing ~2m after each step to give any detection tools or logs time to caputre the information.
 
 Based on the CTI Emulation Plan, each step includes the following information:
-- 📖 **Overview** - Summuary of actions that are completed in this step
+- 📖 **Overview** - Summary of actions that are completed in this step
 - 👾 **Red Team Procedures** - Red team operator instructions & commands to execute with expected output
 - 🔮 **Reference Code & Reporting** - A table with links to the source code for specific actions with cited intelligence leveraged for this action (if available)
-- 🔬 **Blue Team Notes** - key API calls, events, or telemtry for blue teams
+- 🔬 **Blue Team Notes** - key API calls, events, or telemetry for blue teams
 
 In-line Symbols:
 * :bulb: - callout notes
@@ -97,9 +97,9 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
    ```
    cd ocean-lotus/Resources/controlServer
    ```
-   This is the terminal window we use to task the implant. Unless otherwise specified, all copy/paste command will use this terminal window.
+   This is the terminal window we use to task the implant. Unless otherwise specified, all copy/paste commands will use this terminal window.
    
-<details><summary>Trouble Shooting</summary>
+<details><summary>Troubleshooting</summary>
   
    Check Configuration.
    - Check the ip address & port in the config file
@@ -112,8 +112,8 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 </details>
 
 #### VNC Access to macOS
-1. :arrow_right: Navigate to the **thrid** terminal window on your local machine. 
-1. Setup SSH Tunnel to forward port 5900 to localhost (must use teh ec2-user for this part).
+1. :arrow_right: Navigate to the **third** terminal window on your local machine. 
+1. Setup SSH Tunnel to forward port 5900 to localhost (must use the ec2-user for this part).
    ```
    ssh -L 5900:localhost:5900 ec2-user@10.90.30.22
    ```
@@ -127,13 +127,13 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
        │ ╰─┼╯ │  Amazon EC2
        └───┴──┘  macOS Catalina 10.15.7
    ```
-   Leave this window open and move to the side. We will not need to referene this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion.
+   Leave this window open and move to the side. We will not need to reference this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion.
 1. :arrow_right: Navigate to the **fourth**, and last open terminal window on your local machine.
-1. Copy/Paste the following command to connect over VNC for a GUI intereface for the macOS machine in AWS.
+1. Copy/Paste the following command to connect over VNC for a GUI interface for the macOS machine in AWS.
    ```
    open vnc://localhost:5900
    ```
-   A window should appear asking for Screen Sharing privillages to sin into "localhost".
+   A window should appear asking for Screen Sharing privileges to sign into "localhost".
    This terminal window can be closed or terminated after the command is run.   
 1. Enter the Hope Potter's credentials
    Username
@@ -150,11 +150,11 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 1. :arrow_right: Enter the same password from above... manualy. The user's Desktop should appear.
 1. Click on the Downloads folder in the Dock located at the base of the Desktop. When the icon expands, select "Open in Finder". A Finder window will open displaying the contents of the Downloads folder.
 
-   >The Dock is the macOS version of a Window's toolbar, Finder is the macOS of Windows Explorer, and the Downloads folder is typically located to the left side of the Trash icon in the Dock.
+   >The Dock is the macOS version of a Windows toolbar, Finder is the macOS version of Windows Explorer, and the Downloads folder is typically located to the left side of the Trash icon in the Dock.
 
 1. Verify the conkylan.app file (unicorn in Vietnamese) is present in the Downloads folder. 
 
-<details><summary>Trouble Shooting</summary>
+<details><summary>Troubleshooting</summary>
   
    If you receive this error...
    ```
@@ -171,7 +171,7 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 ## Step 1 - Establish Foothold
 ### 📖 Overview
 
-👋 Handwaving: Assume the user downloaded a Word document from a legitimate, but compromised, site. The Word docuement (`conkylan.app` - unicorn in Vietnamese) resides on the user's `Downloads` folder. 
+👋 Handwaving: Assume the user downloaded a Word document from a legitimate, but compromised, site. The Word document (`conkylan.app` - unicorn in Vietnamese) resides on the user's `Downloads` folder. 
 
 **Step 1** emulates OceanLotus gaining initial access via a malicious file [T1204.002](https://attack.mitre.org/techniques/T1204/002/) targeting user `hpotter`. 
 
@@ -213,7 +213,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
       [INFO] 2023/08/18 17:08:13 Session created for implant b6dbd70f203515095d0ca8a5ecbb43f7
    ```
    
-1. The macOS implant immediately sends collected discovery information about the victim machine which is printed out in the Listerner terminal window.
+1. The macOS implant immediately sends collected discovery information about the victim machine which is printed out in the Listener terminal window.
 
    Expected Output:
    ```
@@ -229,7 +229,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
       6-Core Intel Core i7
    ```
    
-1. The implant will continue to send a `OSX_heartbeat` until tasked.
+1. The implant will continue to send an `OSX_heartbeat` until tasked.
 
    Expected Output:
    ```
@@ -253,7 +253,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
 
    <details><summary>Extra Credit - Execute Persistence</summary>
      
-      This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon, therefore it would be abnormal for the adversary to arbitrarily execute a LaunchAgent when there is an established session. 
+      This is not part of the emulation plan however, if you want to manually verify the LaunchAgent works you can use `launchctl` to manually load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon, therefore it would be abnormal for the adversary to arbitrarily execute a LaunchAgent when there is an established session. 
       
       The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
       
