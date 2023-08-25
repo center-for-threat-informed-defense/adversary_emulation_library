@@ -641,6 +641,18 @@ cat ./files/mount.txt
 
 ### 🔮 Reference Code & Reporting
 <br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota executes `uname` for host discovery | [uname syscall](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/c2_commands.c#L102) | T1082 System Information Discovery | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/| 
+   | Rota executes a shared object that calls `mount` for network share discovery | [mount](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_mount.c) | T1135 Network Share Discovery | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/| 
+
+ </details>
+<br>
+
+
 
 ### 🔬 Blue Team Notes
 <br>
@@ -664,7 +676,7 @@ Rota Jakiro confirms the target file were created
 
 1. Upload the shared object onto the Linux host.
    ```
-   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "payload.so"}'
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "pdf.so"}'
    ```
    
 1. Verify the shared object was uploaded to the Linux host. 
@@ -700,10 +712,27 @@ Rota Jakiro confirms the target file were created
    [Task] 2023/08/21 19:37:53 file exists
    [SUCCESS] 2023/08/21 19:37:53 Successfully set task output.
    ```
+
+### 🔮 Reference Code & Reporting
+<br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota executes a Shared Object to create a staging folder | [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1074.001 Data Staged: Local Data Staging | N/A | 
+   | Rota executes a Shared Object for automated collection| [automated collection](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1119 Automated Collection | N/A | 
+
+ </details>
+<br>
    
 ## Step 6 - Exfil from Linux Host
 ### 📖 Overview
 
+The final step of the emulation plan is to exfiltrate the staged file in the `/tmp/` directory.
+Task the implant to upload the `/tmp/rota.tar.gz` file to the C2 server.
+
+*Note, the C2 server is limited to recieve data up to but not exceeding 65535 bytes.*
 
 ---
 ### 👾 Red Team Procedures
@@ -724,6 +753,7 @@ Rota Jakiro confirms the target file were created
    ```
    ls -lart ./files
    ```
+      
 1. Kill Rota Jakiro and give yourself a high five 🙌, mission accomplished! 💃
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_exit"}'
@@ -743,6 +773,18 @@ The End 💔
 
 ### 🔮 Reference Code & Reporting
 <br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota exfils previously created tar directory| [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1041 Exfiltration Over C2 Channel | N/A | 
+
+ </details>
+<br>
+ 
+
+
 
 ### 🔬 Blue Team Notes
 <br>
