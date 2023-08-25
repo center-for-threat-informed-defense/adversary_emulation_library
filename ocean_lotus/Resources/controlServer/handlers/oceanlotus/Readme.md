@@ -245,11 +245,11 @@ Server: [control+c] to shutdown the C2 Handler
 Victim: The program only ones once and dies.
 
 ## Components
-Coming Soon...
+Compairing CTI Reports, we used the below information to determine the byte stream used Type, Length, & Value (TLV) to serialize the binary data. 
+![Slide showing Hexdump screenshots from two CTI reports that compare OSX.OceanLotus and Rota Jakiro byte stream](../../../images/TCP-TLV.jpeg)
 
-## Encryption
-Coming Soon...
-
+After comparing each header, we used the below structure for each packet. The handler checks for this structure to verify the packet is from an OceanLotus implant (Rota Jakiro & OSX.OceanLotus). Packets that do not have this structure are dropped.  
+![Diagram showing the structure of how the OceanLotus handler manages information between the implants and the Red Team operator](../../../images/headerStructure.jpeg)
 
 ## CTI References
 - [NetLab 360 - Rota Jakiro Linux Backdoor](https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/)
