@@ -717,6 +717,18 @@ The End 💔
 
 ### 🔮 Reference Code & Reporting
 <br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota exfils previously created tar directory| [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1041 Exfiltration Over C2 Channel | N/A | 
+
+ </details>
+<br>
+ 
+
+
 
 ### 🔬 Blue Team Notes
 <br>
