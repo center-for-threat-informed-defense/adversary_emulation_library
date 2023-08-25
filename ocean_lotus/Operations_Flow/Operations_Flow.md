@@ -1,5 +1,8 @@
 # OceanLotus Operations Flow
 
+![Diagram of the below word picture](../Resources/images/OperationsFLowBlackBG.jpeg)
+
+
 | Step | CTI Operations Flow | Cited Intelligence |
 | ------- | ----------- | ----------- | 
 |0| In this plan, it is assumed OceanLotus used a watering hole attack ([T1189](https://attack.mitre.org/techniques/T1189/)) to identify potential vicitms. Once a target was identified, OceanLotus sent them a payload disguised as a fake Word document ([T1566](https://attack.mitre.org/techniques/T1566/)) and the target downloaded this to their machine.| OceanLotus targets a variety of private corporations in the manufacturing, consumer product, and hospitality sectors as well as foreign governments, political dissidents, and journalists. The adversary uses publically available websites that they've compromised and fake websites they've created to target potential victims. <sup> 1, 2, 13, 16 </sup>
