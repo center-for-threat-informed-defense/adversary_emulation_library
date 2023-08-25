@@ -1,9 +1,12 @@
 # 🌊💮 Emulation 
+![Diagram of the below word picture](../Resources/images/OperationsFLowBlackBG.jpeg)
+
 This scenario emulates OceanLotus TTPs based primarily on two malware specimens either 
 used by or associated with the OceanLotus actors:
 
 1. [Rota Jakiro](./Resources/OSX.OceanLotus)
 1. [OceanLotus.abcdef](./Resources/rota)
+
 
 
 ### 🗺️ Legend
