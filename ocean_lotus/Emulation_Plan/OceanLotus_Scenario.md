@@ -147,7 +147,7 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
    Expected output:
    A GUI interface to the Mac Mini should appear on the screen asking for a password.
 
-1. :arrow_right: Enter the same password from above... manualy. The user's Desktop should appear.
+1. :arrow_right: Enter the same password from above... manually. The user's Desktop should appear.
 1. Click on the Downloads folder in the Dock located at the base of the Desktop. When the icon expands, select "Open in Finder". A Finder window will open displaying the contents of the Downloads folder.
 
    >The Dock is the macOS version of a Windows toolbar, Finder is the macOS version of Windows Explorer, and the Downloads folder is typically located to the left side of the Trash icon in the Dock.
@@ -194,7 +194,8 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
 ### 👾 Red Team Procedures
 
 1. Emulate the user double-clicking the conkylan.app (lets pretend it's a Word document)
-1. Confirm C2 Registration of the OSX implant 
+1. Confirm C2 Registration of the OSX implant
+    
    In the Listener terminal window you should see the following output...
 
    ```zsh
@@ -452,7 +453,7 @@ Execute Rota Jakiro
 
    
 <details>
-    <summary>Trouble Shooting</summary>
+    <summary>Troubleshooting</summary>
    ---
     On the C2 server start a simple HTTP server
 
@@ -530,7 +531,7 @@ Execute Rota Jakiro
    [SUCCESS] 2023/08/24 19:31:57 Successfully created session for implant 01020304.
    ```
 
-<details><summary>Trouble Shooting</summary>
+<details><summary>Troubleshooting</summary>
    Check to make sure the binary for rota is in the correct location for download. Handlers will look for payloads to download using the resources/payloads/<handler-name> logic. 
    
 </details>
