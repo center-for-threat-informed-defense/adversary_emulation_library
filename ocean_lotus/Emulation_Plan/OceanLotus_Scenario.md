@@ -666,6 +666,19 @@ Rota Jakiro confirms the target file were created
    [Task] 2023/08/21 19:37:53 file exists
    [SUCCESS] 2023/08/21 19:37:53 Successfully set task output.
    ```
+
+### 🔮 Reference Code & Reporting
+<br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota executes a Shared Object to create a staging folder | [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1074.001 Data Staged: Local Data Staging | N/A | 
+   | Rota executes a Shared Object for automated collection| [automated collection](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1119 Automated Collection | N/A | 
+
+ </details>
+<br>
    
 ## Step 6 - Exfil from Linux Host
 ### 📖 Overview
