@@ -601,6 +601,7 @@ cat ./files/mount.txt
    | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
    | ----------------- | ---------------- | ---------------- | ------------------- |
    | Rota executes `uname` for host discovery | [uname syscall](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/c2_commands.c#L102) | T1082 System Information Discovery | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/| 
+   | Rota executes a shared object that calls `mount` for network share discovery | [mount](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_mount.c) | T1135 Network Share Discovery | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/| 
 
  </details>
 <br>
