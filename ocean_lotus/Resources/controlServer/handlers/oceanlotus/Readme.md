@@ -1,4 +1,5 @@
 # OceanLotus TCP Handler
+![Diagram showing the structure of how the OceanLotus handler manages information between the implants and the Red Team operator](../../../images/HandlerDiagramBlackBG.jpeg)
 
 The OceanLotus TCP Handler functions as the server-side counterpart to the payload structure of the OceanLotus implant. The OceanLotus handler can communicate with the macOS & Linux implants based on the usage of HTTP or TCP packets. 
 
