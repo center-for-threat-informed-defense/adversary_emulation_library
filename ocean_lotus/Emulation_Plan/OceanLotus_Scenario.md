@@ -595,6 +595,19 @@ cat ./files/mount.txt
 
 ### 🔮 Reference Code & Reporting
 <br>
+### 🔮 Reference Code & Reporting
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota executes `uname` for host discovery | - | T1082 System Information Discovery | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html | 
+   | conkylan.app masquerades as a Word document | [Application bundle build script](../Resources/OSX.OceanLotus/ApplicationBundle/build_bundle.sh) | T1036.008 Masquerading: Masquerade File Type | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+
+ </details>
+<br>
+
+
 
 ### 🔬 Blue Team Notes
 <br>
