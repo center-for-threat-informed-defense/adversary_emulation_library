@@ -1,4 +1,4 @@
-# 🌊💮 Emulation 
+# 🌊💮 OceanLotus Emulation Plan
 ![Diagram of the below word picture](../Resources/images/OperationsFLowBlackBG.jpeg)
 
 This scenario emulates OceanLotus TTPs based primarily on two malware specimens either 
