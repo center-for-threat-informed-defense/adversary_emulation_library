@@ -16,8 +16,10 @@ This scenario focuses on macOS and Linux environments therefore no Windows hosts
 👋 Not emulated. The user recieves an email with an attached document, they download the document. Note: Having the document pre-exist does bypass initial Gatekeeper checks. Due to time constraints and lack of recent CTI reporting on macOS, we prioritized an assumed breach approach to focus on follow-on actions. 
 
 Hope Potter (hpotter), double-clicks the conkylan.app (unicorn in Vietnamese) believing it to be a word document. The Word document is actually an Application bundle. Once opened, the app launches a decoy word document, executes a shell script, drops the second stage payload files, connects to the command and control server, and establishes persistence. OceanLotus then performs discover, identifies the user manages a file server using SSH with non password protected SSH keys. Using these remote services, OceanLotus downloads and executs Rota Jakiro on the Linux file server. Once persistence is established through modifing desktop autostart files and bashrc configuration files, OceanLotus performs discovery using shared objects for all mounted drives connected to the server. Finding none, OceanLotus collects all pdf and exfils the documents for later analysis. 
-
 <br>
+
+![Diagram walking through how OceanLotus infects a macOS, moves to a Linux host and exfils data](./Resources/images/OperationsFLowBlackBG.jpeg)
+
 
 ## Quick Links
 ### For Engineers 💻
@@ -47,7 +49,8 @@ All other pre-built executables have been removed. To rebuild the binaries, foll
 
 - [Operation Flow](./Operations_Flow/Operations_Flow.md/) - High-level summary of the scenario & infrastructure with diagrams. 
 - [Intelligence Summary](./Intelligence_Summary/Intelligence_Summary.md) - General overview of the Adversary with links to reporting used throughout the scenario.
-  >Note: Review each implant's readme for technical details and supporting CTI reporting when developing the implant. 
+
+>Note: Review each implant's readme for technical details and supporting CTI reporting when developing the implant. 
 
 ## Connect with us 🗨️
 
@@ -80,14 +83,12 @@ This content is only to be used with appropriate prior, explicit authorization f
 
 ## Notice
 
-<!-- TODO Add PRS prior to publication. -->
-
 Copyright 2023 MITRE Engenuity. Approved for public release. Document number REPLACE_WITH_PRS_NUMBER
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
 file except in compliance with the License. You may obtain a copy of the License at
 
-[http://www.apache.org/licenses/LICENSE-2.0
+[http://www.apache.org/licenses/LICENSE-2.0]
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
