@@ -13,6 +13,11 @@
         cmd: "networksetup -setdnsservers \"Thunderbolt Ethernet Slot  1\" \"10.90.30.20\""
       become: yes
 
+    - name: Enable VNC on Mac
+      ansible.builtin.command:
+        cmd: "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -restart -agent -privs -all"
+      become: yes
+
     - name: Join domain
       ansible.builtin.command:
         cmd: |

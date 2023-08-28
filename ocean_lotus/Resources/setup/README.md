@@ -121,9 +121,9 @@ For `vhagar`, `dreamfyre`, and `drogon`, update the value of `ansible_host` with
 1. First, generate the Windows AD domain.
    1. `ansible-playbook -i inventory playbooks/windows.yml`
    2. Once the playbook completes successfully, move to next step.
-2. Provision the Linux host.
-   1. `ansible-playbook -i inventory playbooks/linux.yml`
-   2. Once the playbook completes successfully, manually provision the Mac host.
+2. Provision the remaining hosts.
+   1. `ansible-playbook -i inventory playbooks/all_the_rest.yml`
+   2. Once the playbook completes successfully, manually perform a couple setup steps on the Mac host.
 
 ## Post Configuration
 
@@ -140,35 +140,10 @@ Replace `MAC-IP` with the public IP of your Mac instance below.
    1. From the AWS Mac Instance: `sudo passwd ec2-user`
       1. **NOTE**: The emulation plan assumes you set the password to `apples`.
 
-3. Enable VNC
-
-   1. From the AWS Mac Instance:
-
-      ```sh
-      sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
-      -activate -configure -access -on \
-      -restart -agent -privs -all
-      ```
-
-4. Create SSH Tunnel
+3. Create SSH Tunnel
 
    1. From your local machine: `ssh -L  5900:localhost:5900 -i ./oceanlotus ec2-user@MAC-IP`
 
-5. Join to Domain
-
-   1. From the AWS Mac instance:
-
-      1. Set DNS to Active Directory (vhagar) server: https://support.apple.com/lt-lt/guide/mac-help/mh14127/10.15/mac/10.15
-      2. Set DNS server to `10.90.30.20`
-
-   2. From the AWS Mac instance:
-
-         ```sh
-         dsconfigad -force -add "viserion.com" -computer 10.90.30.20\
-         -username hpotter -password 'noax3teenohb~e'\
-         -localhome enable\
-         -groups 'Domain Admins' -shell /bin/bash
-         ```
 
 6. You will now be able to connect to the Mac host.
 
@@ -252,4 +227,3 @@ VNC Connection to Mac
 Some items for future work are listed below:
 
 * Dynamically generating the Ansible inventory
-* Mac management with Ansible
