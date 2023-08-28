@@ -9,10 +9,21 @@
     - ../vars.yml
 
   tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        pkg:
+          - git
+          - rsync
+          - unzip
+        state: present
+        update_cache: yes
+
     - name: copy repository files to kali box
       ansible.posix.synchronize:
         src: "{{ playbook_dir }}/../../../../"
         dest: "{{ oc_dir }}"
+        owner: no
+        group: no
         private_key: "{{ playbook_dir }}/../../oceanlotus"
 
     - name: ensure payloads directory exists
