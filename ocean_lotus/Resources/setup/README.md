@@ -50,7 +50,6 @@
 
     * On Linux, see [Terraform](https://developer.hashicorp.com/terraform/downloads) and [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html) documentation
 
-
 ### Create SSH Key Pair
 
 Run the `run_first.sh` script in this directory first. The script will generate a separate SSH key pair, that will be used for OceanLotus infrastructure.
@@ -88,7 +87,7 @@ Terraform is used to initialize the AWS infrastructure.
       1. `terraform apply tfplan`
       2. NOTE: This step may take a few minutes to properly provision all AWS resources. This is normal.
    5. View the Terraform output to get a list of public IP addresses for each resource, as well as the default password for the Windows server.
-      1. `terraform output` (if you get a "No outputs found" message, run `terraform refresh`) 
+      1. `terraform output` (if you get a "No outputs found" message, run `terraform refresh`)
    6. You are done, celebrate!
 
 ## Ansible
@@ -99,23 +98,23 @@ The Windows and Ubuntu hosts are configured with Ansible. The AWS Mac instance m
 
 ### Install Ansible dependencies
 
-First, install the Ansible playbook requirements by running the following command: 
+First, install the Ansible playbook requirements by running the following command:
 
 `ansible-galaxy install -r requirements.yml`
 
 #### Retrieve the Windows Password
 
-AWS generates a random password on creation of a Windows instance. 
+AWS generates a random password on creation of a Windows instance.
 
-1. To retrieve the password, view the output of `terraform output` from the previous step. 
+1. To retrieve the password, view the output of `terraform output` from the previous step.
 2. Open the `ansible/inventory` text file in an editor
 3. From the output from Terraform, paste the value for Windows_Admin_Password into the `ansible_password` section for the `vhagar` host. Replace the text `REPLACE_ME_WITH_Windows_Admin_Password` with your actual password output by Terraform earlier.
 
 #### Update the Ansible Inventory
 
-Update the IP addresses listed in the `inventory` file with the IPs output by `terraform output`. 
+Update the IP addresses listed in the `inventory` file with the IPs output by `terraform output`.
 
-For `vhagar`, `dreamfyre`, and `drogon`, update the value of `ansible_host` with the IP address output by `terraform output`. 
+For `vhagar`, `dreamfyre`, and `drogon`, update the value of `ansible_host` with the IP address output by `terraform output`.
 
 #### Deploy Ansible Configuration
 
@@ -139,7 +138,7 @@ Replace `MAC-IP` with the public IP of your Mac instance below.
 2. Set password for default ec2-user
 
    1. From the AWS Mac Instance: `sudo passwd ec2-user`
-      1. **NOTE**: The emulation plan assumes you set the password to `apples`. 
+      1. **NOTE**: The emulation plan assumes you set the password to `apples`.
 
 3. Enable VNC
 
@@ -240,7 +239,7 @@ terraform destroy
 
 VNC Connection to Mac
 
-**NOTE**: Anytime you connect to the AWS Mac instance over VNC will require you to setup an SSH tunnel first. 
+**NOTE**: Anytime you connect to the AWS Mac instance over VNC will require you to setup an SSH tunnel first.
 
 1. Establish SSH tunnel.
 
