@@ -62,17 +62,11 @@ After the script completes, you will have a new SSH private and public key pair,
 
 You will need to know your public IP address for the next steps. You can get it by searching Google for "what is my ip", or running `curl ifconfig.me` from the command line on a system with curl installed. For the rest of this document, your public IP will be referred to as `PUBLIC_IP`, replace the variable `PUBLIC_IP` with your actual public IP address.
 
-
-
-| Public IP | `PUBLIC_IP` |
-| --------- | ----------- |
-|           |             |
-
 ## Terraform
 
 Terraform is used to initialize the AWS infrastructure. 
 
-<img src="assets/oceanlotus-Page-3.drawio.png" alt="oceanlotus-Page-3.drawio" style="zoom: 50%;" />
+<img src="../images/AwsDiagram.png" alt="OceanLotus AWS Diagram" style="zoom: 50%;" />
 
 1. Create a Terraform settings file from the included template. 
    1. `cp -a oceanlotus.auto.tfvars.example oceanlotus.auto.tfvars`
