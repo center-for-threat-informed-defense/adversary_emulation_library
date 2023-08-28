@@ -8,6 +8,20 @@
     - ../vars.yml
 
   tasks:
+    - name: Set DNS server
+      ansible.builtin.command:
+        cmd: "networksetup -setdnsservers \"Thunderbolt Ethernet Slot  1\" \"10.90.30.20\""
+      become: yes
+
+    - name: Join domain
+      ansible.builtin.command:
+        cmd: |
+          dsconfigad -force -add 'viserion.com' -computer 10.90.30.20
+          -username hpotter -password 'noax3teenohb~e'
+          -localhome enable
+          -groups 'Domain Admins' -shell /bin/bash
+      become: yes
+
     - name: Force home directory creation
       ansible.builtin.command:
         cmd: "/usr/sbin/createhomedir -c -u {{ user_to_create|quote }}"

@@ -185,7 +185,6 @@ following command and password `malware`:
 
 ```sh
 # from the ocean-lotus directory
-
 unzip Resources/Binaries/binaries.zip -d Resources/payloads
 ```
 
