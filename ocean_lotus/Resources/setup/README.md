@@ -196,12 +196,11 @@ Mac host yet, use the following commands to do so:
 
 1. Copy the Application Bundle from Kali Linux machine to the Mac host:
 
-2. ```sh
-    # from the ocean-lotus directory
-    
-    cd Resources/payloads/oceanlotus/
-    scp -r -i /home/kali/.ssh/id_rsa_ocean conkylan.app ec2-user@10.90.30.22:/tmp/
-    ```
+      ```sh
+      # from the ocean-lotus directory
+      cd Resources/payloads/oceanlotus/
+      scp -r -i /home/kali/.ssh/id_rsa_ocean conkylan.app ec2-user@10.90.30.22:/tmp/
+      ```
 
 1. SSH from the Kali Linux machine to the Mac host, entering the password when
 prompted:
