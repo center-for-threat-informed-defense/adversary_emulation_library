@@ -2,7 +2,7 @@
 - name: configure mac host
   hosts: mac_server
   vars:
-    - user_to_create: wsign
+    - user_to_create: hpotter
     - ubuntu_ip: "10.90.30.7"
   vars_files:
     - ../vars.yml

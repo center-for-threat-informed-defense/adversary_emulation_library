@@ -3,7 +3,7 @@
   hosts: kali_server
   become: yes
   vars:
-    - oc_dir: /opt/ocean-lotus2
+    - oc_dir: /opt/ocean-lotus
     - unzip_dir: Resources/payloads
   vars_files:
     - ../vars.yml
