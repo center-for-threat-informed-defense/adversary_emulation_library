@@ -1,4 +1,14 @@
 # replace with your info
 # aws-profile = "awsacct"
 # unique_prefix = "2134123rad"
+
+# Put your public ip address(es) in the ip-whitelist list
+# Whitelist Examples
+## whitelist a single IP
 # ip-whitelist = ["123.45.67.899"]
+
+## Whitelist multiple IPs
+# ip-whitelist = ["123.45.67.899","234.456.78.999"]
+
+## Whitelist CIDR range
+# ip-whitelist = ["123.45.678.0/24"]
