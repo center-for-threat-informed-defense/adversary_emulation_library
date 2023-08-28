@@ -1,0 +1,29 @@
+---
+- name: configure mac host
+  hosts: mac_server
+  vars:
+    - user_to_create: wsign
+    - ubuntu_ip: "10.90.30.7"
+  vars_files:
+    - ../vars.yml
+
+  tasks:
+    - name: Force home directory creation
+      ansible.builtin.command:
+        cmd: "/usr/sbin/createhomedir -c -u {{ user_to_create|quote }}"
+      become: yes
+
+    - name: Ensure ssh directory exists
+      ansible.builtin.file:
+        path: "/Users/{{ user_to_create|quote }}/.ssh"
+        state: directory
+        mode: '0700'
+        owner: "{{ user_to_create }}"
+        group: "{{ ansible_real_group_id }}"
+      become: yes
+
+    - name: Create known_hosts file for new user
+      ansible.builtin.command:
+        cmd: "ssh-keyscan -H {{ ubuntu_ip }} >> ~/.ssh/known_hosts"
+      become: yes
+      become_user: "{{ user_to_create|quote }}"
