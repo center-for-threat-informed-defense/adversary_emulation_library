@@ -1,0 +1,93 @@
+---
+- name: install prereqs and join ubuntu to domain
+  hosts: linux_server
+  become: yes
+  vars_files:
+    - ../vars.yml
+
+  tasks:
+    - name: Install packages required for AD and some useful tools
+      ansible.builtin.apt:
+        pkg:
+          - adcli
+          - curl
+          - etckeeper
+          - git
+          - libnss-sss
+          - libpam-sss
+          - oddjob
+          - oddjob-mkhomedir
+          - packagekit
+          - realmd
+          - resolvconf
+          - samba-common-bin
+          - sssd
+          - sssd-tools
+        state: present
+        update_cache: yes
+
+    - name: Create systemd-resolved config
+      template:
+        src: "systemd-resolved.conf.j2"
+        dest: "/etc/systemd/resolved.conf"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      notify:
+        - "Restart systemd-resolved"
+
+    - name: Join the AD domain
+      ansible.builtin.command: realm join --user={{ ad_username }} {{ ad_domain }} --install=/ -U {{ ad_username }}%{{ ad_password }}
+      register: join_result
+      ignore_errors: yes
+
+    - name: Check the AD join result
+      fail:
+        msg: "Unable to join the AD domain, {{ join_result.stderr }}"
+      when: join_result.rc != 0
+
+    - name: Restart SSSD service
+      service:
+        name: sssd
+        state: restarted
+        enabled: yes
+
+    - name: Validate the AD join
+      ansible.builtin.command: getent passwd {{ ad_username }}
+      register: validate_result
+      ignore_errors: yes
+
+    - name: Check the validation result
+      fail:
+        msg: "AD join validation failed, {{ validate_result.stderr }}"
+      when: validate_result.rc != 0
+
+    - name: install pdf file
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/7_Awesome_Tales_of_Vietnamese_Mythology.pdf"
+        dest: /srv/super-secret-file.pdf
+        mode: '0644'
+
+    - name: install sudo configuration
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/91-sudo-domain-admin"
+        dest: /etc/sudoers.d/91-sudo-domain-admin
+        mode: '0440'
+        owner: root
+        group: root
+        validate: /usr/sbin/visudo -cs
+    - name: allow password auth for domain users over ssh
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/30-allow-password-auth.conf"
+        dest: /etc/ssh/sshd_config.d/30-allow-password-auth.conf
+        mode: '0644'
+        owner: root
+        group: root
+
+  handlers:
+    - name: Restart systemd-resolved
+      systemd:
+        name: "systemd-resolved"
+        daemon_reload: yes
+        state: restarted
+
