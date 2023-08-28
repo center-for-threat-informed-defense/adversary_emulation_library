@@ -1,7 +1,7 @@
 TIMESTAMP := $(shell date -u +"%Y%m%d_%H%M%S")
 GIT_HASH := $(shell git rev-parse --short HEAD)
 DOCS_CFG = .terraform-docs.yml
-TF_CODE_DIR = range
+TF_CODE_DIR = scenario
 
 .DEFAULT_GOAL := help
 
