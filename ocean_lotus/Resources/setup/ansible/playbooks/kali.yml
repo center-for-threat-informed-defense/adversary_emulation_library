@@ -1,0 +1,32 @@
+---
+- name: configure kali host
+  hosts: kali_server
+  become: yes
+  vars:
+    - oc_dir: /opt/ocean-lotus2
+    - unzip_dir: Resources/payloads
+  vars_files:
+    - ../vars.yml
+
+  tasks:
+    - name: copy repository files to kali box
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../../../../"
+        dest: "{{ oc_dir }}"
+        private_key: "{{ playbook_dir }}/../../oceanlotus"
+
+    - name: ensure payloads directory exists
+      ansible.builtin.file:
+        path: "{{ oc_dir }}/{{ unzip_dir }}"
+        state: directory
+        mode: '0755'
+
+
+    - name: Unarchive binaries to payloads directory
+      ansible.builtin.unarchive:
+        src: "{{ oc_dir }}/Resources/Binaries/binaries.zip"
+        dest: "{{ oc_dir }}/Resources/payloads"
+        remote_src: yes
+        extra_opts:
+          - "-P"
+          - "malware"

@@ -65,7 +65,7 @@
     - name: install pdf file
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/7_Awesome_Tales_of_Vietnamese_Mythology.pdf"
-        dest: /srv/super-secret-file.pdf
+        dest: /home/ubuntu/7_Awesome_Tales_of_Vietnamese_Mythology.pdf
         mode: '0644'
 
     - name: install sudo configuration
