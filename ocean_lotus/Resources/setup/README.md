@@ -1,8 +1,23 @@
 # OceanLotus Infrastructure Overview
 
-[TOC]
-
-
+- [OceanLotus Infrastructure Overview](#oceanlotus-infrastructure-overview)
+  - [Setup](#setup)
+    - [Prerequisites](#prerequisites)
+    - [Create SSH Key Pair](#create-ssh-key-pair)
+    - [Get your Public IP](#get-your-public-ip)
+  - [Terraform](#terraform)
+  - [Ansible](#ansible)
+    - [Install Ansible dependencies](#install-ansible-dependencies)
+      - [Retrieve the Windows Password](#retrieve-the-windows-password)
+      - [Update the Ansible Inventory](#update-the-ansible-inventory)
+      - [Deploy Ansible Configuration](#deploy-ansible-configuration)
+  - [Post Configuration](#post-configuration)
+      - [Mac Host](#mac-host)
+    - [Setup Adversary Payloads](#setup-adversary-payloads)
+      - [Move Unzipped Binaries into Payloads](#move-unzipped-binaries-into-payloads)
+      - [Staging the Application Bundle on Victim](#staging-the-application-bundle-on-victim)
+  - [Important](#important)
+  - [Follow On Work](#follow-on-work)
 
 ## Setup
 
@@ -14,7 +29,7 @@
 
   * Tools
 
-    * `ssh-keygen`, 
+    * `ssh-keygen`,
     * `bash` shell,
     * [Terraform](https://developer.hashicorp.com/terraform/downloads),
     * [Ansible](https://docs.ansible.com/)
@@ -24,7 +39,7 @@
 
     * On Mac with [Homebrew](https://brew.sh/) installed
 
-      * Example: 
+      * Example:
 
       * ```
         brew tap hashicorp/tap
@@ -85,7 +100,9 @@ Terraform is used to initialize the AWS infrastructure.
 
 The Windows and Ubuntu hosts are configured with Ansible. The AWS Mac instance must be configured manually. The steps for configuring the AWS Mac instance are listed in the next section. 
 
-#### Install Ansible dependencies
+**IMPORTANT**: All Ansible commands assume you are in the `Resources/setup/ansible` directory. Please change to the `Resources/setup/ansible` directory if necessary.
+
+### Install Ansible dependencies
 
 First, install the Ansible playbook requirements by running the following command: 
 
@@ -138,7 +155,7 @@ Replace `MAC-IP` with the public IP of your Mac instance below.
 
 5. Join to Domain
 
-   1. From the AWS Mac instance: 
+   1. From the AWS Mac instance:
 
       1. Set DNS to Active Directory (vhagar) server: https://support.apple.com/lt-lt/guide/mac-help/mh14127/10.15/mac/10.15
       2. Set DNS server to `10.90.30.20`
@@ -153,7 +170,7 @@ Replace `MAC-IP` with the public IP of your Mac instance below.
          ```
 
 6. You will now be able to connect to the Mac host.
- 
+
 ### Setup Adversary Payloads
 
 The following steps details how to manually setup the adversary payloads and
@@ -165,7 +182,7 @@ A zip of the scenario binaries have been included [here](../Binaries/binaries.zi
 The binaries.zip can be unzipped to the expected directory location using the
 following command and password `malware`:
 
-```
+```sh
 # from the ocean-lotus directory
 
 unzip Resources/Binaries/binaries.zip -d Resources/payloads
@@ -186,14 +203,16 @@ Mac host yet, use the following commands to do so:
 
 1. SSH from the Kali Linux machine to the Mac host, entering the password when
 prompted:
-    ```
+
+    ```sh
     ssh -i /home/kali/.ssh/id_rsa_ocean ec2-user@10.90.30.22
     ```
 
 1. Using the SSH session, modify the file permissions of the Application Bundle
 to be owned by `hpotter`, then copy the Application Bundle to
 `/Users/hpotter/Downloads`:
-    ```
+
+    ```sh
     cd /tmp
     sudo chown -R hpotter /tmp/conkylan.app
     sudo cp -r /tmp/conkylan.app /Users/hpotter/Downloads
@@ -208,4 +227,13 @@ VNC Connection to Mac
 
 **NOTE**: Anytime you connect to the AWS Mac instance over VNC will require you to setup an SSH tunnel first. 
 
-`ssh -L  5900:localhost:5900 -i ./oceanlotus ec2-user@MAC-IP`
+```sh
+ssh -L  5900:localhost:5900 -i ./oceanlotus ec2-user@MAC-IP
+```
+
+## Follow On Work
+
+Some items for future work are listed below:
+
+* Dynamically generating the Ansible inventory
+* Mac management with Ansible

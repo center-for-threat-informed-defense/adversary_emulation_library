@@ -2,7 +2,11 @@
 
 This document is a quick reference for information and commands needed once your environment is up and running.
 
-[TOC]
+- [Quick Reference](#quick-reference)
+  - [List of Active Directory Users](#list-of-active-directory-users)
+  - [List of AWS Instances](#list-of-aws-instances)
+  - [Useful Commands](#useful-commands)
+    - [SSH Tunnel to AWS Mac Instance for VNC](#ssh-tunnel-to-aws-mac-instance-for-vnc)
 
 ## List of Active Directory Users
 
