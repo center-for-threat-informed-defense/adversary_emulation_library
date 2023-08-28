@@ -12,11 +12,12 @@
       - [Update the Ansible Inventory](#update-the-ansible-inventory)
       - [Deploy Ansible Configuration](#deploy-ansible-configuration)
   - [Post Configuration](#post-configuration)
-      - [Mac Host](#mac-host)
+    - [Mac Host](#mac-host)
     - [Setup Adversary Payloads](#setup-adversary-payloads)
       - [Move Unzipped Binaries into Payloads](#move-unzipped-binaries-into-payloads)
       - [Staging the Application Bundle on Victim](#staging-the-application-bundle-on-victim)
-  - [Important](#important)
+  - [Teardown](#teardown)
+  - [How To Connect Using VNC to Mac](#how-to-connect-using-vnc-to-mac)
   - [Follow On Work](#follow-on-work)
 
 ## Setup
@@ -127,7 +128,7 @@ For `vhagar`, `dreamfyre`, and `drogon`, update the value of `ansible_host` with
 
 ## Post Configuration
 
-#### Mac Host
+### Mac Host
 
 Replace `MAC-IP` with the public IP of your Mac instance below.
 
@@ -188,7 +189,8 @@ If the OSX.OceanLotus Application Bundle has not been staged on the target
 Mac host yet, use the following commands to do so:
 
 1. Copy the Application Bundle from Kali Linux machine to the Mac host:
-    ```
+
+2. ```sh
     # from the ocean-lotus directory
     
     cd Resources/payloads/oceanlotus/
@@ -215,15 +217,31 @@ to be owned by `hpotter`, then copy the Application Bundle to
 1. The Application Bundle should now be available in the Downloads folder of
 `hpotter` and ready for scenario execution
 
-## Important
+## Teardown
+
+Once done with emulation, you can destroy the resources you deployed in AWS to limit billing.
+To permanently destroy the OceanLotus AWS resources, run the following command from the `terraform/` directory.
+
+```shell
+# cd Resources/setup/terraform
+terraform destroy
+```
+
+**NOTE**: Once you confirm the `destroy` operation, any resources managed by Terraform will be deleted.
+
+## How To Connect Using VNC to Mac
 
 VNC Connection to Mac
 
 **NOTE**: Anytime you connect to the AWS Mac instance over VNC will require you to setup an SSH tunnel first. 
 
-```sh
-ssh -L  5900:localhost:5900 -i ./oceanlotus ec2-user@MAC-IP
-```
+1. Establish SSH tunnel.
+
+    ```sh
+    ssh -L  5900:localhost:5900 -i ./oceanlotus ec2-user@MAC-IP
+    ```
+
+2. From Mac, run `open vnc://localhost:5900`. On other platforms, use a VNC client to connect to `localhost:5900`.
 
 ## Follow On Work
 
