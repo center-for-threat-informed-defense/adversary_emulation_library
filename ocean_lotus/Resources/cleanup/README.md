@@ -6,7 +6,7 @@
 entering the password when prompted:
     ```
     cd /opt/oceanlotus/Resources/cleanup
-    scp OSX.OceanLotus/cleanup_osx.oceanlotus.sh ec2-user@10.90.30.22:/tmp/cleanup_osx.oceanlotus.sh
+    scp -i /home/kali/.ssh/id_rsa_ocean OSX.OceanLotus/cleanup_osx.oceanlotus.sh ec2-user@10.90.30.22:/tmp/cleanup_osx.oceanlotus.sh
     ```
     | Password |
     | -------- |
@@ -15,7 +15,7 @@ entering the password when prompted:
 1. SSH from the Kali Linux machine to the Mac host, entering the password when
 prompted:
     ```
-    ssh ec2-user@10.90.30.22
+    ssh -i /home/kali/.ssh/id_rsa_ocean ec2-user@10.90.30.22
     ```
     | Password |
     | -------- |
