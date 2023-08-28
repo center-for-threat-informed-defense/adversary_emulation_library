@@ -24,12 +24,13 @@ prompted:
 1. Using the SSH session, modify the file permissions of the cleanup script to be owned by `hpotter`:
     ```
     cd /tmp
+    sudo chmod +x /tmp/cleanup_ox.oceanlotus.sh
     sudo chown -R hpotter /tmp/cleanup_osx.oceanlotus.sh
     ```
    
 1. Switch user to `hpotter` then execute the cleanup script:
     ```
-    sudo su hpotter
+    sudo -i -u hpotter
     ./cleanup_osx.oceanlotus.sh /Users/hpotter/Downloads
     ```
     
