@@ -75,7 +75,7 @@
         mode: '0440'
         owner: root
         group: root
-        validate: /usr/sbin/visudo -cs
+        validate: /usr/sbin/visudo -cs %s
     - name: allow password auth for domain users over ssh
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/30-allow-password-auth.conf"
