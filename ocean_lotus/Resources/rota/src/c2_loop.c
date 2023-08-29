@@ -16,6 +16,7 @@
 #include "c2_loop.h"
 #include "c2_commands.h"
 
+// Loosely based socket structure on the following gist: https://gist.github.com/suyash/2488ff6996c98a8ee3a84fe3198a6f85
 
 void c2_loop() {
 
