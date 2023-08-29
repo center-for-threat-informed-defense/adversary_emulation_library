@@ -19,10 +19,9 @@ The bash script contains the base64 encoded Implant (Second Stage)
 embedded within it. On application bundle open, the bash script is executed and
 performs the following actions:
 - Removes quarantine flag on files within the application bundle
-- Extracts, base64 decodes, and executes the embedded Implant (Second
-Stage) payload
-- Prepares persistence install via LaunchAgent or LaunchDaemon
-  - **NOTE:** This script *does not* activate/install the persistence mechanism
+- Extracts and base64 decodes the embedded Implant (Second Stage) payload and its Communication Library component as `/Users/hpotter/Library/WebKit/com.apple.launchpad` and `/Users/hpotter/Library/WebKit/b2NlYW5sb3R1czIz`, respectively
+- Prepares persistence via LaunchAgent or LaunchDaemon
+  - **NOTE:** This script *does not* activate the persistence mechanism
   and the implant, once executed, should be tasked to execute the following
   command:
     ```
@@ -34,6 +33,7 @@ Stage) payload
 - Uses `touch` to update the timestamps of the Implant (Second Stage) artifacts
 - Uses `chmod` to make the Implant (Second Stage) binary file executable by
 changing file permissions to 755
+- Executes the Implant (Second Stage) binary
 - Replaces the application bundle with the decoy Word document
 
 ### Implant (Second Stage)
@@ -88,6 +88,12 @@ the returned data will be stored within the "Payload" section of the above
 structure. This POST request will be sent immediately after OSX.OceanLotus has
 completed the task.
 
+*Ingressed Downloads to Victim*
+
+OSX.OceanLotus will write downloaded files to `osx.download` in the current
+working directory of the executed implant binary. At this time, no additional
+HTTP requests are sent back to the C2 server to confirm the download succeeded.
+
 #### Available Instructions
 
 > Note: Because the "Command instruction bytes" is 4 bytes in length, the 
@@ -107,11 +113,17 @@ of the instruction.
 
 #### Obfuscation
 
+*Not implemented*
+
 ## For Operators
 
 ### Execution
 
-To activate the persistence mechanism at the user context, task the implant to
+:bulb: Click [here](../controlServer/handlers/oceanlotus#osxoceanlotus) for
+examples of interacting with an active implant using `evalsC2client.py` to
+task the above instructions.
+
+To execute the persistence mechanism at the user context, task the implant to
 execute the following command:
 ```
 launchctl load -w /Users/bob/Library/LaunchAgents/com.apple.launchpad
@@ -121,6 +133,131 @@ Replace the above path with `/Library/LaunchAgents/com.apple.launchpad` if the
 implant is running in an elevated (root) context.
 
 ### Troubleshooting
+
+**Application Bundle artifacts did not drop as expected**
+
+* Check the group/file ownership of `conkylan.app` to ensure the executing
+user can access all files within the application bundle. If the executing
+user does not have access, the file permissions of `conkylan.app` can be
+changed using `chown -r`
+
+**Implant did not register with the C2**
+
+* Check the following components were dropped:
+  * Implant binary - `/Users/hpotter/Library/WebKit/com.apple.launchpad`
+  * Communication library dylib - `/Users/hpotter/Library/WebKit/b2NlYW5sb3R1czIz`
+  * If either of the above are missing, the artifacts are not dropping as
+  expected and there may be file write permission issues
+* The dropped communication library is hardcoded to connect to the IP address
+`10.90.30.26`. To modify this address, update the address [here](./Comms/Comms/Comms.cpp#L125)
+then refer to [Building](#building) for rebuilding the application bundle.
+* Check a `/tmp/store` file is created that is identical to `/Users/hpotter/Library/WebKit/b2NlYW5sb3R1czIz` (compare MD5 or SHA256)
+* Check debug output of the implant by executing the Implant binary directly
+from the Terminal. Debug messages are prepended with `[IMPLANT]` for messages
+printed by the Implant binary and `[COMMS]` for messages printed by the loaded
+Communication Library. Examples:
+  * "[IMPLANT] unable to load libComms.dylib ("/tmp/store")"
+    * This would point to a failure within [loadComms](./Implant/Implant/main.cpp#L53-L99).
+    * There are most likely additional error messages above this one that may
+    imply exactly where the failure occurred:
+      * Write/read permissions
+      * Communication Library missing from current working directory
+      * Communication Library could not be opened
+  * "[IMPLANT] unable to load libComms.dylib sendRequest"
+    * This would point to a failure to load the exported `sendRequest` function
+    from the Communication Library dylib
+    * Check the symbol table for `/tmp/store` (the copied Communication Library
+    dylib) to ensure `sendRequest` exists
+    * If modifications were made:
+      * Ensure the function definitions expected within[`ClientPP::performHTTPRequest`](./Implant/Implant/ClientPP.cpp#L331)
+      match the definition in [Comms.hpp](./Comms/Comms/Comms.hpp#L43) and
+      [Comms.cpp](./Comms/Comms/Comms.cpp#L90)
+      * Ensure the `extern` keyword is used and visibility attribute is set to
+      `default` for `sendRequest`
+  * "[IMPLANT] Received unfamiliar instruction"
+    * This would point to a C2 issue in which the communications from the C2
+    are malformed, instruction command IDs are being tasked that are not within
+    the Implant's [available instruction set](#available-instructions)
+  * "[COMMS] Connection Failed"
+    * This would point to the socket being unable to connect to the intended
+    IP address of the C2 server
+  * "[COMMS] No response received from C2"
+    * This would point to a successful connection but the C2 server discarded
+    or ignored the communication from the implant. This can happen if the C2
+    server was restarted after the Implant has registered and no longer
+    recognizes follow up heartbeats from the Implant. To resolve, re-execute
+    the Implant binary
+
+**Implant LaunchAgent is not working**
+
+* Check `/Users/hpotter/Library/LaunchAgents` directory exists. If not, create
+it, [cleanup](#cleanup), then re-execute the application bundle
+* Check `/Users/hpotter/Library/LaunchAgents/com.apple.launchpad/com.apple.launchpad.plist`
+exists and contains the following:
+  ```
+  <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+        <key>Label</key>
+        <string>com.apple.launchpad</string>
+        <key>ProgramArguments</key>
+        <array>
+            <string>/Users/hpotter/Library/WebKit/com.apple.launchpad</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>KeepAlive</key>
+        <true/>
+    </dict>
+    </plist>
+  ```
+
+**Implant registered to the C2 server with a different UUID than what is listed in the [Emulation Plan](../../Emulation_Plan/OceanLotus_Scenario.md)**
+
+* The implant UUID is created from the following values:
+  * IOPlatformSerialNumber
+  * IOPlatformUUID
+  * MAC address (`ifconfig en0 | awk '/ether/{print $2}'`)
+* If the above values are different from the deployed infrastructure used in
+the Emulation Plan, the UUID for all tasking commands must be updated
+accordingly
+
+**Multiple OSX.OceanLotus Implants executed on the same host all have the same UUID**
+
+* For easy replication of the executed scenario, the implant UUID is created
+from the following values:
+  * IOPlatformSerialNumber
+  * IOPlatformUUID
+  * MAC address (`ifconfig en0 | awk '/ether/{print $2}'`)
+* For a new, random UUID to be generated with each execution of the implant,
+uncomment [this line](./Implant/Implant/ClientPP.cpp#L317) and comment out the
+[following line of code](./Implant/Implant/ClientPP.cpp#L318)
+  * This adds the output of `uuidgen` to the creation of the implant UUID
+
+**Implant command execution lists an unexpected current working directory**
+
+* It has been observed that usage of `popen` to execute commands may end up
+executing from an effective current working directory of `/` instead of the
+expected Implant binary location (within `/Users/hpotter/Library/WebKit`).
+Always use full paths for listing directories and accessing the file system
+
+**Relative path in executed command fails unexpectedly**
+
+* It has been observed that usage of `~` does not resolve properly. Similar to
+ the above issue (`popen` using `/` as its current working directory), always
+ use full paths for interacting with the file system
+
+**Implant download is missing**
+
+* The implant will write downloaded files to `/Users/hpotter/Library/WebKit/osx.download`
+or wherever `com.apple.launchpad` (Implant binary) was executed from.
+  * Look in the directory where the Implant binary exists
+  * Look `osx.download` file on the system if the location of the Implant
+  binary is unknown
+* Check the C2 server for output reporting the expected payload was not found
+  * For tasking the OSX.OceanLotus implant, the C2 server will look for
+  payloads in the `ocean-lotus/Resources/payloads/ocean-lotus` directory
 
 ### Cleanup
 
@@ -157,6 +294,11 @@ Identified executing directory as: /Users/hpotter/Downloads/
 ## For Developers 
 
 ### Dependencies
+
+To build the OSX.OceanLotus implant the following requirements must be met:
+- Building on a macOS host [Catalina 10.15.7](https://support.apple.com/en-us/HT211683) ~8.25GB
+- Full Xcode application is installed (version 12.4 compatible with Catalina 10.15)
+- Xcode developer tools are installed (used in the terminal)
 
 ### Building
 

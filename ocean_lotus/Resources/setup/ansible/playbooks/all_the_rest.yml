@@ -1,0 +1,4 @@
+---
+- import_playbook: kali.yml
+- import_playbook: linux.yml
+- import_playbook: mac.yml

@@ -19,7 +19,7 @@ bool nonroot_bashrc_persistence(void);
 //         Create a ".Desktop" file for persistence
 //    Result: Boolean value indicating success or failue of persistence mechanism created.
 //    MITRE ATT&CK Technique
-//        TODO - Technique: Desktop Entry (not documented in ATT&CK)
+//       T1547.013 - Boot or Logon Autostart Exeuction: XDG Autostart Entries
 //    CTI:
 //        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 bool nonroot_desktop_persistence(void);
@@ -58,20 +58,11 @@ bool root_persistence(void);
 //
 //    Result: Boolean value returned indicating success or failure of data being written to a file.
 //    MITRE ATT&CK Technique:
-//        TODO - in new version of ATT&CK
+//        T1559 - Inter-Process Communication
 //    CTI:
 //        https://attack.mitre.org/techniques/T1037/
 bool monitor_proc(int *pid);
 
-
-// write_to_file
-//     About:
-//         Wrapper function to write data to a given file path
-//
-//    Result: Boolean value returned indicating success or failure of data being written to a file.
-//    MITRE ATT&CK Technique: N/A
-//    CTI: N/A
-bool write_to_file(char *fpath, char *data);
 
 
 // watchdog_process_shmget
@@ -79,7 +70,7 @@ bool write_to_file(char *fpath, char *data);
 //         Intial watchdogthread, monitor shared memory for existence of other file. This function is started via a thread.
 //    Result: A watchdog thread or dedicated watchdog process is spawned
 //    MITRE ATT&CK Technique:
-//        TODO - *in new version of ATT&CK?*
+//        T1106 - Native API
 //    CTI:
 //        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 void *watchdog_process_shmget();
@@ -91,7 +82,7 @@ void *watchdog_process_shmget();
 //
 //    Result: A watchdog thread or dedicated watchdog process is spawned
 //    MITRE ATT&CK Technique:
-//        TODO - *in new version of ATT&CK?*
+//        T1106 - Native API
 //    CTI:
 //        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 void *watchdog_process_shmread();
@@ -100,7 +91,8 @@ void *watchdog_process_shmread();
 //     About:
 //         Spawn watchdog thread depending on id passed to it
 //    Result: A watchdog thread or dedicated watchdog process is spawned
-//    MITRE ATT&CK Technique: N/A
+//    MITRE ATT&CK Technique:
+//      T1106 - Native API
 //    CTI:
 //        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 void spawn_thread_watchdog(int some_id);

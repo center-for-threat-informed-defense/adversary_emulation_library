@@ -1,0 +1,9 @@
+simplehttp: 
+  host: 192.168.0.4
+  port: 8080
+  enabled: false
+oceanlotus:
+  host: 10.90.30.26
+  port: 443
+  encryption: false
+  enabled: true

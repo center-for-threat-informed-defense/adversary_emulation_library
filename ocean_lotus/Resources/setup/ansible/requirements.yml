@@ -1,0 +1,4 @@
+collections:
+  - name: ansible.windows
+  - name: ansible.posix
+  - name: community.crypto

