@@ -20,7 +20,7 @@
 //    Create file locks to indicate which file should be spawned for watchdog processes
 // Result: lock files and assocaited directories created
 // MITRE ATT&CK Techniques:
-//     TODO - In new version of ATT&CK?
+//     T1140 - Debofuscate/Deocde Files or Information
 // CTI:
 //     https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 // Other References:
@@ -99,7 +99,7 @@ void create_lock(int lock_id) {
 //    Check if a file is locked or not
 // Result: Integer value indicating if a file is locked.
 // MITRE ATT&CK Techniques:
-//     TODO - In new version of ATT&CK?
+//     T1140 - Debofuscate/Deocde Files or Information
 // CTI:
 //     https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 // Other References:
@@ -155,7 +155,7 @@ bool self_delete(char *fpath) {
 //     Obtain PID from shared memory
 // Result: char *of shared memory.
 // MITRE ATT&CK Techniques:
-//     TODO - In new version of ATT&CK?
+//     T1106 - Native API
 // CTI:
 //     https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 // Other References:
