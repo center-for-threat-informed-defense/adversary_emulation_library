@@ -7,6 +7,7 @@ This document is a quick reference for information and commands needed once your
   - [List of AWS Instances](#list-of-aws-instances)
   - [Useful Commands](#useful-commands)
     - [SSH Tunnel to AWS Mac Instance for VNC](#ssh-tunnel-to-aws-mac-instance-for-vnc)
+  - [References](#references)
 
 ## List of Active Directory Users
 
@@ -34,3 +35,8 @@ The following usernames were randomly generated.
 ### SSH Tunnel to AWS Mac Instance for VNC
 
 `ssh -L  5900:localhost:5900 -i ./oceanlotus ec2-user@MAC-IP`
+
+## References
+
+* [Infrastructure README](README.md)
+* [Terraform README](./terraform/scenario/README.md)

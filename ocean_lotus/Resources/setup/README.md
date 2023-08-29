@@ -19,6 +19,7 @@
   - [Teardown](#teardown)
   - [How To Connect Using VNC to Mac](#how-to-connect-using-vnc-to-mac)
   - [Follow On Work](#follow-on-work)
+  - [References](#references)
 
 ## Setup
 
@@ -227,3 +228,8 @@ VNC Connection to Mac
 Some items for future work are listed below:
 
 * Dynamically generating the Ansible inventory
+
+## References
+
+* [Quick Reference](REFERENCE.md)
+* [Terraform README](./terraform/scenario/README.md)
