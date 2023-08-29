@@ -123,8 +123,7 @@ bool c2_delete_file(char *fpath);
 //    About:
 //       Execute Shared Object
 //    Result: Loading and execution of Shared Objection
-//    MITRE ATT&CK Techniques: N/A
-//         TODO - in new version of ATT&CK?
+//    MITRE ATT&CK Techniques: TBD
 //    CTI:
 //        https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/
 //    Other References:
