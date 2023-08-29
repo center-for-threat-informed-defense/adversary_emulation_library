@@ -1,0 +1,9 @@
+ad_username: hpotter
+ad_password: "noax3teenohb~e"
+ad_domain: viserion.com
+ad_safe_mode_password: uuj7phaequ4Aic
+systemd_resolved:
+  DNS: "10.90.30.20"
+  Domain: "{{ ad_domain }}"
+  Cache: yes
+

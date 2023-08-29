@@ -1,0 +1,75 @@
+---
+- name: Configure Windows Domain
+  hosts: windows_server
+  gather_facts: no
+  vars_files:
+    - ../vars.yml
+
+  tasks:
+    - name: Create Windows Domain
+      microsoft.ad.domain:
+        dns_domain_name: "{{ ad_domain }}"
+        safe_mode_password: "{{ ad_safe_mode_password }}"  # Replace as appropriate with properly secured token.
+      register: domain_result
+
+    - name: Reboot Windows Server if the domain was created
+      win_reboot:
+      when: domain_result.reboot_required
+
+    - name: create a test user
+      microsoft.ad.user:
+        name: "{{ ad_username }}"
+        firstname: Hope
+        surname: Potter
+        password: "{{ ad_password }}"
+        state: present
+        password_never_expires: yes
+        groups:
+          set:
+            - Domain Admins
+            - Domain Users
+
+    - name: User 2
+      microsoft.ad.user:
+        name: rburris
+        firstname: Rolfe
+        surname: Burris
+        password: "RbP4ssw0rd"
+        state: present
+        groups:
+          set:
+            - Domain Admins
+            - Domain Users
+
+    - name: User 3
+      microsoft.ad.user:
+        name: fsewter
+        firstname: Sewter
+        surname: Sewter
+        password: "bZ1r2GGw#u9"
+        state: present
+        groups:
+          set:
+            - Domain Users
+
+    - name: User 4
+      microsoft.ad.user:
+        name: wsign
+        firstname: Webster
+        surname: Sign
+        password: "aE7tewFhxc-a"
+        state: present
+        groups:
+          set:
+            - Domain Users
+
+    - name: User 5
+      microsoft.ad.user:
+        name: dbrosio
+        firstname: Dale
+        surname: Brosio
+        password: "pN6<3twi2"
+        state: present
+        groups:
+          set:
+            - Domain Users
