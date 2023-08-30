@@ -566,7 +566,7 @@ OceanLotus downloads Rota Jakiro to the macOS host in the `/Users/hpotter/Librar
 ## Step 4 - Discovery on Linux Host
 ### 📖 Overview
 
-**Step 4 ** emulates OceanLotus executing conducting discovery on the Linux host. 
+**Step 4** emulates OceanLotus executing conducting discovery on the Linux host. 
 
 For initial collection, Rota Jakiro executes and collects the results from the `uname` syscall. Rota Jakiro sends the following information regarding the Linux host to the C2 server: Host name, Architecture, & Kernel version. Rota Jakiro then downloads and executes a shared object (mount.so file) performing discovery for mounted drives connected to the Linux host. The resulting information is saved to the `mount.txt` file. Rota Jakiro then uploads this file to the C2 server for offline analysis. 
 
@@ -755,7 +755,8 @@ OceanLotus tasks Rota Jakiro to upload the `/tmp/rota.tar.gz` file to the C2 ser
    ls -lart ./files
    ```
       
-1. Kill Rota Jakiro and give yourself a high five 🙌, mission accomplished! 💃
+1. Give yourself a high five 🙌, mission accomplished! 💃
+2. Kill Rota Jakiro 
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_exit"}'
    ```
