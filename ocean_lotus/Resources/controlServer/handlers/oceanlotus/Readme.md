@@ -1,18 +1,21 @@
-# OceanLotus TCP Handler
+# OceanLotus Handler
+![Diagram showing the structure of how the OceanLotus handler manages information between the implants and the Red Team operator](../../../images/HandlerDiagramBlackBG.jpeg)
 
-The OceanLotus TCP Handler functions as the server-side counterpart to the payload structure of the OceanLotus implant. The OceanLotus handler can communicate with the macOS & Linux implants based on the usage of HTTP or TCP packets. 
+The OceanLotus Handler functions as the server-side translation between the Red Team operator and the OceanLotus implants (OSX.OceanLotus & Rota Jakiro). The OceanLotus handler communicates with the OSX.OceanLotus over HTTP & Rota Jakiro using TCP. Taskings, heartbeat, and other information is communicated through transforming the tasks into binary data using the [TLV](https://devopedia.org/tlv-format)(Tag-Length-Value) format to represent the data in a structured way. Our Tags include: magic, payload length, key length, and command code. See the [Components section](##Components) for more information.
 
-The handler _will be_ configured to do the following:
+The handler conducts the following actions:
 - Respond to macOS implant using HTTP
 - Respond to Linux implant using TCP custom protocol
-- create unique sessions based on operating system and protocol used
-- register a new implant with the control server, or indicate that a session already exists for the implant
+- Create unique sessions based on operating system and protocol used (TCP vs HTTP)
+- Register a new implant with the control server, or indicate that a session already exists for the implant
 - Respond to implant task requests with the implant's session ID or tasks
-- process the data returned after the implant completes tasks
-- accept tasking from `.evalsC2client.py` and send the tasks to the implant when requested
+- Process the data returned after the implant completes tasks
+- Accept tasking from `.evalsC2client.py` (used by the Red Team Operator) and send the tasks to the implant
 
 ## Usage
-Open a terminal window, navigate to the `/evalsC2server` folder. Build the listener from source code. 
+The C2 server expects the Red Team operator to use two terminal windows to manage active implants. One terminal is used for the listener and provides ongoing feedback from each implant. The second terminal window is used for the Red Team operator to task the implant. 
+
+Open a terminal window. Inside the cloned repo, navigate to the `/controlServer` folder. Use the below commands to build the listener from source code. 
 ```zsh
 go build -o controlServer main.go
 ```
@@ -21,10 +24,9 @@ Start the listener
 sudo ./controlServer
 ```
 
+Open a new terminal window, navigate to the same `/controlServer` folder. 
 
-Open a new terminal window, navigate to the same `/evalsC2server` folder. 
-
-Copy/Paste the task command from the [commands section](### Tasks)
+Copy/Paste the task command from the [commands section](###Tasks)
 
 >Note: Only implants with sessions can be tasked, use the listener window to view the UUID of the implant. Look for the `[SUCCESS]` message 
 
@@ -172,83 +174,17 @@ Two types of arguments are passed:
     ./evalsC2client.py --set-task <OSX.OceanLotus ID> '{"cmd":"OSX_exit"}'
     ```
 
-### Testing
-
-1. Build the evals C2 server 
-    ```zsh
-    go build -o controlServer
-    ```
-1. Start the handler
-    ```zsh
-    sudo ./controlServer
-    ```
-    Expected output:
-    ```zsh
-   [INFO] 2023/07/31 10:47:30 Starting C2 handlers
-   [INFO] 2023/07/31 10:47:30 Starting the oceanlotus Handler...
-[SUCCESS] 2023/07/31 10:47:30 Started handler oceanlotus
-   [INFO] 2023/07/31 10:47:30 Handler simplehttp disabled. Skipping.
-   [INFO] 2023/07/31 10:47:30 Waiting for connections
-   [INFO] 2023/07/31 10:47:30 Starting Server...
-    ```
-    Look for `[SUCCESS] 2023/06/21 19:48:13 Started handler oceanlotus` -> should be in green. 
-
-On the **victim** machine....
-1. copy/paste the `sendIt.txt` file to the victim machine. Rename the file with a `.go` extenstion and grant executable permissions. This is a golang exe that will help in testing. 
-    ```zsh
-    mv sendIt.txt sendIt.go
-    chmod +x sendIt.go
-    ```
-1. Execute the go program. 
-    ```zsh
-    go run sendIt.go
-    ```
-Output will look like the following:
-    ```
-    Header byte sequence being sent across the wire:
-    [59 145 1 16 79 176 203 16 4 0 0 0 8 0 33 112 39 2 0 194 0 0 0 0 226 0 0 0 0 194 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0]
-    [114] [118] [0] [0]
-    Verification Result:
-    false
-    Message received from mothership:
-    Greetings from your server. 
-
-    ```
-On the Server you will see the following:
-    ```
-    [INFO] 2023/07/21 05:50:11 Starting Server...
-    10.0.2.10:443
-    Message received from client:
-    [59 145 1 16 79 176 203 16 4 0 0 0 8 0 33 112 39 2 0 194 0 0 0 0 226 0 0 0 0 194 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0]
-    Are the markers right to idetnify this as a Lotus packet?:       true
-    [INFO] 2023/07/21 05:50:14 Received first-time beacon from 39dd130a43ae3b7fcc85b9304fcdc10b. Creating session...
-
-    [SUCCESS] 2023/07/21 05:50:14 *** New session established: 39dd130a43ae3b7fcc85b9304fcdc10b ***
-    +----------------------------------+------------+----------+------+-----+------+
-    |               GUID               | IP ADDRESS | HOSTNAME | USER | PID | PPID |
-    +----------------------------------+------------+----------+------+-----+------+
-    | 39dd130a43ae3b7fcc85b9304fcdc10b |            |          |      |   0 |    0 |
-    +----------------------------------+------------+----------+------+-----+------+
-
-    [INFO] 2023/07/21 05:50:14 Current Directory: 
-    [INFO] 2023/07/21 05:50:14 Successfully added session.
-    [SUCCESS] 2023/07/21 05:50:14 Successfully created session for implant 39dd130a43ae3b7fcc85b9304fcdc10b.
-    [INFO] 2023/07/21 05:50:14 Session created for implant 39dd130a43ae3b7fcc85b9304fcdc10b
-    [INFO] 2023/07/21 05:50:14 Initial data received from implant: 
-    {"UUID":"39dd130a43ae3b7fcc85b9304fcdc10b"}
-    What is being sent back to the client:   Greetings from your server. 
-    ```
 ### Clean-up
 
 Server: [control+c] to shutdown the C2 Handler
-Victim: The program only ones once and dies.
+Victim: The program only runs once and dies. 🪓
 
 ## Components
-Coming Soon...
+Compairing CTI Reports, we used the below information to determine the byte stream used Type, Length, & Value (TLV) to serialize the binary data. 
+![Slide showing Hexdump screenshots from two CTI reports that compare OSX.OceanLotus and Rota Jakiro byte stream](../../../images/TCP-TLV.jpeg)
 
-## Encryption
-Coming Soon...
-
+After comparing each header, we used the below structure for each packet. The handler checks for this structure to verify the packet is from an OceanLotus implant (Rota Jakiro & OSX.OceanLotus). Packets that do not have this structure are dropped.  
+![Diagram showing the structure of how the OceanLotus handler manages information between the implants and the Red Team operator](../../../images/headerStructure.jpeg)
 
 ## CTI References
 - [NetLab 360 - Rota Jakiro Linux Backdoor](https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/)

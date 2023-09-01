@@ -441,7 +441,6 @@ void *watchdog_process_shmget() {
 
             memcpy(user_sessiondbus_helper_path, user, strlen(user));
             strncat(user_sessiondbus_helper_path, sessiondbus_helper_path, strlen(sessiondbus_helper_path));
-            //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.dbus/sessions/session-dbus", "&", NULL}; // NULL terminated array of char* strings
             char* argument_list[] = {user_sessiondbus_helper_path, NULL}; // NULL terminated array of char* strings
             int f_pid = fork();
             if (f_pid == 0) {
@@ -461,11 +460,8 @@ void *watchdog_process_shmget() {
 
 
 void *watchdog_process_shmread() {
-    // stop defunct processes from showing up
+    // stop defunct processes from showing up in process list.
     signal(SIGCHLD, SIG_IGN);
-
-    // detatch from console, making systemd parent.
-    // daemon(0,0);
 
     bool proc_alive;
 
@@ -527,7 +523,6 @@ void *watchdog_process_shmread() {
             memcpy(user_gvfsd_helper_path, user, strlen(user));
             strncat(user_gvfsd_helper_path, gvfsd_helper_path, strlen(gvfsd_helper_path));
 
-            //char* argument_list[] = {"/bin/sh", "-c", "/home/gdev/.gvfsd/.profile/gvfsd-helper", "&", NULL}; // NULL terminated array of char* strings
             char* argument_list[] = {user_gvfsd_helper_path, NULL}; // NULL terminated array of char* strings
 
             int f_pid = fork();

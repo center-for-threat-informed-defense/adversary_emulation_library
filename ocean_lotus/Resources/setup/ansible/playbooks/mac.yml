@@ -1,0 +1,48 @@
+---
+- name: configure mac host
+  hosts: mac_server
+  vars:
+    - user_to_create: hpotter
+    - ubuntu_ip: "10.90.30.7"
+  vars_files:
+    - ../vars.yml
+
+  tasks:
+    - name: Set DNS server
+      ansible.builtin.command:
+        cmd: "networksetup -setdnsservers \"Thunderbolt Ethernet Slot  1\" \"10.90.30.20\""
+      become: yes
+
+    - name: Enable VNC on Mac
+      ansible.builtin.command:
+        cmd: "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -restart -agent -privs -all"
+      become: yes
+
+    - name: Join domain
+      ansible.builtin.command:
+        cmd: |
+          dsconfigad -force -add 'viserion.com' -computer 10.90.30.20
+          -username hpotter -password 'noax3teenohb~e'
+          -localhome enable
+          -groups 'Domain Admins' -shell /bin/bash
+      become: yes
+
+    - name: Force home directory creation
+      ansible.builtin.command:
+        cmd: "/usr/sbin/createhomedir -c -u {{ user_to_create|quote }}"
+      become: yes
+
+    - name: Ensure ssh directory exists
+      ansible.builtin.file:
+        path: "/Users/{{ user_to_create|quote }}/.ssh"
+        state: directory
+        mode: '0700'
+        owner: "{{ user_to_create }}"
+        group: "{{ ansible_real_group_id }}"
+      become: yes
+
+    - name: Create known_hosts file for new user
+      ansible.builtin.command:
+        cmd: "ssh-keyscan -H {{ ubuntu_ip }} >> ~/.ssh/known_hosts"
+      become: yes
+      become_user: "{{ user_to_create|quote }}"

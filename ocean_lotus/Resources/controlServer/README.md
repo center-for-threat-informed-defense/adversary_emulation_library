@@ -6,6 +6,14 @@ The Control Server provides features for generating implant stagers, controlling
 
 The Control Server is backed with a REST API to support automation and integration with other tools.
 
+## Handlers Contained
+
+Click the links below for usage and implementation information specific to each handler.
+
+| Handler | Description |
+| ------- | ----------- |
+| [oceanlotus](./handlers/oceanlotus) | C2 handler for both the emulated OSX.OceanLotus and RotaJakiro implants |
+
 ## Usage
 This repository is meant to act as a submodule within other adversary emulation or ATT&CK evaluation repositories. To use this control server repository, you may either run the binary as is or reference the entire repository as a submodule.
 
