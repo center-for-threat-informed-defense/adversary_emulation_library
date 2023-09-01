@@ -293,7 +293,7 @@ Identified executing directory as: /Users/hpotter/Downloads/
 
 ## For Developers 
 
-### Dependencies
+### Development Dependencies
 
 To build the OSX.OceanLotus implant the following requirements must be met:
 - Building on a macOS host [Catalina 10.15.7](https://support.apple.com/en-us/HT211683) ~8.25GB
@@ -303,6 +303,9 @@ To build the OSX.OceanLotus implant the following requirements must be met:
 ### Building
 
 **Build All**
+
+The dropped communication library is hardcoded to connect to the IP address
+`10.90.30.26`. To modify this address, update the address [here](./Comms/Comms/Comms.cpp#L125) prior to building. 
 
 To build all, run the build script from the OSX.OceanLotus directory:
 ```
