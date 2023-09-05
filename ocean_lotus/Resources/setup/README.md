@@ -65,9 +65,11 @@ You will need to know your public IP address for the next steps. You can get it 
 
 ## Terraform
 
-Terraform is used to initialize the AWS infrastructure. 
+Terraform is used to initialize the AWS infrastructure.
 
 <img src="../images/AwsDiagram.png" alt="OceanLotus AWS Diagram" style="zoom: 50%;" />
+
+**NOTE**: You may be prompted to accept the Terms and subscribe for the Kali image in the Marketplace. If prompted, follow the URL provided in the terminal and click the Subscribe button. Once the process completes, re-run the Terraform plan and apply commands below.
 
 1. Create a Terraform settings file from the included template. 
    1. `cp -a oceanlotus.auto.tfvars.example oceanlotus.auto.tfvars`
