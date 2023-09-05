@@ -1,10 +1,10 @@
-output "windows_ad_ip" {
+output "vhagar_windows_ad_ip" {
   value = aws_instance.vhagar.public_ip
 }
-output "mac_ip" {
+output "dreamfyre_mac_ip" {
   value = aws_instance.dreamfyre.public_ip
 }
-output "ubuntu_ip" {
+output "drogon_ubuntu_ip" {
   value = aws_instance.drogon.public_ip
 }
 output "kali_ip" {

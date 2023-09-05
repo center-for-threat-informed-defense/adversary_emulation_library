@@ -104,7 +104,7 @@ resource "aws_instance" "drogon" {
 
 ## Windows Server
 data "template_file" "user_data" {
-  template = file("${path.module}/files/winrm.ps1")
+  template = file("${path.module}/files/winrm.txt")
 }
 
 resource "aws_instance" "vhagar" {
