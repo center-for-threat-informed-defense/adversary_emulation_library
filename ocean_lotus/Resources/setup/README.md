@@ -61,13 +61,15 @@ After the script completes, you will have a new SSH private and public key pair,
 
 ### Get your Public IP
 
-You will need to know your public IP address for the next steps. You can get it by searching Google for "what is my ip", or running `curl ifconfig.me` from the command line on a system with curl installed. For the rest of this document, your public IP will be referred to as `PUBLIC_IP`, replace the variable `PUBLIC_IP` with your actual public IP address.
+You will need to know your public IP address for the next steps. You can get it by searching Google for "what is my ip", or running `curl ifconfig.me` from the command line on a system with curl installed. For the rest of this document, your public IP will be referred to as `PUBLIC_IP`, replace the variable `PUBLIC_IP` with your actual public IP address, in CIDR notation. For example, append `/32` to specify a single IP (e.g. `4.3.2.1/32`.)
 
 ## Terraform
 
-Terraform is used to initialize the AWS infrastructure. 
+Terraform is used to initialize the AWS infrastructure.
 
 <img src="../images/AwsDiagram.png" alt="OceanLotus AWS Diagram" style="zoom: 50%;" />
+
+**NOTE**: You may be prompted to accept the Terms and subscribe for the Kali image in the Marketplace. If prompted, follow the URL provided in the terminal and click the Subscribe button. Once the process completes, re-run the Terraform plan and apply commands below.
 
 1. Create a Terraform settings file from the included template. 
    1. `cp -a oceanlotus.auto.tfvars.example oceanlotus.auto.tfvars`
@@ -96,6 +98,8 @@ Terraform is used to initialize the AWS infrastructure.
 The Windows and Ubuntu hosts are configured with Ansible. The AWS Mac instance must be configured manually. The steps for configuring the AWS Mac instance are listed in the next section. 
 
 **IMPORTANT**: All Ansible commands assume you are in the `Resources/setup/ansible` directory. Please change to the `Resources/setup/ansible` directory if necessary.
+
+**IMPORTANT**: If you are running Ansible on a Mac, and encounter an error `ERROR! A worker was found in a dead state` when running Ansible, run `export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES` from the command line prior to running any Ansible commands to workaround the bug. This is a known [upstream Ansible issue](https://github.com/ansible/ansible/issues/49207).
 
 ### Install Ansible dependencies
 

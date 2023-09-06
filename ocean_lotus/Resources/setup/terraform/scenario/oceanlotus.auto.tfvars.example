@@ -4,11 +4,13 @@
 
 # Put your public ip address(es) in the ip-whitelist list
 # Whitelist Examples
-## whitelist a single IP
-# ip-whitelist = ["123.45.67.899"]
+## whitelist a single IP 
+## IMPORTANT: USE CIDR NOTATION. 
+## For a single IP, use /32. 
+# ip-whitelist = ["123.45.67.899/32"]
 
 ## Whitelist multiple IPs
-# ip-whitelist = ["123.45.67.899","234.456.78.999"]
+# ip-whitelist = ["123.45.67.899/32","234.456.78.999/32"]
 
 ## Whitelist CIDR range
 # ip-whitelist = ["123.45.678.0/24"]
