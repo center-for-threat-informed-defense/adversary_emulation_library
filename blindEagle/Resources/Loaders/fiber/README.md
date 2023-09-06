@@ -61,6 +61,10 @@ PS C:\<path>\<to>\birdsofprey\Resources\fiber> 'C:\Program Files | [x86]\Microso
 
 ## Cleanup
 
+The `cleanup.ps1` script is located in the [cleanup](../../Cleanup/) section of this repo. It can be used to remove artifacts of persistence left by `fiber.dll`
+
+`cleanup.ps1` does the following actions:
+
 1) delete `OneDrive.vbs` from `C:\Windows\Temp`
 
 2) delete `notepad.lnk` from `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`
