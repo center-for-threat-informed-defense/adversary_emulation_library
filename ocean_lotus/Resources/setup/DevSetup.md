@@ -3,18 +3,30 @@
 Below are steps that will assist in setting up a macOS Catalina development environment.
 
 - [Setting up Dev Environment](#setting-up-dev-environment)
-  - [Create a macOS Catalina Virtual Machine (local)](#create-a-macos-catalina-virtual-machine-local)
-    - [How to Download the macOS Catalina Installer and Create an ISO File](#how-to-download-the-macos-catalina-installer-and-create-an-iso-file)
-    - [Use the ISO to Create a Virtual Machine](#use-the-iso-to-create-a-virtual-machine)
+  - [Use AWS macOS Virtual Machine for Development (remote)](#use-aws-macos-virtual-machine-for-development-remote)
+  - [Use local Virtual Machine for Development (local)](#use-local-virtual-machine-for-development-local)
+    - [Create a macOS Catalina Virtual Machine (local)](#create-a-macos-catalina-virtual-machine-local)
+      - [How to Download the macOS Catalina Installer and Create an ISO File](#how-to-download-the-macos-catalina-installer-and-create-an-iso-file)
+      - [Use the ISO to Create a Virtual Machine](#use-the-iso-to-create-a-virtual-machine)
   - [Install Xcode](#install-xcode)
 
-## Create a macOS Catalina Virtual Machine (local)
+
+
+## Use AWS macOS Virtual Machine for Development (remote)
+
+Skip to [Install Xcode](#install-xcode) section.
+
+## Use local Virtual Machine for Development (local)
+
+Use the following section to create a local development virtual machine.
+
+### Create a macOS Catalina Virtual Machine (local)
 
 **NOTE**: You will need access to an x86/Intel system running macOS.
 
 You will first need to create a macOS installer ISO, which will be used as the installer to create a virtual machine.
 
-### How to Download the macOS Catalina Installer and Create an ISO File
+#### How to Download the macOS Catalina Installer and Create an ISO File
 
 This process will take an installer for macOS and create an ISO file from it which can be booted or used as a typical disk image file.
 
@@ -44,7 +56,7 @@ This process will take an installer for macOS and create an ISO file from it whi
 
     `mv ~/Desktop/Catalina.cdr ~/Desktop/Catalina.iso`
 
-### Use the ISO to Create a Virtual Machine
+#### Use the ISO to Create a Virtual Machine
 
 Follow the directions for your particular hypervisor to use the ISO to create and install macOS on a virtual machine. Directions for VMware and Parallels are listed below.
 
