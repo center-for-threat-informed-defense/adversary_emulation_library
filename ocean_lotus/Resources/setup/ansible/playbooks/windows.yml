@@ -10,6 +10,9 @@
       microsoft.ad.domain:
         dns_domain_name: "{{ ad_domain }}"
         safe_mode_password: "{{ ad_safe_mode_password }}"  # Replace as appropriate with properly secured token.
+        create_dns_delegation: yes
+        install_dns: yes
+        reboot: yes
       register: domain_result
 
     - name: Reboot Windows Server if the domain was created

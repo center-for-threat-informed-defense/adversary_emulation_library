@@ -65,6 +65,25 @@ resource "aws_security_group" "oc-winrm-sg" {
   tags = merge({ "Name" : "${var.unique_prefix} OceanLotus winrm sg" }, local.default_tags)
 }
 
+resource "aws_security_group" "oc-lan-sg" {
+  name        = "${var.unique_prefix}-oc-lan-sg"
+  description = "OceanLotus-${var.unique_prefix}: Allows lan traffic to instances"
+  vpc_id      = aws_vpc.oc-vpc.id
+  ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [aws_security_group.oc-ssh-sg.id]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [aws_security_group.oc-ssh-sg.id]
+  }
+  tags = merge({ "Name" : "${var.unique_prefix} OceanLotus lan sg" }, local.default_tags)
+}
+
 
 ## Kali boxes
 resource "aws_instance" "kali1" {
@@ -72,7 +91,7 @@ resource "aws_instance" "kali1" {
   instance_type               = local.aws-vm-size-medium
   key_name                    = aws_key_pair.oceanlotuskey.key_name
   subnet_id                   = aws_subnet.oc-pub-subnet-1.id
-  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id]
+  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id, aws_security_group.oc-lan-sg.id]
   private_ip                  = local.kali1-private-ip
   associate_public_ip_address = true
   lifecycle {
@@ -90,7 +109,7 @@ resource "aws_instance" "drogon" {
   instance_type               = local.aws-vm-size-medium
   key_name                    = aws_key_pair.oceanlotuskey.key_name
   subnet_id                   = aws_subnet.oc-pub-subnet-1.id
-  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id]
+  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id, aws_security_group.oc-lan-sg.id]
   private_ip                  = local.drogon-private-ip
   associate_public_ip_address = true
   lifecycle {
@@ -112,7 +131,7 @@ resource "aws_instance" "vhagar" {
   instance_type               = local.aws-vm-size-medium
   key_name                    = aws_key_pair.oceanlotuskey.key_name # aws only supports RSA keys for this attribute
   subnet_id                   = aws_subnet.oc-pub-subnet-1.id
-  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id, aws_security_group.oc-rdp-sg.id, aws_security_group.oc-winrm-sg.id]
+  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id, aws_security_group.oc-rdp-sg.id, aws_security_group.oc-winrm-sg.id, aws_security_group.oc-lan-sg.id]
   get_password_data           = true
   user_data_replace_on_change = false
   user_data                   = data.template_file.user_data.rendered
@@ -145,7 +164,7 @@ resource "aws_instance" "dreamfyre" {
   instance_type               = local.mac-ec2-host-type
   key_name                    = aws_key_pair.oceanlotuskey.key_name
   subnet_id                   = aws_subnet.oc-pub-subnet-1.id
-  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id]
+  vpc_security_group_ids      = [aws_security_group.oc-ssh-sg.id, aws_security_group.oc-lan-sg.id]
   private_ip                  = local.dreamfyre-private-ip
   associate_public_ip_address = true
 

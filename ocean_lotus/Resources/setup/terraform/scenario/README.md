@@ -29,6 +29,7 @@ No modules.
 | [aws_key_pair.oceanlotuskey](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [aws_route_table.oc-pub-subnet-rt](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table_association.oc-pub-subnet-1-ra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_security_group.oc-lan-sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.oc-rdp-sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.oc-ssh-sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.oc-winrm-sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
@@ -61,8 +62,8 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_Windows_Admin_Password"></a> [Windows\_Admin\_Password](#output\_Windows\_Admin\_Password) | n/a |
+| <a name="output_dreamfyre_mac_ip"></a> [dreamfyre\_mac\_ip](#output\_dreamfyre\_mac\_ip) | n/a |
+| <a name="output_drogon_ubuntu_ip"></a> [drogon\_ubuntu\_ip](#output\_drogon\_ubuntu\_ip) | n/a |
 | <a name="output_kali_ip"></a> [kali\_ip](#output\_kali\_ip) | n/a |
-| <a name="output_mac_ip"></a> [mac\_ip](#output\_mac\_ip) | n/a |
-| <a name="output_ubuntu_ip"></a> [ubuntu\_ip](#output\_ubuntu\_ip) | n/a |
-| <a name="output_windows_ad_ip"></a> [windows\_ad\_ip](#output\_windows\_ad\_ip) | n/a |
+| <a name="output_vhagar_windows_ad_ip"></a> [vhagar\_windows\_ad\_ip](#output\_vhagar\_windows\_ad\_ip) | n/a |
 <!-- END_TF_DOCS -->
