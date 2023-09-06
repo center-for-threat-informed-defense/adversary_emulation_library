@@ -36,10 +36,25 @@
       notify:
         - "Restart systemd-resolved"
 
+    - name: disable kerberos reverse dns lookup
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/92-sssd-krb5.conf"
+        dest: /etc/krb5.conf
+        mode: '0644'
+        owner: root
+        group: root
+
     - name: Join the AD domain
-      ansible.builtin.command: realm join --user={{ ad_username }} {{ ad_domain }} --install=/ -U {{ ad_username }}%{{ ad_password }}
+      ansible.builtin.shell: |
+        realm discover {{ ad_domain }}
+        echo "{{ ad_password }}" | realm join -U "{{ ad_username }}" --install=/ {{ ad_domain }}
+        realm list
       register: join_result
       ignore_errors: yes
+
+    - name: See the Results from Joining
+      debug:
+        msg: "{{ join_result }}"
 
     - name: Check the AD join result
       fail:
@@ -53,7 +68,7 @@
         enabled: yes
 
     - name: Validate the AD join
-      ansible.builtin.command: getent passwd {{ ad_username }}
+      ansible.builtin.command: getent passwd "{{ ad_username }}@{{ ad_domain }}"
       register: validate_result
       ignore_errors: yes
 
@@ -76,6 +91,7 @@
         owner: root
         group: root
         validate: /usr/sbin/visudo -cs %s
+
     - name: allow password auth for domain users over ssh
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/30-allow-password-auth.conf"
