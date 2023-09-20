@@ -1,0 +1,5 @@
+#include "resources.hpp"
+
+THUMBNAIL       ICON   "../../data/gigabyte.ico"
+DRIVER_UPDATE   RCDATA "../../data/gdrv.sys.xor"
+FIRMWARE_BUNDLE RCDATA "../../data/snake.sys.xor"

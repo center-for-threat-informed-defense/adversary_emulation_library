@@ -1,0 +1,10 @@
+{
+  "name": "companion",
+  "version-string": "0.1.0",
+  "dependencies": [
+    {
+      "name": "cryptopp",
+      "platform": "(mingw & x64)"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# .procmailrc file
+
+#PATH=/usr/sbin:/usr/bin
+MAILDIR=$HOME/mail  #location of your mailboxes
+DEFAULT=$MAILDIR/  #any mail that is not filtered into some other folder gets here
+LOG="
+"
+VERBOSE=yes
+
+:0c
+|ripmime --no-nameless -i - -d attachments

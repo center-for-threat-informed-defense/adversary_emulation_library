@@ -1,0 +1,28 @@
+# contents of /etc/postfix/main.cf
+
+alias_database = hash:/etc/aliases
+alias_maps = hash:/etc/aliases
+append_dot_mydomain = no
+biff = no
+compatibility_level = 2
+inet_interfaces = all
+inet_protocols = all
+mailbox_command = procmail
+mailbox_size_limit = 0
+mydestination = $myhostname, stamp.innovationmail.net, localhost.innovationmail.net, , localhost
+myhostname = stamp.innovationmail.net
+mynetworks = 10.0.0.0/8 91.0.0.0/8 176.0.0.0/8
+myorigin = /etc/mailname
+readme_directory = no
+recipient_delimiter = +
+relayhost =
+smtp_tls_CApath = /etc/ssl/certs
+smtp_tls_security_level = may
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file = /etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_tls_security_level = may
+virtual_alias_domains = innovationmail.net
+virtual_alias_maps = hash:/etc/postfix/virtual

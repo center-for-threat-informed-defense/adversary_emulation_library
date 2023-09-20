@@ -1,0 +1,13 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "installer.exe (src\\installer.exe)",
+      "name": "installer.exe (src\\installer.exe)",
+      "args": [ "--leak" ]
+    }
+  ]
+}

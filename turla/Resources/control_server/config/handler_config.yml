@@ -1,0 +1,26 @@
+snakehttp:
+  host: 10.0.2.7
+  port: 8080
+  enabled: false
+carbonhttp:
+  host: 10.0.2.8
+  port: 80
+  enabled: false
+lightneuron:
+  host: "smtp.mail.local"
+  port: 25
+  mailFrom: ""
+  username: ""
+  password: ""
+  image_file_path: ""
+  watch_dir_path: ""
+  recipientFilePath: ""
+  encryption: true
+  enabled: true
+epic:
+  host: 10.0.2.8
+  port: 8080
+  cert_file: ""
+  key_file: ""
+  use_https: false
+  enabled: true

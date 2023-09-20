@@ -1,0 +1,22 @@
+snakehttp:
+  host: 176.59.15.44
+  port: 8083
+  enabled: true
+lightneuron:
+  host: stamp.innovationmail.net
+  port: 25
+  mailFrom: noreply@innovationmail.net
+  username: "dev"
+  password: "DevPass12345"
+  image_file_path: "handlers/lightneuron/snake.jpg"
+  watch_dir_path: "/home/cradwell/mail/attachments"
+  recipient: "info@nk.local"
+  encryption: true
+  enabled: true
+epic:
+  host: 176.59.15.44
+  port: 8080
+  cert_file: "/etc/ssl/certs/ssl-traffic.pem"
+  key_file: "/etc/ssl/private/ssl-traffic.key"
+  use_https: true
+  enabled: true

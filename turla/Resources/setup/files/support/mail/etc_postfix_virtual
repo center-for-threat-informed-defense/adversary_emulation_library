@@ -1,0 +1,2 @@
+# contents of /etc/postfix/virtual
+@innovationmail.net cradwell@notslowmail.com

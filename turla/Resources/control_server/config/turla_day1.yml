@@ -1,0 +1,11 @@
+carbonhttp:
+  host: 176.59.15.33
+  port: 8082
+  enabled: true
+epic:
+  host: 176.59.15.33
+  port: 8080
+  cert_file: ""
+  key_file: ""
+  use_https: false
+  enabled: true

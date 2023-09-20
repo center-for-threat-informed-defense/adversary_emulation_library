@@ -1,0 +1,19 @@
+{
+  "CN": "Super Certs Intermediate CA",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C":  "GB",
+      "L":  "Manchester",
+      "O":  "Super Certs",
+      "OU": "Super Certs Intermediate CA",
+      "ST": "England"
+    }
+  ],
+  "ca": {
+    "expiry": "35040h"
+  }
+}
