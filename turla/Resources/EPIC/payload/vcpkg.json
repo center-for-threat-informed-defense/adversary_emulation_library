@@ -1,0 +1,11 @@
+{
+  "name": "payload",
+  "version-string": "0.1.0",
+  "dependencies": [
+    {
+      "name": "cryptopp",
+      "platform": "(windows & x64 & static)"
+    },
+    "bzip2"
+  ]
+}

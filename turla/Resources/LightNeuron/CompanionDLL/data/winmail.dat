@@ -1,0 +1,6 @@
+EMAIL_LOG_FILE: C:\Windows\ServiceProfiles\NetworkService\AppData\Local\Temp\tmp4C4E
+SIGNATURE_KEY: pwndsnek
+RULE_FILE: C:\Windows\ServiceProfiles\NetworkService\AppData\Local\Temp\msmdat.xml
+FROM: noreply@nk.local
+SUBJECT: Confirmation
+TO: info@innovationmail.net

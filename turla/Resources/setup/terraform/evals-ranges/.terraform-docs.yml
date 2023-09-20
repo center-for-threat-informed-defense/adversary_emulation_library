@@ -1,0 +1,13 @@
+
+formatter: "" # this is required
+
+  #recursive:
+  #enabled: true
+  #path: . 
+output:
+  file: README.md
+  mode: inject
+  template: |-
+    <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+    {{ .Content }}
+    <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

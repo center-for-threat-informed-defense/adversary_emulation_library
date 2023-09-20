@@ -1,0 +1,20 @@
+{
+  "CN": "svobodaukrayin.ua",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+  {
+    "C": "UA",
+    "L": "Kyiv",
+    "O": "Svoboda Ukrayin",
+    "OU": "Svoboda Ukrayin",
+    "ST": "Kyiv Oblast"
+  }
+  ],
+  "hosts": [
+    "svobodaukrayin.ua",
+    "www.svobodaukrayin.ua"
+  ]
+}

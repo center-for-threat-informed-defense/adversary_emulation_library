@@ -1,0 +1,4 @@
+#define THUMBNAIL       1
+#define DRIVER_UPDATE   100
+#define FIRMWARE_BUNDLE 200
+

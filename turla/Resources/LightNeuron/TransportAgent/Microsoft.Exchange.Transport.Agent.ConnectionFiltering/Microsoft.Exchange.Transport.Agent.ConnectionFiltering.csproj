@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+    <Nullable>enable</Nullable>
+	<LangVersion>preview</LangVersion>
+	<PlatformTarget>x64</PlatformTarget>
+	<BaseOutputPath>bin\</BaseOutputPath>
+	<ErrorReport>none</ErrorReport>
+	<NoWin32Manifest>true</NoWin32Manifest>	  
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <Reference Include="Microsoft.Exchange.Data.Common">
+		  <HintPath>Microsoft.Exchange.Data.Common.dll</HintPath>
+		  <SpecificVersion>False</SpecificVersion>
+	  </Reference>
+	  <Reference Include="Microsoft.Exchange.Data.Transport">
+		  <HintPath>Microsoft.Exchange.Data.Transport.dll</HintPath>
+		  <SpecificVersion>False</SpecificVersion>
+	  </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+	 <Compile Include="ConnectionFilteringAgent.cs" />
+  </ItemGroup>
+
+</Project>

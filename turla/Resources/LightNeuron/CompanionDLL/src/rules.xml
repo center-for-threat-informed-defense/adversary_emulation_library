@@ -1,0 +1,27 @@
+<!-- Groups: 
+Group attribute is used as an AND conditional; 
+The number is used to identify what other rules it grouped with;
+eg. All rules with group="1" will be grouped into an AND;
+All rules without a group should be considered as OR.-->
+<!-- Conditions: 
+"match" requires the provided attribute to match the email exactly.
+"contains" will trigger on an emali that contains the attribute text. eg. email=".com" will match ever email that has .com as the TLD. -->
+<!-- Atrributes:
+"email" pretains to the email recipient associated with a given email.
+"subject" is the subject of the given email. 
+"include" WIP; not yet implemented -->
+
+<rules>
+    <command>
+        <rule condition="match" email="tet@g.com" include="1" />
+        <rule condition="match" email="javoss" include="1" />
+        <rule condition="contains" email="1234" include="1" />
+        <rule condition="contains" email="red" group="1" include="1" /> 
+        <rule condition="contains" subject="Test" group="1" include="1" />
+    </command>
+    <zip>
+        <rule condition="match" email="test@g.com" include="1" />
+        <rule condition="contains" email="g.com" include="1" />
+        <rule condition="contains" email="reddev.local" include="1" />
+    </zip>
+</rules>
