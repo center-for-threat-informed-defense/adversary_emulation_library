@@ -45,6 +45,7 @@ loadComms
     MITRE ATT&CK Techniques:
         T1129: Shared Modules - uses dynamic libraries to modularize functionality (.dylib files)
     CTI:
+        https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/
         https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
     References:
         https://stackoverflow.com/q/43184544
