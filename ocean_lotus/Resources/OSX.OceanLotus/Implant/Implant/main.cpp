@@ -43,6 +43,7 @@ loadComms
     Result:
         Returns pointer to the opened libComms dylib
     MITRE ATT&CK Techniques:
+        T1129: Shared Modules - uses dynamic libraries to modularize functionality (.dylib files)
     CTI:
         https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
     References:
