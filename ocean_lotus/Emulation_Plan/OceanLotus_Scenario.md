@@ -717,8 +717,9 @@ Rota Jakiro confirms the target file was created.
 
    | Red Team Activity | Source Code Link | ATT&CK Technique | Relevant CTI Report |
    | ----------------- | ---------------- | ---------------- | ------------------- |
-   | Rota executes a Shared Object to create a staging folder | [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1074.001 Data Staged: Local Data Staging | N/A | 
-   | Rota executes a Shared Object for automated collection| [automated collection](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1119 Automated Collection | N/A | 
+   | Rota executes a Shared Object to create a staging folder | [hidden directory creation](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1074.001 Data Staged: Local Data Staging</p>T1083 File and Directory Discovery| https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/ | 
+   | Rota executes a Shared Object for automated collection| [automated collection](https://github.com/center-for-threat-informed-defense/ocean-lotus/blob/rota-docs-update/Resources/rota/src/so_pdf.c) | T1119 Automated Collection</p>T1560.001 Archive Collected Data: Archive via Utility | https://blog.netlab.360.com/stealth_rotajakiro_backdoor_en/</p>https://unit42.paloaltonetworks.com/unit42-new-improved-macos-backdoor-oceanlotus/ | 
+
 
  </details>
 <br>
