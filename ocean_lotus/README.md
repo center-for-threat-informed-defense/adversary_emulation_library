@@ -84,7 +84,7 @@ This content is only to be used with appropriate prior, explicit authorization f
 
 ## Notice
 
-Copyright 2023 MITRE Engenuity. Approved for public release. Document number REPLACE_WITH_PRS_NUMBER
+Copyright 2023 MITRE Engenuity. Approved for public release. Document number CT0084
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
 file except in compliance with the License. You may obtain a copy of the License [here](http://www.apache.org/licenses/LICENSE-2.0).
