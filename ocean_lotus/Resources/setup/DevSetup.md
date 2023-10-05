@@ -2,13 +2,12 @@
 
 Below are steps that will assist in setting up a macOS Catalina development environment.
 
-- [Setting up Dev Environment](#setting-up-dev-environment)
-  - [Use AWS macOS Virtual Machine for Development (remote)](#use-aws-macos-virtual-machine-for-development-remote)
-  - [Use local Virtual Machine for Development (local)](#use-local-virtual-machine-for-development-local)
-    - [Create a macOS Catalina Virtual Machine (local)](#create-a-macos-catalina-virtual-machine-local)
-      - [How to Download the macOS Catalina Installer and Create an ISO File](#how-to-download-the-macos-catalina-installer-and-create-an-iso-file)
-      - [Use the ISO to Create a Virtual Machine](#use-the-iso-to-create-a-virtual-machine)
-  - [Install Xcode](#install-xcode)
+- [Use AWS macOS Virtual Machine for Development (remote)](#use-aws-macos-virtual-machine-for-development-remote)
+- [Use local Virtual Machine for Development (local)](#use-local-virtual-machine-for-development-local)
+  - [Create a macOS Catalina Virtual Machine (local)](#create-a-macos-catalina-virtual-machine-local)
+    - [How to Download the macOS Catalina Installer and Create an ISO File](#how-to-download-the-macos-catalina-installer-and-create-an-iso-file)
+    - [Use the ISO to Create a Virtual Machine](#use-the-iso-to-create-a-virtual-machine)
+- [Install Xcode](#install-xcode)
 
 
 
@@ -30,7 +29,7 @@ You will first need to create a macOS installer ISO, which will be used as the i
 
 This process will take an installer for macOS and create an ISO file from it which can be booted or used as a typical disk image file.
 
-1. First, [download the MacOS Catalina installer](https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12) from the Mac App Store, When the “Install MacOS Catalina.app” application is fully downloaded and within the /Applications folder, proceed to next step.
+1. First, [download the macOS Catalina installer](https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12) from the Mac App Store, When the “Install macOS Catalina.app” application is fully downloaded and within the /Applications folder, proceed to next step.
 2. Open the Terminal application
 3. Create a disk image DMG file by running the following command:
 
@@ -68,7 +67,7 @@ Parallels: https://kb.parallels.com/125374
 
 First, download Xcode 12.4 from Apple. You will need a free Apple Developer account.
 
-1. Download Xcode 12.4 from [Apple](https://developer.apple.com/download/all/?q=xcode%2012.4). 
+1. Download Xcode 12.4 from [Apple](https://developer.apple.com/download/all/?q=xcode%2012.4).
    1. **NOTE**: Xcode 12.4 is the most recent release that supports macOS Catalina.
 2. Extract the `xip` file by double clicking.
 3. Move the Xcode.app file to the `/Applications` folder.
