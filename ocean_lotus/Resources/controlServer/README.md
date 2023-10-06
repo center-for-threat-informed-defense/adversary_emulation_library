@@ -76,8 +76,12 @@ sidetwist:
   port: 443
   enabled: false
 ```
+Build the control server (need to rebuild the server to capture changes made to config files)
+```
+go build -o controlServer main.go
+```
 
-1. Start the control server:
+Start the control server:
 
 Using default config file paths:
 ```

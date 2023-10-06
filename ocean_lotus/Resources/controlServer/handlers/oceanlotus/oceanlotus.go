@@ -160,7 +160,7 @@ func (o *oceanlotusHandler) startListener() {
 			bufReader := bufio.NewReader(reader)
 			req, err := http.ReadRequest(bufReader)
 			if err != nil {
-				logger.Warning(fmt.Sprintf("Could not read HTTP request, potential Rota"))
+				logger.Data(fmt.Sprintf("Could not read HTTP request, potential Rota"))
 			} else {
 				reqBody, err := ioutil.ReadAll(req.Body)
 				if err != nil {
@@ -276,7 +276,6 @@ func (o *oceanlotusHandler) handleBeacon(packet *ImplantPacket) ([]byte, error) 
 
 		if len(task) == 0 {
 			// If no queued tasks from operator - Return beacon response
-			logger.Info("No tasks available for UUID: ", packet.UUID)
 			response, err = o.convertTaskToResponse(packet.UUID, "", packet.protocol)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to convert task to response: %s", err.Error()))
@@ -746,11 +745,14 @@ func (o *oceanlotusHandler) extractTaskParts(taskString string, task *Task) erro
 	}
 	payloadName := strings.TrimSpace(payloadNameStr.(string))
 	if len(payloadName) > 0 {
-		logger.Info("Fetching requested file for task: ", payloadName)
 		task.payloadData, err = forwardGetFileFromServer(o.restAPIaddress, payloadName)
 		if err != nil {
+			logger.Error("Error when fetching: ", payloadName)
 			return err
 		}
+		logger.Task("Obtained file from C2 server: ", payloadName)
+
+
 	} else {
 		task.payloadData = []byte{}
 	}
