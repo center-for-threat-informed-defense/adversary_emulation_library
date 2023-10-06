@@ -31,9 +31,6 @@ The [Binaries.zip](./Resources/Binaries/binaries.zip) contains all executables i
 
 All other pre-built executables have been removed. To rebuild the binaries, follow the documentation for the respective implant.
 
-#### YARA Rules
-
-[YARA rules](./YARA_Rules/oceanlotus.yar) are provided to assist the community in researching, preventing, and detecting malware specimens used in this emulation plan.
 
 #### Emulation Key Software
 
@@ -66,13 +63,11 @@ reporting issues.
 
 ## How Do I Contribute?
 
-We welcome your feedback and contributions. 
-
 ### CTI Contributions
 We are trying something new using OceanLotus as our testcase. We wanted to find a way to increase information shareing while also giving credit to contributors. Check out our [Contributing Wiki](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/wiki/Contributing#contribute-open-source-intelligence-for-an-adversary) for more information on how to contribute CTI (open-source). 
 
 ### Code Contributions
-When emulating an adversary our CTI teams often propose an open-source based CTI Emulation Plan that is rich in ATT&CK techniques, uses a plethora of interesting implants, and is complex in nature. When translating this plan into development work, this plan is often pruned and simplified by the Red Team to fit the scope of develoment time and resources available. Afterall, we are a small team with only a couple of months to emulate a large, well-funded, specialized, development team that has years to develop these implants. On average ~30-40% of the proposed CTI Emulation Plan is actually developed. Rather than throwing this plan away (which is what we usually do) we are opening this up to the community. We would love for you to contribute a feature, functionality, or step from our proposed emulation plan. There are a couple of catches, it must be well integrated, tested, documented, and cited. Don't forget to check out the issues! We hope to have some smaller items to enable others to become familiar with our code base. 
+When emulating an adversary our CTI teams often propose an open-source based CTI Emulation Plan that is rich in ATT&CK techniques, uses a plethora of interesting implants, and is complex in nature. When translating this plan into development work, this plan is often pruned and simplified by the Red Team to fit the scope of development time and resources available. After all, we are a small team with only a couple of months to emulate a large, well-funded, specialized, development team that has years to develop these implants. On average ~30-40% of the proposed CTI Emulation Plan is actually developed. Rather than throwing this plan away (which is what we usually do) we are opening this up to the community. We would love for you to contribute a feature, functionality, or step from our proposed emulation plan. There are a couple of catches, it must be well integrated, tested, documented, and cited. Check out the issues for functionality that we did not have time to emulate (i.e. byte shifting, encryption, and upload capabilities! We hope to have some smaller items to enable others to become familiar with our code base.
 Happy hacking!
 
 For all other contributions, please see the guidance for contributors if you are interested in [contributing or simply reporting issues.](/CONTRIBUTING.md)
