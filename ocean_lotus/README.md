@@ -46,7 +46,7 @@ files. Then OceanLotus performs discovery using shared objects for all mounted d
 connected to the server. Finding none, OceanLotus collects PDF files and exfils the
 documents for later analysis.
 
-![Diagram walking through how OceanLotus infects a macOS, moves to a Linux host and
+![Diagram walking through how OceanLotus infects a macOS host, moves to a Linux host and
 exfils data](./Resources/images/OperationsFLowBlackBG.jpeg)
 
 ## Quick Links
