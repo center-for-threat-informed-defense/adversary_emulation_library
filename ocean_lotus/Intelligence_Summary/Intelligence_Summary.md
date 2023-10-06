@@ -18,9 +18,6 @@ OceanLotus has been reported to use the [OSX.OceanLotus](https://attack.mitre.or
 
 **Associated Groups:** APT32, SeaLotus, APT-C-00, Ocean Buffalo
 
-## Technique Scope
-![OceanLotus Technique Scope](../Intelligence_Summary/attack_navigator_TTPs.png/)
-
 ## Group Overview Report References
 Source ID | Report Links
 |:---:|:---|
