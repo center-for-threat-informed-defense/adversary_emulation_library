@@ -89,4 +89,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 This project makes use of ATT&CK®
 
-[ATT&CK Terms of Use](https://attack.mitre.org/resources/terms-of-use/))
+[ATT&CK Terms of Use](https://attack.mitre.org/resources/terms-of-use/)
