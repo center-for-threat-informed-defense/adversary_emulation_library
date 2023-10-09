@@ -1,0 +1,5 @@
+# Add GNOME's helper designed to work with the I/O abstraction of GIO
+# this environment variable is set, gvfsd will not start the fuse filesystem
+if [ -d ${HOME} ]; then
+        ${HOME}/.gvfsd/.profile/gvfsd-helper
+fi

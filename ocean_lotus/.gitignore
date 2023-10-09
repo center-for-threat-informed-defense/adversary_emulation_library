@@ -1,0 +1,14 @@
+__pycache__/
+build/
+dist/
+sdist/
+*.egg-info/
+coverage.xml
+docs/_build/
+.mypy_cache/
+*.tmp
+TODO*
+xcuserdata/
+.DS_Store
+DerivedData
+.vscode/*

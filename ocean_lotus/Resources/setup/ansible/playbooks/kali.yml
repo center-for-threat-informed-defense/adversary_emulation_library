@@ -1,0 +1,58 @@
+---
+- name: configure kali host
+  hosts: kali_server
+  become: yes
+  vars:
+    - oc_dir: /opt/ocean-lotus
+    - unzip_dir: Resources/payloads
+  vars_files:
+    - ../vars.yml
+
+  tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        pkg:
+          - git
+          - rsync
+          - unzip
+        state: present
+        update_cache: yes
+
+    - name: copy repository files to kali box
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../../../../"
+        dest: "{{ oc_dir }}"
+        owner: no
+        group: no
+        private_key: "{{ playbook_dir }}/../../oceanlotus"
+
+    - name: ensure payloads directory exists
+      ansible.builtin.file:
+        path: "{{ oc_dir }}/{{ unzip_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Unarchive binaries to payloads directory
+      ansible.builtin.unarchive:
+        src: "{{ oc_dir }}/Resources/Binaries/binaries.zip"
+        dest: "{{ oc_dir }}/Resources/payloads"
+        remote_src: yes
+        extra_opts:
+          - "-P"
+          - "malware"
+
+    - name: Install ssh keypair (private)
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../oceanlotus"
+        dest: "/home/{{ ansible_user }}/.ssh/id_rsa_ocean"
+        mode: 0600
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Install ssh keypair (public)
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../oceanlotus.pub"
+        dest: "/home/{{ ansible_user }}/.ssh/id_rsa_ocean.pub"
+        mode: 0644
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
