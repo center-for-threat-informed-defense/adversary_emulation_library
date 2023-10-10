@@ -82,6 +82,13 @@ func (l *LightNeuronHandler) StartHandler(restAddress string, configEntry config
 	}
 	l.imageFilePath = imageFilePath
 
+	// Set the recipient
+	recipient, ok := configEntry["recipient"]
+	if !ok {
+		l.recipient = ""
+	}
+	l.recipient = recipient
+
 	// Get the path to the image file used for embedding data
 	encryption, ok := configEntry["encryption"]
 	if !ok {
