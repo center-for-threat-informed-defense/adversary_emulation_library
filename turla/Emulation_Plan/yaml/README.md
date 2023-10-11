@@ -76,8 +76,8 @@ python3 server.py --insecure --log DEBUG
 
 :exclamation: Snake has not been included in this binaries.zip. Please visit the following
 resources for building Snake and its components:
-- [Snake Installer Build](../Snake/SnakeInstaller/README.md#build)
-- [Snake Build Script](../Snake/buildall.ps1)
+- [Snake Installer Build](../../Resources/Snake/SnakeInstaller/README.md#build)
+- [Snake Build Script](../../Resources/Snake/buildall.ps1)
 
 ### Mimikatz
 
