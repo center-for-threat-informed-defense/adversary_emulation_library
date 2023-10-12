@@ -36,7 +36,7 @@ In-line Symbols:
 
 ### 📖 Overview
 
-This step assumes you have completed the [infrastructure setup](../setup/). Actions
+This step assumes you have completed the [infrastructure setup](../Resources/setup/). Actions
 completed in this step:
 
 - Login to the attacker Kali machine via SSH
