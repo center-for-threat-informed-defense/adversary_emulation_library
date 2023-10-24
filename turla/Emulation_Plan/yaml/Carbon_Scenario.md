@@ -29,7 +29,13 @@ Before running the operation, you will need to make sure that the Turla fact sou
 - `third.target.ntlm`: The NTLM hash for the third target user.
 - `apache.server.ip`: The IP address of the Apache server.
 - `attacker.host.ip`: The IP address of the attacker's host.
+- `first.epic.id`: The first EPIC implant ID
+- `second.epic.id`: The second EPIC implant ID
+- `first.carbon.id`: The first Carbon implant ID
+- `second.carbon.id`: The second Carbon implant ID
+- `third.carbon.id`: The third Carbon implant ID
 
+Generally, it’s only possible to task a Caldera agent which is alive and actively checking in with the Caldera server. However, due to the integration between the `evalsc2client.py` and the Caldera Emu plugin in this port, the user is effectively tasking the Sandcat agent to task `evalsc2client.py` to task an implant through the Control Server, which makes it possible to task an implant that is not active. Therefore, a Caldera requirement was implemented to prevent an ability from executing if the implant tasked in that ability was not actively beaconing in. This requirement uses the facts for the EPIC and Carbon implant IDs, which are listed above.
 
 # RUNNING THE OPERATION
 

@@ -38,6 +38,15 @@ Before running the operation, you will need to make sure that the Turla fact sou
 - `domain.admin.user`: The username of a domain admin.
 - `new.domain.user`: The username of the new domain user.
 - `new.domain.password`: The password of the new domain user.
+- `first.epic.id`: The first EPIC implant ID.
+- `first.snake.id`: The first Snake implant ID.
+- `second.snake.id`: The second Snake implant ID.
+- `third.snake.id`: The third Snake implant ID.
+- `lightneuron.implant.id`: The Lightneuron implant ID.
+
+Generally, it’s only possible to task a Caldera agent which is alive and actively checking in with the Caldera server. However, due to the integration between the [`evalsc2client.py`](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/master/turla/Resources/control_server/evalsC2client.py) and the Caldera Emu plugin in this port, the user is effectively tasking the Sandcat agent to task `evalsc2client.py` to task an implant through the Control Server, which makes it possible to task an implant that is not active. Therefore, a Caldera requirement was implemented to prevent an ability from executing if the implant tasked in that ability was not actively beaconing in. This requirement uses the facts for the EPIC and Snake implant IDs, which are listed above.
+
+Additionally, a separate Caldera requirement was implemented for the Lightneuron implant. This requirement will allow an ability to execute if the Lightneuron implant ID is listed in the agents tab of the Caldera Server GUI, even if the agent is dead and untrusted. The Lightneuron agent only sends one initial beacon to the Server, and is then considered a dead agent. This custom requirement will allow Lightneuron to be tasked despite that fact that it appears dead in the Caldera GUI.
 
 # RUNNING THE OPERATION
 

