@@ -818,7 +818,7 @@
           xdotool key --window "$rdp_window" Return;
           sleep 2;
           
-          kill $(ps aux | grep "sshd: #{caldera.user.name}" | grep -v priv | grep -v grep | awk '{print $2}')
+          kill $(ps aux | grep "sshd-session: #{caldera.user.name}" | grep -v priv | grep -v grep | awk '{print $2}')
 
 - id: d9c9a941-c0e8-4eed-8cc3-6511ad5b9e15
   name: OilRig Cleanup on Gosta
