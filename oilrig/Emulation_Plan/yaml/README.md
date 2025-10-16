@@ -224,7 +224,7 @@ python3 ~/caldera/app/utility/file_decryptor.py -c ~/caldera/conf/local.yml /tmp
 - `plink.exe` will be downloaded to the workstation as a payload from the CALDERA server. In the original scenario, `plink.exe` is initially downloaded to `C:\Users\Public\Downloads\plink.exe`. In the port, it will be downloaded through the C2 channel to the same folder as the agent on the `THEBLOCK`. Then, it will be copied to the `Downloads` folder.
 - The additional `-no-antispoof` flag was added to avoid the required interaction step.
 - Step 7.A.3, "Valid Accounts: Domain Accounts" (T1078.002) is included in Step 7.A.4. 
-- Steps 7.A.2 and 7.A.4 are run using `exec-background` which runs a command as a background process. The `/cert-ignore` parameter is also added to Step 7.A.4. 
+- Steps 7.A.2 and 7.A.4 are run using `exec-background` which runs a command as a background process. The `/cert:ignore` parameter is also added to Step 7.A.4. 
 - The password for `saka` has been changed from `$ceKa#zU$Uc4^9yZ` to `ceKa#zUUc4^9yZ`.  
 
 ## Step 8
