@@ -593,7 +593,7 @@
     linux:
       proc:
         command: |
-          exec-background xfreerdp /u:'#{network.domain.name}\#{initial.target.user}' /p:'#{initial.target.password}' /v:localhost:13389 /cert-ignore
+          exec-background xfreerdp /u:'#{network.domain.name}\#{initial.target.user}' /p:'#{initial.target.password}' /v:localhost:13389 /cert:ignore
 
 
 # Step 8
